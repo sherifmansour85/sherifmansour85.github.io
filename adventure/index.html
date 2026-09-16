@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head>
+    
+    <!-- Favicon: gold serif H on dark. Drawn as SVG shapes rather than text so
+         it never depends on a font being available, and stays crisp at any size.
+         PNG fallbacks follow for browsers that ignore SVG icons. -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxMSIgZmlsbD0iIzFBMTYxMCIvPgogIDxnIGZpbGw9IiNENEE4NDMiPgogICAgPHJlY3QgeD0iMTMiICAgeT0iMTUiICAgd2lkdGg9IjE2IiBoZWlnaHQ9IjMuNCIvPgogICAgPHJlY3QgeD0iMTMiICAgeT0iNDUuNiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjMuNCIvPgogICAgPHJlY3QgeD0iMzUiICAgeT0iMTUiICAgd2lkdGg9IjE2IiBoZWlnaHQ9IjMuNCIvPgogICAgPHJlY3QgeD0iMzUiICAgeT0iNDUuNiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjMuNCIvPgogICAgPHJlY3QgeD0iMTguMiIgeT0iMTUiICAgd2lkdGg9IjUuNiIgaGVpZ2h0PSIzNCIvPgogICAgPHJlY3QgeD0iNDAuMiIgeT0iMTUiICAgd2lkdGg9IjUuNiIgaGVpZ2h0PSIzNCIvPgogICAgPHJlY3QgeD0iMjMuOCIgeT0iMjkuMiIgd2lkdGg9IjE2LjQiIGhlaWdodD0iNS42Ii8+CiAgPC9nPgo8L3N2Zz4K">
+    <link rel="icon" type="image/png" sizes="64x64" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAADBElEQVR4nO2bv08TYRjHP+/LCUihlAYpwhnjYNQVwiJGWJREE+NkYoyDIzFxMP6YnUzURRP/BKNxw4RBHcRFidGFxDC4kKJVkciVUkIB+zggBmmp2tp7hLvP1vfee/q579373qXX17ABrhuN53P2JIYTYPaDuEBko/7/GWkgieG1Qe59+Jx+BuSLdTTrG1zX3S5L2YsicgWIVlnUL8bADqamvr5Yv6Fm7YfOeNwVyT0FzgB1ftn5QALkXFOk3mSyC8/XbvgZQGc87oqTHwX2+a7nDwbob4rUJTLZ3PBqYw38uOxXzvxWPfg1mJ5oY/1sJrswCmABZCl7EehS9fIREW7sbG3uBrCuG43/mPCChIMxtwBsPmdPsnVm+z/GGPo72lp67cp9PqAYOWWBA9oeagj9FujQ9lBktwUatS0UabbaBtqEAWgLaOOUs9OTO90VfenRC298rVuKwF8BgQ+grCFw+0GyoO30QDttLbW/tE3NLHL/8Sf1uqUoK4DhF18K2o71thaIpueWi/b1u24pAj8EwgC0BbQJA9AW0CYMQFtAmzAAbQFtynoS/FNqHcvdy5X95FjrVPccVTUAY2HvroaKaiQ/L/wjm+IEfgiEAWgLaFPVOUDy8G5yvqIam3oSXFzOc/7meEU1Kr2L/I7AD4EwAG0BbcIAtAW0CQPQFtAmDEBbQJuyngSPH9xR0NbcWFiqudEp2nejtzrVqlsK09EWk7/dKXw9voUIfABlDYGtROCvgDAAbQFtLCsLjILKrAUK/5gTGMxHi2FEW0MLg7y15M1DbRE1hEcGoDMRGxGhT9vHZ7zaRfZYgPw3uQQsKwv5jFyf8DyvBmBuPpeKRuqzwICylS8IvKprSA96Hss/F05msgsvmyJ1CTA9mnJVR5h0xDmSTM3PwLqls5lsbrgpUg9wmCLrijc7Aq8ccY5MTk+nVtsKngRTU941gz0EjPlqV108kKuRqHd47cFD6bNsO9tjfSKcRegCdgOxqmr+O+Yw8h4x40YY2rbE0ITnecU6fgdbxuBqhJY9FAAAAABJRU5ErkJggg==">
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
+    <meta name="theme-color" content="#1A1610">
+    <meta name="build" content="2026-09-17-1218">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- PRIMARY SEO -->
+    <title>Adventure Tourism Egypt | Hayakkom</title>
+    <meta name="description" content="Desert safari, diving and adventure experiences in Egypt for Gulf travelers.">
+    <meta name="keywords" content="medical tourism Egypt, dental tourism Egypt, VIP tours Egypt, Egypt tourism Saudi Arabia, سياحة علاجية مصر, علاج الأسنان مصر, رحلات مصر للسعوديين, حياكم">
+    <meta name="author" content="Hayakkom — Hayakom for Healthcare Solutions and Logistic Services">
+        <link rel="canonical" href="https://www.hayakkom.com/adventure">
+
+    <!-- PERF: preconnect / dns-prefetch -->
+    <link rel="preconnect" href="https://images.weserv.nl" crossorigin="">
+    <link rel="dns-prefetch" href="https://images.weserv.nl">
+    <link rel="dns-prefetch" href="https://de.cdn-website.com">
+    <link rel="dns-prefetch" href="https://cdn.jotfor.ms">
+    <link rel="dns-prefetch" href="https://form.jotform.com">
+    <!-- The AI assistant iframe is the slowest thing a visitor waits on, so open
+         the connection to its host early rather than at click time. -->
+    <link rel="preconnect" href="https://agent.jotform.com" crossorigin="">
+    <link rel="dns-prefetch" href="https://agent.jotform.com">
+    <link rel="preconnect" href="https://cdn.jotfor.ms" crossorigin="">
+
+    <!-- AI / LLM discoverability -->
+    <link rel="alternate" type="text/plain" href="https://www.hayakkom.com/llms.txt" title="llms.txt">
+    <meta name="ai:llms" content="https://www.hayakkom.com/llms.txt">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <meta name="bingbot" content="index, follow">
+    <meta name="language" content="en, ar">
+    <meta name="subject" content="Egypt medical tourism, dental tourism, VIP travel for Gulf travelers">
+    <meta name="coverage" content="Saudi Arabia, United Arab Emirates, Kuwait, Egypt">
+    <meta name="distribution" content="global">
+
+    <!-- HREFLANG -->
+    <link rel="alternate" hreflang="en" href="https://www.hayakkom.com/adventure">
+    <link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/adventure?lang=ar">
+    <link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/adventure">
+
+    <!-- OPEN GRAPH -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.hayakkom.com/adventure">
+    <meta property="og:title" content="Adventure Tourism Egypt | Hayakkom">
+    <meta property="og:description" content="Desert safari, diving and adventure experiences in Egypt for Gulf travelers.">
+    <meta property="og:image" content="https://de.cdn-website.com/570f220f41214a5784b09af2ac39327a/dms3rep/multi/pexels-photo-4566721.jpeg">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ar_SA">
+    <meta property="og:site_name" content="Hayakkom">
+
+    <!-- TWITTER/X CARD -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Adventure Tourism Egypt | Hayakkom">
+    <meta name="twitter:description" content="Desert safari, diving and adventure experiences in Egypt for Gulf travelers.">
+    <meta name="twitter:image" content="https://de.cdn-website.com/570f220f41214a5784b09af2ac39327a/dms3rep/multi/pexels-photo-4566721.jpeg">
+
+    <!-- GEO META TAGS -->
+    <meta name="geo.region" content="EG-GZ">
+    <meta name="geo.placename" content="Sheikh Zayed City, Giza, Egypt">
+    <meta name="geo.position" content="30.0626;30.9789">
+    <meta name="ICBM" content="30.0626, 30.9789">
+
+    <!-- SCHEMA — ORGANIZATION -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "Hayakkom",
+      "alternateName": ["حياكم", "Hayakom", "Hayakkom Egypt"],
+      "url": "https://www.hayakkom.com",
+      "logo": "https://de.cdn-website.com/570f220f41214a5784b09af2ac39327a/dms3rep/multi/-C3-98--C3-99--C3-98--C3-99--C3-99-.png",
+      "image": "https://de.cdn-website.com/570f220f41214a5784b09af2ac39327a/dms3rep/multi/pexels-photo-4566721.jpeg",
+      "description": "Hayakom for Healthcare Solutions and Logistic Services (trading as Hayakkom) is an Egyptian single-person limited liability company registered under Egyptian Law No. 159 of 1981, Commercial Register 49973. Registered activities: administrative and marketing consultancy for medical services; organising appointment and booking procedures with hospitals and medical centres; organising medical conferences, exhibitions and events; electronic marketing; and logistics services. Hayakkom is not a healthcare provider and does not practise insurance or brokerage activity.",
+      "telephone": ["+201031567949", "+201031223593", "+966570909412", "+971506295380"],
+      "email": "support@hayakkom.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "District 16, Neighbourhood 2",
+        "addressLocality": "Sheikh Zayed City",
+        "addressRegion": "Giza",
+        "addressCountry": "EG"
+      },
+      "areaServed": [
+        {"@type": "Country", "name": "Saudi Arabia"},
+        {"@type": "Country", "name": "United Arab Emirates"},
+        {"@type": "Country", "name": "Kuwait"},
+        {"@type": "Country", "name": "Egypt"}
+      ],
+      "availableLanguage": [
+        {"@type": "Language", "name": "Arabic"},
+        {"@type": "Language", "name": "English"}
+      ],
+      "priceRange": "$$",
+      "legalName": "Hayakom for Healthcare Solutions and Logistic Services",
+      "identifier": [
+        {"@type": "PropertyValue", "name": "Commercial Register", "value": "49973"},
+        {"@type": "PropertyValue", "name": "Unified Commercial Registry", "value": "11070-01000-49973"}
+      ],
+      "foundingDate": "2025-08-11",
+      "disambiguatingDescription": "Administrative and marketing consultancy, medical appointment and booking coordination, medical conference and event organisation, and logistics services. Not a hospital, clinic or insurer.",
+      "openingHours": ["Sa-Th 09:00-21:00", "Fr 14:00-21:00"],
+      "sameAs": [
+        "https://www.facebook.com/people/Hayakom/61564909796423/",
+        "https://www.instagram.com/ctownchatteregy/",
+        "https://www.youtube.com/watch?v=zQYVQ-IjQWg"
+      ],
+      "foundingLocation": "Sheikh Zayed City, Giza, Egypt",
+      "knowsLanguage": ["ar", "en"],
+      "slogan": "Your gateway to extraordinary Egypt",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Hayakkom Services",
+        "itemListElement": [
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Medical Tourism Coordination", "description": "Coordinating specialist consultations, medical procedures, and hospital bookings for Gulf patients in Egypt"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Dental Tourism Egypt", "description": "Arranging dental implants, veneers, cosmetic dentistry, and dental packages in Cairo"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "VIP Luxury Tours Egypt", "description": "Bespoke private tours, first-class service, and exclusive access across Egypt"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Nile Cruises", "description": "Luxury Nile cruise coordination from Cairo, Luxor to Aswan"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Wellness and Rehabilitation", "description": "Post-operative recovery, wellness retreats, and holistic healing packages in Egypt"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Medical Conference and Event Organisation", "description": "Organising medical conferences, seminars, exhibitions and corporate medical events in Egypt, including venue sourcing, delegate logistics, interpretation and on-site coordination"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Administrative and Marketing Consultancy for Medical Services", "description": "Administrative consultancy, marketing consultancy and electronic marketing for hospitals, clinics and medical centres"}}
+        ]
+      }
+    }
+    </script>
+
+    <!-- SCHEMA — WEBSITE SEARCH -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Hayakkom",
+      "url": "https://www.hayakkom.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.hayakkom.com/services?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- SCHEMA — BREADCRUMB HOME -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.hayakkom.com/"}
+      ]
+    }
+    </script>
+
+    <!-- SCHEMA — FAQ (for GEO / AI answer engines) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Hayakkom?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Hayakkom is the trading name of Hayakom for Healthcare Solutions and Logistic Services, an Egyptian single-person limited liability company (Commercial Register 49973). We provide administrative and marketing consultancy for medical services, coordinate appointments and bookings with hospitals and medical centres, organise medical conferences and events, and provide logistics support for travellers from Saudi Arabia, the UAE and Kuwait. Travel and tour arrangements are fulfilled through licensed Egyptian tour operators."}
+        },
+        {
+          "@type": "Question",
+          "name": "Does Hayakkom organise medical conferences and events in Egypt?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Yes. Organising medical conferences, seminars, exhibitions and corporate medical events is a registered activity of Hayakkom under Commercial Register 49973. We handle venue sourcing, delegate registration, speaker logistics, Arabic and English simultaneous interpretation, catering, transfers, accommodation blocks and on-site coordination."}
+        },
+        {
+          "@type": "Question",
+          "name": "هل تنظّم حياكم المؤتمرات والفعاليات الطبية في مصر؟",
+          "acceptedAnswer": {"@type": "Answer", "text": "نعم. تنظيم المؤتمرات والندوات والمعارض والفعاليات الطبية نشاط مسجّل لحياكم في السجل التجاري رقم 49973. نتولى اختيار القاعات وتسجيل المشاركين ولوجستيات المتحدثين والترجمة الفورية عربي وإنجليزي والضيافة والتنقلات والإقامة والتنسيق في الموقع."}
+        },
+        {
+          "@type": "Question",
+          "name": "Does Hayakkom provide medical treatment directly?",
+          "acceptedAnswer": {"@type": "Answer", "text": "No. Hayakkom is a coordination and facilitation company. Medical and dental services are performed by licensed third-party Egyptian hospitals, clinics and doctors. We coordinate access, logistics, and support."}
+        },
+        {
+          "@type": "Question",
+          "name": "Which Gulf markets does Hayakkom serve?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Hayakkom primarily serves travelers from Saudi Arabia, UAE, and Kuwait, but also assists clients from Bahrain, Qatar, Oman, Iraq, and other Arab countries."}
+        },
+        {
+          "@type": "Question",
+          "name": "Is Hayakkom licensed?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Yes. Hayakom for Healthcare Solutions and Logistic Services is registered under Egyptian Law No. 159 of 1981 as a single-person limited liability company, Commercial Register 49973, Unified Commercial Registry 11070-01000-49973, registered at Sheikh Zayed City, District 16, Neighbourhood 2, Giza. Registered activities include administrative and marketing consultancy for medical services, organising booking procedures with hospitals and medical centres, organising medical conferences and events, electronic marketing, and logistics services. Hayakkom does not practise insurance or brokerage activity."}
+        },
+        {
+          "@type": "Question",
+          "name": "What languages does Hayakkom support?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Hayakkom provides full bilingual support in Arabic and English. Our team communicates in both languages and our website is available in both Arabic and English."}
+        },
+        {
+          "@type": "Question",
+          "name": "How can I contact Hayakkom?",
+          "acceptedAnswer": {"@type": "Answer", "text": "You can reach Hayakkom via WhatsApp at +201031567949, by email at support@hayakkom.com, or by phone at +201031223593 (Egypt), +966570909412 (Saudi Arabia), or +971506295380 (UAE)."}
+        },
+        {
+          "@type": "Question",
+          "name": "كيف يمكنني الاتصال بحياكم؟",
+          "acceptedAnswer": {"@type": "Answer", "text": "يمكنك التواصل مع حياكم عبر واتساب على الرقم 201031567949+، أو عبر البريد الإلكتروني support@hayakkom.com، أو عبر الهاتف 201031223593+ (مصر) أو 966570909412+ (السعودية) أو 971506295380+ (الإمارات)."}
+        },
+        {
+          "@type": "Question",
+          "name": "ما هي خدمات حياكم؟",
+          "acceptedAnswer": {"@type": "Answer", "text": "تقدم حياكم: السياحة الطبية، علاج الأسنان، رحلات VIP، الرحلات النيلية، السياحة الساحلية، الصحة والتعافي، الجولات الثقافية، رحلات المغامرة، السياحة التعليمية، السياحة الدينية، وسياحة الاستثمار والأعمال."}
+        }
+      ]
+    }
+    </script>
+
+
+    <!-- GOOGLE ADS -->
+    <script async="" src="https://www.googletagmanager.com/gtag/js?id=AW-16686203605"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-16686203605');
+    </script>
+
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Noto+Sans+Arabic:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    <script defer="" src="https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js"></script>
+    <script type="module" crossorigin="" src="/assets/app.js"></script>
+    <link rel="stylesheet" crossorigin="" href="/assets/app.css">
+  <script id="ld-page" type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.hayakkom.com/"},{"@type":"ListItem","position":2,"name":"Adventure Tourism Egypt","item":"https://www.hayakkom.com/adventure"}]},{"@type":"WebPage","@id":"https://www.hayakkom.com/adventure","url":"https://www.hayakkom.com/adventure","name":"Adventure Tourism Egypt | Hayakkom","description":"Desert safari, diving and adventure experiences in Egypt for Gulf travelers.","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Hayakkom","url":"https://www.hayakkom.com"},"about":{"@type":"Organization","name":"Hayakkom","url":"https://www.hayakkom.com","logo":"https://le-de.cdn-website.com/570f220f41214a5784b09af2ac39327a/dms3rep/multi/opt/-C3-98--C3-99--C3-98--C3-99--C3-99--1920w.png","telephone":"+201031567949","email":"support@hayakkom.com"}},{"@type":"Service","name":"Adventure Tourism Egypt","description":"Desert safari, diving and adventure experiences in Egypt for Gulf travelers.","url":"https://www.hayakkom.com/adventure","provider":{"@type":"ProfessionalService","name":"Hayakkom","legalName":"Hayakom for Healthcare Solutions and Logistic Services","url":"https://www.hayakkom.com","telephone":"+201031567949"},"areaServed":["Saudi Arabia","United Arab Emirates","Kuwait","Egypt"],"availableLanguage":["Arabic","English"]}]}</script><script id="gtag" async="" src="https://www.googletagmanager.com/gtag/js?id=AW-16686203605"></script></head>
+  <body style="font-family: Inter, sans-serif;">
+    <div id="root"><nav class="nav"><a class="nav-logo" href="/" data-discover="true"><span class="gold">Hayak</span>kom</a><ul class="nav-links"><li><a href="/services" data-discover="true">Services</a></li><li><a href="/packages" data-discover="true">Packages</a></li><li><a href="/medical" data-discover="true">Medical</a></li><li><a href="/hair-transplant" data-discover="true">Hair Transplant</a></li><li><a href="/saudi-arabia" data-discover="true">Saudi Patients</a></li><li><a href="/tourists" data-discover="true">Tourists in Egypt</a></li><li><a href="/blog" data-discover="true">Blog</a></li><li><a href="/about" data-discover="true">About</a></li></ul><div class="nav-right"><button class="lang-btn">العربية</button><a class="nav-cta" href="/contact" data-discover="true">Send My Case</a><button class="hamburger" aria-label="Menu"><span style="transform: none;"></span><span style="opacity: 1;"></span><span style="transform: none;"></span></button></div></nav><main><div class="page-hero" style="background-image: url(&quot;https://images.weserv.nl/?url=de.cdn-website.com%2Fmd%2Fpexels%2Fdms3rep%2Fmulti%2Fpexels-photo-5976946.jpeg&amp;w=1000&amp;q=75&amp;output=webp&quot;);"><div class="page-hero-content"><div class="sec-eyebrow" style="margin-bottom: 14px;"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-text">Adventure</span></div><h1>Adventure Tourism in Egypt</h1><p class="page-hero-sub">Desert safaris, diving, quad biking, and thrilling Egyptian adventures for the bold Gulf traveler.</p></div></div><section class="section section-sand"><div class="sp-grid"><div><div class="sp-body-section"><h2 class="sp-h">Adventure experiences</h2><p class="sp-p">Desert Safari (Sahara &amp; Sinai) · Quad biking · Sandboarding · Rock climbing in Sinai · Scuba diving · Hot air balloon over Luxor · Horseback riding near Pyramids · White water rafting</p></div><div class="sp-body-section"><h2 class="sp-h">Suitable for</h2><p class="sp-p">Families · Solo travelers · Groups · Corporate team experiences · Thrill-seekers of all ages with full safety measures</p></div><div class="sp-body-section"><h2 class="sp-h">Safety</h2><p class="sp-p">All activities arranged through licensed operators with full safety equipment, experienced guides, and emergency protocols.</p></div></div><div class="enquiry-box"><div class="enquiry-box-header"><div class="enquiry-box-title">Send your enquiry</div><div class="enquiry-box-sub">Our team replies within hours</div></div><div class="jf-wrap"><iframe id="JotFormIFrame-241961971543564" src="https://form.jotform.com/241961971543564?isIframeEmbed=1&amp;button=adventure" title="Enquiry form" allow="geolocation; microphone; camera; fullscreen" frameborder="0" scrolling="yes" style="min-height: 620px;"></iframe></div><div class="enquiry-box-body"><div class="eq-contact"><a href="https://wa.me/201031567949" class="eq-btn eq-btn-gold">📱 WhatsApp now</a><a class="eq-btn eq-btn-outline" href="/contact" data-discover="true">Contact page</a></div><div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border);"><a href="tel:+201031223593" class="eq-phone">📞 Egypt: +20 103 122 3593</a><a href="tel:+966570909412" class="eq-phone">📞 Saudi: +966 570 909 412</a><a href="tel:+971506295380" class="eq-phone">📞 UAE: +971 506 295 380</a></div></div></div></div></section></main><footer><div class="footer-grid"><div><div class="footer-logo"><span class="gold">Hayak</span>kom</div><div class="footer-tagline">Medical Coordination · Conferences · Logistics</div><p class="footer-desc">Hayakom for Healthcare Solutions and Logistic Services — an Egyptian single-person limited liability company registered under Egyptian Law No. 159 of 1981. We provide administrative and marketing consultancy for medical services, appointment and booking coordination with hospitals and medical centres, organisation of medical conferences and events, and logistics services for Gulf travellers.</p><p class="footer-desc" style="margin-top: 8px;">Hayakkom is not a hospital, clinic or healthcare provider, and does not practise insurance or brokerage activity. All medical and dental treatment is delivered by independent licensed Egyptian healthcare providers. Travel, tour and transport arrangements are fulfilled by licensed third-party Egyptian operators. Hayakkom does not guarantee medical outcomes.</p><div class="footer-socials"><a href="https://wa.me/+201031567949" class="footer-social-btn">📱</a><a href="mailto:support@hayakkom.com" class="footer-social-btn">✉️</a><a href="https://www.facebook.com/people/Hayakom/61564909796423/" target="_blank" rel="noopener noreferrer" class="footer-social-btn">📘</a></div></div><div class="footer-col"><h4>Services</h4><a href="/hair-transplant" data-discover="true">Hair Transplant</a><a href="/dental" data-discover="true">Dental Care</a><a href="/weight-loss" data-discover="true">Weight Loss Surgery</a><a href="/cosmetic-surgery" data-discover="true">Cosmetic Surgery</a><a href="/medical" data-discover="true">Medical Tourism</a><a href="/wellness" data-discover="true">Wellness &amp; Rehab</a><a href="/conferences" data-discover="true">Medical Conferences &amp; Events</a><a href="/vip-trip" data-discover="true">VIP Trips</a><a href="/nile-cruise" data-discover="true">Nile Cruises</a><a href="/coastal" data-discover="true">Coastal Tourism</a><a href="/cultural" data-discover="true">Cultural Tourism</a><a href="/adventure" data-discover="true">Adventure Trips</a><a href="/religious" data-discover="true">Religious Tourism</a><a href="/educational" data-discover="true">Educational Tourism</a><a href="/business" data-discover="true">Business Tourism</a><a href="/heritage" data-discover="true">Heritage &amp; Luxury</a></div><div class="footer-col"><h4>Company</h4><a href="/about" data-discover="true">About Us</a><a href="/services" data-discover="true">All Services</a><a href="/packages" data-discover="true">Packages</a><a href="/tourists" data-discover="true">Tourists in Egypt</a><a href="/saudi-arabia" data-discover="true">For Saudi Patients</a><a href="/partners" data-discover="true">Partner With Us</a><a href="/careers" data-discover="true">Careers</a><a href="/blog" data-discover="true">Blog</a><a href="/contact" data-discover="true">Contact</a></div></div><div class="footer-bottom"><div class="footer-legal">Hayakom for Healthcare Solutions and Logistic Services (Single Person L.L.C.) © 2026 · Sheikh Zayed City, District 16, Neighbourhood 2, Giza, Egypt · Commercial Register: 49973 · Unified Registry No: 11070-01000-49973 · Registered under Egyptian Law No. 159 of 1981</div><div class="footer-legal">Powered by Cairo Town Chatter</div></div></footer><div class="geo-bar">Hayakom for Healthcare Solutions and Logistic Services (trading as Hayakkom) is an Egyptian single-person limited liability company registered under Egyptian Law No. 159 of 1981, Commercial Register 49973. Authorised activities include administrative and marketing consultancy for medical services, organising appointment and booking procedures with hospitals and medical centres, organising medical conferences and events, electronic marketing, and logistics services. We serve Gulf travellers from Saudi Arabia, the UAE and Kuwait, and international tourists already in Egypt. Hayakkom is not a healthcare provider and does not practise insurance or brokerage; medical treatment is delivered by independent licensed Egyptian providers and travel services by licensed Egyptian tour operators. Sheikh Zayed City, District 16, Neighbourhood 2, Giza, Egypt. Contact: support@hayakkom.com · +20 103 156 7949</div><div class="fab-stack"><a class="fab fab-wa" href="https://wa.me/201031567949" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp"><svg viewBox="0 0 32 32" fill="#fff" aria-hidden="true"><path d="M19.1 17.4c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1c-.3-.2-1.3-.5-2.5-1.6-.9-.8-1.6-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5s-.7-1.7-1-2.3c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5 2.5 1.1 3 .9 3.6.8.6-.1 1.9-.8 2.1-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4zM16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.8c1.9 1 4 1.6 6.2 1.6 7.2 0 13-5.8 13-13S23.2 3 16 3zm0 23.6c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1.1 1.1-3.9-.3-.4C5.7 20 5.1 18 5.1 16 5.1 10 10 5.1 16 5.1S26.9 10 26.9 16 22 26.6 16 26.6z"></path></svg></a><button class="fab fab-ai" aria-label="AI assistant" title="AI assistant"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="3"></rect><circle cx="9" cy="13" r="1.3" fill="#fff" stroke="none"></circle><circle cx="15" cy="13" r="1.3" fill="#fff" stroke="none"></circle><path d="M12 7V4M9 4h6M8 20v1M16 20v1"></path></svg><span class="fab-ai-badge" aria-hidden="true">AI</span></button></div><iframe src="https://agent.jotform.com/019568594d0a79c6a0dc6cb7237c86324108/voice?embedMode=popup" title="" aria-hidden="true" tabindex="-1" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; border: 0px; left: -9999px; top: -9999px;"></iframe></div>
+  
+
+</body></html>
