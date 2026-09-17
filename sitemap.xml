@@ -792,4 +792,67 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/"/>
+    <lastmod>2026-09-17</lastmod><changefreq>weekly</changefreq><priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/saudi-arabia</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/saudi-arabia"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/saudi-arabia?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/saudi-arabia"/>
+    <lastmod>2026-09-17</lastmod><changefreq>weekly</changefreq><priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/saudi-arabia?lang=ar</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/saudi-arabia"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/saudi-arabia?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/saudi-arabia"/>
+    <lastmod>2026-09-17</lastmod><changefreq>weekly</changefreq><priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/saudi-arabia/riyadh</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/saudi-arabia/riyadh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/saudi-arabia/riyadh?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/saudi-arabia/riyadh"/>
+    <lastmod>2026-09-17</lastmod><changefreq>weekly</changefreq><priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/saudi-arabia/riyadh?lang=ar</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/saudi-arabia/riyadh"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/saudi-arabia/riyadh?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/saudi-arabia/riyadh"/>
+    <lastmod>2026-09-17</lastmod><changefreq>weekly</changefreq><priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/saudi-arabia/jeddah</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/saudi-arabia/jeddah"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/saudi-arabia/jeddah?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/saudi-arabia/jeddah"/>
+    <lastmod>2026-09-17</lastmod><changefreq>weekly</changefreq><priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/saudi-arabia/jeddah?lang=ar</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/saudi-arabia/jeddah"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/saudi-arabia/jeddah?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/saudi-arabia/jeddah"/>
+    <lastmod>2026-09-17</lastmod><changefreq>weekly</changefreq><priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/saudi-arabia/dammam</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/saudi-arabia/dammam"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/saudi-arabia/dammam?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/saudi-arabia/dammam"/>
+    <lastmod>2026-09-17</lastmod><changefreq>weekly</changefreq><priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/saudi-arabia/dammam?lang=ar</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/saudi-arabia/dammam"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/saudi-arabia/dammam?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/saudi-arabia/dammam"/>
+    <lastmod>2026-09-17</lastmod><changefreq>weekly</changefreq><priority>0.9</priority>
+  </url>
 </urlset>

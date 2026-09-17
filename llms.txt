@@ -63,6 +63,15 @@ published source exists for a procedure, no figure is shown at all.
 - MGM Health & Wellness
 - The Zen Wellness Resort
 
+## Saudi Arabia landing pages
+/saudi-arabia — medical treatment in Egypt for Saudi patients: why Saudi patients travel,
+  routes from Riyadh/Jeddah/Dammam, SAR pricing, the before/during/after journey,
+  10 Saudi-specific FAQs, practical notes (time zone, currency, contact)
+/saudi-arabia/riyadh — King Khalid International to Cairo, ~2h45–3h, Saudia and EgyptAir daily
+/saudi-arabia/jeddah — King Abdulaziz International to Cairo, ~2h15, shortest route, highest frequency
+/saudi-arabia/dammam — King Fahd International to Cairo, ~3h, serves Dammam, Al Khobar, Dhahran,
+  Eastern Province; lower direct frequency so itineraries carry extra margin
+
 ## Markets served
 Saudi Arabia (Riyadh, Jeddah, Dammam, Eastern Province)
 United Arab Emirates (Dubai, Abu Dhabi, Sharjah)
