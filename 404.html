@@ -11,6 +11,13 @@
     <meta name="author" content="Hayakkom — Hayakom for Healthcare Solutions and Logistic Services">
         <link rel="canonical" href="https://www.hayakkom.com/">
 
+    <!-- PERF: preconnect / dns-prefetch -->
+    <link rel="preconnect" href="https://images.weserv.nl" crossorigin>
+    <link rel="dns-prefetch" href="https://images.weserv.nl">
+    <link rel="dns-prefetch" href="https://de.cdn-website.com">
+    <link rel="dns-prefetch" href="https://cdn.jotfor.ms">
+    <link rel="dns-prefetch" href="https://form.jotform.com">
+
     <!-- AI / LLM discoverability -->
     <link rel="alternate" type="text/plain" href="https://www.hayakkom.com/llms.txt" title="llms.txt">
     <meta name="ai:llms" content="https://www.hayakkom.com/llms.txt">
@@ -45,7 +52,7 @@
 
     <!-- GEO META TAGS -->
     <meta name="geo.region" content="EG-GZ">
-    <meta name="geo.placename" content="Sheikh Zayed, Giza, Egypt">
+    <meta name="geo.placename" content="Sheikh Zayed City, Giza, Egypt">
     <meta name="geo.position" content="30.0626;30.9789">
     <meta name="ICBM" content="30.0626, 30.9789">
 
@@ -53,19 +60,19 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "TravelAgency",
+      "@type": "ProfessionalService",
       "name": "Hayakkom",
       "alternateName": ["حياكم", "Hayakom", "Hayakkom Egypt"],
       "url": "https://www.hayakkom.com",
       "logo": "https://de.cdn-website.com/570f220f41214a5784b09af2ac39327a/dms3rep/multi/-C3-98--C3-99--C3-98--C3-99--C3-99-.png",
       "image": "https://de.cdn-website.com/570f220f41214a5784b09af2ac39327a/dms3rep/multi/pexels-photo-4566721.jpeg",
-      "description": "Licensed Egyptian tourism and medical facilitation company specialising in Gulf travelers from Saudi Arabia, UAE, and Kuwait. Services include VIP travel, dental tourism, medical coordination, Nile cruises, wellness retreats, cultural tours, and investment tourism.",
+      "description": "Hayakom for Healthcare Solutions and Logistic Services (trading as Hayakkom) is an Egyptian single-person limited liability company registered under Egyptian Law No. 159 of 1981, Commercial Register 49973. Registered activities: administrative and marketing consultancy for medical services; organising appointment and booking procedures with hospitals and medical centres; organising medical conferences, exhibitions and events; electronic marketing; and logistics services. Hayakkom is not a healthcare provider and does not practise insurance or brokerage activity.",
       "telephone": ["+201031567949", "+201031223593", "+966570909412", "+971506295380"],
       "email": "support@hayakkom.com",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "Block 2, District 16",
-        "addressLocality": "Sheikh Zayed",
+        "streetAddress": "District 16, Neighbourhood 2",
+        "addressLocality": "Sheikh Zayed City",
         "addressRegion": "Giza",
         "addressCountry": "EG"
       },
@@ -80,13 +87,20 @@
         {"@type": "Language", "name": "English"}
       ],
       "priceRange": "$$",
+      "legalName": "Hayakom for Healthcare Solutions and Logistic Services",
+      "identifier": [
+        {"@type": "PropertyValue", "name": "Commercial Register", "value": "49973"},
+        {"@type": "PropertyValue", "name": "Unified Commercial Registry", "value": "11070-01000-49973"}
+      ],
+      "foundingDate": "2025-08-11",
+      "disambiguatingDescription": "Administrative and marketing consultancy, medical appointment and booking coordination, medical conference and event organisation, and logistics services. Not a hospital, clinic or insurer.",
       "openingHours": ["Sa-Th 09:00-21:00", "Fr 14:00-21:00"],
       "sameAs": [
         "https://www.facebook.com/people/Hayakom/61564909796423/",
         "https://www.instagram.com/ctownchatteregy/",
         "https://www.youtube.com/watch?v=zQYVQ-IjQWg"
       ],
-      "foundingLocation": "Sheikh Zayed, Giza, Egypt",
+      "foundingLocation": "Sheikh Zayed City, Giza, Egypt",
       "knowsLanguage": ["ar", "en"],
       "slogan": "Your gateway to extraordinary Egypt",
       "hasOfferCatalog": {
@@ -97,7 +111,9 @@
           {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Dental Tourism Egypt", "description": "Arranging dental implants, veneers, cosmetic dentistry, and dental packages in Cairo"}},
           {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "VIP Luxury Tours Egypt", "description": "Bespoke private tours, first-class service, and exclusive access across Egypt"}},
           {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Nile Cruises", "description": "Luxury Nile cruise coordination from Cairo, Luxor to Aswan"}},
-          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Wellness and Rehabilitation", "description": "Post-operative recovery, wellness retreats, and holistic healing packages in Egypt"}}
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Wellness and Rehabilitation", "description": "Post-operative recovery, wellness retreats, and holistic healing packages in Egypt"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Medical Conference and Event Organisation", "description": "Organising medical conferences, seminars, exhibitions and corporate medical events in Egypt, including venue sourcing, delegate logistics, interpretation and on-site coordination"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Administrative and Marketing Consultancy for Medical Services", "description": "Administrative consultancy, marketing consultancy and electronic marketing for hospitals, clinics and medical centres"}}
         ]
       }
     }
@@ -138,7 +154,17 @@
         {
           "@type": "Question",
           "name": "What is Hayakkom?",
-          "acceptedAnswer": {"@type": "Answer", "text": "Hayakkom (حياكم) is a licensed Egyptian company that coordinates tourism and medical care for Gulf travelers from Saudi Arabia, UAE, and Kuwait. We arrange medical tourism, dental treatment, VIP tours, Nile cruises, wellness retreats, and more."}
+          "acceptedAnswer": {"@type": "Answer", "text": "Hayakkom is the trading name of Hayakom for Healthcare Solutions and Logistic Services, an Egyptian single-person limited liability company (Commercial Register 49973). We provide administrative and marketing consultancy for medical services, coordinate appointments and bookings with hospitals and medical centres, organise medical conferences and events, and provide logistics support for travellers from Saudi Arabia, the UAE and Kuwait. Travel and tour arrangements are fulfilled through licensed Egyptian tour operators."}
+        },
+        {
+          "@type": "Question",
+          "name": "Does Hayakkom organise medical conferences and events in Egypt?",
+          "acceptedAnswer": {"@type": "Answer", "text": "Yes. Organising medical conferences, seminars, exhibitions and corporate medical events is a registered activity of Hayakkom under Commercial Register 49973. We handle venue sourcing, delegate registration, speaker logistics, Arabic and English simultaneous interpretation, catering, transfers, accommodation blocks and on-site coordination."}
+        },
+        {
+          "@type": "Question",
+          "name": "هل تنظّم حياكم المؤتمرات والفعاليات الطبية في مصر؟",
+          "acceptedAnswer": {"@type": "Answer", "text": "نعم. تنظيم المؤتمرات والندوات والمعارض والفعاليات الطبية نشاط مسجّل لحياكم في السجل التجاري رقم 49973. نتولى اختيار القاعات وتسجيل المشاركين ولوجستيات المتحدثين والترجمة الفورية عربي وإنجليزي والضيافة والتنقلات والإقامة والتنسيق في الموقع."}
         },
         {
           "@type": "Question",
@@ -153,7 +179,7 @@
         {
           "@type": "Question",
           "name": "Is Hayakkom licensed?",
-          "acceptedAnswer": {"@type": "Answer", "text": "Yes. Hayakkom is registered under Egyptian Law No. 159 of 1981. Commercial Register: 49973. Unified Registry No: 199730100011070."}
+          "acceptedAnswer": {"@type": "Answer", "text": "Yes. Hayakom for Healthcare Solutions and Logistic Services is registered under Egyptian Law No. 159 of 1981 as a single-person limited liability company, Commercial Register 49973, Unified Commercial Registry 11070-01000-49973, registered at Sheikh Zayed City, District 16, Neighbourhood 2, Giza. Registered activities include administrative and marketing consultancy for medical services, organising booking procedures with hospitals and medical centres, organising medical conferences and events, electronic marketing, and logistics services. Hayakkom does not practise insurance or brokerage activity."}
         },
         {
           "@type": "Question",
@@ -179,6 +205,7 @@
     }
     </script>
 
+
     <!-- GOOGLE ADS -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16686203605"></script>
     <script>
@@ -192,9 +219,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js"></script>
-    <script type="module" crossorigin src="/assets/index-FCxn59Cq.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DoRH2E1U.css">
+    <script defer src="https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js"></script>
+    <script type="module" crossorigin src="/assets/index-CTlFAt8T.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Kp_5BtwN.css">
   </head>
   <body>
     <div id="root"></div>
