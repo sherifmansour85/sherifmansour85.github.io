@@ -1,0 +1,9 @@
+# RFC 9116 security disclosure policy for hayakkom.com
+Contact: mailto:support@hayakkom.com
+Expires: 2027-09-18T00:00:00.000Z
+Preferred-Languages: en, ar
+Canonical: https://www.hayakkom.com/.well-known/security.txt
+
+# Scope: the static site at hayakkom.com only. Enquiry forms and the AI
+# assistant are hosted by Jotform; report issues in those to Jotform directly.
+# This site holds no database, no user accounts and no server-side code.
