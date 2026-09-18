@@ -1,0 +1,1 @@
+function e(e,t=800){if(!e)return e;let n=e.replace(/^https?:\/\//,``);return`https://images.weserv.nl/?url=${encodeURIComponent(n)}&w=${t}&q=75&output=webp`}export{e as t};
