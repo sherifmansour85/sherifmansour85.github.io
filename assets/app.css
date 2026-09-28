@@ -124,3 +124,17 @@ body.form-active .fab-stack:hover,body.form-active .to-top:hover{opacity:1}
   color:#FFFFFF !important;border-color:rgba(255,255,255,.55) !important;background:transparent !important}
 .hero .btn-outline:hover,.hero-cta .btn-outline:hover{
   background:rgba(255,255,255,.14) !important;border-color:#FFFFFF !important;color:#FFFFFF !important}
+
+/* AI panel: 380px was too narrow to hold a conversation in. Wider on desktop,
+   taller, and it keeps the full-screen behaviour on phones. */
+.ai-panel{width:min(460px, calc(100vw - 40px)) !important;
+  height:min(680px, calc(100vh - 150px)) !important}
+@media(min-width:1280px){
+  .ai-panel{width:min(520px, calc(100vw - 60px)) !important;
+    height:min(740px, calc(100vh - 140px)) !important}
+}
+@media(max-width:600px){
+  .ai-panel{width:100% !important;max-width:100% !important;height:100% !important;
+    border-radius:0 !important;inset:0 !important}
+}
+.ai-panel iframe{min-height:0}
