@@ -138,3 +138,14 @@ body.form-active .fab-stack:hover,body.form-active .to-top:hover{opacity:1}
     border-radius:0 !important;inset:0 !important}
 }
 .ai-panel iframe{min-height:0}
+
+/* Regulatory notice — SCMR Decision 9/2025 requires an advertisement for health
+   services to carry the licence number and to avoid describing treatment
+   methods. This states the coordination boundary and the commercial register. */
+.hk-compliance{background:var(--sand2);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px 18px;margin:28px 0 8px;font-size:11.5px;line-height:1.75;color:var(--muted)}
+.hk-compliance p{margin:0}
+
+/* Tourism notice sits above the packages so the attribution is read before the
+   prices, not after them. */
+.hk-tourism{margin:0 0 22px;background:#FDF6E8;border-color:var(--gold)}
