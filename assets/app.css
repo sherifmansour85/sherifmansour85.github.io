@@ -204,3 +204,9 @@ footer .footer-bottom>.footer-legal:last-child a:hover{text-decoration:underline
    the prerendered HTML outside it. Hide the outer copy only where a React root
    exists; the Arabic pages have none and keep theirs. */
 #root ~ .fab-stack{display:none!important}
+
+@media(max-width:600px){
+  .fab-stack{bottom:84px!important;right:14px!important;gap:10px!important}
+  .fab,.fab-wa{width:54px!important;height:54px!important}
+  .fab-wa svg{width:27px;height:27px}
+}

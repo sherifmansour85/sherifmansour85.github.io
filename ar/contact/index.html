@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="build" content="2026-10-05-0307">
+<meta name="build" content="2026-10-05-0315">
 <title>تواصل معنا — حياكم | تنسيق العلاج في مصر</title>
 <meta name="description" content="تواصل مع حياكم لتنسيق رحلتك العلاجية إلى مصر. واتساب ومكالمات من السعودية والإمارات ومصر.">
 <meta name="keywords" content="تواصل حياكم، حجز علاج في مصر، استشارة سياحة علاجية">
@@ -255,11 +255,47 @@ footer .footer-legal-links{text-align:right}
    the prerendered HTML outside it. Hide the outer copy only where a React root
    exists; the Arabic pages have none and keep theirs. */
 #root ~ .fab-stack{display:none!important}
+
+/* Mobile: the Arabic pages had no hamburger, so the nav wrapped into a long
+   list down the screen. Collapse it behind a button as the English site does. */
+.arburger{display:none;background:none;border:none;cursor:pointer;padding:8px;
+  flex-direction:column;gap:5px;width:40px;height:40px;align-items:center;justify-content:center}
+.arburger span{display:block;width:22px;height:2px;background:var(--dark,#1A1610);border-radius:2px;transition:.2s}
+@media(max-width:900px){
+  .arburger{display:flex}
+  .arnav-in{flex-wrap:nowrap;gap:10px;justify-content:space-between}
+  .arlinks{position:fixed;inset:64px 0 auto 0;background:#FAF7F1;
+    border-bottom:1px solid var(--border,#E3DACA);box-shadow:0 14px 30px rgba(26,22,16,.14);
+    max-height:calc(100svh - 64px);overflow-y:auto;padding:10px 5% 18px;
+    display:none;z-index:300}
+  .arlinks.open{display:block}
+  .arlinks ul.nav-links{flex-direction:column;align-items:stretch;gap:0}
+  .arlinks ul.nav-links>li{width:100%;border-bottom:1px solid rgba(227,218,202,.7)}
+  .arlinks ul.nav-links>li>a,.arlinks .nav-drop-btn{display:block;width:100%;
+    padding:13px 4px!important;font-size:15px!important;text-align:right}
+  .arlinks .nav-drop-btn{justify-content:space-between}
+  /* submenus sit inline on mobile rather than floating */
+  .arlinks .nav-sub{position:static!important;opacity:1!important;visibility:visible!important;
+    transform:none!important;box-shadow:none!important;border:none!important;
+    background:transparent!important;padding:0 14px 8px!important;min-width:0!important;
+    max-height:0;overflow:hidden;transition:max-height .25s ease}
+  .arlinks .nav-drop.open .nav-sub{max-height:600px}
+  .arlinks .nav-sub a{padding:10px 8px!important;font-size:14px!important;color:var(--muted,#6A5C4C)!important}
+  .arlinks .nav-drop::after{display:none}
+  .arlang{order:3;font-size:12px!important;padding:5px 11px!important}
+  .arlogo{font-size:21px!important}
+}
+
+@media(max-width:600px){
+  .fab-stack{bottom:84px!important;right:14px!important;gap:10px!important}
+  .fab,.fab-wa{width:54px!important;height:54px!important}
+  .fab-wa svg{width:27px;height:27px}
+}
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "MedicalOrganization", "name": "Dar Al Fouad Hospital – 6th of October", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group", "url": "https://alameda-hc.com"}, "address": {"@type": "PostalAddress", "addressLocality": "6th of October City", "addressCountry": "EG"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "First hospital in Egypt to achieve JCI accreditation (2005), re-accredited for the sixth time in 2020, per Alameda Healthcare Group's published material. Cleveland Clinic Foundation partner."}, {"@type": "MedicalOrganization", "name": "Dar Al Fouad Hospital – Nasr City", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group"}, "address": {"@type": "PostalAddress", "addressLocality": "Nasr City, Cairo", "addressCountry": "EG"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "JCI accredited March 2022, per the group's published material."}, {"@type": "MedicalOrganization", "name": "As-Salam International Hospital – Maadi", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group"}, "address": {"@type": "PostalAddress", "addressLocality": "Maadi, Cairo", "addressCountry": "EG"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "Fourth JCI accreditation awarded September 2024, per the group's published material."}, {"@type": "MedicalOrganization", "name": "As-Salam International Hospital – New Cairo", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group"}, "address": {"@type": "PostalAddress", "addressLocality": "New Cairo", "addressCountry": "EG"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "JCI accredited within two years of opening, per the group's published material."}, {"@type": "MedicalOrganization", "name": "Andalusia Hospital", "parentOrganization": {"@type": "Organization", "name": "Andalusia Group for Medical Services", "url": "https://www.andalusiagroup.net", "foundingDate": "1984", "foundingLocation": {"@type": "Place", "name": "Jeddah, Saudi Arabia"}}, "address": {"@type": "PostalAddress", "addressCountry": "EG"}, "description": "Part of Andalusia Group, founded in Jeddah in 1984 and operating in Saudi Arabia and Egypt. Hayakkom is authorised to represent its services to Gulf clients under a letter of intent. No accreditation is claimed."}, {"@type": "MedicalOrganization", "name": "Contours Obesity Solutions — Dr Ahmed Shabana", "medicalSpecialty": "Bariatric", "address": {"@type": "PostalAddress", "addressCountry": "EG"}, "employee": {"@type": "Physician", "name": "Dr Ahmed Shabana", "medicalSpecialty": "Bariatric", "description": "Consultant in laparoscopic and bariatric surgery, per the practice's own letterhead."}, "description": "Hayakkom is authorised to represent its services to Gulf clients under a letter of intent. No accreditation is claimed."}, {"@type": "MedicalClinic", "name": "Care Clinic — عيادات عناية التخصصية", "address": {"@type": "PostalAddress", "streetAddress": "27 Oraby Street, Downtown", "addressLocality": "Cairo", "addressCountry": "EG"}, "description": "Hayakkom is authorised to represent its services to Gulf clients under a letter of intent. No accreditation is claimed."}]}</script>
 </head>
 <body>
-<header class="arnav"><div class="arnav-in"><a class="arlogo" href="/ar/"><span>Hayak</span>kom</a><nav class="arlinks"><ul class="nav-links"><li class="nav-drop"><button class="nav-drop-btn" type="button" aria-haspopup="true">العلاجات<span class="nav-caret" aria-hidden="true">&#9662;</span></button><ul class="nav-sub"><li><a href="/ar/dental/">علاج الأسنان</a></li><li><a href="/ar/hair-transplant/">زراعة الشعر</a></li><li><a href="/ar/weight-loss/">جراحات التخسيس</a></li><li><a href="/ar/cosmetic-surgery/">جراحات التجميل</a></li><li><a href="/ar/medical/">السياحة العلاجية</a></li><li><a href="/ar/wellness/">الاستشفاء والتعافي</a></li><li><a href="/ar/services/">كل الخدمات</a></li></ul></li><li class="nav-drop"><button class="nav-drop-btn" type="button" aria-haspopup="true">الخدمات والباقات<span class="nav-caret" aria-hidden="true">&#9662;</span></button><ul class="nav-sub"><li><a href="/ar/packages/">الإقامة والتنقلات</a></li><li><a href="/ar/vip-trip/">رحلات VIP</a></li><li><a href="/ar/nile-cruise/">الرحلات النيلية</a></li><li><a href="/ar/tourists/">السياح في مصر</a></li><li><a href="/ar/conferences/">المؤتمرات الطبية</a></li><li><a href="/ar/educational/">الدراسة في مصر</a></li><li><a href="/ar/partners/">كن شريكاً</a></li></ul></li><li><a href="/ar/saudi-arabia/">للسعوديين</a></li><li><a href="/ar/about/">من نحن</a><a href="/ar/who-we-are/">ما هي حياكم؟</a><a href="/ar/travel-guide/">دليل السفر للعلاج</a></li><li><a href="/ar/contact/">تواصل معنا</a></li></ul></nav><a class="arlang" href="/contact/?lang=en">English</a></div></header>
+<header class="arnav"><div class="arnav-in"><button class="arburger" id="arBurger" type="button" aria-label="القائمة" aria-expanded="false"><span></span><span></span><span></span></button><a class="arlogo" href="/ar/"><span>Hayak</span>kom</a><nav class="arlinks"><ul class="nav-links"><li class="nav-drop"><button class="nav-drop-btn" type="button" aria-haspopup="true">العلاجات<span class="nav-caret" aria-hidden="true">&#9662;</span></button><ul class="nav-sub"><li><a href="/ar/dental/">علاج الأسنان</a></li><li><a href="/ar/hair-transplant/">زراعة الشعر</a></li><li><a href="/ar/weight-loss/">جراحات التخسيس</a></li><li><a href="/ar/cosmetic-surgery/">جراحات التجميل</a></li><li><a href="/ar/medical/">السياحة العلاجية</a></li><li><a href="/ar/wellness/">الاستشفاء والتعافي</a></li><li><a href="/ar/services/">كل الخدمات</a></li></ul></li><li class="nav-drop"><button class="nav-drop-btn" type="button" aria-haspopup="true">الخدمات والباقات<span class="nav-caret" aria-hidden="true">&#9662;</span></button><ul class="nav-sub"><li><a href="/ar/packages/">الإقامة والتنقلات</a></li><li><a href="/ar/vip-trip/">رحلات VIP</a></li><li><a href="/ar/nile-cruise/">الرحلات النيلية</a></li><li><a href="/ar/tourists/">السياح في مصر</a></li><li><a href="/ar/conferences/">المؤتمرات الطبية</a></li><li><a href="/ar/educational/">الدراسة في مصر</a></li><li><a href="/ar/partners/">كن شريكاً</a></li></ul></li><li><a href="/ar/saudi-arabia/">للسعوديين</a></li><li><a href="/ar/about/">من نحن</a><a href="/ar/who-we-are/">ما هي حياكم؟</a><a href="/ar/travel-guide/">دليل السفر للعلاج</a></li><li><a href="/ar/contact/">تواصل معنا</a></li></ul></nav><a class="arlang" href="/contact/?lang=en">English</a></div></header>
 <main class="arwrap">
 
 <div class="page-hero" style="background-image: url(&quot;https://images.weserv.nl/?url=de.cdn-website.com%2F570f220f41214a5784b09af2ac39327a%2Fdms3rep%2Fmulti%2Fpexels-photo-262786-b2855781.jpeg&amp;w=1920&amp;q=82&amp;output=webp&quot;);"><div class="page-hero-content"><div class="sec-eyebrow" style="margin-bottom: 14px;"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-text">تواصل معنا</span></div><h1>تواصل معنا</h1><p class="page-hero-sub">فريقنا ثنائي اللغة جاهز لتخطيط تجربتك المثالية في مصر.</p></div></div><div style="background: rgb(26, 22, 16); padding: 13px 5%; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; position: relative; z-index: 1;"><span style="font-size: 13.5px; color: rgba(255, 255, 255, 0.75); font-weight: 400;">⚡ أسرع طريقة — واتساب، نرد في دقائق</span><a href="https://wa.me/+201031567949" style="background: rgb(37, 211, 102); color: rgb(255, 255, 255); padding: 9px 22px; border-radius: 8px; font-weight: 700; font-size: 13.5px; text-decoration: none; white-space: nowrap;">📱 WhatsApp</a></div><section class="section section-sand" style="position: relative; z-index: 1;"><div style="margin-bottom: 48px;"><div class="sec-eyebrow" style="margin-bottom: 16px;"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-text">معلومات التواصل</span></div><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px;"><div class="contact-card" style="border-color: rgba(37, 211, 102, 0.25); background: rgba(37, 211, 102, 0.04);"><span class="contact-card-icon">📱</span><div style="min-width: 0px;"><div class="contact-card-label">واتساب</div><a href="https://wa.me/+201031567949" class="contact-card-value" style="color: rgb(22, 163, 74);">+20 103 156 7949</a></div></div><div class="contact-card"><span class="contact-card-icon">✉️</span><div style="min-width: 0px;"><div class="contact-card-label">البريد الإلكتروني</div><a href="mailto:support@hayakkom.com" class="contact-card-value">support@hayakkom.com</a></div></div><div class="contact-card"><span class="contact-card-icon">📞</span><div style="min-width: 0px;"><div class="contact-card-label">مصر</div><a href="tel:+201000100529" class="contact-card-value">+20 100 010 0529</a></div></div><div class="contact-card"><span class="contact-card-icon">📞</span><div style="min-width: 0px;"><div class="contact-card-label">السعودية</div><a href="tel:+966570909412" class="contact-card-value">+966 570 909 412</a></div></div><div class="contact-card"><span class="contact-card-icon">📞</span><div style="min-width: 0px;"><div class="contact-card-label">الإمارات</div><a href="tel:+971505306260" class="contact-card-value">+971 505 306 260</a></div></div><div class="contact-card"><span class="contact-card-icon">📍</span><div style="min-width: 0px;"><div class="contact-card-label">العنوان</div><div class="contact-card-value" style="cursor: default;">الشيخ زايد، الحي 16، الجيزة</div></div></div></div></div><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 52px;"><div class="hours-card"><div class="hours-title">🕐 ساعات العمل</div><div class="hours-text" style="white-space: pre-line;">السبت – الخميس: 9 صباحاً – 9 مساءً (توقيت مصر)
@@ -298,4 +334,29 @@ footer .footer-legal-links{text-align:right}
 </div>
 
 <script src='https://cdn.jotfor.ms/agent/embedjs/019568594d0a79c6a0dc6cb7237c86324108/embed.js'></script>
+
+<script>
+(function(){
+  var burger=document.getElementById('arBurger'), nav=document.querySelector('.arlinks');
+  if(!burger||!nav) return;
+  burger.addEventListener('click', function(){
+    var open=nav.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open?'true':'false');
+  });
+  /* on mobile the dropdowns expand in place instead of hovering */
+  nav.querySelectorAll('.nav-drop-btn').forEach(function(b){
+    b.addEventListener('click', function(e){
+      if(window.matchMedia('(max-width:900px)').matches){
+        e.preventDefault();
+        b.parentElement.classList.toggle('open');
+      }
+    });
+  });
+  document.addEventListener('click', function(e){
+    if(!nav.contains(e.target) && !burger.contains(e.target)){
+      nav.classList.remove('open'); burger.setAttribute('aria-expanded','false');
+    }
+  });
+})();
+</script>
 </body></html>
