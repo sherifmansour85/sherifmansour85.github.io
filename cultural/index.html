@@ -19,7 +19,7 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="theme-color" content="#1A1610">
-    <meta name="build" content="2026-10-05-0257">
+    <meta name="build" content="2026-10-05-0307">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -299,6 +299,32 @@ footer .footer-bottom>.footer-legal:last-child a:hover{text-decoration:underline
    own launcher. The React button and panel are hidden so there is only one. */
 .fab-ai{display:none!important}
 .ai-panel{display:none!important}
+
+/* Floating controls — WhatsApp sized and positioned to match Jotform's own
+   launcher, stacked directly above it on the same side. */
+.fab-stack{position:fixed!important;bottom:96px!important;
+  inset-inline-start:auto!important;right:24px!important;left:auto!important;
+  z-index:998;display:flex!important;flex-direction:column!important;
+  align-items:center!important;gap:14px!important}
+[dir="rtl"] .fab-stack{right:24px!important;left:auto!important;flex-direction:column!important}
+.fab,.fab-wa{width:64px!important;height:64px!important;border-radius:50%!important;
+  border:none;padding:0;cursor:pointer;align-items:center;
+  justify-content:center;overflow:hidden;box-shadow:0 6px 20px rgba(26,22,16,.26);
+  transition:transform .2s}
+.fab-wa{display:flex!important}
+.fab-ai{display:none!important}
+.fab:hover,.fab-wa:hover{transform:translateY(-2px)}
+.fab-wa svg{width:32px;height:32px}
+@media(max-width:600px){
+  .fab-stack{bottom:88px!important;right:16px!important}
+  .fab,.fab-wa{width:58px!important;height:58px!important}
+  .fab-wa svg{width:29px;height:29px}
+}
+
+/* English pages render these twice — once by React inside #root and once in
+   the prerendered HTML outside it. Hide the outer copy only where a React root
+   exists; the Arabic pages have none and keep theirs. */
+#root ~ .fab-stack{display:none!important}
 </style>
   <script id="ld-page" type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.hayakkom.com/"},{"@type":"ListItem","position":2,"name":"Cultural Tourism Egypt","item":"https://www.hayakkom.com/cultural"}]},{"@type":"WebPage","@id":"https://www.hayakkom.com/cultural","url":"https://www.hayakkom.com/cultural","name":"Cultural Tourism Egypt — Pyramids, Luxor, Aswan | Hayakkom","description":"Expertly guided cultural tours to the Pyramids, Luxor, Aswan and Cairo for Gulf travelers.","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Hayakkom","url":"https://www.hayakkom.com"},"about":{"@type":"Organization","name":"Hayakkom","url":"https://www.hayakkom.com","logo":"https://www.hayakkom.com/assets/logo.png","telephone":"+201031567949","email":"support@hayakkom.com"}},{"@type":"Service","name":"Cultural Tourism Egypt — Pyramids, Luxor, Aswan","description":"Expertly guided cultural tours to the Pyramids, Luxor, Aswan and Cairo for Gulf travelers.","url":"https://www.hayakkom.com/cultural","provider":{"@type":"ProfessionalService","name":"Hayakkom","legalName":"Hayakom for Healthcare Solutions and Logistic Services","url":"https://www.hayakkom.com","telephone":"+201031567949"},"areaServed":["Saudi Arabia","United Arab Emirates","Kuwait","Egypt"],"availableLanguage":["Arabic","English"]}]}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16686203605"></script>
