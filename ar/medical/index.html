@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="build" content="2026-10-04-2316">
+<meta name="build" content="2026-10-04-2357">
 <title>السياحة العلاجية في مصر ٢٠٢٦ — التكلفة والتنسيق | حياكم</title>
 <meta name="description" content="السياحة العلاجية في مصر لمرضى الخليج: مراجعة السجلات قبل السفر، وتنسيق المواعيد والإقامة والتنقلات والمتابعة. شركة مصرية مرخّصة، سجل تجاري 49973.">
 <meta name="keywords" content="السياحة العلاجية في مصر، سياحة علاجية في مصر، العلاج في مصر، شركات سياحة علاجية في مصر، تكلفة العلاج في مصر">
@@ -43,10 +43,70 @@ body{font-family:var(--arfont);direction:rtl;text-align:right;margin:0;backgroun
 .hk-tourism{background:#FDF6E8;border-color:var(--gold,#B8922A)}
 img{max-width:100%;height:auto}
 @media(max-width:700px){.arlinks{gap:2px}.arlinks a{font-size:12px;padding:5px 7px}}
+
+/* Arabic pages — refinement pass.
+   The ten-item menu crowded the header and the notice at the top broke the
+   first impression. Five items, notice at the foot, and more generous spacing. */
+.arnav-in{padding:14px 5%!important;gap:22px!important}
+.arlogo{font-size:24px!important;letter-spacing:-.3px}
+.arlinks{gap:2px!important;justify-content:flex-start}
+.arlinks a{font-size:13.5px!important;padding:7px 13px!important;font-weight:500;transition:all .18s}
+.arlinks a:hover{background:rgba(184,146,42,.1)!important}
+.arlang{font-size:12.5px!important;letter-spacing:.3px}
+main.arwrap{padding-top:34px!important}
+main.arwrap h1{font-family:Georgia,'Times New Roman',serif!important;
+  font-size:clamp(26px,4.4vw,40px)!important;line-height:1.35!important;
+  color:#1A1610!important;margin:0 0 14px!important;font-weight:700}
+main.arwrap h2{font-family:Georgia,'Times New Roman',serif!important;
+  font-size:clamp(20px,2.8vw,27px)!important;color:#1A1610!important;
+  margin:34px 0 12px!important;line-height:1.4;font-weight:700}
+main.arwrap h3{font-size:17px!important;color:#1A1610!important;margin:18px 0 6px!important}
+main.arwrap p{font-size:15.5px!important;line-height:2!important;color:#3D3020!important;
+  max-width:760px;margin:0 0 12px!important}
+main.arwrap ul{line-height:2.1!important}
+main.arwrap li{font-size:15.5px;color:#3D3020}
+/* the notices: quieter, at the foot where they belong */
+.hk-compliance{font-size:11px!important;line-height:1.8!important;opacity:.82;
+  margin-top:34px!important;padding:14px 16px!important}
+.hk-compliance p{margin:0!important;font-size:11px!important;line-height:1.8!important}
+.hk-tourism{margin-top:20px!important}
+@media(max-width:700px){
+  .arlinks a{font-size:12.5px!important;padding:6px 9px!important}
+  main.arwrap h1{font-size:25px!important}
+}
+
+/* The page hero carries a dark image behind it, so its heading must stay light.
+   The refinement pass above set all h1s dark, which made it unreadable there. */
+main.arwrap .page-hero h1,main.arwrap .page-hero-content h1,.arwrap .page-hero h1{color:#FFFFFF!important}
+main.arwrap .page-hero .page-hero-sub,main.arwrap .page-hero-content .page-hero-sub,.arwrap .page-hero p{color:rgba(255,255,255,.92)!important}
+.page-hero .sec-eyebrow-text{color:#E8C877!important}
+.page-hero .sec-eyebrow-line{background:rgba(232,200,119,.55)!important}
+/* strengthen the scrim so text reads whatever the photo does */
+.page-hero::after{content:'';position:absolute;inset:0;z-index:0;
+  background:linear-gradient(to bottom,rgba(16,13,9,.45),rgba(16,13,9,.72))}
+.page-hero>*{position:relative;z-index:1}
+
+/* Footer: reuse the English structure and styling, corrected for RTL so the
+   columns read right-to-left and text aligns correctly. */
+footer{direction:rtl;text-align:right}
+footer .footer-grid{direction:rtl}
+footer .footer-col{text-align:right}
+footer .footer-head{text-align:right}
+footer .footer-logo{font-family:Georgia,'Times New Roman',serif;direction:ltr;text-align:right;unicode-bidi:isolate}
+footer .footer-tagline{text-align:right}
+footer .footer-desc{text-align:right;line-height:1.95}
+footer .footer-socials{justify-content:flex-start}
+footer .footer-bottom{text-align:center}
+footer .footer-legal{text-align:center;line-height:1.9}
+footer a{text-decoration:none}
+@media(max-width:860px){
+  footer .footer-grid{grid-template-columns:1fr!important;gap:26px}
+  footer .footer-col{margin-top:4px}
+}
 </style>
 </head>
 <body>
-<header class="arnav"><div class="arnav-in"><a class="arlogo" href="/ar/"><span>حياك</span>كم</a><nav class="arlinks"><a href="/ar/medical/">السياحة العلاجية</a><a href="/ar/dental/">علاج الأسنان</a><a href="/ar/hair-transplant/">زراعة الشعر</a><a href="/ar/weight-loss/">جراحات التخسيس</a><a href="/ar/cosmetic-surgery/">جراحات التجميل</a><a href="/ar/wellness/">الاستشفاء</a><a href="/ar/packages/">الإقامة والتنقلات</a><a href="/ar/saudi-arabia/">للسعوديين</a><a href="/ar/about/">من نحن</a><a href="/ar/contact/">تواصل معنا</a></nav><a class="arlang" href="/medical/">English</a></div></header>
+<header class="arnav"><div class="arnav-in"><a class="arlogo" href="/ar/"><span>Hayak</span>kom</a><nav class="arlinks"><a href="/ar/dental/">الأسنان</a><a href="/ar/hair-transplant/">زراعة الشعر</a><a href="/ar/medical/">السياحة العلاجية</a><a href="/ar/saudi-arabia/">للسعوديين</a><a href="/ar/contact/">تواصل معنا</a></nav><a class="arlang" href="/medical/">English</a></div></header>
 <main class="arwrap">
 
 <div class="page-hero" style="background-image: url(&quot;https://images.weserv.nl/?url=de.cdn-website.com%2Fmd%2Fpexels%2Fdms3rep%2Fmulti%2Fpexels-photo-4021779.jpeg&amp;w=1000&amp;q=75&amp;output=webp&quot;);"><div class="page-hero-content"><div class="sec-eyebrow" style="margin-bottom: 14px;"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-text">السياحة العلاجية</span></div><h1>السياحة العلاجية في مصر</h1><p class="page-hero-sub">تنسيق رعاية صحية عالمي لمرضى الخليج — أطباء مرخّصون ومستشفيات متميزة ودعم لوجستي كامل من الخليج إلى مصر.</p></div></div><section class="section section-sand"><div class="sp-grid"><div><div class="sp-body-section"><h2 class="sp-h">ما الذي ننسّقه</h2><p class="sp-p">نساعد مرضى الخليج في الوصول إلى أفضل المستشفيات والعيادات المتخصصة في مصر — من حجز الاستشارة الأولى إلى متابعة ما بعد العلاج.</p></div><div class="sp-body-section"><h2 class="sp-h">الخدمات المشمولة</h2><ul class="sp-list"><li>استشارات متخصصة</li><li>إجراءات طبية</li><li>حجوزات مستشفيات</li><li>تنقلات مطار وعيادة</li><li>إقامة</li><li>ترجمة</li><li>خدمات مرافق</li><li>تنسيق المتابعة</li></ul></div><div class="sp-body-section"><h2 class="sp-h">شركاؤنا الطبيون</h2><p class="sp-p">نتعاون مع أكثر المستشفيات الخاصة موثوقية: مستشفى السلام الدولي ودار الفؤاد وألاميدا للرعاية الصحية — جميعها معتمدة دولياً بطاقم ثنائي اللغة.</p></div><div class="sp-body-section"><h2 class="sp-h">لماذا مصر للعلاج الطبي؟</h2><p class="sp-p">تتميز مصر بأطباء متخصصين وجراحين مدرّبين دولياً ومرافق حديثة بتكاليف أقل بنسبة 40-70٪ من دول الخليج.</p></div><div class="sp-body-section"><h2 class="sp-h">كيف تعمل الخدمة</h2><p class="sp-p">١. تواصل معنا بحاجتك → ٢. نطابقك مع المتخصص → ٣. يُرتَّب الموعد → ٤. ننسّق سفرك وإقامتك → ٥. دعم كامل طوال العلاج والتعافي</p></div></div><div class="enquiry-box"><div class="enquiry-box-header"><div class="enquiry-box-title">أرسل استفسارك</div><div class="enquiry-box-sub">سيتواصل معك فريقنا خلال ساعات</div></div><div class="enquiry-box-body"><div class="eq-contact"><a href="https://wa.me/201031567949" class="eq-btn eq-btn-gold">📱 واتساب الآن</a><a class="eq-btn eq-btn-outline" href="/contact" data-discover="true">صفحة التواصل</a></div><div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border);"><a href="tel:+201000100529" class="eq-phone">📞 مصر: +20 100 010 0529</a><a href="tel:+966570909412" class="eq-phone">📞 السعودية: +966 570 909 412</a><a href="tel:+971505306260" class="eq-phone">📞 الإمارات: +971 505 306 260</a></div></div></div></div></section>
@@ -57,16 +117,22 @@ img{max-width:100%;height:auto}
 <p style="font-size:14px;color:#6A5C4C;margin:0 0 16px">أرفق تقاريرك وأشعتك ليراجعها مزوّد مرخّص قبل أن تحجز تذكرتك.</p>
 <iframe src="https://form.jotform.com/242362990310553" title="نموذج الاستفسار" loading="lazy" allow=""></iframe>
 </section>
-<footer class="arfoot"><div class="arfoot-in">
-<p><strong>حياكم لحلول الرعاية الصحية والخدمات اللوجستية</strong> (ش.ذ.م.م لشخص واحد)<br>
-سجل تجاري 49973 · تحت القانون 159 لسنة 1981 · مدينة الشيخ زايد، الحي 16، المجاورة 2، الجيزة، مصر</p>
-<p>واتساب: <a href="https://wa.me/201031567949">+20 103 156 7949</a> ·
-مصر: <a href="tel:+201000100529">+20 100 010 0529</a> ·
-السعودية: <a href="tel:+966570909412">+966 570 909 412</a> ·
-الإمارات: <a href="tel:+971505306260">+971 505 306 260</a><br>
-<a href="mailto:support@hayakkom.com">support@hayakkom.com</a></p>
-<p><a href="/ar/">الرئيسية</a> · <a href="/ar/about/">من نحن</a> · <a href="/ar/contact/">تواصل معنا</a> ·
-<a href="/privacy/">سياسة الخصوصية</a> · <a href="/terms/">الشروط والأحكام</a> ·
-<a href="/medical/">English</a></p>
+<footer><div class="footer-grid">
+<div><div class="footer-logo" aria-label="Hayakkom"><span class="gold">Hayak</span>kom</div>
+<div class="footer-tagline">تنسيق طبي · مؤتمرات · خدمات لوجستية</div>
+<p class="footer-desc">حياكم لحلول الرعاية الصحية والخدمات اللوجستية — شركة مصرية ذات مسؤولية محدودة لشخص واحد، مسجلة تحت القانون رقم 159 لسنة 1981. نقدّم الاستشارات الإدارية والتسويقية للخدمات الطبية، وتنظيم المواعيد والحجوزات مع المستشفيات والمراكز الطبية، وتنظيم المؤتمرات والفعاليات الطبية، والخدمات اللوجستية لمسافري الخليج.</p>
+<p class="footer-desc" style="margin-top:8px">حياكم ليست مستشفى ولا عيادة ولا جهة مقدِّمة للرعاية الصحية، ولا تمارس نشاط التأمين أو الوساطة. ويُقدَّم العلاج الطبي وعلاج الأسنان بالكامل من مزوّدين مصريين مرخّصين ومستقلين. وتُنفَّذ ترتيبات السفر والجولات والنقل عبر مشغّلين سياحيين مصريين مرخّصين. ولا تضمن حياكم نتائج العلاج.</p>
+<div class="footer-socials">
+<a href="https://wa.me/+201031567949" class="footer-social-btn" aria-label="WhatsApp">📱</a>
+<a href="mailto:support@hayakkom.com" class="footer-social-btn" aria-label="Email">✉️</a>
+<a href="https://www.facebook.com/people/Hayakom/61564909796423/" target="_blank" rel="noopener noreferrer" class="footer-social-btn" aria-label="Facebook">📘</a>
+</div></div>
+<div class="footer-col"><h3 class="footer-head">الخدمات</h3><a href="/ar/dental/">علاج الأسنان</a><a href="/ar/hair-transplant/">زراعة الشعر</a><a href="/ar/weight-loss/">جراحات التخسيس</a><a href="/ar/cosmetic-surgery/">جراحات التجميل</a><a href="/ar/medical/">السياحة العلاجية</a><a href="/ar/wellness/">الاستشفاء وإعادة التأهيل</a><a href="/ar/packages/">الإقامة والتنقلات</a><a href="/ar/conferences/">المؤتمرات الطبية</a><a href="/ar/vip-trip/">رحلات VIP</a><a href="/ar/nile-cruise/">الرحلات النيلية</a></div>
+<div class="footer-col"><h3 class="footer-head">الشركة</h3><a href="/ar/about/">من نحن</a><a href="/ar/saudi-arabia/">للمرضى السعوديين</a><a href="/ar/contact/">تواصل معنا</a><a href="/ar/partners/">كن شريكاً</a><a href="/ar/tourists/">السياح في مصر</a><a href="/ar/educational/">الدراسة في مصر</a><a href="/ar/services/">جميع الخدمات</a><a href="/privacy/">سياسة الخصوصية</a><a href="/terms/">الشروط والأحكام</a></div>
+</div>
+<div class="footer-bottom">
+<div class="footer-legal">حياكم لحلول الرعاية الصحية والخدمات اللوجستية (ش.ذ.م.م لشخص واحد) © 2026 · مدينة الشيخ زايد، الحي 16، المجاورة 2، الجيزة، مصر · سجل تجاري: 49973 · الرقم الموحد: 11070-01000-49973 · مسجلة تحت القانون المصري رقم 159 لسنة 1981</div>
+<div class="footer-legal footer-legal-links"><a href="/ar/">الرئيسية</a> · <a href="/privacy/">سياسة الخصوصية</a> · <a href="/terms/">الشروط والأحكام</a> · <a href="/medical/">English</a></div>
+<div class="footer-legal">Powered by <a href="https://www.instagram.com/ctownchatteregy" target="_blank" rel="noopener noreferrer" class="ctc-link">Cairo Town Chatter</a></div>
 </div></footer>
 </body></html>

@@ -531,4 +531,53 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/conferences/</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/conferences/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/conferences/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/conferences/"/>
+    <lastmod>2026-10-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/tourists/</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/tourists/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/tourists/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/tourists/"/>
+    <lastmod>2026-10-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/partners/</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/partners/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/partners/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/partners/"/>
+    <lastmod>2026-10-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/services/</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/services/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/services/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/services/"/>
+    <lastmod>2026-10-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/vip-trip/</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/vip-trip/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/vip-trip/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/vip-trip/"/>
+    <lastmod>2026-10-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/nile-cruise/</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/nile-cruise/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/nile-cruise/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/nile-cruise/"/>
+    <lastmod>2026-10-04</lastmod><changefreq>monthly</changefreq><priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/educational/</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/educational/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/educational/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/educational/"/>
+    <lastmod>2026-10-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority>
+  </url>
 </urlset>

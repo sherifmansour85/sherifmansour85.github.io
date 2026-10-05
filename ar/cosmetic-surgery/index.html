@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="build" content="2026-10-04-2316">
+<meta name="build" content="2026-10-04-2357">
 <title>أسعار عمليات التجميل في مصر ٢٠٢٦ — وكيف تختار بأمان | حياكم</title>
 <meta name="description" content="أسعار عمليات التجميل في مصر ٢٠٢٦، وكيف تتحقق من ترخيص الجرّاح قبل السفر. تنسيق كامل للرحلة مع مزوّدين مصريين مرخّصين لمرضى الخليج.">
 <meta name="keywords" content="عمليات التجميل في مصر، أسعار عمليات التجميل في مصر، عمليات التجميل الانف في مصر، تجميل الوجه في مصر، تجارب عمليات التجميل في مصر">
@@ -43,10 +43,70 @@ body{font-family:var(--arfont);direction:rtl;text-align:right;margin:0;backgroun
 .hk-tourism{background:#FDF6E8;border-color:var(--gold,#B8922A)}
 img{max-width:100%;height:auto}
 @media(max-width:700px){.arlinks{gap:2px}.arlinks a{font-size:12px;padding:5px 7px}}
+
+/* Arabic pages — refinement pass.
+   The ten-item menu crowded the header and the notice at the top broke the
+   first impression. Five items, notice at the foot, and more generous spacing. */
+.arnav-in{padding:14px 5%!important;gap:22px!important}
+.arlogo{font-size:24px!important;letter-spacing:-.3px}
+.arlinks{gap:2px!important;justify-content:flex-start}
+.arlinks a{font-size:13.5px!important;padding:7px 13px!important;font-weight:500;transition:all .18s}
+.arlinks a:hover{background:rgba(184,146,42,.1)!important}
+.arlang{font-size:12.5px!important;letter-spacing:.3px}
+main.arwrap{padding-top:34px!important}
+main.arwrap h1{font-family:Georgia,'Times New Roman',serif!important;
+  font-size:clamp(26px,4.4vw,40px)!important;line-height:1.35!important;
+  color:#1A1610!important;margin:0 0 14px!important;font-weight:700}
+main.arwrap h2{font-family:Georgia,'Times New Roman',serif!important;
+  font-size:clamp(20px,2.8vw,27px)!important;color:#1A1610!important;
+  margin:34px 0 12px!important;line-height:1.4;font-weight:700}
+main.arwrap h3{font-size:17px!important;color:#1A1610!important;margin:18px 0 6px!important}
+main.arwrap p{font-size:15.5px!important;line-height:2!important;color:#3D3020!important;
+  max-width:760px;margin:0 0 12px!important}
+main.arwrap ul{line-height:2.1!important}
+main.arwrap li{font-size:15.5px;color:#3D3020}
+/* the notices: quieter, at the foot where they belong */
+.hk-compliance{font-size:11px!important;line-height:1.8!important;opacity:.82;
+  margin-top:34px!important;padding:14px 16px!important}
+.hk-compliance p{margin:0!important;font-size:11px!important;line-height:1.8!important}
+.hk-tourism{margin-top:20px!important}
+@media(max-width:700px){
+  .arlinks a{font-size:12.5px!important;padding:6px 9px!important}
+  main.arwrap h1{font-size:25px!important}
+}
+
+/* The page hero carries a dark image behind it, so its heading must stay light.
+   The refinement pass above set all h1s dark, which made it unreadable there. */
+main.arwrap .page-hero h1,main.arwrap .page-hero-content h1,.arwrap .page-hero h1{color:#FFFFFF!important}
+main.arwrap .page-hero .page-hero-sub,main.arwrap .page-hero-content .page-hero-sub,.arwrap .page-hero p{color:rgba(255,255,255,.92)!important}
+.page-hero .sec-eyebrow-text{color:#E8C877!important}
+.page-hero .sec-eyebrow-line{background:rgba(232,200,119,.55)!important}
+/* strengthen the scrim so text reads whatever the photo does */
+.page-hero::after{content:'';position:absolute;inset:0;z-index:0;
+  background:linear-gradient(to bottom,rgba(16,13,9,.45),rgba(16,13,9,.72))}
+.page-hero>*{position:relative;z-index:1}
+
+/* Footer: reuse the English structure and styling, corrected for RTL so the
+   columns read right-to-left and text aligns correctly. */
+footer{direction:rtl;text-align:right}
+footer .footer-grid{direction:rtl}
+footer .footer-col{text-align:right}
+footer .footer-head{text-align:right}
+footer .footer-logo{font-family:Georgia,'Times New Roman',serif;direction:ltr;text-align:right;unicode-bidi:isolate}
+footer .footer-tagline{text-align:right}
+footer .footer-desc{text-align:right;line-height:1.95}
+footer .footer-socials{justify-content:flex-start}
+footer .footer-bottom{text-align:center}
+footer .footer-legal{text-align:center;line-height:1.9}
+footer a{text-decoration:none}
+@media(max-width:860px){
+  footer .footer-grid{grid-template-columns:1fr!important;gap:26px}
+  footer .footer-col{margin-top:4px}
+}
 </style>
 </head>
 <body>
-<header class="arnav"><div class="arnav-in"><a class="arlogo" href="/ar/"><span>حياك</span>كم</a><nav class="arlinks"><a href="/ar/medical/">السياحة العلاجية</a><a href="/ar/dental/">علاج الأسنان</a><a href="/ar/hair-transplant/">زراعة الشعر</a><a href="/ar/weight-loss/">جراحات التخسيس</a><a href="/ar/cosmetic-surgery/">جراحات التجميل</a><a href="/ar/wellness/">الاستشفاء</a><a href="/ar/packages/">الإقامة والتنقلات</a><a href="/ar/saudi-arabia/">للسعوديين</a><a href="/ar/about/">من نحن</a><a href="/ar/contact/">تواصل معنا</a></nav><a class="arlang" href="/cosmetic-surgery/">English</a></div></header>
+<header class="arnav"><div class="arnav-in"><a class="arlogo" href="/ar/"><span>Hayak</span>kom</a><nav class="arlinks"><a href="/ar/dental/">الأسنان</a><a href="/ar/hair-transplant/">زراعة الشعر</a><a href="/ar/medical/">السياحة العلاجية</a><a href="/ar/saudi-arabia/">للسعوديين</a><a href="/ar/contact/">تواصل معنا</a></nav><a class="arlang" href="/cosmetic-surgery/">English</a></div></header>
 <main class="arwrap">
 
 <div class="page-hero" style="background-image: url(&quot;https://images.weserv.nl/?url=de.cdn-website.com%2F570f220f41214a5784b09af2ac39327a%2Fdms3rep%2Fmulti%2Fpexels-photo-4426556.jpeg&amp;w=1000&amp;q=75&amp;output=webp&quot;);"><div class="page-hero-content"><div class="sec-eyebrow" style="margin-bottom: 14px;"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-text">جراحات التجميل</span></div><h1>عمليات التجميل في مصر — الأسعار وكيف تختار بأمان</h1><p class="page-hero-sub">تجميل الأنف ونحت الجسم وشفط الدهون وجراحات الصدر بالتنسيق مع جرّاحي تجميل مصريين مرخّصين.</p></div></div><section class="section section-sand"><div class="sp-grid"><div><div class="price-block"><div class="price-head"><div><div class="price-eyebrow">تكاليف تقديرية</div><h3 class="price-title">ما يمكن أن تتوقعه</h3></div><label class="price-cur"><span>العملة</span><select aria-label="اختر العملة"><option value="SAR">SAR — ريال سعودي</option><option value="AED">AED — درهم إماراتي</option><option value="KWD">KWD — دينار كويتي</option><option value="QAR">QAR — ريال قطري</option><option value="BHD">BHD — دينار بحريني</option><option value="OMR">OMR — ريال عماني</option><option value="USD">USD — دولار أمريكي</option><option value="EGP">EGP — جنيه مصري</option></select></label></div><div class="price-rows"><div class="price-row"><div class="price-row-main"><div class="price-proc">شفط الدهون / نحت الجسم</div><div class="price-unit">لمجموعة المناطق</div></div><div class="price-row-figure"><div class="price-from-label">التكلفة</div><div class="price-value price-on-request">بعد التقييم السريري</div><div class="price-stay">🗓 مدة الإقامة المقترحة: ٧–١٠ أيام</div></div><p class="price-note">تزيد التكلفة بعدد المناطق والتقنية. تقنيات VASER والليزر أعلى سعراً من الشفط التقليدي.</p></div><div class="price-row"><div class="price-row-main"><div class="price-proc">تجميل الأنف</div><div class="price-unit">الإجراء</div></div><div class="price-row-figure"><div class="price-from-label">النطاق السائد في مصر</div><div class="price-value">8,300 SAR – 13,900 SAR</div><div class="price-wide">النطاق الكامل المرصود: 5,600 SAR – 20,300 SAR</div><div class="price-stay">🗓 مدة الإقامة المقترحة: ٨–١٢ يوماً</div></div><p class="price-note">إعادة تجميل الأنف أعلى تكلفة من العملية الأولى. يمكن دمج تعديل الحاجز الأنفي لتحسين التنفس.</p></div><div class="price-row"><div class="price-row-main"><div class="price-proc">شد البطن</div><div class="price-unit">الإجراء</div></div><div class="price-row-figure"><div class="price-from-label">التكلفة</div><div class="price-value price-on-request">بعد التقييم السريري</div><div class="price-stay">🗓 مدة الإقامة المقترحة: ١٠–١٤ يوماً</div></div><p class="price-note">غالباً يُدمج مع شفط الدهون. مطلوب عادةً بعد فقدان وزن كبير أو بعد الحمل.</p></div><div class="price-row"><div class="price-row-main"><div class="price-proc">تجميل الصدر (تكبير / تصغير / شد)</div><div class="price-unit">الإجراء</div></div><div class="price-row-figure"><div class="price-from-label">التكلفة</div><div class="price-value price-on-request">بعد التقييم السريري</div><div class="price-stay">🗓 مدة الإقامة المقترحة: ٨–١٢ يوماً</div></div><p class="price-note">تقنيات الحشوات ونقل الدهون تختلف في السعر. تُقيَّم الملاءمة سريرياً.</p></div></div><div class="price-disclaimer"><div class="price-disclaimer-title">تقديري — وليس سعراً نهائياً</div><p>الأرقام أعلاه بيانات سوقية عامة منشورة من عيادات ومنصات مصرية، وليست عرض سعر من حياكم. تختلف الأسعار اختلافاً كبيراً حسب التقنية والمواد وخبرة الطبيب. سعرك الفعلي يُحدَّد بعد المراجعة السريرية.</p><p>القرارات الطبية النهائية، بما فيها مدى ملاءمة أي إجراء لك، تعود للطبيب المعالج المرخّص. حياكم تنسّق ولا تقدّم خدمات طبية ولا تضمن نتائج.</p></div><div class="price-cta"><a class="btn-gold" href="/contact" data-discover="true">احصل على تقدير التكلفة</a><a href="https://wa.me/201031567949" class="btn-outline">تحدّث مع منسّق</a></div><div class="price-sources"><strong>مصدر الأرقام: </strong>نطاقات مُجمَّعة من قوائم أسعار منشورة لعيادات ومستشفيات مصرية ومن منصات تجميع عروض العيادات، مراجَعة في 2026-09-15. هذه بيانات سوقية لأطراف ثالثة وليست عرض سعر من حياكم.<div class="price-updated">محدَّث في  2026-09-15</div></div></div><div class="sp-body-section"><h2 class="sp-h">الإجراءات المنسّقة</h2><ul class="sp-list"><li>تجميل الأنف وإعادة تجميل الأنف</li><li>شفط الدهون والفيزر ونحت الجسم عالي الدقة</li><li>شد البطن</li><li>تكبير وتصغير وشد الصدر</li><li>التثدي عند الرجال</li><li>شد الجفون</li><li>شد الوجه وتجديد النضارة</li><li>نحت الجسم بعد جراحات السمنة</li><li>نقل الدهون</li></ul></div><div class="sp-body-section"><h2 class="sp-h">مدة التعافي هي ما يستهين به الناس</h2><p class="sp-p">معظم جراحات التجميل تتطلب 7–14 يوماً في مصر قبل السماح لك بالسفر — لإتاحة التعافي الأولي ومواعيد المتابعة وتصريح الطيران الآمن. شد البطن يحتاج عادةً 10–14 يوماً. السفر مبكراً بعد الجراحة يحمل خطراً حقيقياً، منه خطر التجلطات. من يعرض عليك رحلة تجميل من 3 أيام لا يخطط لتعافيك بشكل سليم.</p></div><div class="sp-body-section"><h2 class="sp-h">ما تنسّقه حياكم</h2><ul class="sp-list"><li>اختيار الجرّاح المناسب لإجرائك تحديداً</li><li>مراجعة الصور والتاريخ الطبي قبل السفر من الجرّاح</li><li>الفحوصات قبل العملية</li><li>جدولة غرفة العمليات والمستشفى</li><li><strong class="rt-term">إقامة مناسبة للتعافي</strong><span class="rt-desc">مصعد، غرف هادئة، خدمة غرف</span></li><li>تنقلات المطار والعيادة بسيارة مريحة</li><li>مرافقة بالعربية للمواعيد</li><li>مواعيد الفحص بعد العملية قبل السفر</li><li>تأكيد تصريح الطيران من الجرّاح</li><li>تنسيق المتابعة بعد عودتك</li></ul></div><div class="sp-body-section"><h2 class="sp-h">الخصوصية</h2><p class="sp-p">نتفهّم أن كثيراً من المرضى يفضّلون التعامل مع هذا الأمر بسرية. استفسارك ومستنداتك وبرنامجك يتولاها منسّق واحد محدّد بالاسم، ولا يُشارَك أي شيء خارج نطاق المزوّد المعالج دون موافقتك.</p></div><div class="sp-body-section"><h2 class="sp-h">توقعات ومخاطر صادقة</h2><p class="sp-p">كل إجراء جراحي يحمل مخاطر — نزيف، عدوى، تندّب، عدم تناسق، تفاعل مع التخدير، واحتمال نتيجة تختلف عمّا تخيّلته. إجراءات التصحيح أعلى تكلفة من العملية الأولى. تُقيَّم الملاءمة سريرياً: قد يوصي الجرّاح بإجراء مختلف عمّا طلبته، أو ينصح بعدم الجراحة. المرشّحون المناسبون هم الأصحاء أصحاب التوقعات الواقعية. حياكم لا تضمن أي نتيجة جمالية — هذا التقدير يخص جرّاحك، ولا يضمن أي جرّاح صادق نتيجة دقيقة كذلك.</p></div></div><div class="enquiry-box"><div class="enquiry-box-header"><div class="enquiry-box-title">أرسل استفسارك</div><div class="enquiry-box-sub">سيتواصل معك فريقنا خلال ساعات</div></div><div class="enquiry-box-body"><div class="eq-contact"><a href="https://wa.me/201031567949" class="eq-btn eq-btn-gold">📱 واتساب الآن</a><a class="eq-btn eq-btn-outline" href="/contact" data-discover="true">صفحة التواصل</a></div><div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border);"><a href="tel:+201000100529" class="eq-phone">📞 مصر: +20 100 010 0529</a><a href="tel:+966570909412" class="eq-phone">📞 السعودية: +966 570 909 412</a><a href="tel:+971505306260" class="eq-phone">📞 الإمارات: +971 505 306 260</a></div></div></div></div></section>
@@ -57,16 +117,22 @@ img{max-width:100%;height:auto}
 <p style="font-size:14px;color:#6A5C4C;margin:0 0 16px">أرفق تقاريرك وأشعتك ليراجعها مزوّد مرخّص قبل أن تحجز تذكرتك.</p>
 <iframe src="https://form.jotform.com/242362990310553" title="نموذج الاستفسار" loading="lazy" allow=""></iframe>
 </section>
-<footer class="arfoot"><div class="arfoot-in">
-<p><strong>حياكم لحلول الرعاية الصحية والخدمات اللوجستية</strong> (ش.ذ.م.م لشخص واحد)<br>
-سجل تجاري 49973 · تحت القانون 159 لسنة 1981 · مدينة الشيخ زايد، الحي 16، المجاورة 2، الجيزة، مصر</p>
-<p>واتساب: <a href="https://wa.me/201031567949">+20 103 156 7949</a> ·
-مصر: <a href="tel:+201000100529">+20 100 010 0529</a> ·
-السعودية: <a href="tel:+966570909412">+966 570 909 412</a> ·
-الإمارات: <a href="tel:+971505306260">+971 505 306 260</a><br>
-<a href="mailto:support@hayakkom.com">support@hayakkom.com</a></p>
-<p><a href="/ar/">الرئيسية</a> · <a href="/ar/about/">من نحن</a> · <a href="/ar/contact/">تواصل معنا</a> ·
-<a href="/privacy/">سياسة الخصوصية</a> · <a href="/terms/">الشروط والأحكام</a> ·
-<a href="/cosmetic-surgery/">English</a></p>
+<footer><div class="footer-grid">
+<div><div class="footer-logo" aria-label="Hayakkom"><span class="gold">Hayak</span>kom</div>
+<div class="footer-tagline">تنسيق طبي · مؤتمرات · خدمات لوجستية</div>
+<p class="footer-desc">حياكم لحلول الرعاية الصحية والخدمات اللوجستية — شركة مصرية ذات مسؤولية محدودة لشخص واحد، مسجلة تحت القانون رقم 159 لسنة 1981. نقدّم الاستشارات الإدارية والتسويقية للخدمات الطبية، وتنظيم المواعيد والحجوزات مع المستشفيات والمراكز الطبية، وتنظيم المؤتمرات والفعاليات الطبية، والخدمات اللوجستية لمسافري الخليج.</p>
+<p class="footer-desc" style="margin-top:8px">حياكم ليست مستشفى ولا عيادة ولا جهة مقدِّمة للرعاية الصحية، ولا تمارس نشاط التأمين أو الوساطة. ويُقدَّم العلاج الطبي وعلاج الأسنان بالكامل من مزوّدين مصريين مرخّصين ومستقلين. وتُنفَّذ ترتيبات السفر والجولات والنقل عبر مشغّلين سياحيين مصريين مرخّصين. ولا تضمن حياكم نتائج العلاج.</p>
+<div class="footer-socials">
+<a href="https://wa.me/+201031567949" class="footer-social-btn" aria-label="WhatsApp">📱</a>
+<a href="mailto:support@hayakkom.com" class="footer-social-btn" aria-label="Email">✉️</a>
+<a href="https://www.facebook.com/people/Hayakom/61564909796423/" target="_blank" rel="noopener noreferrer" class="footer-social-btn" aria-label="Facebook">📘</a>
+</div></div>
+<div class="footer-col"><h3 class="footer-head">الخدمات</h3><a href="/ar/dental/">علاج الأسنان</a><a href="/ar/hair-transplant/">زراعة الشعر</a><a href="/ar/weight-loss/">جراحات التخسيس</a><a href="/ar/cosmetic-surgery/">جراحات التجميل</a><a href="/ar/medical/">السياحة العلاجية</a><a href="/ar/wellness/">الاستشفاء وإعادة التأهيل</a><a href="/ar/packages/">الإقامة والتنقلات</a><a href="/ar/conferences/">المؤتمرات الطبية</a><a href="/ar/vip-trip/">رحلات VIP</a><a href="/ar/nile-cruise/">الرحلات النيلية</a></div>
+<div class="footer-col"><h3 class="footer-head">الشركة</h3><a href="/ar/about/">من نحن</a><a href="/ar/saudi-arabia/">للمرضى السعوديين</a><a href="/ar/contact/">تواصل معنا</a><a href="/ar/partners/">كن شريكاً</a><a href="/ar/tourists/">السياح في مصر</a><a href="/ar/educational/">الدراسة في مصر</a><a href="/ar/services/">جميع الخدمات</a><a href="/privacy/">سياسة الخصوصية</a><a href="/terms/">الشروط والأحكام</a></div>
+</div>
+<div class="footer-bottom">
+<div class="footer-legal">حياكم لحلول الرعاية الصحية والخدمات اللوجستية (ش.ذ.م.م لشخص واحد) © 2026 · مدينة الشيخ زايد، الحي 16، المجاورة 2، الجيزة، مصر · سجل تجاري: 49973 · الرقم الموحد: 11070-01000-49973 · مسجلة تحت القانون المصري رقم 159 لسنة 1981</div>
+<div class="footer-legal footer-legal-links"><a href="/ar/">الرئيسية</a> · <a href="/privacy/">سياسة الخصوصية</a> · <a href="/terms/">الشروط والأحكام</a> · <a href="/cosmetic-surgery/">English</a></div>
+<div class="footer-legal">Powered by <a href="https://www.instagram.com/ctownchatteregy" target="_blank" rel="noopener noreferrer" class="ctc-link">Cairo Town Chatter</a></div>
 </div></footer>
 </body></html>
