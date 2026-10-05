@@ -173,3 +173,8 @@ footer .footer-bottom>.footer-legal:last-child a:hover{text-decoration:underline
 /* Single hero image — the second layer and its crossfade are removed. */
 .hero-layer-b{display:none!important}
 .hero-layer-a{animation:none!important;opacity:1!important}
+
+/* The agent is now served by Jotform's official embed script, which renders its
+   own launcher. The React button and panel are hidden so there is only one. */
+.fab-ai{display:none!important}
+.ai-panel{display:none!important}
