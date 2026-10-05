@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="build" content="2026-10-05-0043">
+<meta name="build" content="2026-10-05-0050">
 <title>تنظيم المؤتمرات والفعاليات الطبية في مصر | حياكم</title>
 <meta name="description" content="تنظيم وتنسيق المؤتمرات والفعاليات الطبية في مصر: القاعات والإقامة والتنقلات والوفود الخليجية. شركة مصرية مرخّصة، سجل تجاري 49973.">
 <meta name="keywords" content="مؤتمرات طبية في مصر، تنظيم فعاليات طبية، مؤتمرات القاهرة الطبية، وفود طبية">
@@ -173,6 +173,27 @@ footer .footer-legal-links{text-align:right}
 @media(max-width:700px){
   footer .footer-bottom>.footer-legal:last-child,footer .footer-legal-links{text-align:center}
 }
+
+/* Partner logo marquee: the English site animates this with JavaScript. The
+   Arabic pages are static, so it is driven by CSS here instead — same effect,
+   no script, and it honours prefers-reduced-motion. */
+.pm-wrap{overflow:hidden;position:relative}
+.pm-viewport{overflow:hidden!important}
+.pm-rail{display:flex!important;width:max-content!important;
+  animation:pmScroll 38s linear infinite}
+.pm-rail:hover{animation-play-state:paused}
+.pm-track{display:flex!important;flex-shrink:0}
+.pm-track:last-child{display:flex!important}
+.pm-item{flex:0 0 auto;padding:0 30px;display:flex;align-items:center}
+.pm-item img{height:56px;width:auto;object-fit:contain;opacity:.85;transition:opacity .2s}
+.pm-item img:hover{opacity:1}
+@keyframes pmScroll{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+@media (prefers-reduced-motion: reduce){
+  .pm-rail{animation:none}
+  .pm-viewport{overflow-x:auto!important}
+}
+/* the drag hint is meaningless without JS */
+.pm-wrap + p,.pm-hint{display:none}
 </style>
 </head><body>
 <header class="arnav"><div class="arnav-in">

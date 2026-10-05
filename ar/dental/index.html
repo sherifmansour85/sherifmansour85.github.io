@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="build" content="2026-10-05-0043">
+<meta name="build" content="2026-10-05-0050">
 <title>أسعار زراعة الاسنان في مصر ٢٠٢٦ — التكلفة والمدة | حياكم</title>
 <meta name="description" content="تكلفة زراعة الاسنان في مصر ٢٠٢٦ والعوامل التي تحددها: نوع الغرسة والتاج وتطعيم العظم. تنسيق كامل لرحلة علاج الأسنان لمرضى الخليج مع مزوّدين مصريين مرخّصين.">
 <meta name="keywords" content="زراعة الاسنان في مصر، تكلفة زراعة الاسنان في مصر، اسعار زراعة الاسنان في مصر، زراعه اسنان في مصر كم تكلف، مراكز زراعة الاسنان في مصر، الغرسة، التاج، الطربوش">
@@ -177,6 +177,27 @@ footer .footer-legal-links{text-align:right}
 @media(max-width:700px){
   footer .footer-bottom>.footer-legal:last-child,footer .footer-legal-links{text-align:center}
 }
+
+/* Partner logo marquee: the English site animates this with JavaScript. The
+   Arabic pages are static, so it is driven by CSS here instead — same effect,
+   no script, and it honours prefers-reduced-motion. */
+.pm-wrap{overflow:hidden;position:relative}
+.pm-viewport{overflow:hidden!important}
+.pm-rail{display:flex!important;width:max-content!important;
+  animation:pmScroll 38s linear infinite}
+.pm-rail:hover{animation-play-state:paused}
+.pm-track{display:flex!important;flex-shrink:0}
+.pm-track:last-child{display:flex!important}
+.pm-item{flex:0 0 auto;padding:0 30px;display:flex;align-items:center}
+.pm-item img{height:56px;width:auto;object-fit:contain;opacity:.85;transition:opacity .2s}
+.pm-item img:hover{opacity:1}
+@keyframes pmScroll{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+@media (prefers-reduced-motion: reduce){
+  .pm-rail{animation:none}
+  .pm-viewport{overflow-x:auto!important}
+}
+/* the drag hint is meaningless without JS */
+.pm-wrap + p,.pm-hint{display:none}
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "زراعه اسنان في مصر كم تكلف؟", "acceptedAnswer": {"@type": "Answer", "text": "الأسعار المنشورة في السوق المصري تتراوح تقريباً بين 7,000 و42,000 جنيه مصري للغرسة الواحدة. هذا نطاق سوقي منشور من مصادر خارجية وليس عرض سعر منّا. والفارق الأكبر داخل هذا النطاق يرجع إلى بلد منشأ الغرسة، ثم إلى نوع التاج وما إذا كان العظم يحتاج تطعيماً. وتكلفتك أنت يحددها المزوّد المعالج بعد مراجعة أشعتك."}}, {"@type": "Question", "name": "هل سعر التاج مشمول في سعر الغرسة؟", "acceptedAnswer": {"@type": "Answer", "text": "غالباً لا. التاج (الطربوش) يُسعَّر منفصلاً في معظم العيادات المصرية، وهذا من أكثر ما يفاجئ المرضى. لذلك اسأل دائماً: هل الرقم يشمل الغرسة والتاج معاً أم الغرسة وحدها؟"}}, {"@type": "Question", "name": "كم رحلة أحتاج لزراعة الأسنان في مصر؟", "acceptedAnswer": {"@type": "Answer", "text": "زراعة الأسنان تحتاج عادةً رحلتين تفصل بينهما شهور: الأولى لوضع الغرسة (3–5 أيام)، ثم فترة التئام العظم حول الغرسة، ثم رحلة ثانية لتركيب التاج (3–5 أيام). والزراعة الفورية ليست خياراً لكل حالة، ويحددها الطبيب بعد الفحص والأشعة. ومن يخطط لرحلة واحدة فقط يفاجأ غالباً."}}, {"@type": "Question", "name": "ما الأشعة المطلوبة قبل السفر؟", "acceptedAnswer": {"@type": "Answer", "text": "عادةً أشعة بانوراما، وفي حالات الزراعة أشعة مقطعية CBCT. ولو كانت لديك صور حديثة من طبيبك في بلدك فهي تكفي غالباً للمراجعة المبدئية، وتوفر عليك وقتاً وتكلفة بعد الوصول."}}, {"@type": "Question", "name": "هل يمكن معرفة السعر قبل السفر؟", "acceptedAnswer": {"@type": "Answer", "text": "يمكن الحصول على تقدير مبدئي، نعم. ترسل أشعتك وتقاريرك، ويراجعها مزوّد مرخّص ويعطيك خطة علاجية مبدئية وتقدير تكلفة ومدة إقامة متوقعة — قبل أن تحجز تذكرتك. أما السعر النهائي فيؤكده المزوّد بعد الفحص المباشر، لأن الفحص قد يكشف ما لا تظهره الصورة."}}, {"@type": "Question", "name": "ما الفرق بين الغرسة الكورية والألمانية والسويسرية؟", "acceptedAnswer": {"@type": "Answer", "text": "بلد منشأ نظام الغرسة هو المحرّك الأكبر للسعر. والاختيار بينها قرار إكلينيكي يتخذه طبيبك بناءً على حالة العظم وموضع السن والخطة العلاجية — لا نقرره نحن ولا يُقرَّر عبر الإنترنت. لكن من حقك أن تعرف أي نظام سيُستخدم في حالتك وما فرق تكلفته، وهذا ما نحرص على أن يصلك مكتوباً قبل السفر."}}, {"@type": "Question", "name": "متى أحتاج تطعيم عظم أو رفع للجيوب الأنفية؟", "acceptedAnswer": {"@type": "Answer", "text": "عندما تكون كثافة العظم أو ارتفاعه غير كافيين لتثبيت الغرسة. وهذا يُحدَّد من الأشعة المقطعية، ويضيف إلى التكلفة وإلى المدة. ولهذا تحديداً لا يمكن إعطاء سعر نهائي من صورة فوتوغرافية."}}, {"@type": "Question", "name": "هل أستطيع السفر مباشرة بعد الإجراء؟", "acceptedAnswer": {"@type": "Answer", "text": "في أغلب حالات الأسنان نعم، لكن القرار للطبيب المعالج. ونحن ننسّق موعد عودتك بعد أن يؤكد الطبيب أنك جاهز للسفر، لا قبل ذلك."}}, {"@type": "Question", "name": "من يتابعني بعد عودتي إلى بلدي؟", "acceptedAnswer": {"@type": "Answer", "text": "ننسّق المتابعة بينك وبين المزوّد المعالج بعد عودتك. واحرص على أن تغادر ومعك تقرير مكتوب يوضح ما تم، ونوع الغرسة المستخدمة وبياناتها — فطبيبك في بلدك سيحتاجها لأي عمل مستقبلي على هذا السن."}}, {"@type": "Question", "name": "لماذا تختلف الأسعار بين عيادة وأخرى في مصر؟", "acceptedAnswer": {"@type": "Answer", "text": "نظام الغرسة، ونوع التاج (زيركون أو إيماكس أو بورسلين)، وخبرة الطبيب، ومستوى المركز، والحاجة إلى إجراءات تمهيدية مثل تطعيم العظم أو علاج اللثة. ولهذا فإن مقارنة رقم برقم دون معرفة ما يشمله كل منهما مقارنة مضلّلة."}}]}</script>
 </head>
