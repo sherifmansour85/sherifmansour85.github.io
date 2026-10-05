@@ -19,7 +19,7 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="theme-color" content="#1A1610">
-    <meta name="build" content="2026-10-05-0023">
+    <meta name="build" content="2026-10-05-0043">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -270,6 +270,26 @@ body.form-active .fab-stack:hover,body.form-active .to-top:hover{opacity:1}
 /* Tourism notice sits above the packages so the attribution is read before the
    prices, not after them. */
 .hk-tourism{margin:0 0 22px;background:#FDF6E8;border-color:var(--gold)}
+
+/* Footer bottom: three flex children meant Cairo Town Chatter wrapped onto a
+   line of its own and read as an afterthought. Restructured as two tidy rows —
+   the legal statement across the top, then links and credit balanced beneath. */
+footer .footer-bottom{display:grid!important;grid-template-columns:1fr auto;
+  grid-template-areas:"legal legal" "links credit";
+  gap:10px 24px;align-items:center;padding-top:22px}
+footer .footer-bottom>.footer-legal:first-child{grid-area:legal;line-height:1.85;
+  padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.08)}
+footer .footer-legal-links{grid-area:links;margin-top:0!important}
+footer .footer-bottom>.footer-legal:last-child{grid-area:credit;text-align:right;
+  white-space:nowrap;opacity:.72;font-size:10.5px}
+footer .footer-bottom>.footer-legal:last-child a{color:var(--gold3)!important;text-decoration:none}
+footer .footer-bottom>.footer-legal:last-child a:hover{text-decoration:underline}
+@media(max-width:700px){
+  footer .footer-bottom{grid-template-columns:1fr;
+    grid-template-areas:"legal" "links" "credit";text-align:center;gap:12px}
+  footer .footer-bottom>.footer-legal:last-child{text-align:center}
+  footer .footer-legal-links{text-align:center}
+}
 </style>
   <script id="ld-page" type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.hayakkom.com/"}]},{"@type":"WebPage","@id":"https://www.hayakkom.com/","url":"https://www.hayakkom.com/","name":"Hayakkom — Egypt Medical Tourism & VIP Travel for Gulf Travelers","description":"Licensed Egyptian company coordinating medical tourism, dental treatment, VIP tours and Nile cruises for Saudi, UAE and Kuwaiti travelers.","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Hayakkom","url":"https://www.hayakkom.com"},"about":{"@type":"Organization","name":"Hayakkom","url":"https://www.hayakkom.com","logo":"https://le-de.cdn-website.com/570f220f41214a5784b09af2ac39327a/dms3rep/multi/opt/-C3-98--C3-99--C3-98--C3-99--C3-99--1920w.png","telephone":"+201031567949","email":"support@hayakkom.com"}}]}</script><script async src="https://www.googletagmanager.com/gtag/js?id=AW-16686203605"></script>
     <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "MedicalOrganization", "name": "Dar Al Fouad Hospital – 6th of October", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group", "url": "https://alameda-hc.com", "sameAs": ["https://maps.app.goo.gl/EpfndFTJ6jAjRaFo8", "https://www.facebook.com/people/Hayakom/61564909796423/"], "hasMap": "https://maps.app.goo.gl/EpfndFTJ6jAjRaFo8"}, "address": {"@type": "PostalAddress", "addressCountry": "EG", "addressLocality": "Cairo"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "First hospital in Egypt to achieve JCI accreditation (2005); re-accredited for the sixth time in 2020. Its stroke unit was the first in Egypt to be JCI accredited. Partnership with Cleveland Clinic Foundation spanning more than 20 years."}, {"@type": "MedicalOrganization", "name": "Dar Al Fouad Hospital – Nasr City", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group", "url": "https://alameda-hc.com", "sameAs": ["https://maps.app.goo.gl/EpfndFTJ6jAjRaFo8", "https://www.facebook.com/people/Hayakom/61564909796423/"], "hasMap": "https://maps.app.goo.gl/EpfndFTJ6jAjRaFo8"}, "address": {"@type": "PostalAddress", "addressCountry": "EG", "addressLocality": "Cairo"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "JCI accredited in March 2022."}, {"@type": "MedicalOrganization", "name": "As-Salam International Hospital – Maadi", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group", "url": "https://alameda-hc.com", "sameAs": ["https://maps.app.goo.gl/EpfndFTJ6jAjRaFo8", "https://www.facebook.com/people/Hayakom/61564909796423/"], "hasMap": "https://maps.app.goo.gl/EpfndFTJ6jAjRaFo8"}, "address": {"@type": "PostalAddress", "addressCountry": "EG", "addressLocality": "Cairo"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "Received its fourth JCI accreditation in September 2024."}, {"@type": "MedicalOrganization", "name": "As-Salam International Hospital – New Cairo", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group", "url": "https://alameda-hc.com", "sameAs": ["https://maps.app.goo.gl/EpfndFTJ6jAjRaFo8", "https://www.facebook.com/people/Hayakom/61564909796423/"], "hasMap": "https://maps.app.goo.gl/EpfndFTJ6jAjRaFo8"}, "address": {"@type": "PostalAddress", "addressCountry": "EG", "addressLocality": "Cairo"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "JCI accredited within two years of opening."}, {"@type": "MedicalOrganization", "name": "Andalusia Health Egypt", "parentOrganization": {"@type": "Organization", "name": "Andalusia Group", "url": "https://www.andalusiagroup.net", "foundingDate": "1984", "foundingLocation": {"@type": "Place", "name": "Jeddah, Saudi Arabia"}, "sameAs": ["https://maps.app.goo.gl/EpfndFTJ6jAjRaFo8", "https://www.facebook.com/people/Hayakom/61564909796423/"], "hasMap": "https://maps.app.goo.gl/EpfndFTJ6jAjRaFo8"}, "address": {"@type": "PostalAddress", "addressCountry": "EG"}, "description": "Part of Andalusia Group, founded in Jeddah in 1984 and operating in both Saudi Arabia and Egypt. Egyptian facilities include El Shallalat and Smouha hospitals in Alexandria, Maadi Hospital in Cairo, and the Antoniadis clinics complex. No accreditation is claimed."}]}</script>

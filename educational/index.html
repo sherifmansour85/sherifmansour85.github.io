@@ -19,7 +19,7 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="theme-color" content="#1A1610">
-    <meta name="build" content="2026-10-05-0023">
+    <meta name="build" content="2026-10-05-0043">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -270,6 +270,26 @@ body.form-active .fab-stack:hover,body.form-active .to-top:hover{opacity:1}
 /* Tourism notice sits above the packages so the attribution is read before the
    prices, not after them. */
 .hk-tourism{margin:0 0 22px;background:#FDF6E8;border-color:var(--gold)}
+
+/* Footer bottom: three flex children meant Cairo Town Chatter wrapped onto a
+   line of its own and read as an afterthought. Restructured as two tidy rows —
+   the legal statement across the top, then links and credit balanced beneath. */
+footer .footer-bottom{display:grid!important;grid-template-columns:1fr auto;
+  grid-template-areas:"legal legal" "links credit";
+  gap:10px 24px;align-items:center;padding-top:22px}
+footer .footer-bottom>.footer-legal:first-child{grid-area:legal;line-height:1.85;
+  padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.08)}
+footer .footer-legal-links{grid-area:links;margin-top:0!important}
+footer .footer-bottom>.footer-legal:last-child{grid-area:credit;text-align:right;
+  white-space:nowrap;opacity:.72;font-size:10.5px}
+footer .footer-bottom>.footer-legal:last-child a{color:var(--gold3)!important;text-decoration:none}
+footer .footer-bottom>.footer-legal:last-child a:hover{text-decoration:underline}
+@media(max-width:700px){
+  footer .footer-bottom{grid-template-columns:1fr;
+    grid-template-areas:"legal" "links" "credit";text-align:center;gap:12px}
+  footer .footer-bottom>.footer-legal:last-child{text-align:center}
+  footer .footer-legal-links{text-align:center}
+}
 </style>
   <script id="ld-page" type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.hayakkom.com/"},{"@type":"ListItem","position":2,"name":"Educational Tourism Egypt","item":"https://www.hayakkom.com/educational"}]},{"@type":"WebPage","@id":"https://www.hayakkom.com/educational","url":"https://www.hayakkom.com/educational","name":"Educational Tourism Egypt | Hayakkom","description":"Study tours and educational experiences in Egypt for Gulf students.","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Hayakkom","url":"https://www.hayakkom.com"},"about":{"@type":"Organization","name":"Hayakkom","url":"https://www.hayakkom.com","logo":"https://le-de.cdn-website.com/570f220f41214a5784b09af2ac39327a/dms3rep/multi/opt/-C3-98--C3-99--C3-98--C3-99--C3-99--1920w.png","telephone":"+201031567949","email":"support@hayakkom.com"}},{"@type":"Service","name":"Educational Tourism Egypt","description":"Study tours and educational experiences in Egypt for Gulf students.","url":"https://www.hayakkom.com/educational","provider":{"@type":"ProfessionalService","name":"Hayakkom","legalName":"Hayakom for Healthcare Solutions and Logistic Services","url":"https://www.hayakkom.com","telephone":"+201031567949"},"areaServed":["Saudi Arabia","United Arab Emirates","Kuwait","Egypt"],"availableLanguage":["Arabic","English"]}]}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16686203605"></script>

@@ -149,3 +149,23 @@ body.form-active .fab-stack:hover,body.form-active .to-top:hover{opacity:1}
 /* Tourism notice sits above the packages so the attribution is read before the
    prices, not after them. */
 .hk-tourism{margin:0 0 22px;background:#FDF6E8;border-color:var(--gold)}
+
+/* Footer bottom: three flex children meant Cairo Town Chatter wrapped onto a
+   line of its own and read as an afterthought. Restructured as two tidy rows —
+   the legal statement across the top, then links and credit balanced beneath. */
+footer .footer-bottom{display:grid!important;grid-template-columns:1fr auto;
+  grid-template-areas:"legal legal" "links credit";
+  gap:10px 24px;align-items:center;padding-top:22px}
+footer .footer-bottom>.footer-legal:first-child{grid-area:legal;line-height:1.85;
+  padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.08)}
+footer .footer-legal-links{grid-area:links;margin-top:0!important}
+footer .footer-bottom>.footer-legal:last-child{grid-area:credit;text-align:right;
+  white-space:nowrap;opacity:.72;font-size:10.5px}
+footer .footer-bottom>.footer-legal:last-child a{color:var(--gold3)!important;text-decoration:none}
+footer .footer-bottom>.footer-legal:last-child a:hover{text-decoration:underline}
+@media(max-width:700px){
+  footer .footer-bottom{grid-template-columns:1fr;
+    grid-template-areas:"legal" "links" "credit";text-align:center;gap:12px}
+  footer .footer-bottom>.footer-legal:last-child{text-align:center}
+  footer .footer-legal-links{text-align:center}
+}
