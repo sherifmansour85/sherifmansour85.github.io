@@ -169,3 +169,7 @@ footer .footer-bottom>.footer-legal:last-child a:hover{text-decoration:underline
   footer .footer-bottom>.footer-legal:last-child{text-align:center}
   footer .footer-legal-links{text-align:center}
 }
+
+/* Single hero image — the second layer and its crossfade are removed. */
+.hero-layer-b{display:none!important}
+.hero-layer-a{animation:none!important;opacity:1!important}
