@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="build" content="2026-10-05-0315">
+<meta name="build" content="2026-10-05-1452">
 <title>الإقامة والتنقلات في مصر للمرضى — حياكم</title>
 <meta name="description" content="إقامة مختارة للتعافي وتنقلات مع سائق لمرضى الخليج في مصر. تُقدَّم عبر مشغّلين مصريين مرخّصين وتنسّقها حياكم حول جدولك العلاجي.">
 <meta name="keywords" content="إقامة للعلاج في مصر، شقق فندقية القاهرة، تنقلات المرضى في مصر، سيارة مع سائق في مصر">
@@ -20,10 +20,10 @@
 <link rel="icon" href="/favicon.svg">
 <link rel="stylesheet" href="/assets/app.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@600;700&family=Tajawal:wght@300;400;500;700&display=swap">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "ProfessionalService", "name": "حياكم", "alternateName": "Hayakkom", "url": "https://www.hayakkom.com/ar/packages/", "inLanguage": "ar", "description": "إقامة مختارة للتعافي وتنقلات مع سائق لمرضى الخليج في مصر. تُقدَّم عبر مشغّلين مصريين مرخّصين وتنسّقها حياكم حول جدولك العلاجي.", "address": {"@type": "PostalAddress", "addressLocality": "الشيخ زايد، الجيزة", "addressCountry": "EG"}, "telephone": "+201000100529", "email": "support@hayakkom.com", "areaServed": [{"@type": "Country", "name": "السعودية"}, {"@type": "Country", "name": "الإمارات"}, {"@type": "Country", "name": "الكويت"}], "identifier": "سجل تجاري 49973", "sameAs": ["https://maps.app.goo.gl/EpfndFTJ6jAjRaFo8", "https://www.facebook.com/people/Hayakom/61564909796423/"], "hasMap": "https://maps.app.goo.gl/EpfndFTJ6jAjRaFo8"}</script>
 <style>
-:root{--arfont:'Noto Sans Arabic',system-ui,sans-serif}
+:root{--arfont:'Tajawal',system-ui,sans-serif}
 body{font-family:var(--arfont);direction:rtl;text-align:right;margin:0;background:var(--sand,#FAF7F1)}
 .arnav{position:sticky;top:0;z-index:200;background:rgba(245,240,232,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border,#E3DACA)}
 .arnav-in{max-width:1180px;margin:0 auto;padding:12px 5%;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
@@ -206,14 +206,11 @@ footer .footer-legal-links{text-align:right}
 /* Floating contact controls — the React app renders these on the English
    pages; the static Arabic pages need their own. Laid out as a row so they
    never cover a form's own buttons. */
-.fab-stack{position:fixed;bottom:20px;inset-inline-start:20px;z-index:998;
-  display:flex;flex-direction:row;align-items:center;gap:12px}
-[dir="rtl"] .fab-stack{flex-direction:row-reverse}
-.fab{width:56px;height:56px;border-radius:50%;border:none;padding:0;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;overflow:hidden;
-  box-shadow:0 6px 20px rgba(26,22,16,.26);transition:transform .2s}
-.fab:hover{transform:translateY(-2px)}
-.fab-ai{background:var(--dark,#1A1610)}
+
+
+
+
+
 .fab-avatar{width:100%;height:100%;object-fit:cover}
 .fab-wa{background:#25D366;text-decoration:none}
 .ai-panel{position:fixed;bottom:88px;inset-inline-start:20px;z-index:999;
@@ -225,10 +222,7 @@ footer .footer-legal-links{text-align:right}
 .ai-panel-head button{background:none;border:none;color:#F3ECD9;font-size:24px;cursor:pointer;line-height:1}
 .ai-panel iframe{flex:1;width:100%;border:0}
 @media(min-width:1280px){.ai-panel{width:min(520px,calc(100vw - 60px));height:min(740px,calc(100vh - 140px))}}
-@media(max-width:600px){
-  .fab-stack{bottom:16px;inset-inline-start:16px}
-  .ai-panel{inset:0;width:100%;height:100%;border-radius:0;bottom:0}
-}
+
 
 /* Floating controls — WhatsApp sized and positioned to match Jotform's own
    launcher, stacked directly above it on the same side. */
@@ -291,6 +285,63 @@ footer .footer-legal-links{text-align:right}
   .fab,.fab-wa{width:54px!important;height:54px!important}
   .fab-wa svg{width:27px;height:27px}
 }
+
+/* Arabic typography: Amiri for headings (classical naskh, the counterpart to
+   Cormorant Garamond on the English site), Tajawal for body and UI. */
+body,.arwrap,.arnav,footer{font-family:'Tajawal',system-ui,-apple-system,sans-serif}
+main.arwrap h1,main.arwrap h2,main.arwrap h3,
+.arwrap .sec-title,.hero h1,footer .footer-head{
+  font-family:'Amiri','Times New Roman',serif!important;font-weight:700}
+main.arwrap h1,.hero h1{letter-spacing:0;line-height:1.5!important}
+main.arwrap h2{line-height:1.55!important}
+main.arwrap p,main.arwrap li,.arwrap .sec-sub{
+  font-family:'Tajawal',sans-serif!important;line-height:2.05!important;
+  font-weight:400;letter-spacing:0}
+.arlinks a,.arlinks .nav-drop-btn,.arlang,.arburger{font-family:'Tajawal',sans-serif!important;font-weight:500}
+footer,footer p,footer a,.footer-desc,.footer-legal{font-family:'Tajawal',sans-serif!important}
+footer .footer-head{font-size:15px;letter-spacing:.2px}
+/* Arabic reads better slightly larger than Latin at the same nominal size */
+main.arwrap p{font-size:16px!important}
+main.arwrap li{font-size:16px}
+.hk-compliance,.hk-compliance p{font-family:'Tajawal',sans-serif!important;font-size:11.5px!important}
+/* the wordmark stays Latin */
+.arlogo,.footer-logo{font-family:'Cormorant Garamond',Georgia,serif!important}
+@media(max-width:700px){
+  main.arwrap p,main.arwrap li{font-size:15.5px!important;line-height:2!important}
+}
+
+/* Phone numbers, emails and the wordmark are Latin runs inside Arabic text.
+   Without isolation the bidi algorithm reverses them. */
+a[href^="tel:"],a[href^="mailto:"],a[href*="wa.me"],
+.contact-pill,.ltr,.footer-legal a[href^="tel:"]{
+  direction:ltr!important;unicode-bidi:isolate!important;display:inline-block}
+[dir="rtl"] a[href^="tel:"],[dir="rtl"] a[href^="mailto:"]{text-align:right}
+/* keep the Arabic label beside the number in the right order */
+.contact-pill{unicode-bidi:isolate-override!important}
+footer .footer-legal{unicode-bidi:plaintext}
+
+bdi{direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+
+/* Floating controls — one definition. Jotform's launcher sits bottom-right;
+   WhatsApp stacks directly above it at the same size. */
+.fab-stack{position:fixed!important;bottom:100px!important;right:24px!important;
+  left:auto!important;inset-inline-start:auto!important;z-index:998;
+  display:flex!important;flex-direction:column!important;align-items:center!important;gap:0!important}
+.fab-wa{width:60px!important;height:60px!important;border-radius:50%!important;
+  background:#25D366!important;display:flex!important;align-items:center;justify-content:center;
+  box-shadow:0 6px 18px rgba(26,22,16,.24);text-decoration:none;transition:transform .2s}
+.fab-wa:hover{transform:translateY(-2px)}
+.fab-wa svg{width:30px;height:30px}
+.fab-ai{display:none!important}
+#root ~ .fab-stack{display:none!important}
+@media(max-width:600px){
+  .fab-stack{bottom:92px!important;right:16px!important}
+  .fab-wa{width:54px!important;height:54px!important}
+  .fab-wa svg{width:27px;height:27px}
+}
+
+.fab-stack{transform:none!important}
+body.form-active .fab-stack{transform:none!important;opacity:.35}
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "MedicalOrganization", "name": "Dar Al Fouad Hospital – 6th of October", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group", "url": "https://alameda-hc.com"}, "address": {"@type": "PostalAddress", "addressLocality": "6th of October City", "addressCountry": "EG"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "First hospital in Egypt to achieve JCI accreditation (2005), re-accredited for the sixth time in 2020, per Alameda Healthcare Group's published material. Cleveland Clinic Foundation partner."}, {"@type": "MedicalOrganization", "name": "Dar Al Fouad Hospital – Nasr City", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group"}, "address": {"@type": "PostalAddress", "addressLocality": "Nasr City, Cairo", "addressCountry": "EG"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "JCI accredited March 2022, per the group's published material."}, {"@type": "MedicalOrganization", "name": "As-Salam International Hospital – Maadi", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group"}, "address": {"@type": "PostalAddress", "addressLocality": "Maadi, Cairo", "addressCountry": "EG"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "Fourth JCI accreditation awarded September 2024, per the group's published material."}, {"@type": "MedicalOrganization", "name": "As-Salam International Hospital – New Cairo", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group"}, "address": {"@type": "PostalAddress", "addressLocality": "New Cairo", "addressCountry": "EG"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "JCI accredited within two years of opening, per the group's published material."}, {"@type": "MedicalOrganization", "name": "Andalusia Hospital", "parentOrganization": {"@type": "Organization", "name": "Andalusia Group for Medical Services", "url": "https://www.andalusiagroup.net", "foundingDate": "1984", "foundingLocation": {"@type": "Place", "name": "Jeddah, Saudi Arabia"}}, "address": {"@type": "PostalAddress", "addressCountry": "EG"}, "description": "Part of Andalusia Group, founded in Jeddah in 1984 and operating in Saudi Arabia and Egypt. Hayakkom is authorised to represent its services to Gulf clients under a letter of intent. No accreditation is claimed."}, {"@type": "MedicalOrganization", "name": "Contours Obesity Solutions — Dr Ahmed Shabana", "medicalSpecialty": "Bariatric", "address": {"@type": "PostalAddress", "addressCountry": "EG"}, "employee": {"@type": "Physician", "name": "Dr Ahmed Shabana", "medicalSpecialty": "Bariatric", "description": "Consultant in laparoscopic and bariatric surgery, per the practice's own letterhead."}, "description": "Hayakkom is authorised to represent its services to Gulf clients under a letter of intent. No accreditation is claimed."}, {"@type": "MedicalClinic", "name": "Care Clinic — عيادات عناية التخصصية", "address": {"@type": "PostalAddress", "streetAddress": "27 Oraby Street, Downtown", "addressLocality": "Cairo", "addressCountry": "EG"}, "description": "Hayakkom is authorised to represent its services to Gulf clients under a letter of intent. No accreditation is claimed."}]}</script>
 </head>
@@ -312,7 +363,7 @@ footer .footer-legal-links{text-align:right}
 <p class="footer-desc">شركة مصرية مرخّصة تنسّق رحلات العلاج في مصر لمرضى الخليج. نراجع سجلاتك مع مزوّد مرخّص قبل السفر، وننسّق المواعيد والإقامة والتنقلات والمتابعة بعد العودة.</p>
 <p class="footer-desc" style="margin-top:8px">حياكم ليست مستشفى ولا عيادة. يقدّم العلاج أطباء ومنشآت مصرية مرخّصة ومستقلة، وتُنفَّذ ترتيبات السفر والإقامة عبر مشغّلين مرخّصين. ولا تضمن حياكم نتائج العلاج.</p>
 <div class="footer-socials">
-<a href="https://wa.me/+201031567949" class="footer-social-btn" aria-label="WhatsApp">📱</a>
+<a href="https://wa.me/<bdi>+201031567949</bdi>" class="footer-social-btn" aria-label="WhatsApp">📱</a>
 <a href="mailto:support@hayakkom.com" class="footer-social-btn" aria-label="Email">✉️</a>
 <a href="https://www.facebook.com/people/Hayakom/61564909796423/" target="_blank" rel="noopener noreferrer" class="footer-social-btn" aria-label="Facebook">📘</a>
 </div></div>

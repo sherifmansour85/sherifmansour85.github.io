@@ -210,3 +210,24 @@ footer .footer-bottom>.footer-legal:last-child a:hover{text-decoration:underline
   .fab,.fab-wa{width:54px!important;height:54px!important}
   .fab-wa svg{width:27px;height:27px}
 }
+
+/* Floating controls — one definition. Jotform's launcher sits bottom-right;
+   WhatsApp stacks directly above it at the same size. */
+.fab-stack{position:fixed!important;bottom:100px!important;right:24px!important;
+  left:auto!important;inset-inline-start:auto!important;z-index:998;
+  display:flex!important;flex-direction:column!important;align-items:center!important;gap:0!important}
+.fab-wa{width:60px!important;height:60px!important;border-radius:50%!important;
+  background:#25D366!important;display:flex!important;align-items:center;justify-content:center;
+  box-shadow:0 6px 18px rgba(26,22,16,.24);text-decoration:none;transition:transform .2s}
+.fab-wa:hover{transform:translateY(-2px)}
+.fab-wa svg{width:30px;height:30px}
+.fab-ai{display:none!important}
+#root ~ .fab-stack{display:none!important}
+@media(max-width:600px){
+  .fab-stack{bottom:92px!important;right:16px!important}
+  .fab-wa{width:54px!important;height:54px!important}
+  .fab-wa svg{width:27px;height:27px}
+}
+
+.fab-stack{transform:none!important}
+body.form-active .fab-stack{transform:none!important;opacity:.35}
