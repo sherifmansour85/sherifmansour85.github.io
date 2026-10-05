@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="build" content="2026-10-05-0237">
+<meta name="build" content="2026-10-05-0244">
 <title>أسعار زراعة الاسنان في مصر ٢٠٢٦ — التكلفة والمدة | حياكم</title>
 <meta name="description" content="تكلفة زراعة الاسنان في مصر ٢٠٢٦ والعوامل التي تحددها: نوع الغرسة والتاج وتطعيم العظم. تنسيق كامل لرحلة علاج الأسنان لمرضى الخليج مع مزوّدين مصريين مرخّصين.">
 <meta name="keywords" content="زراعة الاسنان في مصر، تكلفة زراعة الاسنان في مصر، اسعار زراعة الاسنان في مصر، زراعه اسنان في مصر كم تكلف، مراكز زراعة الاسنان في مصر، الغرسة، التاج، الطربوش">
@@ -92,7 +92,7 @@ footer{direction:rtl;text-align:right}
 footer .footer-grid{direction:rtl}
 footer .footer-col{text-align:right}
 footer .footer-head{text-align:right}
-footer .footer-logo{font-family:Georgia,'Times New Roman',serif;direction:ltr;text-align:right;unicode-bidi:isolate}
+footer .footer-logo{direction:ltr;text-align:right;unicode-bidi:isolate}
 footer .footer-tagline{text-align:right}
 footer .footer-desc{text-align:right;line-height:1.95}
 footer .footer-socials{justify-content:flex-start}
@@ -202,6 +202,33 @@ footer .footer-legal-links{text-align:right}
 /* Single hero image — the second layer and its crossfade are removed. */
 .hero-layer-b{display:none!important}
 .hero-layer-a{animation:none!important;opacity:1!important}
+
+/* Floating contact controls — the React app renders these on the English
+   pages; the static Arabic pages need their own. Laid out as a row so they
+   never cover a form's own buttons. */
+.fab-stack{position:fixed;bottom:20px;inset-inline-start:20px;z-index:998;
+  display:flex;flex-direction:row;align-items:center;gap:12px}
+[dir="rtl"] .fab-stack{flex-direction:row-reverse}
+.fab{width:56px;height:56px;border-radius:50%;border:none;padding:0;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  box-shadow:0 6px 20px rgba(26,22,16,.26);transition:transform .2s}
+.fab:hover{transform:translateY(-2px)}
+.fab-ai{background:var(--dark,#1A1610)}
+.fab-avatar{width:100%;height:100%;object-fit:cover}
+.fab-wa{background:#25D366;text-decoration:none}
+.ai-panel{position:fixed;bottom:88px;inset-inline-start:20px;z-index:999;
+  width:min(460px,calc(100vw - 40px));height:min(680px,calc(100vh - 150px));
+  background:#fff;border-radius:16px;overflow:hidden;
+  box-shadow:0 18px 50px rgba(26,22,16,.3);display:flex;flex-direction:column}
+.ai-panel-head{background:var(--dark,#1A1610);color:#F3ECD9;padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;font-size:14px}
+.ai-panel-head button{background:none;border:none;color:#F3ECD9;font-size:24px;cursor:pointer;line-height:1}
+.ai-panel iframe{flex:1;width:100%;border:0}
+@media(min-width:1280px){.ai-panel{width:min(520px,calc(100vw - 60px));height:min(740px,calc(100vh - 140px))}}
+@media(max-width:600px){
+  .fab-stack{bottom:16px;inset-inline-start:16px}
+  .ai-panel{inset:0;width:100%;height:100%;border-radius:0;bottom:0}
+}
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "زراعه اسنان في مصر كم تكلف؟", "acceptedAnswer": {"@type": "Answer", "text": "الأسعار المنشورة في السوق المصري تتراوح تقريباً بين 7,000 و42,000 جنيه مصري للغرسة الواحدة. هذا نطاق سوقي منشور من مصادر خارجية وليس عرض سعر منّا. والفارق الأكبر داخل هذا النطاق يرجع إلى بلد منشأ الغرسة، ثم إلى نوع التاج وما إذا كان العظم يحتاج تطعيماً. وتكلفتك أنت يحددها المزوّد المعالج بعد مراجعة أشعتك."}}, {"@type": "Question", "name": "هل سعر التاج مشمول في سعر الغرسة؟", "acceptedAnswer": {"@type": "Answer", "text": "غالباً لا. التاج (الطربوش) يُسعَّر منفصلاً في معظم العيادات المصرية، وهذا من أكثر ما يفاجئ المرضى. لذلك اسأل دائماً: هل الرقم يشمل الغرسة والتاج معاً أم الغرسة وحدها؟"}}, {"@type": "Question", "name": "كم رحلة أحتاج لزراعة الأسنان في مصر؟", "acceptedAnswer": {"@type": "Answer", "text": "زراعة الأسنان تحتاج عادةً رحلتين تفصل بينهما شهور: الأولى لوضع الغرسة (3–5 أيام)، ثم فترة التئام العظم حول الغرسة، ثم رحلة ثانية لتركيب التاج (3–5 أيام). والزراعة الفورية ليست خياراً لكل حالة، ويحددها الطبيب بعد الفحص والأشعة. ومن يخطط لرحلة واحدة فقط يفاجأ غالباً."}}, {"@type": "Question", "name": "ما الأشعة المطلوبة قبل السفر؟", "acceptedAnswer": {"@type": "Answer", "text": "عادةً أشعة بانوراما، وفي حالات الزراعة أشعة مقطعية CBCT. ولو كانت لديك صور حديثة من طبيبك في بلدك فهي تكفي غالباً للمراجعة المبدئية، وتوفر عليك وقتاً وتكلفة بعد الوصول."}}, {"@type": "Question", "name": "هل يمكن معرفة السعر قبل السفر؟", "acceptedAnswer": {"@type": "Answer", "text": "يمكن الحصول على تقدير مبدئي، نعم. ترسل أشعتك وتقاريرك، ويراجعها مزوّد مرخّص ويعطيك خطة علاجية مبدئية وتقدير تكلفة ومدة إقامة متوقعة — قبل أن تحجز تذكرتك. أما السعر النهائي فيؤكده المزوّد بعد الفحص المباشر، لأن الفحص قد يكشف ما لا تظهره الصورة."}}, {"@type": "Question", "name": "ما الفرق بين الغرسة الكورية والألمانية والسويسرية؟", "acceptedAnswer": {"@type": "Answer", "text": "بلد منشأ نظام الغرسة هو المحرّك الأكبر للسعر. والاختيار بينها قرار إكلينيكي يتخذه طبيبك بناءً على حالة العظم وموضع السن والخطة العلاجية — لا نقرره نحن ولا يُقرَّر عبر الإنترنت. لكن من حقك أن تعرف أي نظام سيُستخدم في حالتك وما فرق تكلفته، وهذا ما نحرص على أن يصلك مكتوباً قبل السفر."}}, {"@type": "Question", "name": "متى أحتاج تطعيم عظم أو رفع للجيوب الأنفية؟", "acceptedAnswer": {"@type": "Answer", "text": "عندما تكون كثافة العظم أو ارتفاعه غير كافيين لتثبيت الغرسة. وهذا يُحدَّد من الأشعة المقطعية، ويضيف إلى التكلفة وإلى المدة. ولهذا تحديداً لا يمكن إعطاء سعر نهائي من صورة فوتوغرافية."}}, {"@type": "Question", "name": "هل أستطيع السفر مباشرة بعد الإجراء؟", "acceptedAnswer": {"@type": "Answer", "text": "في أغلب حالات الأسنان نعم، لكن القرار للطبيب المعالج. ونحن ننسّق موعد عودتك بعد أن يؤكد الطبيب أنك جاهز للسفر، لا قبل ذلك."}}, {"@type": "Question", "name": "من يتابعني بعد عودتي إلى بلدي؟", "acceptedAnswer": {"@type": "Answer", "text": "ننسّق المتابعة بينك وبين المزوّد المعالج بعد عودتك. واحرص على أن تغادر ومعك تقرير مكتوب يوضح ما تم، ونوع الغرسة المستخدمة وبياناتها — فطبيبك في بلدك سيحتاجها لأي عمل مستقبلي على هذا السن."}}, {"@type": "Question", "name": "لماذا تختلف الأسعار بين عيادة وأخرى في مصر؟", "acceptedAnswer": {"@type": "Answer", "text": "نظام الغرسة، ونوع التاج (زيركون أو إيماكس أو بورسلين)، وخبرة الطبيب، ومستوى المركز، والحاجة إلى إجراءات تمهيدية مثل تطعيم العظم أو علاج اللثة. ولهذا فإن مقارنة رقم برقم دون معرفة ما يشمله كل منهما مقارنة مضلّلة."}}]}</script>
 </head>
@@ -235,4 +262,34 @@ footer .footer-legal-links{text-align:right}
 <div class="footer-legal footer-legal-links"><a href="/ar/">الرئيسية</a> · <a href="/privacy/">سياسة الخصوصية</a> · <a href="/terms/">الشروط والأحكام</a> · <a href="/dental/?lang=en">English</a></div>
 <div class="footer-legal">Powered by <a href="https://www.instagram.com/ctownchatteregy" target="_blank" rel="noopener noreferrer" class="ctc-link">Cairo Town Chatter</a></div>
 </div></footer>
+
+<div class="fab-stack" role="group" aria-label="تواصل سريع">
+  <button class="fab fab-ai" type="button" id="hkAiBtn" title="المساعد الذكي" aria-label="المساعد الذكي">
+    <img src="/assets/ai-avatar.png" alt="" aria-hidden="true" class="fab-avatar" loading="lazy" decoding="async">
+  </button>
+  <a class="fab fab-wa" href="https://wa.me/201031567949" target="_blank" rel="noopener noreferrer" title="واتساب" aria-label="واتساب">
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="#fff" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35z"/><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5.03-1.32A10 10 0 1012 2zm0 18.2a8.2 8.2 0 01-4.18-1.15l-.3-.18-3.1.81.83-3.02-.2-.31A8.2 8.2 0 1112 20.2z"/></svg>
+  </a>
+</div>
+<div class="ai-panel" id="hkAiPanel" hidden>
+  <div class="ai-panel-head">
+    <span>المساعد الذكي — حياكم</span>
+    <button type="button" id="hkAiClose" aria-label="إغلاق">&times;</button>
+  </div>
+  <iframe id="hkAiFrame" title="المساعد الذكي" allow="microphone; autoplay; clipboard-write"></iframe>
+</div>
+<script>
+(function(){
+  var btn=document.getElementById('hkAiBtn'), panel=document.getElementById('hkAiPanel'),
+      frame=document.getElementById('hkAiFrame'), close=document.getElementById('hkAiClose'), loaded=false;
+  if(!btn) return;
+  btn.addEventListener('click', function(){
+    /* load the agent only when it is actually opened */
+    if(!loaded){ frame.src='https://agent.jotform.com/019568594d0a79c6a0dc6cb7237c86324108?embedMode=popup'; loaded=true; }
+    panel.hidden=false; panel.classList.add('open');
+  });
+  close.addEventListener('click', function(){ panel.classList.remove('open'); panel.hidden=true; });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape'&&!panel.hidden){ panel.classList.remove('open'); panel.hidden=true; } });
+})();
+</script>
 </body></html>
