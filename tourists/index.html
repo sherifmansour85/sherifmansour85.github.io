@@ -19,7 +19,7 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="theme-color" content="#1A1610">
-    <meta name="build" content="2026-10-05-1452">
+    <meta name="build" content="2026-10-06-0933">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -326,17 +326,19 @@ footer .footer-bottom>.footer-legal:last-child a:hover{text-decoration:underline
    exists; the Arabic pages have none and keep theirs. */
 #root ~ .fab-stack{display:none!important}
 
-@media(max-width:600px){
-  .fab-stack{bottom:84px!important;right:14px!important;gap:10px!important}
-  .fab,.fab-wa{width:54px!important;height:54px!important}
-  .fab-wa svg{width:27px;height:27px}
-}
 
-/* Floating controls — one definition. Jotform's launcher sits bottom-right;
-   WhatsApp stacks directly above it at the same size. */
-.fab-stack{position:fixed!important;bottom:100px!important;right:24px!important;
-  left:auto!important;inset-inline-start:auto!important;z-index:998;
-  display:flex!important;flex-direction:column!important;align-items:center!important;gap:0!important}
+
+
+
+.fab-stack{transform:none!important}
+body.form-active .fab-stack{transform:none!important;opacity:.35}
+
+/* Floating controls: WhatsApp bottom-left, Jotform's own launcher bottom-right,
+   both at the same height so they read as a pair framing the page. */
+.fab-stack{position:fixed!important;bottom:24px!important;left:24px!important;
+  right:auto!important;inset-inline-start:auto!important;z-index:998;
+  display:flex!important;flex-direction:row!important;align-items:center!important;
+  gap:0!important;transform:none!important}
 .fab-wa{width:60px!important;height:60px!important;border-radius:50%!important;
   background:#25D366!important;display:flex!important;align-items:center;justify-content:center;
   box-shadow:0 6px 18px rgba(26,22,16,.24);text-decoration:none;transition:transform .2s}
@@ -344,14 +346,100 @@ footer .footer-bottom>.footer-legal:last-child a:hover{text-decoration:underline
 .fab-wa svg{width:30px;height:30px}
 .fab-ai{display:none!important}
 #root ~ .fab-stack{display:none!important}
+body.form-active .fab-stack{transform:none!important;opacity:.4}
+/* keep the launchers clear of the footer text */
+footer{padding-bottom:104px!important}
 @media(max-width:600px){
-  .fab-stack{bottom:92px!important;right:16px!important}
+  .fab-stack{bottom:18px!important;left:16px!important}
   .fab-wa{width:54px!important;height:54px!important}
   .fab-wa svg{width:27px;height:27px}
+  footer{padding-bottom:96px!important}
 }
 
-.fab-stack{transform:none!important}
-body.form-active .fab-stack{transform:none!important;opacity:.35}
+/* The ▾ character renders as a dot in several Arabic fonts. Draw the chevron
+   with CSS borders instead so it is identical in both languages. */
+.nav-caret{display:inline-block;width:0;height:0;border-left:4px solid transparent;
+  border-right:4px solid transparent;border-top:5px solid currentColor;
+  opacity:.55;margin-inline-start:6px;vertical-align:middle;font-size:0;line-height:0;transition:transform .2s}
+.nav-drop:hover .nav-caret,.nav-drop:focus-within .nav-caret,.nav-drop.open .nav-caret{transform:rotate(180deg);opacity:.9}
+
+/* These blocks sit outside the React root so crawlers can read them; React
+   renders its own copy, so hide them once the app has mounted. */
+
+
+/* Own lightweight launcher — the Jotform platform script was heavy and prompted
+   visitors to sign in. The iframe loads only when the panel is opened. */
+.fab-ai-own{position:fixed;bottom:24px;right:24px;z-index:998;width:60px;height:60px;
+  border-radius:50%;border:none;padding:0;cursor:pointer;overflow:hidden;background:#1A1610;
+  box-shadow:0 6px 18px rgba(26,22,16,.24);transition:transform .2s}
+.fab-ai-own:hover{transform:translateY(-2px)}
+.fab-ai-own img{width:100%;height:100%;object-fit:cover;display:block}
+.ai-own{position:fixed;bottom:96px;right:24px;z-index:999;
+  width:min(440px,calc(100vw - 40px));height:min(660px,calc(100vh - 150px));
+  background:#fff;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:0 18px 50px rgba(26,22,16,.3)}
+.ai-own[hidden]{display:none}
+.ai-own-head{background:#1A1610;color:#F3ECD9;padding:12px 16px;display:flex;
+  align-items:center;justify-content:space-between;font-size:14px;font-family:inherit}
+.ai-own-head button{background:none;border:none;color:#F3ECD9;font-size:24px;cursor:pointer;line-height:1}
+.ai-own iframe{flex:1;width:100%;border:0}
+@media(max-width:600px){
+  .fab-ai-own{bottom:18px;right:16px;width:54px;height:54px}
+  .ai-own{inset:0;width:100%;height:100%;border-radius:0}
+}
+
+/* Partner logos: two identical tracks side by side, translated by exactly half
+   the rail width so the loop is seamless. */
+.pm-viewport{overflow:hidden!important;width:100%}
+.pm-rail{display:flex!important;width:max-content!important;
+  animation:pmScroll 40s linear infinite!important;transform:translateZ(0)}
+.pm-rail:hover{animation-play-state:paused}
+.pm-track{display:flex!important;flex:0 0 auto}
+.pm-item{flex:0 0 auto;padding:0 28px;display:flex;align-items:center}
+.pm-item img{height:54px;width:auto;object-fit:contain;opacity:.85}
+@keyframes pmScroll{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+@media (prefers-reduced-motion: reduce){.pm-rail{animation:none!important}.pm-viewport{overflow-x:auto!important}}
+
+/* English dropdowns: draw the chevron with CSS so both languages match. */
+.nav-drop-btn::after{content:'';display:inline-block;width:0;height:0;
+  border-left:4px solid transparent;border-right:4px solid transparent;
+  border-top:5px solid currentColor;opacity:.55;margin-left:6px;
+  vertical-align:middle;transition:transform .2s}
+.nav-drop:hover .nav-drop-btn::after,.nav-drop:focus-within .nav-drop-btn::after{transform:rotate(180deg);opacity:.9}
+/* the Arabic pages already render their own .nav-caret span */
+.arlinks .nav-drop-btn::after{display:none}
+
+
+/* Physical positioning only — logical properties flip in RTL and were pulling
+   the WhatsApp button to the right on the Arabic pages. */
+.fab-stack{position:fixed!important;bottom:24px!important;left:24px!important;
+  right:auto!important;inset-inline-start:unset!important;inset-inline-end:unset!important;
+  z-index:998;display:flex!important;flex-direction:row!important;align-items:center!important;
+  gap:0!important;transform:none!important}
+.fab-ai-own{position:fixed!important;bottom:24px!important;right:24px!important;left:auto!important}
+.fab-wa,.fab-ai-own{width:60px!important;height:60px!important}
+@media(max-width:600px){
+  .fab-stack{bottom:18px!important;left:16px!important;right:auto!important}
+  .fab-ai-own{bottom:18px!important;right:16px!important;left:auto!important}
+  .fab-wa,.fab-ai-own{width:54px!important;height:54px!important}
+}
+
+/* Each control positioned directly — a flex container flips under RTL, which
+   kept pulling WhatsApp to the right on the Arabic pages. */
+.fab-stack{position:static!important;display:contents!important}
+.fab-wa{position:fixed!important;bottom:24px!important;left:24px!important;right:auto!important;
+  width:60px!important;height:60px!important;border-radius:50%!important;background:#25D366!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  box-shadow:0 6px 18px rgba(26,22,16,.24);text-decoration:none;z-index:998;transform:none!important}
+.fab-ai-own{position:fixed!important;bottom:24px!important;right:24px!important;left:auto!important;
+  width:60px!important;height:60px!important;z-index:998}
+.fab-wa svg{width:30px!important;height:30px!important}
+.fab-ai{display:none!important}
+@media(max-width:600px){
+  .fab-wa{bottom:18px!important;left:16px!important;width:54px!important;height:54px!important}
+  .fab-ai-own{bottom:18px!important;right:16px!important;width:54px!important;height:54px!important}
+  .fab-wa svg{width:27px!important;height:27px!important}
+}
 </style>
   <script id="ld-page" type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.hayakkom.com/"},{"@type":"ListItem","position":2,"name":"Tourists in Egypt","item":"https://www.hayakkom.com/tourists"}]},{"@type":"WebPage","@id":"https://www.hayakkom.com/tourists","url":"https://www.hayakkom.com/tourists","name":"Tourists in Egypt — Doctor Visits, Day Trips & Emergency Help | Hayakkom","description":"Already in Egypt? Hotel doctor visits, dental emergencies, private day trips, transfers and 24/7 WhatsApp support in Cairo, Luxor, Aswan, Hurghada, Sharm and Alexandria.","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Hayakkom","url":"https://www.hayakkom.com"},"about":{"@type":"Organization","name":"Hayakkom","url":"https://www.hayakkom.com","logo":"https://www.hayakkom.com/assets/logo.png","telephone":"+201031567949","email":"support@hayakkom.com"}}]}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16686203605"></script>
@@ -382,5 +470,72 @@ body.form-active .fab-stack{transform:none!important;opacity:.35}
   setTimeout(bind,2500);   /* forms mount lazily */
 })();
 </script>
-<script src='https://cdn.jotfor.ms/agent/embedjs/019568594d0a79c6a0dc6cb7237c86324108/embed.js'></script>
+
+
+<button class="fab fab-ai-own" type="button" id="hkAi" aria-label="Chat">
+  <img src="/assets/ai-avatar.png" alt="" aria-hidden="true">
+</button>
+<div class="ai-own" id="hkAiPanel" hidden>
+  <div class="ai-own-head"><span id="hkAiTitle">Hayakkom Assistant</span>
+    <button type="button" id="hkAiX" aria-label="Close">&times;</button></div>
+  <iframe id="hkAiFrame" title="Assistant" allow="microphone; autoplay; clipboard-write"></iframe>
+</div>
+<script>
+(function(){
+  var b=document.getElementById('hkAi'),p=document.getElementById('hkAiPanel'),
+      fr=document.getElementById('hkAiFrame'),x=document.getElementById('hkAiX'),loaded=false;
+  if(!b) return;
+  if(document.documentElement.lang==='ar'){
+    b.setAttribute('aria-label','المساعد');
+    var t=document.getElementById('hkAiTitle'); if(t) t.textContent='مساعد حياكم';
+  }
+  b.addEventListener('click',function(){
+    if(!loaded){ fr.src='https://agent.jotform.com/019568594d0a79c6a0dc6cb7237c86324108?embedMode=popup'; loaded=true; }
+    p.hidden=false;
+  });
+  x.addEventListener('click',function(){ p.hidden=true; });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') p.hidden=true; });
+})();
+</script>
+
+<script>
+/* The prerendered HTML closes #root early, so a second copy of the lower
+   sections and footer can end up outside React. Once the app has rendered,
+   remove any such duplicate. Crawlers never run this, so they still read the
+   prerendered content. */
+(function(){
+  var tries=0;
+  function clean(){
+    var root=document.getElementById('root');
+    if(!root || root.children.length===0){ if(++tries<40) setTimeout(clean,100); return; }
+    document.body.classList.add('hk-mounted');
+    /* anything duplicated outside the React root goes */
+    document.querySelectorAll('body > footer, body > #hk-prerender').forEach(function(el){
+      el.remove();
+    });
+    /* and any stray section that React also renders */
+    var seen={};
+    document.querySelectorAll('footer').forEach(function(f,i){
+      if(i>0 && !f.closest('#root')) f.remove();
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',clean);
+  else clean();
+})();
+</script>
+
+<script>
+/* Remove any control duplicated by the prerendered copy. */
+(function(){
+  function dedupe(){
+    ['.fab-wa','.fab-ai-own','footer'].forEach(function(sel){
+      var all=[...document.querySelectorAll(sel)];
+      if(all.length<2) return;
+      var keep = all.find(function(e){return e.closest('#root');}) || all[all.length-1];
+      all.forEach(function(e){ if(e!==keep && !e.closest('#root')) e.remove(); });
+    });
+  }
+  setTimeout(dedupe,900); setTimeout(dedupe,2200);
+})();
+</script>
 </body></html>
