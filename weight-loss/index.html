@@ -19,7 +19,7 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="theme-color" content="#1A1610">
-    <meta name="build" content="2026-10-06-1211">
+    <meta name="build" content="2026-10-06-1228">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -730,13 +730,22 @@ body.cc-visible .fab-ai-own{bottom:104px!important}
     var ar=isAr();
     bar.setAttribute('dir', ar?'rtl':'ltr');
     bar.querySelectorAll('a,button').forEach(function(el){
+      /* never rewrite the wordmark or the hamburger — they carry inner markup
+         (the gold span, the three bars) that textContent would destroy */
+      if(el.classList.contains('enlogo') || el.classList.contains('enburger')) return;
       if(!el.dataset.en){
-        var t=el.childNodes[0];
-        el.dataset.en = (t && t.nodeType===3 ? t.textContent : el.textContent).trim();
+        var t0=el.childNodes[0];
+        el.dataset.en = (t0 && t0.nodeType===3 ? t0.textContent : el.textContent).trim();
       }
       var en=el.dataset.en, lbl = ar ? (AR[en]||en) : en;
       var t=el.childNodes[0];
-      if(t && t.nodeType===3) t.textContent = lbl; else el.textContent = lbl;
+      if(t && t.nodeType===3) t.textContent = lbl;
+      else {
+        /* keep any child elements (carets) and only swap the label text */
+        var done=false;
+        el.childNodes.forEach(function(n){ if(!done && n.nodeType===3 && n.textContent.trim()){ n.textContent=lbl; done=true; } });
+        if(!done) el.insertBefore(document.createTextNode(lbl), el.firstChild);
+      }
       var h=el.getAttribute('href');
       if(h && h.charAt(0)==='/'){
         var slug=h.replace(/^\//,'').replace(/\/$/,'').split('?')[0];
