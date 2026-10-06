@@ -19,7 +19,7 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="theme-color" content="#1A1610">
-    <meta name="build" content="2026-10-06-1139">
+    <meta name="build" content="2026-10-06-1200">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -511,6 +511,13 @@ body.cc-visible .fab-ai-own{bottom:104px!important}
     color:var(--muted,#6A5C4C)!important;background:none!important}
   .enlinks .nav-drop::after{display:none!important}
 }
+
+/* Wordmark gold matches the English site: the brighter tone on the logo only,
+   the deeper --gold-text everywhere else. */
+.enlogo span,.arlogo span{color:var(--gold-text,#7D6318)!important}
+.footer-logo .gold{color:var(--gold2,#D4A843)!important}
+.gold{color:var(--gold-text,#7D6318)}
+.sec-eyebrow-text,.featured-tag{color:var(--gold-text,#7D6318)}
 </style>
   <script id="ld-page" type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.hayakkom.com/"},{"@type":"ListItem","position":2,"name":"Cosmetic & Plastic Surgery in Egypt for Gulf Patients","item":"https://www.hayakkom.com/cosmetic-surgery"}]},{"@type":"WebPage","@id":"https://www.hayakkom.com/cosmetic-surgery","url":"https://www.hayakkom.com/cosmetic-surgery","name":"Cosmetic & Plastic Surgery in Egypt for Gulf Patients | Hayakkom","description":"Rhinoplasty, liposuction, tummy tuck and breast surgery in Egypt coordinated for Gulf patients — surgeon selection, realistic recovery planning and discreet coordination.","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Hayakkom","url":"https://www.hayakkom.com"},"about":{"@type":"Organization","name":"Hayakkom","url":"https://www.hayakkom.com","logo":"https://www.hayakkom.com/assets/logo.png","telephone":"+201031567949","email":"support@hayakkom.com"}},{"@type":"Service","name":"Cosmetic & Plastic Surgery in Egypt for Gulf Patients","description":"Rhinoplasty, liposuction, tummy tuck and breast surgery in Egypt coordinated for Gulf patients — surgeon selection, realistic recovery planning and discreet coordination.","url":"https://www.hayakkom.com/cosmetic-surgery","provider":{"@type":"ProfessionalService","name":"Hayakkom","legalName":"Hayakom for Healthcare Solutions and Logistic Services","url":"https://www.hayakkom.com","telephone":"+201031567949"},"areaServed":["Saudi Arabia","United Arab Emirates","Kuwait","Egypt"],"availableLanguage":["Arabic","English"]}]}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16686203605"></script>
@@ -595,6 +602,12 @@ body.cc-visible .fab-ai-own{bottom:104px!important}
       if(el.classList && (el.classList.contains('fab-ai-own') || el.classList.contains('ai-own') ||
          el.classList.contains('enmob') || el.classList.contains('cc-bar'))) return;
       if(el.id === 'enMobBar' || el.id === 'hkCc') return;
+      if(el.classList && el.classList.contains('hk-links')){
+        /* this block is prerendered outside the root — move it above the footer */
+        var ft = root.querySelector('footer');
+        if(ft && ft.parentNode) ft.parentNode.insertBefore(el, ft);
+        return;
+      }
       if(el.id === 'hkAiPanel' || el.id === 'hkAi') return;
       el.remove();
     });
@@ -644,6 +657,120 @@ body.cc-visible .fab-ai-own{bottom:104px!important}
   document.addEventListener('click',function(e){
     if(!n.contains(e.target)&&!b.contains(e.target)){ n.classList.remove('open'); b.setAttribute('aria-expanded','false'); }
   });
+})();
+</script>
+
+<script>
+/* This menu sits outside the React root, so it does not follow the app's
+   language. Detect the language and swap labels and links accordingly. */
+(function(){
+  var bar=document.getElementById('enMobBar'); if(!bar) return;
+  function isAr(){
+    var q=new URLSearchParams(location.search).get('lang');
+    if(q==='ar') return true; if(q==='en') return false;
+    if(location.pathname.indexOf('/ar/')===0) return true;
+    try{ return localStorage.getItem('hk-lang')==='ar'; }catch(e){ return false; }
+  }
+  var AR={
+    'Treatments':'العلاجات','Services &amp; Packages':'الخدمات والباقات','Services & Packages':'الخدمات والباقات',
+    'Saudi Patients':'للسعوديين','About':'من نحن','Guides':'أدلة','Contact':'تواصل معنا',
+    'Dental Treatment':'علاج الأسنان','Hair Transplant':'زراعة الشعر','Weight Loss Surgery':'جراحات التخسيس',
+    'Cosmetic Surgery':'جراحات التجميل','Medical Tourism':'السياحة العلاجية',
+    'Recovery & Wellness':'الاستشفاء والتعافي','All Treatments':'كل العلاجات',
+    'Accommodation & Transfers':'الإقامة والتنقلات','VIP Trips':'رحلات VIP','Nile Cruises':'الرحلات النيلية',
+    'Coastal & Red Sea':'الساحل والبحر الأحمر','Tourists in Egypt':'السياح في مصر',
+    'Medical Conferences':'المؤتمرات الطبية','Study in Egypt':'الدراسة في مصر','Partner With Us':'كن شريكاً'
+  };
+  var AR_PAGES=['dental','hair-transplant','weight-loss','cosmetic-surgery','medical','wellness',
+    'packages','about','contact','conferences','tourists','partners','services','vip-trip',
+    'nile-cruise','educational','saudi-arabia'];
+  function apply(){
+    var ar=isAr();
+    bar.setAttribute('dir', ar?'rtl':'ltr');
+    bar.querySelectorAll('a,button').forEach(function(el){
+      if(!el.dataset.en){
+        var t=el.childNodes[0];
+        el.dataset.en = (t && t.nodeType===3 ? t.textContent : el.textContent).trim();
+      }
+      var en=el.dataset.en, lbl = ar ? (AR[en]||en) : en;
+      var t=el.childNodes[0];
+      if(t && t.nodeType===3) t.textContent = lbl; else el.textContent = lbl;
+      var h=el.getAttribute('href');
+      if(h && h.charAt(0)==='/'){
+        var slug=h.replace(/^\//,'').replace(/\/$/,'').split('?')[0];
+        if(ar){
+          if(h.indexOf('/ar/')===0) return;                 /* already Arabic */
+          if(slug==='') el.setAttribute('href','/ar/');
+          else if(AR_PAGES.indexOf(slug)>=0) el.setAttribute('href','/ar/'+slug+'/');
+          else if(h.indexOf('lang=')<0) el.setAttribute('href','/'+slug+'/?lang=ar');
+        } else if(h.indexOf('/ar/')===0){
+          el.setAttribute('href', h.replace('/ar/','/'));   /* back to English */
+        }
+      }
+    });
+    var lang=bar.querySelector('.enlang');
+    if(lang){ lang.textContent = ar?'English':'العربية';
+      lang.setAttribute('href', ar?(location.pathname+'?lang=en'):(location.pathname+'?lang=ar')); }
+  }
+  apply();
+  document.addEventListener('click', function(){ setTimeout(apply,150); });
+  window.addEventListener('popstate', apply);
+})();
+</script>
+
+
+<script>
+/* Related links. The prerendered copy is wiped when React renders, so build it
+   here and place it above the footer once the app has mounted. */
+(function(){
+  var ITEMS = [["/saudi-arabia/", "For patients travelling from Saudi Arabia"], ["/packages/", "Accommodation and transfers"], ["/wellness/", "Recovery after surgery"], ["/contact/", "Send your case for review"]], AR = {"/saudi-arabia/": "العلاج في مصر للمرضى السعوديين", "/packages/": "الإقامة والتنقلات", "/medical/": "كيف تسير الرحلة العلاجية", "/wellness/": "الاستشفاء والتعافي", "/contact/": "أرسل تقاريرك", "/dental/": "زراعة الاسنان — التكلفة والمدة", "/hair-transplant/": "زراعة الشعر", "/weight-loss/": "تكميم المعدة"};
+  if(!ITEMS.length) return;
+  var tries=0;
+  function isAr(){
+    var q=new URLSearchParams(location.search).get('lang');
+    if(q==='ar') return true; if(q==='en') return false;
+    try{ return localStorage.getItem('hk-lang')==='ar'; }catch(e){ return false; }
+  }
+  function build(){
+    var root=document.getElementById('root');
+    var foot=root && root.querySelector('footer');
+    if(!foot){ if(++tries<60) return setTimeout(build,120); return; }
+    var old=document.getElementById('hkRelated'); if(old) old.remove();
+    var ar=isAr();
+    var sec=document.createElement('section');
+    sec.id='hkRelated'; sec.setAttribute('dir', ar?'rtl':'ltr');
+    sec.style.padding='0 6vw 56px';
+    var box=document.createElement('div');
+    box.style.maxWidth='780px'; box.style.margin='0 auto'; box.style.padding='22px 24px';
+    box.style.background='var(--sand,#FAF7F1)'; box.style.border='1px solid var(--border,#E3DACA)';
+    box.style.borderRadius='12px'; box.style.textAlign = ar?'right':'left';
+    var h=document.createElement('h2');
+    h.textContent = ar ? 'صفحات تهمك' : 'Pages you may need';
+    h.style.fontFamily='Georgia,serif'; h.style.fontSize='21px';
+    h.style.color='var(--dark,#1A1610)'; h.style.margin='0 0 10px';
+    var ul=document.createElement('ul');
+    ul.style.margin='0'; ul.style.lineHeight='2.1'; ul.style.fontSize='15px';
+    ul.style[ar?'paddingRight':'paddingLeft']='20px';
+    ITEMS.forEach(function(it){
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href = ar ? ('/ar'+it[0]) : it[0];
+      a.textContent = ar ? (AR[it[0]]||it[1]) : it[1];
+      a.style.color='var(--gold-text,#7D6318)'; a.style.textDecoration='none';
+      li.appendChild(a); ul.appendChild(li);
+    });
+    box.appendChild(h); box.appendChild(ul); sec.appendChild(box);
+    foot.parentNode.insertBefore(sec, foot);
+  }
+  /* React re-renders the root after mount and wipes anything inserted early,
+     so rebuild on a short schedule and whenever the DOM settles. */
+  function schedule(){ [300, 900, 1800, 3000].forEach(function(t){ setTimeout(build, t); }); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', schedule); else schedule();
+  document.addEventListener('click', function(){ setTimeout(build, 400); });
+  var mo=new MutationObserver(function(){
+    if(!document.getElementById('hkRelated')) { clearTimeout(window.__hkRel); window.__hkRel=setTimeout(build,250); }
+  });
+  mo.observe(document.getElementById('root')||document.body, {childList:true});
 })();
 </script>
 </body></html>

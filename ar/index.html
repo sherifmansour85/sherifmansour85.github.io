@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="build" content="2026-10-06-1139">
+<meta name="build" content="2026-10-06-1200">
 <title>السياحة العلاجية في مصر ٢٠٢٦ — تنسيق العلاج لمرضى الخليج | حياكم</title>
 <meta name="description" content="حياكم تنسّق السياحة العلاجية في مصر لمرضى السعودية والإمارات والكويت: مراجعة السجلات قبل السفر، والمواعيد والإقامة والتنقلات والمتابعة. شركة مصرية مرخّصة، سجل تجاري 49973.">
 <meta name="keywords" content="السياحة العلاجية في مصر، العلاج في مصر، زراعة الاسنان في مصر، زراعة الشعر في مصر، تكميم المعدة في مصر، الدراسة في مصر، حياكم">
@@ -23,7 +23,8 @@
 :root{--gold:#B8922A;--gold2:#D4A843;--gold3:#F0C96A;--gold-text:#7D6318;
   --dark:#1A1610;--ink:#3D3020;--muted:#6A5C4C;--sand:#FAF7F1;--sand2:#EDE7D9;
   --border:#E3DACA;--white:#FDFCF9}
-.arlogo span,.footer-logo .gold,.gold{color:var(--gold2)!important}
+.arlogo span{color:var(--gold2)}
+.footer-logo .gold{color:var(--gold2)}
 .arlang,.arlinks a:hover{color:var(--gold-text)}
 
 :root{--arfont:'Tajawal',system-ui,sans-serif}
@@ -493,6 +494,13 @@ body.cc-visible .fab-ai-own{bottom:104px!important}
 
 .pm-wrap,.pm-viewport{margin-inline:auto}
 .pm-hint,.pm-wrap+p,.arwrap .sec-sub{text-align:center!important;margin-inline:auto!important}
+
+/* Wordmark gold matches the English site: the brighter tone on the logo only,
+   the deeper --gold-text everywhere else. */
+.enlogo span,.arlogo span{color:var(--gold-text,#7D6318)!important}
+.footer-logo .gold{color:var(--gold2,#D4A843)!important}
+.gold{color:var(--gold-text,#7D6318)}
+.sec-eyebrow-text,.featured-tag{color:var(--gold-text,#7D6318)}
 </style>
 <style>
 /* homepage: the hero layers are fixed-position in the app; replicate here */

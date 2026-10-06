@@ -19,7 +19,7 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="theme-color" content="#1A1610">
-    <meta name="build" content="2026-10-06-1139">
+    <meta name="build" content="2026-10-06-1200">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -511,6 +511,13 @@ body.cc-visible .fab-ai-own{bottom:104px!important}
     color:var(--muted,#6A5C4C)!important;background:none!important}
   .enlinks .nav-drop::after{display:none!important}
 }
+
+/* Wordmark gold matches the English site: the brighter tone on the logo only,
+   the deeper --gold-text everywhere else. */
+.enlogo span,.arlogo span{color:var(--gold-text,#7D6318)!important}
+.footer-logo .gold{color:var(--gold2,#D4A843)!important}
+.gold{color:var(--gold-text,#7D6318)}
+.sec-eyebrow-text,.featured-tag{color:var(--gold-text,#7D6318)}
 </style>
   <script id="ld-page" type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.hayakkom.com/"},{"@type":"ListItem","position":2,"name":"Medical Conferences & Event Organisation in Egypt","item":"https://www.hayakkom.com/conferences"}]},{"@type":"WebPage","@id":"https://www.hayakkom.com/conferences","url":"https://www.hayakkom.com/conferences","name":"Medical Conferences & Event Organisation in Egypt | Hayakkom","description":"Hayakkom organises medical conferences, seminars, exhibitions and corporate medical events in Egypt — venue sourcing, delegate logistics, interpretation and on-site coordination.","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Hayakkom","url":"https://www.hayakkom.com"},"about":{"@type":"Organization","name":"Hayakkom","url":"https://www.hayakkom.com","logo":"https://www.hayakkom.com/assets/logo.png","telephone":"+201031567949","email":"support@hayakkom.com"}},{"@type":"Service","name":"Medical Conferences & Event Organisation in Egypt","description":"Hayakkom organises medical conferences, seminars, exhibitions and corporate medical events in Egypt — venue sourcing, delegate logistics, interpretation and on-site coordination.","url":"https://www.hayakkom.com/conferences","provider":{"@type":"ProfessionalService","name":"Hayakkom","legalName":"Hayakom for Healthcare Solutions and Logistic Services","url":"https://www.hayakkom.com","telephone":"+201031567949"},"areaServed":["Saudi Arabia","United Arab Emirates","Kuwait","Egypt"],"availableLanguage":["Arabic","English"]}]}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16686203605"></script>
@@ -595,6 +602,12 @@ body.cc-visible .fab-ai-own{bottom:104px!important}
       if(el.classList && (el.classList.contains('fab-ai-own') || el.classList.contains('ai-own') ||
          el.classList.contains('enmob') || el.classList.contains('cc-bar'))) return;
       if(el.id === 'enMobBar' || el.id === 'hkCc') return;
+      if(el.classList && el.classList.contains('hk-links')){
+        /* this block is prerendered outside the root — move it above the footer */
+        var ft = root.querySelector('footer');
+        if(ft && ft.parentNode) ft.parentNode.insertBefore(el, ft);
+        return;
+      }
       if(el.id === 'hkAiPanel' || el.id === 'hkAi') return;
       el.remove();
     });
@@ -644,6 +657,64 @@ body.cc-visible .fab-ai-own{bottom:104px!important}
   document.addEventListener('click',function(e){
     if(!n.contains(e.target)&&!b.contains(e.target)){ n.classList.remove('open'); b.setAttribute('aria-expanded','false'); }
   });
+})();
+</script>
+
+<script>
+/* This menu sits outside the React root, so it does not follow the app's
+   language. Detect the language and swap labels and links accordingly. */
+(function(){
+  var bar=document.getElementById('enMobBar'); if(!bar) return;
+  function isAr(){
+    var q=new URLSearchParams(location.search).get('lang');
+    if(q==='ar') return true; if(q==='en') return false;
+    if(location.pathname.indexOf('/ar/')===0) return true;
+    try{ return localStorage.getItem('hk-lang')==='ar'; }catch(e){ return false; }
+  }
+  var AR={
+    'Treatments':'العلاجات','Services &amp; Packages':'الخدمات والباقات','Services & Packages':'الخدمات والباقات',
+    'Saudi Patients':'للسعوديين','About':'من نحن','Guides':'أدلة','Contact':'تواصل معنا',
+    'Dental Treatment':'علاج الأسنان','Hair Transplant':'زراعة الشعر','Weight Loss Surgery':'جراحات التخسيس',
+    'Cosmetic Surgery':'جراحات التجميل','Medical Tourism':'السياحة العلاجية',
+    'Recovery & Wellness':'الاستشفاء والتعافي','All Treatments':'كل العلاجات',
+    'Accommodation & Transfers':'الإقامة والتنقلات','VIP Trips':'رحلات VIP','Nile Cruises':'الرحلات النيلية',
+    'Coastal & Red Sea':'الساحل والبحر الأحمر','Tourists in Egypt':'السياح في مصر',
+    'Medical Conferences':'المؤتمرات الطبية','Study in Egypt':'الدراسة في مصر','Partner With Us':'كن شريكاً'
+  };
+  var AR_PAGES=['dental','hair-transplant','weight-loss','cosmetic-surgery','medical','wellness',
+    'packages','about','contact','conferences','tourists','partners','services','vip-trip',
+    'nile-cruise','educational','saudi-arabia'];
+  function apply(){
+    var ar=isAr();
+    bar.setAttribute('dir', ar?'rtl':'ltr');
+    bar.querySelectorAll('a,button').forEach(function(el){
+      if(!el.dataset.en){
+        var t=el.childNodes[0];
+        el.dataset.en = (t && t.nodeType===3 ? t.textContent : el.textContent).trim();
+      }
+      var en=el.dataset.en, lbl = ar ? (AR[en]||en) : en;
+      var t=el.childNodes[0];
+      if(t && t.nodeType===3) t.textContent = lbl; else el.textContent = lbl;
+      var h=el.getAttribute('href');
+      if(h && h.charAt(0)==='/'){
+        var slug=h.replace(/^\//,'').replace(/\/$/,'').split('?')[0];
+        if(ar){
+          if(h.indexOf('/ar/')===0) return;                 /* already Arabic */
+          if(slug==='') el.setAttribute('href','/ar/');
+          else if(AR_PAGES.indexOf(slug)>=0) el.setAttribute('href','/ar/'+slug+'/');
+          else if(h.indexOf('lang=')<0) el.setAttribute('href','/'+slug+'/?lang=ar');
+        } else if(h.indexOf('/ar/')===0){
+          el.setAttribute('href', h.replace('/ar/','/'));   /* back to English */
+        }
+      }
+    });
+    var lang=bar.querySelector('.enlang');
+    if(lang){ lang.textContent = ar?'English':'العربية';
+      lang.setAttribute('href', ar?(location.pathname+'?lang=en'):(location.pathname+'?lang=ar')); }
+  }
+  apply();
+  document.addEventListener('click', function(){ setTimeout(apply,150); });
+  window.addEventListener('popstate', apply);
 })();
 </script>
 </body></html>
