@@ -363,3 +363,21 @@ body.cc-visible .fab-ai-own{bottom:104px!important}
   .cc-bar{padding-left:14px!important;padding-right:14px!important;padding-bottom:84px!important}
   body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{bottom:18px!important}
 }
+
+/* The app's desktop dropdown styling was overriding the mobile menu, so the
+   submenu floated as a white card instead of expanding inline. */
+@media(max-width:900px){
+  .enlinks .nav-sub{position:static!important;inset:auto!important;
+    background:transparent!important;box-shadow:none!important;border:0!important;
+    min-width:0!important;width:auto!important;opacity:1!important;visibility:visible!important;
+    transform:none!important;border-radius:0!important;
+    padding:0 14px!important;margin:0!important;
+    max-height:0!important;overflow:hidden!important;transition:max-height .25s ease!important}
+  .enlinks .nav-drop.open>.nav-sub{max-height:640px!important;padding-bottom:8px!important}
+  .enlinks .nav-drop:hover>.nav-sub,.enlinks .nav-drop:focus-within>.nav-sub{max-height:0}
+  .enlinks .nav-drop.open:hover>.nav-sub{max-height:640px!important}
+  .enlinks .nav-sub li{display:block!important;width:100%}
+  .enlinks .nav-sub a{display:block!important;padding:10px 8px!important;font-size:14px!important;
+    color:var(--muted,#6A5C4C)!important;background:none!important}
+  .enlinks .nav-drop::after{display:none!important}
+}
