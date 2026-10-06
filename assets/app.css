@@ -283,26 +283,9 @@ footer{padding-bottom:104px!important}
   .ai-own{inset:0;width:100%;height:100%;border-radius:0}
 }
 
-/* Partner logos: two identical tracks side by side, translated by exactly half
-   the rail width so the loop is seamless. */
-.pm-viewport{overflow:hidden!important;width:100%}
-.pm-rail{display:flex!important;width:max-content!important;
-  animation:pmScroll 40s linear infinite!important;transform:translateZ(0)}
-.pm-rail:hover{animation-play-state:paused}
-.pm-track{display:flex!important;flex:0 0 auto}
-.pm-item{flex:0 0 auto;padding:0 28px;display:flex;align-items:center}
-.pm-item img{height:54px;width:auto;object-fit:contain;opacity:.85}
-@keyframes pmScroll{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
-@media (prefers-reduced-motion: reduce){.pm-rail{animation:none!important}.pm-viewport{overflow-x:auto!important}}
 
-/* English dropdowns: draw the chevron with CSS so both languages match. */
-.nav-drop-btn::after{content:'';display:inline-block;width:0;height:0;
-  border-left:4px solid transparent;border-right:4px solid transparent;
-  border-top:5px solid currentColor;opacity:.55;margin-left:6px;
-  vertical-align:middle;transition:transform .2s}
-.nav-drop:hover .nav-drop-btn::after,.nav-drop:focus-within .nav-drop-btn::after{transform:rotate(180deg);opacity:.9}
-/* the Arabic pages already render their own .nav-caret span */
-.arlinks .nav-drop-btn::after{display:none}
+
+
 
 /* WhatsApp left, assistant right, identical size, level with each other. */
 .fab-stack{position:fixed!important;bottom:24px!important;
@@ -349,4 +332,16 @@ html[dir="rtl"] .fab-stack,body[dir="rtl"] .fab-stack{left:24px!important;right:
   .fab-wa{bottom:18px!important;left:16px!important;width:54px!important;height:54px!important}
   .fab-ai-own{bottom:18px!important;right:16px!important;width:54px!important;height:54px!important}
   .fab-wa svg{width:27px!important;height:27px!important}
+}
+
+/* Assistant panel: full screen on a phone. Without this it kept its desktop
+   width and sat partly off-screen, so it looked like it never loaded. */
+@media(max-width:700px){
+  .ai-own{position:fixed!important;inset:0!important;width:100%!important;height:100%!important;
+    height:100dvh!important;border-radius:0!important;bottom:0!important;right:0!important;left:0!important;top:0!important;
+    max-width:none!important;max-height:none!important;z-index:10000!important}
+  .ai-own-head{padding:14px 16px!important;font-size:15px!important;
+    padding-top:calc(14px + env(safe-area-inset-top,0px))!important}
+  .ai-own iframe{height:100%!important}
+  body.hk-ai-open{overflow:hidden}
 }
