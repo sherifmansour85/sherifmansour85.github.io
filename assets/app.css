@@ -345,3 +345,21 @@ html[dir="rtl"] .fab-stack,body[dir="rtl"] .fab-stack{left:24px!important;right:
   .ai-own iframe{height:100%!important}
   body.hk-ai-open{overflow:hidden}
 }
+
+/* Assistant avatar: crop to the top of the photo so the face is in frame. */
+.fab-avatar,.fab-ai-own img{object-fit:cover!important;object-position:50% 12%!important}
+
+/* Cookie bar: keep it clear of the floating controls on both sides, and give
+   the buttons room so neither covers the accept control or the text. */
+.cc-bar{left:0!important;right:0!important;bottom:0!important;
+  padding-left:96px!important;padding-right:96px!important;
+  z-index:1000!important;text-align:center}
+.cc-bar>*{max-width:900px;margin-inline:auto}
+.cc-bar .cc-actions,.cc-bar .cc-btns{justify-content:center!important}
+/* lift the controls while the bar is on screen */
+body.cc-visible .fab-wa{bottom:104px!important}
+body.cc-visible .fab-ai-own{bottom:104px!important}
+@media(max-width:700px){
+  .cc-bar{padding-left:14px!important;padding-right:14px!important;padding-bottom:84px!important}
+  body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{bottom:18px!important}
+}

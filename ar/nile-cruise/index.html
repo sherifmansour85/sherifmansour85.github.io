@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="build" content="2026-10-06-1024">
+<meta name="build" content="2026-10-06-1103">
 <title>الرحلات النيلية في مصر — الأقصر وأسوان | حياكم</title>
 <meta name="description" content="رحلات نيلية بين الأقصر وأسوان، منسّقة حول جدولك العلاجي. تُنفَّذ عبر مشغّلين مصريين مرخّصين.">
 <meta name="keywords" content="رحلة نيلية، كروز النيل، الأقصر وأسوان، رحلات النيل للخليجيين">
@@ -461,6 +461,39 @@ footer .footer-bottom>.footer-legal:first-child{text-align:center!important;
   .arlinks .nav-sub a{padding:10px 8px!important;font-size:14px!important}
   .arlinks .nav-drop::after{display:none}
 }
+
+/* Assistant avatar: crop to the top of the photo so the face is in frame. */
+.fab-avatar,.fab-ai-own img{object-fit:cover!important;object-position:50% 12%!important}
+
+/* Cookie bar: keep it clear of the floating controls on both sides, and give
+   the buttons room so neither covers the accept control or the text. */
+.cc-bar{left:0!important;right:0!important;bottom:0!important;
+  padding-left:96px!important;padding-right:96px!important;
+  z-index:1000!important;text-align:center}
+.cc-bar>*{max-width:900px;margin-inline:auto}
+.cc-bar .cc-actions,.cc-bar .cc-btns{justify-content:center!important}
+/* lift the controls while the bar is on screen */
+body.cc-visible .fab-wa{bottom:104px!important}
+body.cc-visible .fab-ai-own{bottom:104px!important}
+@media(max-width:700px){
+  .cc-bar{padding-left:14px!important;padding-right:14px!important;padding-bottom:84px!important}
+  body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{bottom:18px!important}
+}
+
+/* Cookie notice on the static Arabic pages — the React bar does not run here. */
+.cc-bar{position:fixed;left:0;right:0;bottom:0;z-index:1000;background:rgba(26,22,16,.97);
+  color:#F3ECD9;padding:14px 96px;display:flex;flex-direction:column;align-items:center;gap:10px;
+  font-size:13px;line-height:1.75;text-align:center;backdrop-filter:blur(8px)}
+.cc-bar[hidden]{display:none}
+.cc-bar p{margin:0;max-width:820px}
+.cc-btns{display:flex;gap:10px;justify-content:center}
+.cc-bar button{border:none;border-radius:22px;padding:9px 22px;font-family:inherit;font-size:13px;cursor:pointer}
+.cc-accept{background:#D4A843;color:#1A1610;font-weight:600}
+.cc-reject{background:transparent;color:#E3DACA;border:1px solid rgba(227,218,202,.4)}
+@media(max-width:700px){.cc-bar{padding:14px 14px 84px}}
+
+.pm-wrap,.pm-viewport{margin-inline:auto}
+.pm-hint,.pm-wrap+p,.arwrap .sec-sub{text-align:center!important;margin-inline:auto!important}
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "MedicalOrganization", "name": "Dar Al Fouad Hospital – 6th of October", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group", "url": "https://alameda-hc.com"}, "address": {"@type": "PostalAddress", "addressLocality": "6th of October City", "addressCountry": "EG"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "First hospital in Egypt to achieve JCI accreditation (2005), re-accredited for the sixth time in 2020, per Alameda Healthcare Group's published material. Cleveland Clinic Foundation partner."}, {"@type": "MedicalOrganization", "name": "Dar Al Fouad Hospital – Nasr City", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group"}, "address": {"@type": "PostalAddress", "addressLocality": "Nasr City, Cairo", "addressCountry": "EG"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "JCI accredited March 2022, per the group's published material."}, {"@type": "MedicalOrganization", "name": "As-Salam International Hospital – Maadi", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group"}, "address": {"@type": "PostalAddress", "addressLocality": "Maadi, Cairo", "addressCountry": "EG"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "Fourth JCI accreditation awarded September 2024, per the group's published material."}, {"@type": "MedicalOrganization", "name": "As-Salam International Hospital – New Cairo", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group"}, "address": {"@type": "PostalAddress", "addressLocality": "New Cairo", "addressCountry": "EG"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "JCI accredited within two years of opening, per the group's published material."}, {"@type": "MedicalOrganization", "name": "Andalusia Hospital", "parentOrganization": {"@type": "Organization", "name": "Andalusia Group for Medical Services", "url": "https://www.andalusiagroup.net", "foundingDate": "1984", "foundingLocation": {"@type": "Place", "name": "Jeddah, Saudi Arabia"}}, "address": {"@type": "PostalAddress", "addressCountry": "EG"}, "description": "Part of Andalusia Group, founded in Jeddah in 1984 and operating in Saudi Arabia and Egypt. Hayakkom is authorised to represent its services to Gulf clients under a letter of intent. No accreditation is claimed."}, {"@type": "MedicalOrganization", "name": "Contours Obesity Solutions — Dr Ahmed Shabana", "medicalSpecialty": "Bariatric", "address": {"@type": "PostalAddress", "addressCountry": "EG"}, "employee": {"@type": "Physician", "name": "Dr Ahmed Shabana", "medicalSpecialty": "Bariatric", "description": "Consultant in laparoscopic and bariatric surgery, per the practice's own letterhead."}, "description": "Hayakkom is authorised to represent its services to Gulf clients under a letter of intent. No accreditation is claimed."}, {"@type": "MedicalClinic", "name": "Care Clinic — عيادات عناية التخصصية", "address": {"@type": "PostalAddress", "streetAddress": "27 Oraby Street, Downtown", "addressLocality": "Cairo", "addressCountry": "EG"}, "description": "Hayakkom is authorised to represent its services to Gulf clients under a letter of intent. No accreditation is claimed."}]}</script>
 </head><body>
@@ -469,7 +502,7 @@ footer .footer-bottom>.footer-legal:first-child{text-align:center!important;
 <nav class="arlinks"><ul class="nav-links"><li class="nav-drop"><button class="nav-drop-btn" type="button" aria-haspopup="true">العلاجات<span class="nav-caret" aria-hidden="true">&#9662;</span></button><ul class="nav-sub"><li><a href="/ar/dental/">علاج الأسنان</a></li><li><a href="/ar/hair-transplant/">زراعة الشعر</a></li><li><a href="/ar/weight-loss/">جراحات التخسيس</a></li><li><a href="/ar/cosmetic-surgery/">جراحات التجميل</a></li><li><a href="/ar/medical/">السياحة العلاجية</a></li><li><a href="/ar/wellness/">الاستشفاء والتعافي</a></li><li><a href="/ar/services/">كل الخدمات</a></li></ul></li><li class="nav-drop"><button class="nav-drop-btn" type="button" aria-haspopup="true">الخدمات والباقات<span class="nav-caret" aria-hidden="true">&#9662;</span></button><ul class="nav-sub"><li><a href="/ar/packages/">الإقامة والتنقلات</a></li><li><a href="/ar/vip-trip/">رحلات VIP</a></li><li><a href="/ar/nile-cruise/">الرحلات النيلية</a></li><li><a href="/ar/tourists/">السياح في مصر</a></li><li><a href="/ar/conferences/">المؤتمرات الطبية</a></li><li><a href="/ar/educational/">الدراسة في مصر</a></li><li><a href="/ar/partners/">كن شريكاً</a></li></ul></li><li><a href="/ar/saudi-arabia/">للسعوديين</a></li><li><a href="/ar/about/">من نحن</a><a href="/ar/who-we-are/">ما هي حياكم؟</a><a href="/ar/travel-guide/">دليل السفر للعلاج</a></li><li><a href="/ar/contact/">تواصل معنا</a></li></ul></nav>
 <a class="arlang" href="/nile-cruise/?lang=en">English</a></div></header>
 <main class="arwrap">
-<div class="page-hero" style="background-image: url(&quot;https://images.weserv.nl/?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F32286115%2Fpexels-photo-32286115.jpeg%3Fauto%3Dcompress%26cs%3Dtinysrgb%26w%3D1600&amp;w=1400&q=80&output=webp);"><div class="page-hero-content"><div class="sec-eyebrow" style="margin-bottom: 14px;"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-text">الرحلات النيلية</span></div><h1>الرحلات النيلية في مصر</h1><p class="page-hero-sub">أبحر عبر التاريخ العريق على متن رحلة نيلية فاخرة — من فلوكة القاهرة إلى رحلات الأقصر-أسوان متعددة الأيام.</p></div></div><section class="section section-sand"><div class="sp-grid"><div><div class="sp-body-section"><h2 class="sp-h">خيارات الرحلات</h2><ul class="sp-list"><li>إبحار غروب بالفلوكة (القاهرة)</li><li>رحلة يومية (الأقصر أو أسوان)</li><li>رحلة الأقصر-أسوان 3-4 ليالٍ</li><li>رحلة فاخرة 5-7 ليالٍ مع جميع المواقع</li></ul></div><div class="sp-body-section"><h2 class="sp-h">ماذا تتوقع</h2><ul class="sp-list"><li>معبدا الكرنك والأقصر</li><li>وادي الملوك</li><li>إدفو ومعبد حورس</li><li>كوم أمبو</li><li>معبد فيلة</li><li>القرى النوبية</li><li>جميع الوجبات والجولات المرشَّدة والترفيه على السفينة مشمولة</li></ul></div><div class="sp-body-section"><h2 class="sp-h">أفضل وقت للإبحار</h2><p class="sp-p">أكتوبر-أبريل: درجات حرارة مثالية (20-28°م). مايو-سبتمبر: حار جداً والرحلات لا تزال تعمل. الكريسماس والعيد الأكثر ازدحاماً — احجز مسبقاً.</p></div></div><div class="enquiry-box"><div class="enquiry-box-header"><div class="enquiry-box-title">أرسل استفسارك</div><div class="enquiry-box-sub">سيتواصل معك فريقنا خلال ساعات</div></div><div class="enquiry-box-body"><div class="eq-contact"><a href="https://wa.me/201031567949" class="eq-btn eq-btn-gold">📱 واتساب الآن</a><a class="eq-btn eq-btn-outline" href="/contact" data-discover="true">صفحة التواصل</a></div><div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border);"><a href="tel:+201000100529" class="eq-phone">📞 مصر: <bdi>+20 100 010 0529</bdi></a><a href="tel:+966570909412" class="eq-phone">📞 السعودية: <bdi>+966 570 909 412</bdi></a><a href="tel:+971505306260" class="eq-phone">📞 الإمارات: <bdi>+971 505 306 260</bdi></a></div></div></div></div></section>
+<div class="page-hero" style="background-image: url(&quot;https://images.weserv.nl/?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F32286115%2Fpexels-photo-32286115.jpeg%3Fauto%3Dcompress%26cs%3Dtinysrgb%26w%3D1600&amp;w=1400&q=80&output=webp);"><div class="page-hero-content"><div class="sec-eyebrow" style="margin-bottom: 14px;"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-text">الرحلات النيلية</span></div><h1>الرحلات النيلية في مصر</h1><p class="page-hero-sub">أبحر عبر التاريخ العريق على متن رحلة نيلية فاخرة — من فلوكة القاهرة إلى رحلات الأقصر-أسوان متعددة الأيام.</p></div></div><section class="section section-sand"><div class="sp-grid"><div><div class="sp-body-section"><h2 class="sp-h">خيارات الرحلات</h2><ul class="sp-list"><li>إبحار غروب بالفلوكة (القاهرة)</li><li>رحلة يومية (الأقصر أو أسوان)</li><li>رحلة الأقصر-أسوان 3-4 ليالٍ</li><li>رحلة فاخرة 5-7 ليالٍ مع جميع المواقع</li></ul></div><div class="sp-body-section"><h2 class="sp-h">ماذا تتوقع</h2><ul class="sp-list"><li>معبدا الكرنك والأقصر</li><li>وادي الملوك</li><li>إدفو ومعبد حورس</li><li>كوم أمبو</li><li>معبد فيلة</li><li>القرى النوبية</li><li>جميع الوجبات والجولات المرشَّدة والترفيه على السفينة مشمولة</li></ul></div><div class="sp-body-section"><h2 class="sp-h">أفضل وقت للإبحار</h2><p class="sp-p">أكتوبر-أبريل: درجات حرارة مثالية (20-28°م). مايو-سبتمبر: حار جداً والرحلات لا تزال تعمل. الكريسماس والعيد الأكثر ازدحاماً — احجز مسبقاً.</p></div></div><div class="enquiry-box"><div class="enquiry-box-header"><div class="enquiry-box-title">أرسل استفسارك</div><div class="enquiry-box-sub">سيتواصل معك فريقنا خلال ساعات</div></div><div class="enquiry-box-body"><div class="eq-contact"><a href="https://wa.me/201031567949" class="eq-btn eq-btn-gold">📱 واتساب الآن</a><a class="eq-btn eq-btn-outline" href="/ar/contact/" data-discover="true">صفحة التواصل</a></div><div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border);"><a href="tel:+201000100529" class="eq-phone">📞 مصر: <bdi>+20 100 010 0529</bdi></a><a href="tel:+966570909412" class="eq-phone">📞 السعودية: <bdi>+966 570 909 412</bdi></a><a href="tel:+971505306260" class="eq-phone">📞 الإمارات: <bdi>+971 505 306 260</bdi></a></div></div></div></div></section>
 
 
 </main>
@@ -554,6 +587,67 @@ footer .footer-bottom>.footer-legal:first-child{text-align:center!important;
   });
   x.addEventListener('click',function(){ p.hidden=true; document.body.classList.remove('hk-ai-open'); });
   document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ p.hidden=true; document.body.classList.remove('hk-ai-open'); } });
+})();
+</script>
+
+<script>
+/* Flag the body while the cookie bar is visible so the floating controls can
+   move clear of it. */
+(function(){
+  function sync(){
+    var bar=document.querySelector('.cc-bar');
+    var on = bar && getComputedStyle(bar).display!=='none' && bar.getBoundingClientRect().height>0;
+    document.body.classList.toggle('cc-visible', !!on);
+  }
+  sync();
+  new MutationObserver(sync).observe(document.body,{childList:true,subtree:true});
+  [400,1200,2400].forEach(function(t){setTimeout(sync,t);});
+})();
+</script>
+
+<div class="cc-bar" id="hkCc" hidden>
+  <p>نستخدم ملفات تعريف الارتباط لتشغيل الموقع وقياس أدائه. ويمكنك قبولها أو رفض غير الضرورية.
+     <a href="/privacy/" style="color:#7D6318">سياسة الخصوصية</a></p>
+  <div class="cc-btns">
+    <button type="button" id="hkCcNo" class="cc-reject">رفض غير الضروري</button>
+    <button type="button" id="hkCcYes" class="cc-accept">قبول</button>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='hk-consent', bar=document.getElementById('hkCc');
+  if(!bar) return;
+  var saved=null; try{ saved=localStorage.getItem(KEY); }catch(e){}
+  if(saved){ return; }
+  bar.hidden=false; document.body.classList.add('cc-visible');
+  function set(v){ try{ localStorage.setItem(KEY,v); }catch(e){}
+    bar.hidden=true; document.body.classList.remove('cc-visible'); }
+  document.getElementById('hkCcYes').addEventListener('click',function(){set('all');});
+  document.getElementById('hkCcNo').addEventListener('click',function(){set('essential');});
+})();
+</script>
+
+<script>
+/* The partner rail is drag-scrolled by the app on the English pages. The
+   Arabic pages are static, so give them the same behaviour plus a gentle
+   auto-scroll that pauses while the visitor is dragging. */
+(function(){
+  var vp=document.querySelector('.pm-viewport'), rail=document.querySelector('.pm-rail');
+  if(!vp||!rail) return;
+  vp.style.overflowX='auto'; vp.style.cursor='grab'; vp.style.scrollbarWidth='none';
+  rail.style.animation='none'; rail.style.transform='none'; rail.style.width='max-content';
+  var down=false,x0=0,s0=0,auto=true;
+  vp.addEventListener('pointerdown',function(e){down=true;auto=false;x0=e.clientX;s0=vp.scrollLeft;vp.style.cursor='grabbing';vp.setPointerCapture(e.pointerId);});
+  vp.addEventListener('pointermove',function(e){if(!down)return;vp.scrollLeft=s0-(e.clientX-x0);});
+  ['pointerup','pointercancel','pointerleave'].forEach(function(ev){
+    vp.addEventListener(ev,function(){down=false;vp.style.cursor='grab';setTimeout(function(){auto=true;},2500);});
+  });
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!reduce) setInterval(function(){
+    if(!auto||down) return;
+    vp.scrollLeft += 0.5;
+    if(vp.scrollLeft >= rail.scrollWidth/2) vp.scrollLeft = 0;
+  },24);
 })();
 </script>
 </body></html>
