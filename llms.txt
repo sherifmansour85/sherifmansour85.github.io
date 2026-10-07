@@ -26,6 +26,9 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 
 - [دليل السفر إلى مصر للعلاج](https://www.hayakkom.com/ar/travel-guide/): practical Arabic guide covering entry paths, documents to prepare, realistic length of stay per treatment, accommodation and transfers, and what to leave Egypt with. Links to official sources.
 
+- [كيف تختار شركة تنسيق علاجي في مصر — ٧ معايير](https://www.hayakkom.com/ar/how-to-choose/): seven criteria a patient can verify independently before choosing a medical coordination company, including the one Hayakkom does not meet.
+- [حاسبة تكلفة الرحلة العلاجية](https://www.hayakkom.com/ar/calculator/): interactive estimate in SAR covering treatment, flights from Riyadh/Jeddah/Dammam, accommodation, transfers, expected number of trips and length of stay.
+
 ## Arabic pages (الصفحات العربية)
 
 - [السياحة العلاجية في مصر — الصفحة الرئيسية](https://www.hayakkom.com/ar/)

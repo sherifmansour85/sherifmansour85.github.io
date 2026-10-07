@@ -582,4 +582,14 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/travel-guide/"/>
     <lastmod>2026-10-05</lastmod><changefreq>monthly</changefreq><priority>0.9</priority>
   </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/how-to-choose/</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/how-to-choose/"/>
+    <lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/calculator/</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/calculator/"/>
+    <lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.9</priority>
+  </url>
 </urlset>

@@ -400,3 +400,24 @@ body.cc-visible .fab-ai-own{bottom:104px!important}
 .ai-dots span:nth-child(3){animation-delay:.36s}
 @keyframes aiDot{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-4px)}}
 @media (prefers-reduced-motion: reduce){.ai-dots span{animation:none;opacity:.6}}
+
+/* While the cookie bar is showing it must not cover the floating controls.
+   The bar reserves space at the bottom and the controls sit above it. */
+body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{bottom:132px!important}
+.cc-bar{padding-bottom:18px!important}
+@media(max-width:700px){
+  body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{bottom:auto!important;top:auto!important}
+  body.cc-visible .fab-wa{bottom:calc(18px + 150px)!important}
+  body.cc-visible .fab-ai-own{bottom:calc(18px + 150px)!important}
+  .cc-bar{padding-bottom:20px!important}
+}
+
+/* On a phone the cookie bar is tall enough to sit under the floating controls
+   whatever offset they are given, so hide them until the visitor has answered
+   it. One decision at a time, and nothing is ever unreachable. */
+@media(max-width:700px){
+  body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{display:none!important}
+}
+@media(min-width:701px){
+  body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{bottom:148px!important}
+}
