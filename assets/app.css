@@ -421,3 +421,8 @@ body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{bottom:132px!important}
 @media(min-width:701px){
   body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{bottom:148px!important}
 }
+
+/* Images: reserve space so nothing reflows, and never upscale beyond the box. */
+img{max-width:100%;height:auto}
+.pillar-card img,.svc-card img,[class*=card] img{aspect-ratio:3/2;object-fit:cover;width:100%}
+.pm-item img{height:54px;width:auto}

@@ -19,7 +19,7 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="theme-color" content="#1A1610">
-    <meta name="build" content="2026-10-07-1106">
+    <meta name="build" content="2026-10-07-1133">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -33,7 +33,6 @@
     <!-- PERF: preconnect / dns-prefetch -->
     <link rel="dns-prefetch" href="https://images.weserv.nl">
     <link rel="dns-prefetch" href="https://images.weserv.nl">
-    <link rel="dns-prefetch" href="https://de.cdn-website.com">
     <link rel="dns-prefetch" href="https://cdn.jotfor.ms">
     <link rel="dns-prefetch" href="https://form.jotform.com">
     <!-- The AI assistant iframe is the slowest thing a visitor waits on, so open
@@ -438,56 +437,6 @@ footer{padding-bottom:104px!important}
 /* Assistant avatar: crop to the top of the photo so the face is in frame. */
 .fab-avatar,.fab-ai-own img{object-fit:cover!important;object-position:50% 12%!important}
 
-/* Cookie bar: keep it clear of the floating controls on both sides, and give
-   the buttons room so neither covers the accept control or the text. */
-.cc-bar{left:0!important;right:0!important;bottom:0!important;
-  padding-left:96px!important;padding-right:96px!important;
-  z-index:1000!important;text-align:center}
-.cc-bar>*{max-width:900px;margin-inline:auto}
-.cc-bar .cc-actions,.cc-bar .cc-btns{justify-content:center!important}
-/* lift the controls while the bar is on screen */
-
-
-
-/* Mobile menu on the English pages, matching the Arabic one: a compact panel
-   under the header with collapsible groups, rather than a full-screen list. */
-.enmob{display:none}
-@media(max-width:900px){
-  .enmob{display:flex!important;position:sticky;top:0;z-index:400;
-    background:rgba(245,240,232,.96);backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--border,#E3DACA);
-    padding:12px 5%;align-items:center;gap:12px;justify-content:space-between}
-  /* hide the app's own header and drawer on mobile */
-  #root > header, #root nav.nav, .hamburger, #root .nav-links{display:none!important}
-  .enburger{background:none;border:none;cursor:pointer;padding:8px;display:flex;
-    flex-direction:column;gap:5px;width:40px;height:40px;align-items:center;justify-content:center}
-  .enburger span{display:block;width:22px;height:2px;background:var(--dark,#1A1610);border-radius:2px}
-  .enlogo{font-family:'Cormorant Garamond',Georgia,serif;font-size:21px;font-weight:700;
-    color:var(--dark,#1A1610);text-decoration:none}
-  .enlogo span{color:var(--gold2,#D4A843)}
-  .enlang{font-size:12px;border:1px solid var(--border,#E3DACA);padding:5px 11px;
-    border-radius:20px;color:var(--ink,#3D3020);text-decoration:none;white-space:nowrap}
-  .enlinks{display:none;position:fixed;inset:64px 0 auto 0;background:#FAF7F1;
-    border-bottom:1px solid var(--border,#E3DACA);box-shadow:0 14px 30px rgba(26,22,16,.14);
-    max-height:calc(100svh - 64px);overflow-y:auto;padding:8px 5% 16px;z-index:300}
-  .enlinks.open{display:block}
-  .enlinks ul.nav-links{display:flex!important;flex-direction:column;align-items:stretch;gap:0;
-    list-style:none;margin:0;padding:0}
-  .enlinks ul.nav-links>li{width:100%;border-bottom:1px solid rgba(227,218,202,.7);list-style:none}
-  .enlinks ul.nav-links>li>a,.enlinks .nav-drop-btn{display:flex!important;width:100%;
-    padding:13px 4px!important;font-size:15px;justify-content:space-between;align-items:center;
-    color:var(--ink,#3D3020);text-decoration:none;background:none;border:none;
-    font-family:inherit;cursor:pointer;text-align:left}
-  .enlinks .nav-sub{list-style:none;margin:0;padding:0 14px;
-    max-height:0;overflow:hidden;transition:max-height .25s ease}
-  .enlinks .nav-drop.open>.nav-sub{max-height:620px;padding-bottom:8px}
-  .enlinks .nav-sub a{display:block;padding:10px 8px;font-size:14px;
-    color:var(--muted,#6A5C4C);text-decoration:none}
-  .enlinks .nav-caret{display:inline-block;width:0;height:0;
-    border-left:4px solid transparent;border-right:4px solid transparent;
-    border-top:5px solid currentColor;opacity:.55;transition:transform .2s}
-  .enlinks .nav-drop.open .nav-caret{transform:rotate(180deg)}
-}
 
 /* The app's desktop dropdown styling was overriding the mobile menu, so the
    submenu floated as a white card instead of expanding inline. */
@@ -548,6 +497,11 @@ body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{bottom:132px!important}
 @media(min-width:701px){
   body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{bottom:148px!important}
 }
+
+/* Images: reserve space so nothing reflows, and never upscale beyond the box. */
+img{max-width:100%;height:auto}
+.pillar-card img,.svc-card img,[class*=card] img{aspect-ratio:3/2;object-fit:cover;width:100%}
+.pm-item img{height:54px;width:auto}
 </style>
   <script id="ld-page" type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.hayakkom.com/"},{"@type":"ListItem","position":2,"name":"السياحة العلاجية في مصر للمرضى الخليجيين","item":"https://www.hayakkom.com/blog/medical-tourism-egypt-gulf"}]},{"@type":"WebPage","@id":"https://www.hayakkom.com/blog/medical-tourism-egypt-gulf","url":"https://www.hayakkom.com/blog/medical-tourism-egypt-gulf","name":"السياحة العلاجية في مصر للمرضى الخليجيين — دليل 2026 | حياكم","description":"التكاليف والمستشفيات والإجراءات وما يمكن توقعه عند السفر من السعودية أو الإمارات أو الكويت للعلاج في مصر.","inLanguage":"ar","isPartOf":{"@type":"WebSite","name":"Hayakkom","url":"https://www.hayakkom.com"},"about":{"@type":"Organization","name":"Hayakkom","url":"https://www.hayakkom.com","logo":"https://www.hayakkom.com/assets/logo.png","telephone":"+201031567949","email":"support@hayakkom.com"}},{"@type":"Article","headline":"السياحة العلاجية في مصر للمرضى الخليجيين — دليل 2026","description":"التكاليف والمستشفيات والإجراءات وما يمكن توقعه عند السفر من السعودية أو الإمارات أو الكويت للعلاج في مصر.","url":"https://www.hayakkom.com/blog/medical-tourism-egypt-gulf","inLanguage":"ar","author":{"@type":"Organization","name":"Hayakkom","url":"https://www.hayakkom.com"},"publisher":{"@type":"Organization","name":"Hayakkom","url":"https://www.hayakkom.com","logo":{"@type":"ImageObject","url":"https://www.hayakkom.com/assets/logo.png"}},"image":"https://www.hayakkom.com/assets/og-image.jpg","datePublished":"2026-09-14","dateModified":"2026-09-17"}]}</script>
 <script defer src="https://www.googletagmanager.com/gtag/js?id=AW-16686203605"></script>
@@ -592,14 +546,14 @@ body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{bottom:132px!important}
 
 
 <button class="fab fab-ai-own" type="button" id="hkAi" aria-label="Chat">
-  <img src="https://images.weserv.nl/?url=le-de.cdn-website.com%2F570f220f41214a5784b09af2ac39327a%2Fdms3rep%2Fmulti%2Fopt%2FCapture-dccf701f-1920w.PNG&amp;w=180&amp;h=180&amp;fit=cover&amp;a=top&amp;q=82&amp;output=webp" alt="" aria-hidden="true" onerror="this.src='/assets/ai-avatar.png'">
+  <img src="/assets/ai-avatar.png" alt="" aria-hidden="true" onerror="this.src='/assets/ai-avatar.png'" loading="lazy" decoding="async">
 </button>
 <div class="ai-own" id="hkAiPanel" hidden>
   <div class="ai-own-head"><span id="hkAiTitle">Hayakkom Assistant</span>
     <button type="button" id="hkAiX" aria-label="Close">&times;</button></div>
   <div class="ai-own-body">
     <div class="ai-load" id="hkAiLoad">
-      <img src="https://images.weserv.nl/?url=le-de.cdn-website.com%2F570f220f41214a5784b09af2ac39327a%2Fdms3rep%2Fmulti%2Fopt%2FCapture-dccf701f-1920w.PNG&amp;w=180&amp;h=180&amp;fit=cover&amp;a=top&amp;q=82&amp;output=webp" alt="" aria-hidden="true" onerror="this.src='/assets/ai-avatar.png'">
+      <img src="/assets/ai-avatar.png" alt="" aria-hidden="true" onerror="this.src='/assets/ai-avatar.png'" loading="lazy" decoding="async">
       <p id="hkAiLoadText">Connecting you to the assistant…</p>
       <div class="ai-dots" aria-hidden="true"><span></span><span></span><span></span></div>
     </div>
