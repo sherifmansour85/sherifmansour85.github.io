@@ -426,3 +426,17 @@ body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{bottom:132px!important}
 img{max-width:100%;height:auto}
 .pillar-card img,.svc-card img,[class*=card] img{aspect-ratio:3/2;object-fit:cover;width:100%}
 .pm-item img{height:54px;width:auto}
+
+/* On mobile the compact menu replaces React's full-screen drawer; hide the
+   app's own header there so only one menu exists. Desktop keeps React's nav. */
+@media(max-width:900px){
+  #root > header,#root nav.nav,#root .nav-links,.hamburger,.mob-drawer{display:none!important}
+  .enmob{display:flex!important}
+}
+@media(min-width:901px){ .enmob{display:none!important} }
+
+/* One consent bar only — ours. React's own copy is hidden so the two cannot
+   overlap or cancel each other out. */
+#root .cc-bar{display:none!important}
+#hkCc{display:flex!important}
+#hkCc[hidden]{display:none!important}

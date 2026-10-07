@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="build" content="2026-10-07-1133">
+<meta name="build" content="2026-10-07-1154">
 <title>Medical Trip Cost Calculator — Egypt | Hayakkom</title>
 <meta name="description" content="Estimate the full cost of a medical trip to Egypt in SAR: treatment, flights from Riyadh, Jeddah, Dammam, Dubai or Kuwait, accommodation, transfers, plus the expected number of trips and length of stay.">
 <link rel="canonical" href="https://www.hayakkom.com/calculator/">
@@ -47,6 +47,20 @@
 .cc-bar button{border:none;border-radius:22px;padding:9px 22px;font-family:inherit;font-size:13.5px;cursor:pointer}
 .cc-accept{background:#D4A843;color:#1A1610;font-weight:600}
 .cc-reject{background:transparent;color:#E3DACA;border:1px solid rgba(227,218,202,.4)}
+
+/* On mobile the compact menu replaces React's full-screen drawer; hide the
+   app's own header there so only one menu exists. Desktop keeps React's nav. */
+@media(max-width:900px){
+  #root > header,#root nav.nav,#root .nav-links,.hamburger,.mob-drawer{display:none!important}
+  .enmob{display:flex!important}
+}
+@media(min-width:901px){ .enmob{display:none!important} }
+
+/* One consent bar only — ours. React's own copy is hidden so the two cannot
+   overlap or cancel each other out. */
+#root .cc-bar{display:none!important}
+#hkCc{display:flex!important}
+#hkCc[hidden]{display:none!important}
 </style></head>
 <body class="hk-calc">
 <header class="enmob" id="enMobBar"><button class="enburger" id="enBurger" type="button" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button><a class="enlogo" href="/"><span>Hayak</span>kom</a><a class="enlang" href="/?lang=ar">العربية</a><nav class="enlinks" id="enLinks"><ul class="nav-links"><li class="nav-drop"><button class="nav-drop-btn" type="button">Treatments<span class="nav-caret" aria-hidden="true"></span></button><ul class="nav-sub"><li><a href="/dental/">Dental Treatment</a></li><li><a href="/hair-transplant/">Hair Transplant</a></li><li><a href="/weight-loss/">Weight Loss Surgery</a></li><li><a href="/cosmetic-surgery/">Cosmetic Surgery</a></li><li><a href="/medical/">Medical Tourism</a></li><li><a href="/wellness/">Recovery &amp; Wellness</a></li><li><a href="/services/">All Treatments</a></li></ul></li><li class="nav-drop"><button class="nav-drop-btn" type="button">Services &amp; Packages<span class="nav-caret" aria-hidden="true"></span></button><ul class="nav-sub"><li><a href="/packages/">Accommodation &amp; Transfers</a></li><li><a href="/vip-trip/">VIP Trips</a></li><li><a href="/nile-cruise/">Nile Cruises</a></li><li><a href="/coastal/">Coastal &amp; Red Sea</a></li><li><a href="/tourists/">Tourists in Egypt</a></li><li><a href="/conferences/">Medical Conferences</a></li><li><a href="/educational/">Study in Egypt</a></li><li><a href="/partners/">Partner With Us</a></li></ul></li><li><a href="/saudi-arabia/">Saudi Patients</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Guides</a></li><li><a href="/contact/">Contact</a></li></ul></nav></header>
@@ -111,14 +125,14 @@ Hayakkom is a medical coordination company registered in Egypt, Commercial Regis
 
 
 <button class="fab fab-ai-own" type="button" id="hkAi" aria-label="Chat">
-  <img src="/assets/ai-avatar.png" alt="" aria-hidden="true" onerror="this.src='/assets/ai-avatar.png'" loading="lazy" decoding="async">
+  <img src="https://images.weserv.nl/?url=le-de.cdn-website.com%2F570f220f41214a5784b09af2ac39327a%2Fdms3rep%2Fmulti%2Fopt%2FCapture-dccf701f-1920w.PNG&amp;w=180&amp;h=180&amp;fit=cover&amp;a=top&amp;q=82&amp;output=webp" alt="" aria-hidden="true" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/assets/ai-avatar.png'">
 </button>
 <div class="ai-own" id="hkAiPanel" hidden>
   <div class="ai-own-head"><span id="hkAiTitle">Hayakkom Assistant</span>
     <button type="button" id="hkAiX" aria-label="Close">&times;</button></div>
   <div class="ai-own-body">
     <div class="ai-load" id="hkAiLoad">
-      <img src="/assets/ai-avatar.png" alt="" aria-hidden="true" onerror="this.src='/assets/ai-avatar.png'" loading="lazy" decoding="async">
+      <img src="https://images.weserv.nl/?url=le-de.cdn-website.com%2F570f220f41214a5784b09af2ac39327a%2Fdms3rep%2Fmulti%2Fopt%2FCapture-dccf701f-1920w.PNG&amp;w=180&amp;h=180&amp;fit=cover&amp;a=top&amp;q=82&amp;output=webp" alt="" aria-hidden="true" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/assets/ai-avatar.png'">
       <p id="hkAiLoadText">Connecting you to the assistant…</p>
       <div class="ai-dots" aria-hidden="true"><span></span><span></span><span></span></div>
     </div>

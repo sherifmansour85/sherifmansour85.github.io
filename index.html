@@ -19,7 +19,7 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="theme-color" content="#1A1610">
-    <meta name="build" content="2026-10-07-1133">
+    <meta name="build" content="2026-10-07-1154">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -509,6 +509,20 @@ body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{bottom:132px!important}
 img{max-width:100%;height:auto}
 .pillar-card img,.svc-card img,[class*=card] img{aspect-ratio:3/2;object-fit:cover;width:100%}
 .pm-item img{height:54px;width:auto}
+
+/* On mobile the compact menu replaces React's full-screen drawer; hide the
+   app's own header there so only one menu exists. Desktop keeps React's nav. */
+@media(max-width:900px){
+  #root > header,#root nav.nav,#root .nav-links,.hamburger,.mob-drawer{display:none!important}
+  .enmob{display:flex!important}
+}
+@media(min-width:901px){ .enmob{display:none!important} }
+
+/* One consent bar only — ours. React's own copy is hidden so the two cannot
+   overlap or cancel each other out. */
+#root .cc-bar{display:none!important}
+#hkCc{display:flex!important}
+#hkCc[hidden]{display:none!important}
 </style>
   <script id="ld-page" type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.hayakkom.com/"}]},{"@type":"WebPage","@id":"https://www.hayakkom.com/","url":"https://www.hayakkom.com/","name":"Hayakkom — Egypt Medical Tourism & VIP Travel for Gulf Travelers","description":"Licensed Egyptian company coordinating medical tourism, dental treatment, VIP tours and Nile cruises for Saudi, UAE and Kuwaiti travelers.","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Hayakkom","url":"https://www.hayakkom.com"},"about":{"@type":"Organization","name":"Hayakkom","url":"https://www.hayakkom.com","logo":"https://www.hayakkom.com/assets/logo.png","telephone":"+201031567949","email":"support@hayakkom.com"}}]}</script><script defer src="https://www.googletagmanager.com/gtag/js?id=AW-16686203605"></script>
     <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "MedicalOrganization", "name": "Dar Al Fouad Hospital – 6th of October", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group", "url": "https://alameda-hc.com"}, "address": {"@type": "PostalAddress", "addressLocality": "6th of October City", "addressCountry": "EG"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "First hospital in Egypt to achieve JCI accreditation (2005), re-accredited for the sixth time in 2020, per Alameda Healthcare Group's published material. Cleveland Clinic Foundation partner."}, {"@type": "MedicalOrganization", "name": "Dar Al Fouad Hospital – Nasr City", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group"}, "address": {"@type": "PostalAddress", "addressLocality": "Nasr City, Cairo", "addressCountry": "EG"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "JCI accredited March 2022, per the group's published material."}, {"@type": "MedicalOrganization", "name": "As-Salam International Hospital – Maadi", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group"}, "address": {"@type": "PostalAddress", "addressLocality": "Maadi, Cairo", "addressCountry": "EG"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "Fourth JCI accreditation awarded September 2024, per the group's published material."}, {"@type": "MedicalOrganization", "name": "As-Salam International Hospital – New Cairo", "parentOrganization": {"@type": "Organization", "name": "Alameda Healthcare Group"}, "address": {"@type": "PostalAddress", "addressLocality": "New Cairo", "addressCountry": "EG"}, "hasCredential": {"@type": "EducationalOccupationalCredential", "credentialCategory": "Joint Commission International (JCI) accreditation"}, "description": "JCI accredited within two years of opening, per the group's published material."}, {"@type": "MedicalOrganization", "name": "Andalusia Hospital", "parentOrganization": {"@type": "Organization", "name": "Andalusia Group for Medical Services", "url": "https://www.andalusiagroup.net", "foundingDate": "1984", "foundingLocation": {"@type": "Place", "name": "Jeddah, Saudi Arabia"}}, "address": {"@type": "PostalAddress", "addressCountry": "EG"}, "description": "Part of Andalusia Group, founded in Jeddah in 1984 and operating in Saudi Arabia and Egypt. Hayakkom is authorised to represent its services to Gulf clients under a letter of intent. No accreditation is claimed."}, {"@type": "MedicalOrganization", "name": "Contours Obesity Solutions — Dr Ahmed Shabana", "medicalSpecialty": "Bariatric", "address": {"@type": "PostalAddress", "addressCountry": "EG"}, "employee": {"@type": "Physician", "name": "Dr Ahmed Shabana", "medicalSpecialty": "Bariatric", "description": "Consultant in laparoscopic and bariatric surgery, per the practice's own letterhead."}, "description": "Hayakkom is authorised to represent its services to Gulf clients under a letter of intent. No accreditation is claimed."}, {"@type": "MedicalClinic", "name": "Care Clinic — عيادات عناية التخصصية", "address": {"@type": "PostalAddress", "streetAddress": "27 Oraby Street, Downtown", "addressLocality": "Cairo", "addressCountry": "EG"}, "description": "Hayakkom is authorised to represent its services to Gulf clients under a letter of intent. No accreditation is claimed."}]}</script>
@@ -547,14 +561,14 @@ img{max-width:100%;height:auto}
 
 
 <button class="fab fab-ai-own" type="button" id="hkAi" aria-label="Chat">
-  <img src="/assets/ai-avatar.png" alt="" aria-hidden="true" onerror="this.src='/assets/ai-avatar.png'" loading="lazy" decoding="async">
+  <img src="https://images.weserv.nl/?url=le-de.cdn-website.com%2F570f220f41214a5784b09af2ac39327a%2Fdms3rep%2Fmulti%2Fopt%2FCapture-dccf701f-1920w.PNG&amp;w=180&amp;h=180&amp;fit=cover&amp;a=top&amp;q=82&amp;output=webp" alt="" aria-hidden="true" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/assets/ai-avatar.png'">
 </button>
 <div class="ai-own" id="hkAiPanel" hidden>
   <div class="ai-own-head"><span id="hkAiTitle">Hayakkom Assistant</span>
     <button type="button" id="hkAiX" aria-label="Close">&times;</button></div>
   <div class="ai-own-body">
     <div class="ai-load" id="hkAiLoad">
-      <img src="/assets/ai-avatar.png" alt="" aria-hidden="true" onerror="this.src='/assets/ai-avatar.png'" loading="lazy" decoding="async">
+      <img src="https://images.weserv.nl/?url=le-de.cdn-website.com%2F570f220f41214a5784b09af2ac39327a%2Fdms3rep%2Fmulti%2Fopt%2FCapture-dccf701f-1920w.PNG&amp;w=180&amp;h=180&amp;fit=cover&amp;a=top&amp;q=82&amp;output=webp" alt="" aria-hidden="true" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/assets/ai-avatar.png'">
       <p id="hkAiLoadText">Connecting you to the assistant…</p>
       <div class="ai-dots" aria-hidden="true"><span></span><span></span><span></span></div>
     </div>
@@ -742,6 +756,29 @@ img{max-width:100%;height:auto}
   apply();
   document.addEventListener('click', function(){ setTimeout(apply,150); });
   window.addEventListener('popstate', apply);
+})();
+</script>
+
+<div class="cc-bar" id="hkCc" role="dialog" aria-label="Cookie consent" hidden>
+  <p>We use cookies to run this site and measure how it performs.
+     <a href="/privacy/">Privacy policy</a></p>
+  <div class="cc-btns">
+    <button type="button" id="hkCcNo" class="cc-reject">Reject non-essential</button>
+    <button type="button" id="hkCcYes" class="cc-accept">Accept</button>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='hk-consent', bar=document.getElementById('hkCc');
+  if(!bar) return;
+  var saved=null; try{ saved=localStorage.getItem(KEY); }catch(e){}
+  if(saved) return;
+  bar.hidden=false; document.body.classList.add('cc-visible');
+  function set(v){ try{ localStorage.setItem(KEY,v); }catch(e){}
+    bar.hidden=true; document.body.classList.remove('cc-visible'); }
+  var y=document.getElementById('hkCcYes'), nn=document.getElementById('hkCcNo');
+  y && y.addEventListener('click', function(){ set('all'); });
+  nn && nn.addEventListener('click', function(){ set('essential'); });
 })();
 </script>
 </body></html>
