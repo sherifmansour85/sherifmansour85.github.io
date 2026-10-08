@@ -41,7 +41,19 @@ a.out{background:transparent;border:1.5px solid rgba(184,146,42,.45);color:#1A16
 </script>
 <script defer src="https://www.googletagmanager.com/gtag/js?id=AW-16686203605"></script>
 <!-- /HK-GTAG-BLOCK -->
-</head>
+<!--HK-FAB-BLOCK--><style>
+/* Floating AI + WhatsApp buttons ride above the cookie bar (body.hk-ccv is set while it is on screen). */
+body.hk-ccv .fab-wa,body.hk-ccv .fab-ai-own{bottom:calc(var(--hk-cc-h,132px) + 14px)!important}
+body.hk-ccv .to-top{bottom:calc(var(--hk-cc-h,132px) + 14px)!important}
+body:not(.hk-ccv) .to-top{transform:none!important}
+</style><script>(function(){var d=document.documentElement;
+function m(){var b=document.getElementById('hkCc'),bd=document.body;if(!b||!bd)return;var r=b.getBoundingClientRect(),v=getComputedStyle(b).display!=='none'&&!b.hidden&&r.height>0;
+if(v)d.style.setProperty('--hk-cc-h',Math.round(r.height)+'px');bd.classList.toggle('hk-ccv',v);}
+m();window.addEventListener('load',m);window.addEventListener('resize',m);document.addEventListener('click',function(){setTimeout(m,60);setTimeout(m,400)},true);
+[100,400,1000,2500].forEach(function(t){setTimeout(m,t)});
+document.addEventListener('DOMContentLoaded',function(){m();var b=document.getElementById('hkCc');if(!b)return;
+ if(window.ResizeObserver)new ResizeObserver(m).observe(b);
+ new MutationObserver(m).observe(b,{attributes:true});new MutationObserver(m).observe(document.body,{attributes:true,attributeFilter:['class']});});})();</script><!--/HK-FAB-BLOCK--></head>
 <body>
   <div class="w">
     <div class="lg"><span>Hayak</span>kom</div>

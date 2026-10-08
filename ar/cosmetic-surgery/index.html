@@ -524,19 +524,15 @@ footer .footer-bottom>.footer-legal:first-child{text-align:center!important;
 
 /* While the cookie bar is showing it must not cover the floating controls.
    The bar reserves space at the bottom and the controls sit above it. */
-body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{bottom:132px!important}
+
 .cc-bar{padding-bottom:18px!important}
 
 
 /* On a phone the cookie bar is tall enough to sit under the floating controls
    whatever offset they are given, so hide them until the visitor has answered
    it. One decision at a time, and nothing is ever unreachable. */
-@media(max-width:700px){
-  body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{display:none!important}
-}
-@media(min-width:701px){
-  body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{bottom:148px!important}
-}
+
+
 
 /* Images: reserve space so nothing reflows, and never upscale beyond the box. */
 img{max-width:100%;height:auto}
@@ -605,7 +601,40 @@ section:has(.test-grid:empty){display:none!important}
 </script>
 <script defer src="https://www.googletagmanager.com/gtag/js?id=AW-16686203605"></script>
 <!-- /HK-GTAG-BLOCK -->
-</head>
+<!--HK-FAB-BLOCK--><style>
+/* Floating AI + WhatsApp buttons ride above the cookie bar (body.hk-ccv is set while it is on screen). */
+body.hk-ccv .fab-wa,body.hk-ccv .fab-ai-own{bottom:calc(var(--hk-cc-h,132px) + 14px)!important}
+body.hk-ccv .to-top{bottom:calc(var(--hk-cc-h,132px) + 14px)!important}
+body:not(.hk-ccv) .to-top{transform:none!important}
+</style><script>(function(){var d=document.documentElement;
+function m(){var b=document.getElementById('hkCc'),bd=document.body;if(!b||!bd)return;var r=b.getBoundingClientRect(),v=getComputedStyle(b).display!=='none'&&!b.hidden&&r.height>0;
+if(v)d.style.setProperty('--hk-cc-h',Math.round(r.height)+'px');bd.classList.toggle('hk-ccv',v);}
+m();window.addEventListener('load',m);window.addEventListener('resize',m);document.addEventListener('click',function(){setTimeout(m,60);setTimeout(m,400)},true);
+[100,400,1000,2500].forEach(function(t){setTimeout(m,t)});
+document.addEventListener('DOMContentLoaded',function(){m();var b=document.getElementById('hkCc');if(!b)return;
+ if(window.ResizeObserver)new ResizeObserver(m).observe(b);
+ new MutationObserver(m).observe(b,{attributes:true});new MutationObserver(m).observe(document.body,{attributes:true,attributeFilter:['class']});});})();</script><!--/HK-FAB-BLOCK--><!--HK-AR-POLISH--><style>
+/* ── Arabic pages: one type system, tighter rhythm, lighter photos ───────── */
+/* Fonts: Amiri for every heading/display line, Tajawal for everything else. Latin-only display faces
+   (Cormorant Garamond, Georgia) have no Arabic glyphs, so browsers substituted a different font per device. */
+html[dir="rtl"] h1,html[dir="rtl"] h2,html[dir="rtl"] h3,html[dir="rtl"] h4,
+html[dir="rtl"] .enquiry-box-title,html[dir="rtl"] .featured-title,html[dir="rtl"] .footer-tagline,
+html[dir="rtl"] .indiv-title,html[dir="rtl"] .pkg-name,html[dir="rtl"] .price-value,html[dir="rtl"] .proc-n,
+html[dir="rtl"] .route-city,html[dir="rtl"] .stat-num,html[dir="rtl"] .tourist-title,html[dir="rtl"] .arform h2{font-family:'Amiri','Tajawal',serif!important}
+html[dir="rtl"] body,html[dir="rtl"] button,html[dir="rtl"] input,html[dir="rtl"] select,html[dir="rtl"] textarea{font-family:'Tajawal',sans-serif}
+/* One body-text weight (some pages were light 300, others regular 400) and a calmer line height. */
+html[dir="rtl"] main p,html[dir="rtl"] main li,html[dir="rtl"] article p{font-weight:400!important}
+html[dir="rtl"] main p:not([style*="line-height"]),html[dir="rtl"] article p:not([style*="line-height"]){line-height:1.9!important}
+/* Vertical rhythm: bare <section> blocks inherited 72px top and bottom on top of their own margins (~200px between blocks). */
+html[dir="rtl"] main section:not([class]){padding-top:20px;padding-bottom:20px;margin-top:8px!important;margin-bottom:8px!important}
+html[dir="rtl"] main section[class*="section"]{padding-top:56px;padding-bottom:56px}
+@media(max-width:700px){html[dir="rtl"] main section[class*="section"]{padding-top:38px;padding-bottom:38px}}
+html[dir="rtl"] main section h2{margin-top:0}
+/* Photos: English pages use the standard overlay only; the extra Arabic-only scrim made them look muddy. */
+.page-hero::after{display:none!important}
+/* Contact cards: let the email wrap instead of spilling out of its box. */
+.contact-card-value{overflow-wrap:anywhere}
+</style><!--/HK-AR-POLISH--></head>
 <body>
 <header class="arnav"><div class="arnav-in"><button class="arburger" id="arBurger" type="button" aria-label="القائمة" aria-expanded="false"><span></span><span></span><span></span></button><a class="arlogo" href="/ar/"><span>Hayak</span>kom</a><nav class="arlinks"><ul class="nav-links"><li class="nav-drop"><button class="nav-drop-btn" type="button" aria-haspopup="true">العلاجات<span class="nav-caret" aria-hidden="true">&#9662;</span></button><ul class="nav-sub"><li><a href="/ar/dental/">علاج الأسنان</a></li><li><a href="/ar/hair-transplant/">زراعة الشعر</a></li><li><a href="/ar/weight-loss/">جراحات التخسيس</a></li><li><a href="/ar/cosmetic-surgery/">جراحات التجميل</a></li><li><a href="/ar/medical/">السياحة العلاجية</a></li><li><a href="/ar/wellness/">الاستشفاء والتعافي</a></li><li><a href="/ar/services/">كل الخدمات</a></li></ul></li><li class="nav-drop"><button class="nav-drop-btn" type="button" aria-haspopup="true">الخدمات والباقات<span class="nav-caret" aria-hidden="true">&#9662;</span></button><ul class="nav-sub"><li><a href="/ar/packages/">الإقامة والتنقلات</a></li><li><a href="/ar/vip-trip/">رحلات VIP</a></li><li><a href="/ar/nile-cruise/">الرحلات النيلية</a></li><li><a href="/ar/tourists/">السياح في مصر</a></li><li><a href="/ar/conferences/">المؤتمرات الطبية</a></li><li><a href="/ar/educational/">الدراسة في مصر</a></li><li><a href="/ar/partners/">كن شريكاً</a></li></ul></li><li class="nav-drop"><button class="nav-drop-btn" type="button">الأسعار والأدلة<span class="nav-caret" aria-hidden="true"></span></button><ul class="nav-sub"><li><a href="/ar/calculator/">حاسبة تكلفة الرحلة</a></li><li><a href="/ar/how-to-choose/">كيف تختار شركة تنسيق؟</a></li><li><a href="/ar/travel-guide/">دليل السفر للعلاج</a></li><li><a href="/ar/who-we-are/">ما هي حياكم؟</a></li><li><a href="/ar/blog/">المدونة</a></li></ul></li><li><a href="/ar/saudi-arabia/">للسعوديين</a></li><li><a href="/ar/about/">من نحن</a></li><li><a href="/ar/contact/">تواصل معنا</a></li></ul></nav><a class="arlang" href="/cosmetic-surgery/?lang=en">English</a></div></header>
 <main class="arwrap">

@@ -416,7 +416,7 @@ body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{bottom:132px!important}
    whatever offset they are given, so hide them until the visitor has answered
    it. One decision at a time, and nothing is ever unreachable. */
 @media(max-width:700px){
-  body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{display:none!important}
+  
 }
 @media(min-width:701px){
   body.cc-visible .fab-wa,body.cc-visible .fab-ai-own{bottom:148px!important}
