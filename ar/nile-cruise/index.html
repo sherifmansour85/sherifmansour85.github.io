@@ -17,7 +17,7 @@
 <link rel="icon" href="/favicon.svg">
 <link rel="stylesheet" href="/assets/app.css">
 <link rel="preconnect" href="https://fonts.googleapis.com"><noscript><link rel="preconnect" href="https://fonts.googleapis.com"></noscript><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@600;700&family=Tajawal:wght@300;400;500;700&display=swap" media="print" onload="this.media=\'all\'">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "ProfessionalService", "name": "حياكم", "url": "https://www.hayakkom.com/ar/nile-cruise/", "inLanguage": "ar", "description": "رحلات نيلية بين الأقصر وأسوان، منسّقة حول جدولك العلاجي. تُنفَّذ عبر مشغّلين مصريين مرخّصين.", "address": {"@type": "PostalAddress", "addressLocality": "الشيخ زايد، الجيزة", "addressCountry": "EG"}, "telephone": "+201000100529", "email": "support@hayakkom.com", "identifier": "سجل تجاري 49973", "sameAs": ["https://maps.app.goo.gl/EpfndFTJ6jAjRaFo8", "https://www.facebook.com/people/Hayakom/61564909796423/"], "hasMap": "https://maps.app.goo.gl/EpfndFTJ6jAjRaFo8"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "ProfessionalService", "name": "حياكم", "url": "https://www.hayakkom.com/ar/nile-cruise/", "inLanguage": "ar", "description": "رحلات نيلية بين الأقصر وأسوان، منسّقة حول جدولك العلاجي. تُنفَّذ عبر مشغّلين مصريين مرخّصين.", "address": {"@type": "PostalAddress", "streetAddress": "الحي 16، المجاورة 2", "addressLocality": "مدينة الشيخ زايد", "addressRegion": "الجيزة", "addressCountry": "EG"}, "telephone": "+201000100529", "email": "support@hayakkom.com", "identifier": "سجل تجاري 49973", "sameAs": ["https://maps.app.goo.gl/EpfndFTJ6jAjRaFo8", "https://www.facebook.com/people/Hayakom/61564909796423/"], "hasMap": "https://maps.app.goo.gl/EpfndFTJ6jAjRaFo8"}</script>
 <style>
 /* Brand colours — the Arabic pages were relying on fallbacks, which rendered
    the wordmark a yellower gold than the English site. */
@@ -630,7 +630,23 @@ html[dir="rtl"] main section h2{margin-top:0}
 .page-hero::after{display:none!important}
 /* Contact cards: let the email wrap instead of spilling out of its box. */
 .contact-card-value{overflow-wrap:anywhere}
-</style><!--/HK-AR-POLISH--></head><body>
+</style><!--/HK-AR-POLISH--><!--HK-LOGO-BLOCK--><style>
+/* Brand wordmark: "Hayak" is always the brand gold, "kom" follows the surface (dark on light, cream on the dark footer). */
+.enlogo span,.arlogo span,.nav-logo .gold,.nav-logo span,.footer-logo .gold,.footer-logo span{color:#B8922A!important}
+.enlogo,.arlogo,.nav-logo{color:#1A1610}
+.footer-logo{color:#FDFCF9;white-space:nowrap;direction:ltr;unicode-bidi:isolate;margin-bottom:6px;font-family:'Cormorant Garamond',Georgia,serif;font-size:26px;font-weight:700;display:inline-block}
+html[dir="rtl"] h1 em,html[lang="ar"] h1 em{font-style:normal}
+</style><!--/HK-LOGO-BLOCK--><!--HK-AR-FONTS--><style>
+/* One Arabic type system everywhere: Amiri for headings and display lines, Tajawal for everything else (also in the app's Arabic mode). */
+html[dir="rtl"] :where(body,p,li,a,span,div,button,input,select,textarea,label,td,th,small,strong,em,b,i,summary,blockquote,figcaption){font-family:'Tajawal','Noto Sans Arabic',sans-serif!important}
+html[dir="rtl"] h1,html[dir="rtl"] h2,html[dir="rtl"] h3,html[dir="rtl"] h4,
+html[dir="rtl"] .featured-title,html[dir="rtl"] .tourist-title,html[dir="rtl"] .pkg-name,html[dir="rtl"] .price-value,html[dir="rtl"] .proc-n,
+html[dir="rtl"] .route-city,html[dir="rtl"] .stat-num,html[dir="rtl"] .indiv-title,html[dir="rtl"] .enquiry-box-title,html[dir="rtl"] .footer-tagline,
+html[dir="rtl"] .sec-title,html[dir="rtl"] .svc-title,html[dir="rtl"] .card-title{font-family:'Amiri','Tajawal',serif!important}
+html[dir="rtl"] .nav-logo,html[dir="rtl"] .footer-logo,html[dir="rtl"] .enlogo,html[dir="rtl"] .arlogo{font-family:'Cormorant Garamond',Georgia,serif!important}
+/* Letter-spacing breaks Arabic letter joins, so it is always zero. */
+html[dir="rtl"] *{letter-spacing:0!important}
+</style><!--/HK-AR-FONTS--></head><body>
 <header class="arnav"><div class="arnav-in"><button class="arburger" id="arBurger" type="button" aria-label="القائمة" aria-expanded="false"><span></span><span></span><span></span></button>
 <a class="arlogo" href="/ar/"><span>Hayak</span>kom</a>
 <nav class="arlinks"><ul class="nav-links"><li class="nav-drop"><button class="nav-drop-btn" type="button" aria-haspopup="true">العلاجات<span class="nav-caret" aria-hidden="true">&#9662;</span></button><ul class="nav-sub"><li><a href="/ar/dental/">علاج الأسنان</a></li><li><a href="/ar/hair-transplant/">زراعة الشعر</a></li><li><a href="/ar/weight-loss/">جراحات التخسيس</a></li><li><a href="/ar/cosmetic-surgery/">جراحات التجميل</a></li><li><a href="/ar/medical/">السياحة العلاجية</a></li><li><a href="/ar/wellness/">الاستشفاء والتعافي</a></li><li><a href="/ar/services/">كل الخدمات</a></li></ul></li><li class="nav-drop"><button class="nav-drop-btn" type="button" aria-haspopup="true">الخدمات والباقات<span class="nav-caret" aria-hidden="true">&#9662;</span></button><ul class="nav-sub"><li><a href="/ar/packages/">الإقامة والتنقلات</a></li><li><a href="/ar/vip-trip/">رحلات VIP</a></li><li><a href="/ar/nile-cruise/">الرحلات النيلية</a></li><li><a href="/ar/tourists/">السياح في مصر</a></li><li><a href="/ar/conferences/">المؤتمرات الطبية</a></li><li><a href="/ar/educational/">الدراسة في مصر</a></li><li><a href="/ar/partners/">كن شريكاً</a></li></ul></li><li class="nav-drop"><button class="nav-drop-btn" type="button">الأسعار والأدلة<span class="nav-caret" aria-hidden="true"></span></button><ul class="nav-sub"><li><a href="/ar/calculator/">حاسبة تكلفة الرحلة</a></li><li><a href="/ar/how-to-choose/">كيف تختار شركة تنسيق؟</a></li><li><a href="/ar/travel-guide/">دليل السفر للعلاج</a></li><li><a href="/ar/who-we-are/">ما هي حياكم؟</a></li><li><a href="/ar/blog/">المدونة</a></li></ul></li><li><a href="/ar/saudi-arabia/">للسعوديين</a></li><li><a href="/ar/about/">من نحن</a></li><li><a href="/ar/contact/">تواصل معنا</a></li></ul></nav>

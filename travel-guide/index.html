@@ -246,7 +246,40 @@ m();window.addEventListener('load',m);window.addEventListener('resize',m);docume
 [100,400,1000,2500].forEach(function(t){setTimeout(m,t)});
 document.addEventListener('DOMContentLoaded',function(){m();var b=document.getElementById('hkCc');if(!b)return;
  if(window.ResizeObserver)new ResizeObserver(m).observe(b);
- new MutationObserver(m).observe(b,{attributes:true});new MutationObserver(m).observe(document.body,{attributes:true,attributeFilter:['class']});});})();</script><!--/HK-FAB-BLOCK--></head><body>
+ new MutationObserver(m).observe(b,{attributes:true});new MutationObserver(m).observe(document.body,{attributes:true,attributeFilter:['class']});});})();</script><!--/HK-FAB-BLOCK--><!--HK-LOGO-BLOCK--><style>
+/* Brand wordmark: "Hayak" is always the brand gold, "kom" follows the surface (dark on light, cream on the dark footer). */
+.enlogo span,.arlogo span,.nav-logo .gold,.nav-logo span,.footer-logo .gold,.footer-logo span{color:#B8922A!important}
+.enlogo,.arlogo,.nav-logo{color:#1A1610}
+.footer-logo{color:#FDFCF9;white-space:nowrap;direction:ltr;unicode-bidi:isolate;margin-bottom:6px;font-family:'Cormorant Garamond',Georgia,serif;font-size:26px;font-weight:700;display:inline-block}
+html[dir="rtl"] h1 em,html[lang="ar"] h1 em{font-style:normal}
+</style><!--/HK-LOGO-BLOCK--><!--HK-DESKTOP-NAV--><style>
+/* Static English pages have no React header, so give desktop visitors the same bar the phone version has — logo, menu, language. */
+@media(min-width:901px){
+ .enmob{display:flex!important;position:sticky;top:0;z-index:400;padding:14px 6%;gap:24px;min-height:68px;align-items:center;box-sizing:border-box;background:rgba(245,240,232,.97);backdrop-filter:blur(10px);border-bottom:1px solid #E3DACA}
+ .enmob .enlogo{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;color:#1A1610;text-decoration:none;white-space:nowrap;flex:0 0 auto}
+ .enmob .enlang{font-size:12px;border:1px solid #E3DACA;padding:6px 13px;border-radius:20px;color:#3D3020;text-decoration:none;white-space:nowrap;flex:0 0 auto;font-family:inherit}
+ .enmob .enlinks ul{list-style:none;margin:0;padding:0}
+ .enmob .enlinks li{list-style:none}
+ .enmob .enlinks a,.enmob .enlinks .nav-drop-btn{color:#3D3020;text-decoration:none;font-family:inherit;background:none;border:0;cursor:pointer;display:flex;align-items:center}
+ .enmob .enlinks .nav-caret{display:inline-block;width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid currentColor;opacity:.55}
+ .enmob .enburger{display:none!important}
+ .enmob .enlogo{order:0;font-size:27px;letter-spacing:-.2px}
+ .enmob .enlinks{order:1;flex:1 1 auto;display:block!important;position:static!important;inset:auto!important;background:transparent!important;border:0!important;box-shadow:none!important;max-height:none!important;overflow:visible!important;padding:0!important}
+ .enmob .enlang{order:2}
+ .enmob .enlinks ul.nav-links{display:flex!important;flex-direction:row!important;flex-wrap:nowrap;align-items:center;justify-content:flex-start;gap:2px}
+ .enmob .enlinks ul.nav-links>li{width:auto!important;border:0!important;position:relative}
+ .enmob .enlinks ul.nav-links>li>a,.enmob .enlinks .nav-drop-btn{width:auto!important;padding:9px 12px!important;font-size:14px;gap:7px;justify-content:flex-start;border-radius:8px;white-space:nowrap}
+ .enmob .enlinks ul.nav-links>li>a:hover,.enmob .enlinks .nav-drop-btn:hover{background:rgba(184,146,42,.12)!important}
+ .enmob .enlinks .nav-drop>.nav-sub{display:none!important;position:absolute!important;top:100%!important;left:0!important;min-width:236px!important;padding:8px!important;margin:0;list-style:none;background:#FAF7F1!important;border:1px solid #E3DACA!important;border-radius:12px!important;box-shadow:0 18px 40px rgba(26,22,16,.16)!important;max-height:none!important;z-index:420}
+ .enmob .enlinks .nav-drop:hover>.nav-sub,.enmob .enlinks .nav-drop:focus-within>.nav-sub,.enmob .enlinks .nav-drop.open>.nav-sub{display:block!important}
+ .enmob .enlinks .nav-sub a{padding:9px 12px!important;border-radius:8px;font-size:14px!important;white-space:nowrap}
+ .enmob .enlinks .nav-sub a:hover{background:rgba(184,146,42,.12)!important;color:#1A1610!important}
+}
+:where(.crumbs) ol{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin:0 auto;padding:18px 5% 0;font-size:13px;color:#6A5C4C;max-width:1100px}
+:where(.crumbs) li{display:inline-flex;gap:6px;align-items:center}
+:where(.crumbs) a{color:#7D6318;text-decoration:none}
+:where(.crumbs) .crumb-sep{opacity:.5}
+</style><!--/HK-DESKTOP-NAV--><!--HK-VARS--><style>:root{--sand:#f5f0e8;--sand2:#ede7d9;--sand3:#e0d8c8;--gold:#b8922a;--gold-text:#7d6318;--gold2:#d4a843;--gold3:#f0c96a;--dark:#1a1610;--dark2:#2c2418;--ink:#3d3020;--muted:#6a5c4c;--muted-soft:#8c7d6a;--muted2:#b8a898;--white:#fdfcf9;--border:#b8922a2e;--border2:#b8922a52;--radius:10px;--radius-lg:18px}</style><!--/HK-VARS--></head><body>
 <header class="enmob" id="enMobBar"><button class="enburger" id="enBurger" type="button" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button><a class="enlogo" href="/"><span>Hayak</span>kom</a><a class="enlang" href="/?lang=ar">العربية</a><nav class="enlinks" id="enLinks"><ul class="nav-links"><li class="nav-drop"><button class="nav-drop-btn" type="button">Treatments<span class="nav-caret" aria-hidden="true"></span></button><ul class="nav-sub"><li><a href="/dental/">Dental Treatment</a></li><li><a href="/hair-transplant/">Hair Transplant</a></li><li><a href="/weight-loss/">Weight Loss Surgery</a></li><li><a href="/cosmetic-surgery/">Cosmetic Surgery</a></li><li><a href="/medical/">Medical Tourism</a></li><li><a href="/wellness/">Recovery &amp; Wellness</a></li><li><a href="/services/">All Treatments</a></li></ul></li><li class="nav-drop"><button class="nav-drop-btn" type="button">Services &amp; Packages<span class="nav-caret" aria-hidden="true"></span></button><ul class="nav-sub"><li><a href="/packages/">Accommodation &amp; Transfers</a></li><li><a href="/vip-trip/">VIP Trips</a></li><li><a href="/nile-cruise/">Nile Cruises</a></li><li><a href="/coastal/">Coastal &amp; Red Sea</a></li><li><a href="/tourists/">Tourists in Egypt</a></li><li><a href="/conferences/">Medical Conferences</a></li><li><a href="/educational/">Study in Egypt</a></li><li><a href="/partners/">Partner With Us</a></li></ul></li><li class="nav-drop"><button class="nav-drop-btn" type="button">Costs &amp; Guides<span class="nav-caret" aria-hidden="true"></span></button><ul class="nav-sub"><li><a href="/calculator/">Trip cost calculator</a></li><li><a href="/how-to-choose/">How to choose a coordinator</a></li><li><a href="/travel-guide/">Travel guide for treatment</a></li><li><a href="/blog/">Articles &amp; guides</a></li></ul></li><li><a href="/saudi-arabia/">Saudi Patients</a></li><li><a href="/about/">About</a></li><li><a href="/contact/">Contact</a></li></ul></nav></header>
 <div class="wrap">
 <h1>Travelling to Egypt for treatment: what to prepare, how long to stay, what to bring home</h1>
