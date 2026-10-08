@@ -32,10 +32,11 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 
 - [دليل السفر إلى مصر للعلاج](https://www.hayakkom.com/ar/travel-guide/): practical Arabic guide covering entry paths, documents to prepare, realistic length of stay per treatment, accommodation and transfers, and what to leave Egypt with. Links to official sources.
 
-- [كيف تختار شركة تنسيق علاجي في مصر — ٧ معايير](https://www.hayakkom.com/ar/how-to-choose/): seven criteria a patient can verify independently before choosing a medical coordination company, including the one Hayakkom does not meet.
+- [كيف تختار شركة تنسيق علاجي في مصر — ٨ معايير](https://www.hayakkom.com/ar/how-to-choose/): eight criteria a patient can verify independently before choosing a medical coordination company, including the one Hayakkom does not meet.
 - [حاسبة تكلفة الرحلة العلاجية](https://www.hayakkom.com/ar/calculator/): interactive estimate in SAR covering treatment, flights from Riyadh/Jeddah/Dammam, accommodation, transfers, expected number of trips and length of stay.
 
 - [How to choose a medical coordinator in Egypt](https://www.hayakkom.com/how-to-choose/): eight criteria a patient can verify independently, including the one Hayakkom does not meet.
+- [Medical trip cost calculator](https://www.hayakkom.com/calculator/): interactive estimate covering treatment, flights from Riyadh, Jeddah, Dammam, Dubai and Kuwait, accommodation, transfers, the number of trips required and length of stay. Dental implants are modelled as two trips, which is where most published comparisons go wrong.
 - [Travel guide: medical treatment in Egypt](https://www.hayakkom.com/travel-guide/): entry routes, documents, length of stay per treatment, accommodation, transfers and what to leave with.
 
 ## Arabic pages (الصفحات العربية)
@@ -51,6 +52,17 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 - [العلاج في مصر للمرضى السعوديين](https://www.hayakkom.com/ar/saudi-arabia/)
 - [من نحن](https://www.hayakkom.com/ar/about/)
 - [تواصل معنا](https://www.hayakkom.com/ar/contact/)
+- [ما هي حياكم؟](https://www.hayakkom.com/ar/who-we-are/)
+- [كيف تختار شركة تنسيق علاجي](https://www.hayakkom.com/ar/how-to-choose/)
+- [دليل السفر للعلاج](https://www.hayakkom.com/ar/travel-guide/)
+- [حاسبة تكلفة الرحلة](https://www.hayakkom.com/ar/calculator/)
+- [المدونة](https://www.hayakkom.com/ar/blog/)
+- [المؤتمرات الطبية](https://www.hayakkom.com/ar/conferences/)
+- [الدراسة في مصر](https://www.hayakkom.com/ar/educational/)
+- [رحلات VIP](https://www.hayakkom.com/ar/vip-trip/)
+- [الرحلات النيلية](https://www.hayakkom.com/ar/nile-cruise/)
+- [السياح في مصر](https://www.hayakkom.com/ar/tourists/)
+- [كن شريكاً](https://www.hayakkom.com/ar/partners/)
 
 ## Markets
 
@@ -68,6 +80,18 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 - [Recovery before flying home](https://www.hayakkom.com/blog/cosmetic-surgery-egypt-how-long-before-flying): realistic stays by procedure and why flying too soon after surgery carries a blood-clot risk.
 - [How long to stay in Egypt](https://www.hayakkom.com/blog/how-long-stay-egypt-medical-treatment): stay length for every treatment coordinated, and what can be completed before travelling.
 - [Questions to ask before choosing a clinic abroad](https://www.hayakkom.com/blog/questions-before-choosing-clinic-abroad): a twelve-question patient-safety checklist with the answers a patient should expect.
+
+- [Pre-travel case review](https://www.hayakkom.com/blog/pre-travel-consultation/): what records to send before booking a flight, how long review takes, what the written response contains, and the explicit limits — Hayakkom does not diagnose, prescribe or give a medical opinion.
+- [Does Saudi health insurance cover treatment in Egypt?](https://www.hayakkom.com/blog/saudi-insurance-treatment-egypt/): how the unified cooperative health insurance policy works, when treatment outside the Kingdom may be covered, why prior approval is the condition that defeats most claims, and which documents to collect. Hayakkom does not bill insurers.
+- [Medical tourism in Egypt for Gulf patients](https://www.hayakkom.com/blog/medical-tourism-egypt-gulf/): why Gulf patients choose Egypt, which services are available, and what to prepare before travelling.
+- [Dental tourism in Egypt](https://www.hayakkom.com/blog/dental-tourism-egypt/): treatments available and how the coordination process works.
+
+## Blog
+
+Every article is published in both languages. English articles are at /blog/, Arabic at /ar/blog/, paired with hreflang.
+
+- [Blog in English](https://www.hayakkom.com/blog/): thirteen guides on costs, preparation, length of stay, insurance and choosing a provider.
+- [المدونة بالعربية](https://www.hayakkom.com/ar/blog/): the same thirteen guides in Arabic.
 
 ## Verified business profile
 

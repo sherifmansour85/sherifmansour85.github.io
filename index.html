@@ -25,7 +25,7 @@
 
     <!-- PRIMARY SEO -->
     <title>Medical Travel to Egypt for Gulf Patients | Hayakkom</title>
-    <meta name="description" content="Hayakkom coordinates treatment in Egypt for patients from Saudi Arabia, the UAE and Kuwait: records reviewed before you fly, appointments, accommodation, transfers and follow-up. Licensed Egyptian company, CR 49973.">
+    <meta name="description" content="Hayakkom coordinates treatment in Egypt for patients from Saudi Arabia, the UAE and Kuwait: records reviewed before you fly, appointments, accommodation">
     <meta name="keywords" content="medical tourism Egypt, dental tourism Egypt, VIP tours Egypt, Egypt tourism Saudi Arabia, سياحة علاجية مصر, علاج الأسنان مصر, رحلات مصر للسعوديين, حياكم">
     <meta name="author" content="Hayakkom — Hayakom for Healthcare Solutions and Logistic Services">
         <link rel="canonical" href="https://www.hayakkom.com/">
@@ -61,7 +61,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.hayakkom.com/">
     <meta property="og:title" content="Medical Travel to Egypt for Gulf Patients | Hayakkom">
-    <meta property="og:description" content="Hayakkom coordinates treatment in Egypt for patients from Saudi Arabia, the UAE and Kuwait: records reviewed before you fly, appointments, accommodation, transfers and follow-up. Licensed Egyptian company, CR 49973.">
+    <meta property="og:description" content="Hayakkom coordinates treatment in Egypt for patients from Saudi Arabia, the UAE and Kuwait: records reviewed before you fly, appointments, accommodation">
     <meta property="og:image" content="https://www.hayakkom.com/assets/og-image.jpg">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ar_SA">
@@ -70,7 +70,7 @@
     <!-- TWITTER/X CARD -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Medical Travel to Egypt for Gulf Patients | Hayakkom">
-    <meta name="twitter:description" content="Hayakkom coordinates treatment in Egypt for patients from Saudi Arabia, the UAE and Kuwait: records reviewed before you fly, appointments, accommodation, transfers and follow-up. Licensed Egyptian company, CR 49973.">
+    <meta name="twitter:description" content="Hayakkom coordinates treatment in Egypt for patients from Saudi Arabia, the UAE and Kuwait: records reviewed before you fly, appointments, accommodation">
     <meta name="twitter:image" content="https://www.hayakkom.com/assets/og-image.jpg">
 
     <!-- GEO META TAGS -->
@@ -842,6 +842,38 @@ section:has(.test-grid:empty){display:none!important}
   nn && nn.addEventListener('click', function(){ set('essential'); });
 })();
 </script>
+<!-- HK-CONSENT-UPDATE -->
+<script>
+(function(){
+  var KEY='hk-consent';
+  window.dataLayer = window.dataLayer || [];
+  if(typeof window.gtag!=='function'){ window.gtag=function(){dataLayer.push(arguments);}; }
+  function send(v){
+    var ok = (v==='all');
+    gtag('consent','update',{
+      ad_storage:         ok?'granted':'denied',
+      ad_user_data:       ok?'granted':'denied',
+      ad_personalization: ok?'granted':'denied',
+      analytics_storage:  ok?'granted':'denied'
+    });
+  }
+  // Returning visitor: restore the choice they already made.
+  var saved=null; try{ saved=localStorage.getItem(KEY); }catch(e){}
+  if(saved){ send(saved); }
+  // Delegated listener: works no matter where the bar sits in the document,
+  // and survives the bar being re-rendered.
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    while(t && t.nodeType===1){
+      if(t.id==='hkCcYes'){ send('all'); return; }
+      if(t.id==='hkCcNo'){ send('essential'); return; }
+      t = t.parentNode;
+    }
+  }, true);
+})();
+</script>
+<!-- /HK-CONSENT-UPDATE -->
+
 
 <script>
 /* Remove any section left behind with no content — the testimonials shell

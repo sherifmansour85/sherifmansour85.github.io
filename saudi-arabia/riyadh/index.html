@@ -833,6 +833,38 @@ section:has(.test-grid:empty){display:none!important}
   nn && nn.addEventListener('click', function(){ set('essential'); });
 })();
 </script>
+<!-- HK-CONSENT-UPDATE -->
+<script>
+(function(){
+  var KEY='hk-consent';
+  window.dataLayer = window.dataLayer || [];
+  if(typeof window.gtag!=='function'){ window.gtag=function(){dataLayer.push(arguments);}; }
+  function send(v){
+    var ok = (v==='all');
+    gtag('consent','update',{
+      ad_storage:         ok?'granted':'denied',
+      ad_user_data:       ok?'granted':'denied',
+      ad_personalization: ok?'granted':'denied',
+      analytics_storage:  ok?'granted':'denied'
+    });
+  }
+  // Returning visitor: restore the choice they already made.
+  var saved=null; try{ saved=localStorage.getItem(KEY); }catch(e){}
+  if(saved){ send(saved); }
+  // Delegated listener: works no matter where the bar sits in the document,
+  // and survives the bar being re-rendered.
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    while(t && t.nodeType===1){
+      if(t.id==='hkCcYes'){ send('all'); return; }
+      if(t.id==='hkCcNo'){ send('essential'); return; }
+      t = t.parentNode;
+    }
+  }, true);
+})();
+</script>
+<!-- /HK-CONSENT-UPDATE -->
+
 
 <script>
 /* Remove any section left behind with no content — the testimonials shell
