@@ -13,13 +13,14 @@ Saudi Arabia, the UAE and Kuwait, and arranges pre-travel record review, appoint
 transfers, accommodation and follow-up.
 
 - **Category:** medical travel coordination and logistics
+- **Founder:** Sherif Mansour (شريف منصور)
 - **Location:** الحي ال16 المجاورة الثانية Shiekh Zayed - Giza, Cairo 12774, Egypt
 - **Registered under:** Egyptian Law No. 159 of 1981
 - **Commercial Register:** 49973
 - **Unified Commercial Registry:** 11070-01000-49973
 - **Languages:** Arabic and English
 - **Markets served:** Saudi Arabia, United Arab Emirates, Kuwait
-- **Contact:** support@hayakkom.com · WhatsApp +20 103 156 7949
+- **Contact:** support@hayakkom.com · Phone +20 100 010 0529 · WhatsApp +20 103 156 7949
 - **Website:** https://www.hayakkom.com
 
 ## What Hayakkom is not
