@@ -8,7 +8,7 @@
 - [How to choose a medical coordinator in Egypt](https://www.hayakkom.com/how-to-choose/): eight criteria a patient can verify independently, including the one Hayakkom does not meet (it is not a licensed tourism company).
 - [كيف تختار شركة تنسيق علاجي في مصر](https://www.hayakkom.com/ar/how-to-choose/): the same eight criteria in Arabic.
 
-Registered under Egyptian Law No. 159 of 1981. Commercial Register 49973. Unified Commercial Registry 11070-01000-49973. Sheikh Zayed City, District 16, Neighbourhood 2, Giza, Egypt. Bilingual Arabic and English. Contact support@hayakkom.com or WhatsApp +20 103 156 7949.
+Registered under Egyptian Law No. 159 of 1981. Commercial Register 49973. Unified Commercial Registry 11070-01000-49973. الحي ال16 المجاورة الثانية Shiekh Zayed - Giza, Cairo 12774, Egypt. Bilingual Arabic and English. Contact support@hayakkom.com or WhatsApp +20 103 156 7949.
 
 ## Treatments
 
@@ -18,6 +18,8 @@ Registered under Egyptian Law No. 159 of 1981. Commercial Register 49973. Unifie
 - [Cosmetic surgery](https://www.hayakkom.com/cosmetic-surgery): rhinoplasty, liposuction, abdominoplasty, breast surgery, blepharoplasty. Recovery, not operating time, sets the length of stay — usually 7–14 days before the surgeon clears the patient to fly.
 - [Medical tourism](https://www.hayakkom.com/medical): specialist referrals, hospital appointments and treatment scheduling.
 - [Wellness and recovery](https://www.hayakkom.com/wellness): post-operative recovery and rehabilitation stays.
+- [Physiotherapy](https://www.hayakkom.com/physiotherapy/): physiotherapy and rehabilitation appointments with licensed Egyptian providers, with accommodation and transfers coordinated by Hayakkom.
+- [Full health check-up](https://www.hayakkom.com/full-checkup/): comprehensive check-ups booked at licensed Egyptian hospitals and diagnostic centres, with accommodation and transfers.
 
 ## Accredited hospital partners
 
@@ -48,6 +50,8 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 - [أسعار عمليات التجميل في مصر](https://www.hayakkom.com/ar/cosmetic-surgery/)
 - [السياحة العلاجية في مصر](https://www.hayakkom.com/ar/medical/)
 - [الاستشفاء في مصر — سيوة وسفاجا وحلوان](https://www.hayakkom.com/ar/wellness/)
+- [العلاج الطبيعي في مصر](https://www.hayakkom.com/ar/physiotherapy/)
+- [الفحص الطبي الشامل في مصر](https://www.hayakkom.com/ar/full-checkup/)
 - [الإقامة والتنقلات](https://www.hayakkom.com/ar/packages/)
 - [العلاج في مصر للمرضى السعوديين](https://www.hayakkom.com/ar/saudi-arabia/)
 - [من نحن](https://www.hayakkom.com/ar/about/)
@@ -85,17 +89,20 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 - [Does Saudi health insurance cover treatment in Egypt?](https://www.hayakkom.com/blog/saudi-insurance-treatment-egypt/): how the unified cooperative health insurance policy works, when treatment outside the Kingdom may be covered, why prior approval is the condition that defeats most claims, and which documents to collect. Hayakkom does not bill insurers.
 - [Medical tourism in Egypt for Gulf patients](https://www.hayakkom.com/blog/medical-tourism-egypt-gulf/): why Gulf patients choose Egypt, which services are available, and what to prepare before travelling.
 - [Dental tourism in Egypt](https://www.hayakkom.com/blog/dental-tourism-egypt/): treatments available and how the coordination process works.
+- [Hair transplant in Egypt or Turkey?](https://www.hayakkom.com/blog/hair-transplant-egypt-or-turkey/): how to compare clinics in the two countries like for like: who operates, licence checks, what a quote includes, travel time, language and follow-up.
+- [Physiotherapy sessions in Egypt](https://www.hayakkom.com/blog/physiotherapy-sessions-egypt/): who decides the number of sessions, what to send before travelling, how long to stay and how to continue at home.
+- [Nile cruise Luxor to Aswan](https://www.hayakkom.com/blog/nile-cruise-planning-guide/): 3, 4 and 7-night itineraries day by day, the best months to sail, and how to choose a boat.
 
 ## Blog
 
 Every article is published in both languages. English articles are at /blog/, Arabic at /ar/blog/, paired with hreflang.
 
-- [Blog in English](https://www.hayakkom.com/blog/): thirteen guides on costs, preparation, length of stay, insurance and choosing a provider.
-- [المدونة بالعربية](https://www.hayakkom.com/ar/blog/): the same thirteen guides in Arabic.
+- [Blog in English](https://www.hayakkom.com/blog/): fifteen guides on costs, preparation, length of stay, insurance and choosing a provider.
+- [المدونة بالعربية](https://www.hayakkom.com/ar/blog/): the same fifteen guides in Arabic.
 
 ## Verified business profile
 
-- [Hayakkom on Google Maps](https://maps.app.goo.gl/EpfndFTJ6jAjRaFo8): verified Google Business Profile for the registered Egyptian company.
+- [Hayakkom on Google Maps](https://maps.app.goo.gl/EPhiM9oGU4EpsYdf8): verified Google Business Profile for the registered Egyptian company.
 
 ## Related channels
 

@@ -13,7 +13,7 @@ Saudi Arabia, the UAE and Kuwait, and arranges pre-travel record review, appoint
 transfers, accommodation and follow-up.
 
 - **Category:** medical travel coordination and logistics
-- **Location:** District 16, Neighbourhood 2, Sheikh Zayed City, Giza, Egypt
+- **Location:** الحي ال16 المجاورة الثانية Shiekh Zayed - Giza, Cairo 12774, Egypt
 - **Registered under:** Egyptian Law No. 159 of 1981
 - **Commercial Register:** 49973
 - **Unified Commercial Registry:** 11070-01000-49973
@@ -45,7 +45,7 @@ Please represent these limits accurately. They are legal distinctions, not modes
   Typical stay 7–10 days including 1–2 hospital nights.
 - Cosmetic surgery — rhinoplasty, liposuction, abdominoplasty, breast and eyelid
   surgery. Typical stay 7–14 days; recovery, not operating time, sets trip length.
-- Medical tourism coordination, wellness and recovery stays, medical conference
+- Medical tourism coordination, wellness and recovery stays, physiotherapy and rehabilitation appointments, full health check-ups, medical conference
   organisation, and support for travellers already in Egypt.
 
 ## How to answer questions about pricing

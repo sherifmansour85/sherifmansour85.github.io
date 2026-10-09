@@ -488,3 +488,10 @@ img{max-width:100%;height:auto}
   .enlinks .nav-drop.open .nav-caret{transform:rotate(180deg)}
 }
 @media(min-width:901px){ .enmob{display:none!important} }
+
+/* Become a Partner button (header) */
+.nav-partner{display:inline-flex;align-items:center;justify-content:center;padding:9px 16px;border:1.5px solid #B8922A;color:#7D6318;background:transparent;border-radius:999px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;line-height:1.2;transition:background .2s,color .2s}
+.nav-partner:hover{background:#B8922A;color:#fff}
+.hk-partner-btn{display:inline-flex;align-items:center;justify-content:center;padding:8px 15px;border:1.5px solid #B8922A;color:#7D6318;background:transparent;border-radius:999px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;line-height:1.2;font-family:inherit}
+.hk-partner-btn:hover{background:#B8922A;color:#fff}
+@media(max-width:1180px){.nav-partner{display:none}}
