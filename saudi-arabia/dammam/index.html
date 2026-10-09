@@ -26,7 +26,7 @@
     <!-- PRIMARY SEO -->
     <title>العلاج في مصر من الدمام والخبر | حياكم</title>
     <meta name="description" content="من مطار الملك فهد الدولي إلى القاهرة للعلاج. إرشادات لمرضى الدمام والخبر والظهران والمنطقة الشرقية، مع نطاقات تكلفة بالريال وتنسيق بالعربية.">
-    <meta name="keywords" content="medical tourism Egypt, dental tourism Egypt, VIP tours Egypt, Egypt tourism Saudi Arabia, سياحة علاجية مصر, علاج الأسنان مصر, رحلات مصر للسعوديين, حياكم">
+    <meta name="keywords" content="العلاج في مصر من الدمام والخبر, حياكم, Hayakkom, medical tourism Egypt for Gulf patients">
     <meta name="author" content="Hayakkom — Hayakom for Healthcare Solutions and Logistic Services">
         <link rel="canonical" href="https://www.hayakkom.com/saudi-arabia/dammam/">
 
@@ -611,7 +611,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 .enlogo,.arlogo,.nav-logo{color:#1A1610}
 .footer-logo{color:#FDFCF9;white-space:nowrap;direction:ltr;unicode-bidi:isolate;margin-bottom:6px;font-family:'Cormorant Garamond',Georgia,serif;font-size:26px;font-weight:700;display:inline-block}
 html[dir="rtl"] h1 em,html[lang="ar"] h1 em{font-style:normal}
-</style><style>/*HK-LOGO-LS*/html[dir="rtl"] .arlogo,html[dir="rtl"] .nav-logo,.arlogo,.nav-logo{letter-spacing:-.3px!important}</style><!--/HK-LOGO-BLOCK--><!--HK-AR-FONTS--><style>
+</style><style>/*HK-LOGO-LS*/html body .arlogo span,html body .enlogo span,html body .nav-logo span,html body .nav-logo .gold,html body .footer-logo span,html body .footer-logo .gold{font-family:'Cormorant Garamond',Georgia,serif!important;font-weight:700!important;font-size:inherit!important;letter-spacing:inherit!important;color:#B8922A!important}html[dir="rtl"] .arlogo,html[dir="rtl"] .nav-logo,.arlogo,.nav-logo{letter-spacing:-.3px!important}</style><!--/HK-LOGO-BLOCK--><!--HK-AR-FONTS--><style>
 /* One Arabic type system everywhere: Amiri for headings and display lines, Tajawal for everything else (also in the app's Arabic mode). */
 html[dir="rtl"] :where(body,p,li,a,span,div,button,input,select,textarea,label,td,th,small,strong,em,b,i,summary,blockquote,figcaption){font-family:'Tajawal','Noto Sans Arabic',sans-serif!important}
 html[dir="rtl"] h1,html[dir="rtl"] h2,html[dir="rtl"] h3,html[dir="rtl"] h4,
@@ -833,19 +833,20 @@ html[dir="rtl"] *{letter-spacing:0!important}
         if(ar){
           if(h.indexOf('/ar/')===0) return;                 /* already Arabic */
           if(slug==='') el.setAttribute('href','/ar/');
-          else if(AR_PAGES.indexOf(slug)>=0) el.setAttribute('href','/ar/'+slug+'/');
+          else if(AR_PAGES.indexOf(slug)>=0 || slug==='blog' || slug.indexOf('blog/')===0) el.setAttribute('href','/ar/'+slug+'/');
           else if(h.indexOf('lang=')<0) el.setAttribute('href','/'+slug+'/?lang=ar');
         } else if(h.indexOf('/ar/')===0){
           /* only strip /ar/ where an English version actually exists —
              some guides are Arabic-only and must keep their /ar/ path */
           var sl2 = h.replace('/ar/','').replace(/\/$/,'').split('?')[0];
-          if(AR_PAGES.indexOf(sl2)>=0 || sl2==='') el.setAttribute('href', h.replace('/ar/','/'));
+          if(AR_PAGES.indexOf(sl2)>=0 || sl2==='' || sl2==='blog' || sl2.indexOf('blog/')===0) el.setAttribute('href', h.replace('/ar/','/'));
         }
       }
     });
     var lang=bar.querySelector('.enlang');
     if(lang){ lang.textContent = ar?'English':'العربية';
-      lang.setAttribute('href', ar?(location.pathname+'?lang=en'):(location.pathname+'?lang=ar')); }
+      var p=location.pathname, ps=p.replace(/^\/|\/$/g,''), hasAr=(ps===''||ps==='blog'||ps.indexOf('blog/')===0||AR_PAGES.indexOf(ps)>=0);
+      lang.setAttribute('href', ar?(p+'?lang=en'):(hasAr?(ps===''?'/ar/':'/ar/'+ps+'/'):(p+'?lang=ar'))); }
   }
   apply();
   document.addEventListener('click', function(){ setTimeout(apply,150); });
