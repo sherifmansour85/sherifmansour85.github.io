@@ -53,5 +53,6 @@ Allow: /
 Sitemap: https://www.hayakkom.com/sitemap.xml
 # AI-readable company profile:
 # https://www.hayakkom.com/llms.txt
+# https://www.hayakkom.com/llms-full.txt
 # Agent instructions:
 # https://www.hayakkom.com/agents.md

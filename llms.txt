@@ -1,5 +1,7 @@
 # Hayakkom
 
+Full text of every page (English and Arabic): https://www.hayakkom.com/llms-full.txt
+
 > Hayakkom (Hayakom for Healthcare Solutions and Logistic Services) is an Egyptian company that coordinates medical treatment, dental care, hair restoration and cosmetic surgery in Egypt for patients travelling from Saudi Arabia, the UAE and Kuwait. It arranges pre-travel record review, appointments, transfers, accommodation and follow-up. Hayakkom is not a healthcare provider: treatment is delivered by independent licensed Egyptian doctors and hospitals.
 
 ## What Hayakkom is
@@ -44,7 +46,7 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 ## Arabic pages (الصفحات العربية)
 
 - [السياحة العلاجية في مصر — الصفحة الرئيسية](https://www.hayakkom.com/ar/)
-- [أسعار زراعة الاسنان في مصر](https://www.hayakkom.com/ar/dental/)
+- [أسعار زراعة الأسنان في مصر](https://www.hayakkom.com/ar/dental/)
 - [تكلفة زراعة الشعر في مصر — للرجال والنساء](https://www.hayakkom.com/ar/hair-transplant/)
 - [تكلفة تكميم المعدة في مصر](https://www.hayakkom.com/ar/weight-loss/)
 - [أسعار عمليات التجميل في مصر](https://www.hayakkom.com/ar/cosmetic-surgery/)
@@ -91,6 +93,7 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 - [Dental tourism in Egypt](https://www.hayakkom.com/blog/dental-tourism-egypt/): treatments available and how the coordination process works.
 - [Hair transplant in Egypt or Turkey?](https://www.hayakkom.com/blog/hair-transplant-egypt-or-turkey/): how to compare clinics in the two countries like for like: who operates, licence checks, what a quote includes, travel time, language and follow-up.
 - [Physiotherapy sessions in Egypt](https://www.hayakkom.com/blog/physiotherapy-sessions-egypt/): who decides the number of sessions, what to send before travelling, how long to stay and how to continue at home.
+- [Cairo day trips](https://www.hayakkom.com/blog/cairo-day-trips-guide/): the Pyramids and Saqqara, Dahshur, Memphis, Islamic and Coptic Cairo, Alexandria and Ain Sokhna as day trips from Cairo, with realistic timings.
 - [Nile cruise Luxor to Aswan](https://www.hayakkom.com/blog/nile-cruise-planning-guide/): 3, 4 and 7-night itineraries day by day, the best months to sail, and how to choose a boat.
 
 ## Blog

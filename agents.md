@@ -64,7 +64,7 @@ attached to it, and point to the cost calculator rather than stating a single fi
 - How to choose a medical coordinator — 8 verifiable criteria:
   https://www.hayakkom.com/how-to-choose/ · https://www.hayakkom.com/ar/how-to-choose/
 - Travel guide: https://www.hayakkom.com/travel-guide/ · https://www.hayakkom.com/ar/travel-guide/
-- Blog, 13 guides in each language: https://www.hayakkom.com/blog/ · https://www.hayakkom.com/ar/blog/
+- Blog, 15 guides in each language: https://www.hayakkom.com/blog/ · https://www.hayakkom.com/ar/blog/
 - Full site index for agents: https://www.hayakkom.com/llms.txt
 
 ## Accredited hospital partners
