@@ -1748,7 +1748,7 @@ Language: ar
 - العلاج في مصر للقادمين من السعودية — الرحلات والتكاليف بالريال
 - الإقامة والتنقلات أثناء رحلتك العلاجية
 - السياحة العلاجية في مصر — كيف تعمل الرحلة من أولها لآخرها
-- الاستشفاء والتعافي بعد العلاج
+- الاستجمام والتعافي بعد العلاج
 - أرسل أشعتك للمراجعة قبل حجز التذكرة
 
 ## أدلة تفصيلية
@@ -2415,8 +2415,8 @@ Language: ar
 الأكثر طلباً
 
 ابتسامة هوليوود في 5 أيام
-تقديري من 1,200$
-باقتنا الرائدة لمدة 5 أيام تجمع بين علاج الأسنان الفاخر وتجربة القاهرة VIP. الباقة الأكثر طلباً من زوار الخليج.
+تقديري من نحو 4,500 ريال
+باقتنا الرائدة لمدة 5 أيام تجمع بين علاج الأسنان الفاخر وتجربة القاهرة VIP. الباقة الأكثر طلباً من زوار الخليج. السعر النهائي للعلاج تحدده العيادة بعد مراجعة حالتك.
 ✓استشارة وعلاج الأسنان (قشرة/زراعة/ابتسامة)
 ✓فندق 4 نجوم بالقاهرة (4 ليالٍ)
 ✓تنقلات مطار خاصة
@@ -2429,7 +2429,7 @@ Language: ar
 الأفضل للتراث
 
 الجولة التراثية النيلية الكبرى
-تقديري من 800$
+تقديري من نحو 3,000 ريال للشخص
 رحلة 5 أيام عبر القاهرة والأقصر وأسوان مع مرشدين متخصصين في علم المصريات ورحلات جوية وفنادق 4 نجوم.
 ✓رحلات داخلية ذهاباً وإياباً (القاهرة–الأقصر–أسوان)
 ✓فنادق 4 نجوم (4 ليالٍ)
@@ -2444,7 +2444,7 @@ Language: ar
 شاطئ وعافية
 
 استجمام على البحر الأحمر
-تقديري من 600$
+تقديري 2,500–6,900 ريال للغرفة
 4 ليالٍ في منتجع فاخر على البحر الأحمر مع سنوركلينج وغوص اختياري ولوجستيات كاملة من مدينتك الخليجية.
 ✓منتجع 4 نجوم على البحر الأحمر (4 ليالٍ)
 ✓وجبات شاملة
@@ -3529,15 +3529,15 @@ Powered by Cairo Town Chatter
 
 ---
 
-# الاستشفاء والتعافي في مصر 2026 | حياكم
+# الاستجمام والتعافي في مصر 2026 | حياكم
 URL: https://www.hayakkom.com/ar/wellness/
 Language: ar
 
-> مواقع الاستشفاء الطبيعية في مصر: سيوة وسفاجا وحلوان والعين السخنة، والعلاجات التقليدية ومنها الحجامة. تنسيق إقامة التعافي بعد العلاج.
+> إقامات التعافي بعد العلاج وعطلات الاستجمام في مصر: سفاجا وسيوة والجونة والعين السخنة والساحل الشمالي — بالتنسيق مع مزوّدين مرخّصين.
 
-الاستشفاء والتعافي
-الاستشفاء في مصر — سيوة وسفاجا والعلاجات التقليدية
-تعافٍ منظّم بعد العلاج، وإعادة تأهيل، وعلاجات تقليدية — بالتنسيق مع مزوّدين مصريين مرخّصين.
+الاستجمام والتعافي
+الاستجمام والتعافي في مصر — سفاجا وسيوة والساحل
+تعافٍ منظّم بعد العلاج، وإقامات هادئة للاستجمام على البحر وفي الواحات — بالتنسيق مع مزوّدين وشركات مصرية مرخّصة.
 
 ## التعافي بعد الإجراء
 الأيام التي تلي العلاج لا تقل أهمية عن الإجراء نفسه. ننسّق إقامة مختارة للتعافي لا لعدد النجوم: مصعد، ودور هادئ، وخدمة غرف حتى لا تضطر للخروج لتناول الطعام، وتنقلات قصيرة إلى العيادة لمواعيد المتابعة.
@@ -3551,14 +3551,14 @@ Language: ar
 - إعادة التحاليل أو الأشعة عند طلب الطبيب
 - صرف الأدوية
 
-## العلاجات التقليدية والتكميلية
-تُرتَّب عبر ممارسين مصريين مرخّصين، إلى جانب الخطة العلاجية التي وضعها طبيبك لا بديلاً عنها. الحجامة — العلاجات الصينية التقليدية ومنها الوخز بالإبر والكاسات — التدليك العلاجي — العلاج المائي — العلاج الانعكاسي — جلسات التنفّس والاسترخاء الموجّهة
+## خدمات الاسترخاء والسبا
+تُرتَّب في فنادق ومنتجعات مرخّصة بوصفها خدمات راحة فقط: السبا والمساج في فندقك — المسابح والسباحة في البحر والمشي الهادئ — جلسات اليوغا والتنفّس — غرف هادئة وقوائم طعام صحية
 
-## مواقع الاستشفاء الطبيعية في مصر
-في مصر مواقع معروفة منذ زمن للاستشفاء، ويمدّد كثير من المرضى إقامتهم للاستفادة منها بعد أن يأذن لهم الطبيب بالتنقل داخل البلاد. سفاجا على البحر الأحمر — رمال سوداء وملوحة عالية ورطوبة منخفضة، يقصدها الزوار منذ سنوات لتخفيف آلام المفاصل والأمراض الجلدية. حلوان — عيون كبريتية في جنوب القاهرة. واحة سيوة — بحيرات ملحية وعيون ساخنة في الصحراء الغربية. العين السخنة — أقرب ساحل للبحر الأحمر من القاهرة، نحو ساعتين بالسيارة، ما يجعلها خياراً عملياً لإقامة تعافٍ قصيرة.
+## وجهات الاستجمام في مصر
+أماكن تختارها العائلات الخليجية لإقامة أهدأ وأبطأ — بوصفها عطلات لا علاجاً. سفاجا — خلجان هادئة على البحر الأحمر وشواطئ رمال سوداء ورطوبة منخفضة. واحة سيوة — بحيرات ملحية وبساتين نخيل وعيون ساخنة وهدوء الصحراء الغربية. العين السخنة — أقرب ساحل للبحر الأحمر من القاهرة، نحو ساعتين بالسيارة. الجونة — مدينة البحيرات قرب الغردقة، بمرسى وشواطئ هادئة. مرسى علم — شعاب مرجانية بكر وخلجان السلاحف في أقصى الجنوب. دهب — بلدة هادئة بين جبال سيناء والبحر. الفيوم — قرية تونس وبحيرات وشلالات وادي الريان، على بعد نحو ساعة ونصف من القاهرة. الساحل الشمالي — منتجعات الصيف على البحر المتوسط غرب الإسكندرية.
 
 ## تنبيه مهم
-تُرتَّب العلاجات التقليدية والتكميلية بوصفها خدمات راحة ورفاهية، وليست علاجاً لأي حالة طبية ولا تُقدَّم على هذا الأساس. وتحديد ما إذا كان أيٌّ منها مناسباً لك بعد الإجراء قرار للطبيب المعالج، ولا نرتّب شيئاً منها دون هذا الإذن.
+تُرتَّب خدمات الاسترخاء والسبا بوصفها خدمات راحة ورفاهية، وليست علاجاً لأي حالة طبية ولا تُقدَّم على هذا الأساس. وتحديد ما إذا كان أيٌّ منها مناسباً لك بعد الإجراء قرار للطبيب المعالج، ولا نرتّب شيئاً منها دون هذا الإذن.
 
 أرسل استفسارك
 سيتواصل معك فريقنا خلال ساعات
@@ -6104,8 +6104,8 @@ Curated experiences combining tourism, medical care, and luxury — every detail
 Most Popular
 
 Hollywood Smile in 5 Days
-Indicative from $1,200
-Our signature 5-day bundle combining premium dental treatment with a VIP Cairo experience. The most sought-after package for Gulf visitors.
+Indicative from about 4,500 SAR
+Our signature 5-day bundle combining premium dental treatment with a VIP Cairo experience. The most sought-after package for Gulf visitors. Final treatment price is set by the clinic after reviewing your case.
 ✓Dental consultation + treatment (veneers/implants/smile)
 ✓4-star Cairo hotel (4 nights)
 ✓Private airport transfers
@@ -6118,7 +6118,7 @@ Enquire now
 Heritage Favourite
 
 Nile Heritage Grand Tour
-Indicative from $800
+Indicative from about 3,000 SAR per person
 A 5-day journey through Cairo, Luxor, and Aswan with expert Egyptologist guides, domestic flights, and 4-star hotels.
 ✓Return domestic flights (Cairo–Luxor–Aswan)
 ✓4-star hotels (4 nights)
@@ -6133,7 +6133,7 @@ Enquire now
 Beach & Wellness
 
 Red Sea Escape
-Indicative from $600
+Indicative 2,500–6,900 SAR per room
 4 nights at a premium Red Sea resort with snorkeling, optional diving, and full logistics from your Gulf city.
 ✓4-star Red Sea resort (4 nights)
 ✓All-inclusive meals
@@ -6148,7 +6148,7 @@ Healthcare Focused
 
 Medical & Recovery
 Custom pricing
-Fully coordinated medical trip for patients requiring specialist consultation, procedures, or post-operative recovery.
+Fully coordinated medical trip for patients requiring specialist consultation, procedures, or post-operative recovery. Final treatment price is set by the clinic after reviewing your case.
 ✓Medical consultation & hospital booking
 ✓Airport & clinic transfers
 ✓Accommodation near medical facility
@@ -8209,15 +8209,15 @@ Powered by Cairo Town Chatter
 
 ---
 
-# Recovery & Rehabilitation in Egypt | Hayakkom
+# Recovery & Relaxation Stays in Egypt | Hayakkom
 URL: https://www.hayakkom.com/wellness/
 Language: en
 
-> Post-operative recovery, rehabilitation and traditional therapies in Egypt — Hijama, Chinese therapies and recuperation sites, coordinated with licensed providers.
+> Recovery stays after treatment and relaxation holidays in Egypt — Safaga, Siwa, El Gouna, Ain Sokhna and the North Coast — coordinated with licensed providers.
 
 Recovery & Wellness
-Recovery, Rehabilitation & Traditional Therapies in Egypt
-Structured recovery after treatment, physical rehabilitation, and traditional therapies — coordinated with licensed Egyptian providers.
+Recovery & Relaxation Stays in Egypt
+Structured recovery after treatment, and calm relaxation stays by the sea and in the oases — coordinated with licensed Egyptian providers and operators.
 
 ## Recovery after your procedure
 The days after treatment matter as much as the procedure. We coordinate accommodation chosen for recovery rather than for stars — lift access, a quiet floor, room service so you are not obliged to go out for meals, and short transfers to the clinic for review appointments.
@@ -8225,14 +8225,14 @@ The days after treatment matter as much as the procedure. We coordinate accommod
 ## What we coordinate
 Recovery accommodation near your treating clinic · Nursing or companion support at your accommodation · Transfers to review appointments · Physiotherapy and rehabilitation sessions · Dietitian consultations · Repeat blood work or imaging where the physician requests it · Pharmacy collection
 
-## Traditional and complementary therapies
-Arranged through licensed Egyptian practitioners, alongside — never instead of — the treatment plan your physician has set. Hijama (wet cupping) · Traditional Chinese therapies including acupuncture and cupping · Therapeutic and remedial massage · Hydrotherapy · Reflexology · Guided breathing and relaxation sessions
+## Relaxation and spa services
+Arranged at licensed hotels and spas, as comfort services only: Spa and massage at your hotel · Pools, sea swimming and quiet walks · Yoga and guided breathing sessions · Quiet rooms and healthy menus
 
-## Egypt's natural recuperation sites
-Egypt has long-established sites used for recuperation, and many patients extend their stay to use them once their physician has cleared them to travel domestically. Safaga on the Red Sea — black sand, high salinity and low humidity, long used by visitors seeking relief from joint and skin conditions. Helwan — sulphur springs on the southern edge of Cairo. Siwa Oasis — salt lakes and hot springs in the Western Desert. Ain Sokhna — the closest Red Sea coast to Cairo, around two hours by road, which makes it practical for a short recovery stay.
+## Relaxation destinations in Egypt
+Places Gulf families choose for a calmer, slower stay — as holidays, not as treatment. Safaga — quiet Red Sea bays, black-sand beaches and low humidity. Siwa Oasis — salt lakes, palm groves, hot springs and the silence of the Western Desert. Ain Sokhna — the closest Red Sea coast to Cairo, about two hours by road. El Gouna — a lagoon town near Hurghada with a marina and calm beaches. Marsa Alam — untouched reefs and turtle bays in the far south. Dahab — a relaxed bay town between the Sinai mountains and the sea. Fayoum — Tunis Village and the lakes and waterfalls of Wadi El Rayan, about 90 minutes from Cairo. The North Coast (Sahel) — Mediterranean summer resorts west of Alexandria.
 
 ## An important boundary
-Traditional and complementary therapies are arranged as comfort and wellbeing services. They are not a treatment for any medical condition and are never presented as one. Whether any of them is appropriate for you after a procedure is a decision for your treating physician, and we arrange nothing of this kind without that clearance.
+Relaxation and spa services are arranged as comfort and wellbeing services. They are not a treatment for any medical condition and are never presented as one. Whether any of them is appropriate for you after a procedure is a decision for your treating physician, and we arrange nothing of this kind without that clearance.
 
 ### Services
 Hair TransplantDental CareWeight Loss SurgeryCosmetic SurgeryMedical TourismWellness & RehabPhysiotherapyFull Check-upMedical Conferences & EventsVIP TripsNile CruisesCoastal TourismCultural TourismAdventure TripsReligious TourismEducational TourismBusiness TourismHeritage & Luxury
@@ -8243,3 +8243,265 @@ About UsAll ServicesPackagesTourists in EgyptFor Saudi PatientsPartner With UsCa
 Hayakom for Healthcare Solutions and Logistic Services (Single Person L.L.C.) © 2026 · الحي ال16 المجاورة الثانية Shiekh Zayed - Giza, Cairo 12774, Egypt · Commercial Register: 49973 · Unified Registry No: 11070-01000-49973 · Registered under Egyptian Law No. 159 of 1981
 Home · Privacy Policy · Terms & Conditions · Cookie Settings
 Powered by Cairo Town Chatter
+
+---
+# Holiday Packages in Egypt for Gulf Families 2026 | Hayakkom
+URL: https://www.hayakkom.com/holidays/
+Language: en
+> Sharm el-Sheikh, Nile cruises, Cairo, the North Coast and Siwa: Egypt holiday packages for Gulf families with indicative 2026 prices in SAR, arranged with licensed operators.
+Holiday packages · 2026
+# Holiday Packages in Egypt for Gulf Families
+The Red Sea, the Nile, Cairo, the North Coast and Siwa — with indicative 2026 prices in Saudi riyals, arranged with licensed Egyptian operators.In short: Hayakkom coordinates holidays in Egypt for families from Saudi Arabia, the UAE and Kuwait. The prices below are indicative ranges in SAR, excluding flights, built from published October 2026 rates. Trips, transfers and tourist transport are operated and invoiced by licensed Egyptian tourism and transport companies; Hayakkom plans the trip, books it with them and stays with you on WhatsApp in Arabic or English.Most searchedSharm el-Sheikh Family Holiday — 5 Nights3,500–9,700 SAR per room (2 adults)
+Egypt's best-known Red Sea resort town: calm bays, coral reefs a short boat ride away and family resorts with pools and kids' clubs.✓5 nights in a 5-star resort, all-inclusive where offered✓Private airport transfers✓One boat and snorkelling day✓Family-friendly rooms requested in writing✓Arabic-speaking coordinator on WhatsAppAsk on WhatsAppNile Cruise Luxor–Aswan — 4 Nights1,650–4,400 SAR per person
+Four nights on a 5-star ship between Luxor and Aswan, with temples and tombs visited each day from the river. Luxury ships start at about 5,250 SAR per person.✓5-star ship, full board, twin or double cabin✓Sightseeing with an Egyptologist guide and entry fees✓Karnak, Valley of the Kings, Edfu, Kom Ombo and Philae✓Transfers to and from the shipAsk on WhatsAppCairo Family Stay & Discover — 5 Nights2,700–6,200 SAR per family of four
+A serviced apartment in a calm district, a car with driver for the big days, and the Pyramids and Grand Egyptian Museum with your own Egyptologist.✓Serviced apartment in Zamalek, New Cairo or Sheikh Zayed✓Car with driver for 2 days, from a licensed transport company✓Private Egyptologist guide for one day✓Grand Egyptian Museum tickets and a Pyramids visitAsk on WhatsAppSummerNorth Coast (Sahel) Summer — 5 NightsResort room 4,250–10,500 SAR · private chalet or villa 5,300–19,900 SAR
+The Mediterranean summer coast west of Alexandria: turquoise water, gated resorts and family chalets from El Alamein to Marassi.✓Resort in El Alamein or a chalet/villa in a gated resort✓Private car between Cairo and the coast✓Rental contract, permits and deposit terms checked before you pay✓Beach days and family activitiesAsk on WhatsAppRead the North Coast guideRelaxationSiwa Oasis Escape — 3 Days2,350–2,550 SAR per person
+Salt lakes, palm groves, the old Shali fortress and desert sunsets — a quiet escape in the Western Desert. Luxury eco-lodges cost more.✓Transport from Cairo and back✓Eco-lodge stay✓Salt lakes, Shali fortress, Cleopatra's Spring and a desert sunset✓A relaxation holiday — not a medical treatmentAsk on WhatsAppRelaxationEl Gouna & Safaga Calm Stay — 5 Nights2,000–8,300 SAR per room
+Lagoon-side El Gouna or the quiet bays of Safaga and Soma Bay: slow days, calm water and low humidity.✓5 nights in a 4–5-star resort✓Hurghada airport transfers✓Spa and pool access at the resort✓A relaxation holiday — not a medical treatmentAsk on WhatsAppAin Sokhna Weekend — 2 Nights1,300–2,600 SAR per room, with private car from Cairo
+The closest Red Sea beach to Cairo, about two hours by road — the easy weekend away from the city.✓2 nights in an upscale resort✓Private car Cairo ↔ Ain Sokhna, from a licensed transport company✓Beach and pool daysAsk on WhatsAppMarsa Alam Reefs & Turtles — 5 Nights1,650–4,900 SAR per room
+Egypt's far-south Red Sea coast: untouched reefs, turtle bays and some of the clearest water in the country.✓5 nights in a 4–5-star resort✓Marsa Alam airport transfers✓One snorkelling trip to a turtle bayAsk on WhatsAppVIPVIP Cairo & Pyramids — 3 Nights7,800–12,400 SAR per couple
+A 5-star hotel, a senior Egyptologist for two days and a van with driver throughout — Cairo at your own pace.✓3 nights in a 5-star hotel✓Senior private Egyptologist for 2 days✓Van with driver for 3 days, from a licensed transport company✓Pyramids and the Grand Egyptian Museum✓Meet-and-greet at Cairo airportAsk on WhatsAppTreatment + holidayTreat & Recover by the SeaRecovery stay & transfers 2,700–5,650 SAR + treatment priced by the clinic
+Final treatment price is set by the clinic after reviewing your case.
+Treatment at a licensed Cairo clinic, then a calm recovery stay by the Red Sea once your doctor clears you to travel. Example treatment range: hair transplant 4,500–11,300 SAR.✓Treatment at a licensed Cairo clinic✓3 nights near the clinic✓5 recovery nights in Ain Sokhna, when your doctor approves✓Private transfers throughout✓Follow-up appointment before you fly homeAsk on WhatsAppTransport by a licensed transport company. Photo for illustration.Private car & driver
+## Sedan or family van, with a professional driver
+Airport pickup, day trips, and the road between Cairo and the coast — in a clean, air-conditioned car with a driver who knows the way. Cars and drivers are provided by a licensed tourist transport company; Hayakkom books and coordinates them for you and stays on WhatsApp throughout.
+Option · Indicative price · 
+Sedan with driver, full day (8–10 h) · 375–560 SAR · 
+Family van with driver, full day · 790–1,125 SAR · 
+Cairo airport ↔ city, one way · 65–310 SAR per vehicle · 
+## How booking works
+Send us your dates, who is travelling and the package you like, on WhatsApp or by email.
+You receive a written, itemised quote from the licensed operator, with its name and licence number.
+You confirm and pay the operator directly. Nothing is charged before you agree in writing.
+We coordinate every day of the trip and stay on WhatsApp until you are home.
+## Questions families ask
+Are flights included in these prices?
+No. The ranges cover stays, transfers and the activities listed. We can suggest flight times from Riyadh, Jeddah, Dammam, Dubai or Kuwait, but you book flights yourself or through your own agent.
+Who operates the trips?
+Licensed Egyptian tourism and transport companies. Their name and licence number appear on your written quote, and they invoice you directly. Hayakkom plans and coordinates the trip and stays with you on WhatsApp.
+Why are the prices shown as ranges?
+Because the season, the hotel, the room type and the size of your family change the price. We send an itemised quote for your dates before you pay anything.
+Can I combine treatment with a holiday?
+Yes. Treat & Recover by the Sea pairs treatment at a licensed Cairo clinic with a recovery stay by the Red Sea, once your doctor clears you to travel. The treatment price is set by the clinic after reviewing your case.
+## How we built these price ranges
+Indicative ranges in Saudi riyals (1 USD ≈ 3.75 SAR), excluding flights, built from rates published by the sources below and checked in October 2026. Peak dates — summer, Eid and New Year — cost more. Your final price is confirmed in writing by the licensed operator before you pay.
+Pure Nile Tours — Nile cruise prices 2026 — Mar 2026
+In Your Pocket — luxury Egypt: guides, cars, cruises — Jul 2026
+Travelocity — 5-star hotels in Sharm el-Sheikh — Oct 2026
+Travelocity — 5-star hotels in El Gouna — Oct 2026
+Travelocity — 5-star hotels in Cairo — Oct 2026
+Travelocity — Ain Sokhna hotels — Oct 2026
+Kayak — Marsa Alam resorts — Oct 2026
+Kayak — Rixos Premium Alamein (North Coast) — Oct 2026
+Bayut Egypt — Marassi summer rentals — Jul 2026
+TourRadar — 3-day Siwa trip from Cairo — Oct 2026
+Expedia — Cairo aparthotels (Zamalek, New Cairo, Sheikh Zayed) — Oct 2026
+Nasco Tours — van with driver in Cairo, 8 hours — Oct 2026
+Transfeero — Cairo airport transfers — Oct 2026
+Enterprise — Grand Egyptian Museum visit guide — Nov 2025Hayakkom is an Egyptian coordination and marketing company (Commercial Register 49973). It is not a travel agency or tour operator. Trips, transfers and tourist transport are operated and invoiced by licensed Egyptian tourism and transport companies; their name and licence number appear on your written quote. Hayakkom earns a coordination fee from the clinics, hotels and operators it works with. You receive an itemised written estimate before you pay, and you are invoiced directly by the provider.
+## Plan it with us on WhatsApp
+Tell us your dates, who is travelling and your budget. We reply in Arabic or English with a written, itemised quote.📱 WhatsApp +20 103 156 7949✉️ support@hayakkom.com
+
+---
+# باقات سياحية في مصر للعائلات الخليجية 2026 | حياكم
+URL: https://www.hayakkom.com/ar/holidays/
+Language: ar
+> شرم الشيخ والرحلات النيلية والقاهرة والساحل الشمالي وسيوة: باقات عطلات في مصر للعائلات الخليجية بأسعار تقديرية لعام 2026 بالريال، مع شركات مرخّصة.
+باقات العطلات · 2026
+# باقات العطلات في مصر للعائلات الخليجية
+البحر الأحمر والنيل والقاهرة والساحل الشمالي وسيوة — بأسعار تقديرية لعام 2026 بالريال السعودي، تُنفَّذ مع شركات مصرية مرخّصة.باختصار: تنسّق حياكم العطلات في مصر للعائلات من السعودية والإمارات والكويت. والأسعار أدناه نطاقات تقديرية بالريال السعودي دون الطيران، مبنية على أسعار منشورة في أكتوبر 2026. وتُنفِّذ الرحلات والتنقلات ونقل السياح وتُصدِر فواتيرها شركات سياحة ونقل مصرية مرخّصة، بينما تخطط حياكم للرحلة وتحجزها معها وتبقى معك على واتساب بالعربية.الأكثر بحثاًعطلة عائلية في شرم الشيخ — 5 ليالٍ3,500–9,700 ريال للغرفة (شخصان)
+أشهر مدن البحر الأحمر السياحية: خلجان هادئة، وشعاب مرجانية على بُعد رحلة قارب قصيرة، ومنتجعات عائلية بمسابح ونوادٍ للأطفال.✓5 ليالٍ في منتجع 5 نجوم، شامل كلياً حيث يتوفر✓استقبال وتوديع خاص من المطار✓يوم رحلة بحرية وغطس سطحي✓طلب غرف مناسبة للعائلات كتابةً✓منسّق يتحدث العربية على واتساباسأل على واتسابرحلة نيلية من الأقصر إلى أسوان — 4 ليالٍ1,650–4,400 ريال للشخص
+أربع ليالٍ على باخرة 5 نجوم بين الأقصر وأسوان، تزور فيها المعابد والمقابر كل يوم من النهر. وتبدأ البواخر الفاخرة من نحو 5,250 ريالاً للشخص.✓باخرة 5 نجوم، إقامة كاملة، كابينة لشخصين✓زيارات مع مرشد متخصص في الآثار ورسوم الدخول✓الكرنك ووادي الملوك وإدفو وكوم أمبو وفيلة✓التنقل من الباخرة وإليهااسأل على واتسابإقامة عائلية في القاهرة واكتشافها — 5 ليالٍ2,700–6,200 ريال لعائلة من أربعة
+شقة فندقية في حي هادئ، وسيارة بسائق للأيام الكبيرة، والأهرامات والمتحف المصري الكبير مع مرشدك الخاص.✓شقة فندقية في الزمالك أو القاهرة الجديدة أو الشيخ زايد✓سيارة بسائق ليومين من شركة نقل مرخّصة✓مرشد آثار خاص ليوم كامل✓تذاكر المتحف المصري الكبير وزيارة الأهراماتاسأل على واتسابصيفيصيف الساحل الشمالي — 5 ليالٍغرفة منتجع 4,250–10,500 ريال · شاليه أو فيلا خاصة 5,300–19,900 ريال
+ساحل البحر المتوسط الصيفي غرب الإسكندرية: مياه فيروزية، ومنتجعات مغلقة، وشاليهات عائلية من العلمين إلى مراسي.✓منتجع في العلمين أو شاليه/فيلا داخل قرية مغلقة✓سيارة خاصة بين القاهرة والساحل✓مراجعة عقد الإيجار والتصاريح والتأمين قبل الدفع✓أيام شاطئ وأنشطة للعائلةاسأل على واتساباقرأ دليل الساحل الشمالياستجمامرحلة واحة سيوة — 3 أيام2,350–2,550 ريال للشخص
+بحيرات ملحية وبساتين نخيل وقلعة شالي القديمة وغروب الصحراء — هدوء تام في الصحراء الغربية. والنُّزل البيئية الفاخرة أعلى سعراً.✓التنقل من القاهرة وإليها✓إقامة في نُزل بيئي✓البحيرات الملحية وقلعة شالي وعين كليوباترا وغروب الصحراء✓عطلة استجمام — وليست علاجاً طبياًاسأل على واتساباستجمامإقامة هادئة في الجونة وسفاجا — 5 ليالٍ2,000–8,300 ريال للغرفة
+الجونة على البحيرات أو خلجان سفاجا وسوما باي الهادئة: أيام بطيئة ومياه ساكنة ورطوبة منخفضة.✓5 ليالٍ في منتجع 4–5 نجوم✓الاستقبال والتوديع من مطار الغردقة✓السبا والمسابح داخل المنتجع✓عطلة استجمام — وليست علاجاً طبياًاسأل على واتسابعطلة نهاية الأسبوع في العين السخنة — ليلتان1,300–2,600 ريال للغرفة مع سيارة خاصة من القاهرة
+أقرب شاطئ على البحر الأحمر إلى القاهرة، نحو ساعتين بالسيارة — أسهل عطلة قصيرة من المدينة.✓ليلتان في منتجع راقٍ✓سيارة خاصة بين القاهرة والعين السخنة من شركة نقل مرخّصة✓أيام شاطئ ومسبحاسأل على واتسابمرسى علم — الشعاب والسلاحف — 5 ليالٍ1,650–4,900 ريال للغرفة
+أقصى جنوب ساحل البحر الأحمر المصري: شعاب مرجانية بكر، وخلجان السلاحف، ومن أصفى المياه في مصر.✓5 ليالٍ في منتجع 4–5 نجوم✓الاستقبال والتوديع من مطار مرسى علم✓رحلة غطس سطحي إلى خليج السلاحفاسأل على واتسابVIPالقاهرة والأهرامات VIP — 3 ليالٍ7,800–12,400 ريال للزوجين
+فندق 5 نجوم، ومرشد آثار خبير ليومين، وسيارة فان بسائق طوال الرحلة — القاهرة على راحتك.✓3 ليالٍ في فندق 5 نجوم✓مرشد آثار خاص خبير ليومين✓سيارة فان بسائق لثلاثة أيام من شركة نقل مرخّصة✓الأهرامات والمتحف المصري الكبير✓استقبال شخصي في مطار القاهرةاسأل على واتسابعلاج + عطلةعالج واستجم على البحرإقامة التعافي والتنقلات 2,700–5,650 ريال + سعر العلاج تحدده العيادة
+السعر النهائي للعلاج تحدده العيادة بعد مراجعة حالتك.
+علاجك في عيادة مرخّصة بالقاهرة، ثم إقامة تعافٍ هادئة على البحر الأحمر بعد أن يأذن لك طبيبك بالسفر. مثال لنطاق العلاج: زراعة الشعر 4,500–11,300 ريال.✓العلاج في عيادة مرخّصة بالقاهرة✓3 ليالٍ قرب العيادة✓5 ليالٍ للتعافي في العين السخنة بعد موافقة طبيبك✓تنقلات خاصة طوال الرحلة✓موعد متابعة قبل عودتكاسأل على واتسابالنقل عبر شركة نقل مرخّصة. الصورة للتوضيح.سيارة خاصة بسائق
+## سيارة سيدان أو فان عائلي مع سائق محترف
+الاستقبال من المطار، والرحلات اليومية، والطريق بين القاهرة والساحل — في سيارة نظيفة مكيّفة مع سائق يعرف الطريق. توفّر السيارات والسائقين شركة نقل سياحي مرخّصة، وتحجزها حياكم وتنسّقها لك وتبقى معك على واتساب طوال الوقت.
+الخيار · السعر التقديري · 
+سيدان بسائق، يوم كامل (8–10 ساعات) · 375–560 ريال · 
+فان عائلي بسائق، يوم كامل · 790–1,125 ريال · 
+مطار القاهرة ↔ المدينة، اتجاه واحد · 65–310 ريال للسيارة · 
+## كيف يتم الحجز
+أرسل لنا التواريخ ومن سيسافر والباقة التي تعجبك، على واتساب أو بالبريد.
+تستلم عرض سعر مكتوباً ومفصّلاً من الشركة المرخّصة المنفِّذة، باسمها ورقم ترخيصها.
+تؤكد وتدفع للشركة المنفِّذة مباشرةً، ولا يُخصم أي مبلغ قبل موافقتك كتابةً.
+ننسّق كل يوم من أيام الرحلة ونبقى معك على واتساب حتى تعود إلى بيتك.
+## أسئلة تطرحها العائلات
+هل تذاكر الطيران مشمولة في هذه الأسعار؟
+لا. تشمل النطاقات الإقامة والتنقلات والأنشطة المذكورة. ويمكننا اقتراح مواعيد رحلات من الرياض أو جدة أو الدمام أو دبي أو الكويت، لكنك تحجز الطيران بنفسك أو عبر وكيلك.
+من ينفّذ الرحلات؟
+شركات سياحة ونقل مصرية مرخّصة، يظهر اسمها ورقم ترخيصها في عرض السعر المكتوب، وتصدر لك الفاتورة مباشرةً. أما حياكم فتخطط للرحلة وتنسّقها وتبقى معك على واتساب.
+لماذا تظهر الأسعار على شكل نطاقات؟
+لأن الموسم والفندق ونوع الغرفة وعدد أفراد العائلة تغيّر السعر. نرسل لك عرض سعر مفصّلاً لتواريخك قبل أن تدفع أي شيء.
+هل يمكنني الجمع بين العلاج والعطلة؟
+نعم. باقة «عالج واستجم على البحر» تجمع بين العلاج في عيادة مرخّصة بالقاهرة وإقامة تعافٍ على البحر الأحمر بعد أن يأذن لك طبيبك بالسفر. ويحدد العيادة سعر العلاج بعد مراجعة حالتك.
+## كيف بنينا نطاقات الأسعار
+نطاقات تقديرية بالريال السعودي (الدولار ≈ 3.75 ريال)، دون تذاكر الطيران، مبنية على أسعار منشورة في المصادر التالية وراجعناها في أكتوبر 2026. وتكون مواسم الذروة — الصيف والعيد ورأس السنة — أعلى سعراً. ويُؤكَّد سعرك النهائي كتابةً من الشركة المرخّصة المنفِّذة قبل الدفع.
+Pure Nile Tours — Nile cruise prices 2026 — Mar 2026
+In Your Pocket — luxury Egypt: guides, cars, cruises — Jul 2026
+Travelocity — 5-star hotels in Sharm el-Sheikh — Oct 2026
+Travelocity — 5-star hotels in El Gouna — Oct 2026
+Travelocity — 5-star hotels in Cairo — Oct 2026
+Travelocity — Ain Sokhna hotels — Oct 2026
+Kayak — Marsa Alam resorts — Oct 2026
+Kayak — Rixos Premium Alamein (North Coast) — Oct 2026
+Bayut Egypt — Marassi summer rentals — Jul 2026
+TourRadar — 3-day Siwa trip from Cairo — Oct 2026
+Expedia — Cairo aparthotels (Zamalek, New Cairo, Sheikh Zayed) — Oct 2026
+Nasco Tours — van with driver in Cairo, 8 hours — Oct 2026
+Transfeero — Cairo airport transfers — Oct 2026
+Enterprise — Grand Egyptian Museum visit guide — Nov 2025حياكم شركة تنسيق وتسويق مصرية (السجل التجاري 49973)، وليست وكالة سفر أو شركة سياحة. تُنفَّذ الرحلات والتنقلات ونقل السياح وتُصدَر فواتيرها من شركات سياحة ونقل مصرية مرخّصة، ويظهر اسمها ورقم ترخيصها في عرض السعر المكتوب. وتحصل حياكم على رسوم تنسيق من العيادات والفنادق والشركات التي تتعامل معها. تستلم عرض سعر مكتوباً ومفصّلاً قبل الدفع، وتصدر الفاتورة مباشرةً من مقدّم الخدمة.
+## خطّط رحلتك معنا على واتساب
+أخبرنا بالتواريخ ومن سيسافر وميزانيتك، ونرد عليك بالعربية بعرض سعر مكتوب ومفصّل.📱 واتساب +20 103 156 7949✉️ support@hayakkom.com
+
+---
+# North Coast Egypt (Sahel) Summer Guide for Gulf Families | Hayakkom
+URL: https://www.hayakkom.com/north-coast/
+Language: en
+> Egypt's North Coast (Sahel): El Alamein, Marassi, Ras El Hekma and Marsa Matrouh — when to go, where to stay and summer 2026 prices in SAR for Gulf families.
+Destination guide · Summer 2026
+# North Coast (Sahel) Egypt: Summer Guide for Gulf Families
+Turquoise Mediterranean water, gated resorts and family chalets — where to stay, when to go, what it costs and how to book it safely.In short: Egypt's North Coast — known as the Sahel — is the Mediterranean shore west of Alexandria, from Sidi Abdel Rahman and El Alamein to Ras El Hekma and Marsa Matrouh. It is Egypt's summer coast: the season runs roughly June to September, and most stays are in gated resorts, hotels and private chalets. Resort rooms cost about 690–1,880 SAR a night in summer, and private chalets or villas about 900–3,750 SAR a night.
+## Where to stayNew El AlameinMarassiSidi Abdel RahmanRas El HekmaAlmaza BayMarsa Matrouh & Agiba Beach
+New El Alamein — the newest city on the coast, with large hotels, a long promenade and the most activity in July and August. Marassi — a large gated resort with a marina, beaches and chalets or villas for families who want everything inside one gate. Sidi Abdel Rahman and Ras El Hekma — quieter bays with some of the clearest water. Almaza Bay and Marsa Matrouh — further west, calmer, with Agiba Beach among the most photographed spots in Egypt.
+## When to go
+The season is June to September. July and August are the peak — book early. June and September are calmer, better value and still warm enough for the beach. Outside summer many resorts are quiet.
+## Indicative prices, summer 2026
+Stay · Per night · 
+5-star resort room, El Alamein (2 adults) · 690–1,880 SAR · 
+Chalet (1 bedroom) to villa (5 bedrooms), Marassi, July–August · 900–3,750 SAR · 
+Family van with driver, Cairo ↔ coast · 790–1,125 SAR per day · 
+Entry permits and deposits may apply in gated resorts. Prices from Kayak and Bayut Egypt listings, checked in October 2026 (1 USD ≈ 3.75 SAR; 1 SAR ≈ 13.3 EGP for older EGP listings).
+## Getting there
+Most families drive: around three to four hours from Cairo to the El Alamein area. A private car with driver is the easiest option with children and luggage. El Alamein International Airport receives seasonal flights — check current schedules from your city before planning around it.
+## Tips for a smooth summer
+Book July and August early — the best chalets go months ahead.
+Ask for the rental contract, entry permits and deposit terms in writing before you pay anything.
+Respect beach flags: the Mediterranean can have waves and currents on windy days.
+Choose a resort with a pool and shade if you travel with young children.
+## Our North Coast packageSummerNorth Coast (Sahel) Summer — 5 NightsResort room 4,250–10,500 SAR · private chalet or villa 5,300–19,900 SAR
+The Mediterranean summer coast west of Alexandria: turquoise water, gated resorts and family chalets from El Alamein to Marassi.✓Resort in El Alamein or a chalet/villa in a gated resort✓Private car between Cairo and the coast✓Rental contract, permits and deposit terms checked before you pay✓Beach days and family activitiesAsk on WhatsAppSee all holiday packages
+## Questions families ask
+Is the North Coast good for families?
+Yes — most stays are in gated resorts with beaches, pools and restaurants inside, which is why many Egyptian and Gulf families choose it for the summer.
+When is the North Coast season?
+Roughly June to September. July and August are the busiest and most expensive months; June and September are calmer and better value.
+How far is the North Coast from Cairo?
+Around three to four hours by road to the El Alamein area, depending on traffic and the exact resort.
+Do I need a permit to enter the gated resorts?
+Some gated resorts require entry permits and a deposit for rented chalets and villas. We check the rental contract, permits and deposit terms in writing before you pay.Hayakkom is an Egyptian coordination and marketing company (Commercial Register 49973). It is not a travel agency or tour operator. Trips, transfers and tourist transport are operated and invoiced by licensed Egyptian tourism and transport companies; their name and licence number appear on your written quote. Hayakkom earns a coordination fee from the clinics, hotels and operators it works with. You receive an itemised written estimate before you pay, and you are invoiced directly by the provider.
+## Plan it with us on WhatsApp
+Tell us your dates, who is travelling and your budget. We reply in Arabic or English with a written, itemised quote.📱 WhatsApp +20 103 156 7949✉️ support@hayakkom.com
+
+---
+# الساحل الشمالي مصر للعائلات الخليجية — دليل صيف 2026 | حياكم
+URL: https://www.hayakkom.com/ar/north-coast/
+Language: ar
+> الساحل الشمالي في مصر: العلمين ومراسي ورأس الحكمة ومرسى مطروح — متى تذهب وأين تقيم وأسعار صيف 2026 بالريال للعائلات الخليجية.
+دليل وجهة · صيف 2026
+# الساحل الشمالي في مصر: دليل الصيف للعائلات الخليجية
+مياه البحر المتوسط الفيروزية، والقرى المغلقة، والشاليهات العائلية — أين تقيم، ومتى تذهب، وكم التكلفة، وكيف تحجز بأمان.باختصار: الساحل الشمالي في مصر هو شاطئ البحر المتوسط غرب الإسكندرية، من سيدي عبد الرحمن والعلمين إلى رأس الحكمة ومرسى مطروح. وهو ساحل الصيف في مصر: يمتد موسمه من يونيو إلى سبتمبر تقريباً، ومعظم الإقامات في قرى مغلقة وفنادق وشاليهات خاصة. تكلّف غرفة المنتجع نحو 690–1,880 ريالاً لليلة في الصيف، والشاليه أو الفيلا الخاصة نحو 900–3,750 ريالاً لليلة.
+## أين تقيمالعلمين الجديدةمراسيسيدي عبد الرحمنرأس الحكمةألماظة بايمرسى مطروح وشاطئ عجيبة
+العلمين الجديدة — أحدث مدن الساحل، بفنادق كبيرة وممشى طويل وأكثر حركة في يوليو وأغسطس. مراسي — قرية مغلقة كبيرة بمرسى يخوت وشواطئ وشاليهات وفلل لعائلات تريد كل شيء داخل بوابة واحدة. سيدي عبد الرحمن ورأس الحكمة — خلجان أهدأ بمياه من الأصفى على الساحل. ألماظة باي ومرسى مطروح — غرباً، أهدأ، وفيها شاطئ عجيبة من أكثر الأماكن تصويراً في مصر.
+## متى تذهب
+الموسم من يونيو إلى سبتمبر. يوليو وأغسطس ذروة الموسم — احجز مبكراً. ويونيو وسبتمبر أهدأ وأوفر ولا يزال الجو مناسباً للبحر. وخارج الصيف تكون كثير من القرى هادئة.
+## أسعار تقديرية — صيف 2026
+الإقامة · لليلة · 
+غرفة منتجع 5 نجوم في العلمين (شخصان) · 690–1,880 ريال · 
+من شاليه بغرفة واحدة إلى فيلا بخمس غرف في مراسي، يوليو–أغسطس · 900–3,750 ريال · 
+فان عائلي بسائق بين القاهرة والساحل · 790–1,125 ريال لليوم · 
+قد تُطلب تصاريح دخول وتأمين في القرى المغلقة. الأسعار من إعلانات Kayak وBayut مصر، راجعناها في أكتوبر 2026 (الدولار ≈ 3.75 ريال).
+## كيف تصل
+تسافر معظم العائلات بالسيارة: نحو ثلاث إلى أربع ساعات من القاهرة إلى منطقة العلمين. والسيارة الخاصة بسائق هي الأسهل مع الأطفال والحقائب. ويستقبل مطار العلمين الدولي رحلات موسمية — تحقّق من الجداول الحالية من مدينتك قبل أن تبني خطتك عليه.
+## نصائح لصيف مريح
+احجز يوليو وأغسطس مبكراً — أفضل الشاليهات تُحجز قبل أشهر.
+اطلب عقد الإيجار وتصاريح الدخول وشروط التأمين كتابةً قبل أن تدفع أي مبلغ.
+انتبه لأعلام الشاطئ: قد يكون في المتوسط موج وتيارات في الأيام العاصفة.
+اختر قرية فيها مسبح وظل إن كنت مسافراً مع أطفال صغار.
+## باقة الساحل الشماليصيفيصيف الساحل الشمالي — 5 ليالٍغرفة منتجع 4,250–10,500 ريال · شاليه أو فيلا خاصة 5,300–19,900 ريال
+ساحل البحر المتوسط الصيفي غرب الإسكندرية: مياه فيروزية، ومنتجعات مغلقة، وشاليهات عائلية من العلمين إلى مراسي.✓منتجع في العلمين أو شاليه/فيلا داخل قرية مغلقة✓سيارة خاصة بين القاهرة والساحل✓مراجعة عقد الإيجار والتصاريح والتأمين قبل الدفع✓أيام شاطئ وأنشطة للعائلةاسأل على واتسابكل باقات العطلات
+## أسئلة تطرحها العائلات
+هل الساحل الشمالي مناسب للعائلات؟
+نعم — معظم الإقامات داخل قرى مغلقة فيها الشواطئ والمسابح والمطاعم، ولهذا تختاره عائلات مصرية وخليجية كثيرة للصيف.
+متى موسم الساحل الشمالي؟
+من يونيو إلى سبتمبر تقريباً. ويوليو وأغسطس هما الأكثر ازدحاماً وغلاءً، أما يونيو وسبتمبر فأهدأ وأوفر.
+كم يبعد الساحل الشمالي عن القاهرة؟
+نحو ثلاث إلى أربع ساعات بالسيارة إلى منطقة العلمين، بحسب الزحام وموقع القرية.
+هل أحتاج تصريحاً لدخول القرى المغلقة؟
+بعض القرى المغلقة تطلب تصاريح دخول وتأميناً عند استئجار الشاليهات والفلل. ونراجع عقد الإيجار والتصاريح وشروط التأمين كتابةً قبل أن تدفع.حياكم شركة تنسيق وتسويق مصرية (السجل التجاري 49973)، وليست وكالة سفر أو شركة سياحة. تُنفَّذ الرحلات والتنقلات ونقل السياح وتُصدَر فواتيرها من شركات سياحة ونقل مصرية مرخّصة، ويظهر اسمها ورقم ترخيصها في عرض السعر المكتوب. وتحصل حياكم على رسوم تنسيق من العيادات والفنادق والشركات التي تتعامل معها. تستلم عرض سعر مكتوباً ومفصّلاً قبل الدفع، وتصدر الفاتورة مباشرةً من مقدّم الخدمة.
+## خطّط رحلتك معنا على واتساب
+أخبرنا بالتواريخ ومن سيسافر وميزانيتك، ونرد عليك بالعربية بعرض سعر مكتوب ومفصّل.📱 واتساب +20 103 156 7949✉️ support@hayakkom.com
+
+---
+# Video Consultation with a Doctor in Egypt Before You Travel | Hayakkom
+URL: https://www.hayakkom.com/video-consultation/
+Language: en
+> Talk to a licensed Egyptian specialist by Zoom or WhatsApp video before booking flights: dental, hair, weight-loss, cosmetic, orthopaedics, eyes and LASIK. Arabic coordinator available.
+Before you travel
+# Video Consultation with a Doctor in Egypt — Before You Book Flights
+Talk to the licensed Egyptian doctor who would treat you, from home, before you commit to a trip.In short: Before you book anything, Hayakkom sends your reports and scans to a licensed Egyptian specialist and schedules a video call — on Zoom, Google Meet or WhatsApp video — at a time that suits the Gulf. A coordinator can join in Arabic or English. The doctor reviews your file, explains the options and gives an indicative plan; the final plan and price are confirmed after an in-person examination in Egypt.
+## How it works
+Send us your reports, scans or photos on WhatsApp or by email.
+We share them, with your consent, with a licensed clinic or hospital and confirm the doctor's name.
+We book a 20–30 minute video call at a time that suits you, and tell you the consultation fee in writing beforehand.
+You talk to the doctor directly. A coordinator can join to help in Arabic.
+The clinic sends a written plan with the expected stay and an indicative price range.
+## Specialties we can arrangeDental & implantsHair transplantWeight-loss surgeryCosmetic surgeryOrthopaedicsEyes & LASIKPhysiotherapyFull check-up
+## What a video call can — and cannot — do
+It can · It cannot · 
+Review your reports and scans · Replace an in-person examination · 
+Explain your treatment options · Give a final price before you are examined · 
+Estimate how long you need to stay · Guarantee a result · 
+Answer your and your family's questions · Replace your own doctor at home · 
+## Questions patients ask
+Who is the doctor on the call?
+A licensed Egyptian specialist at the clinic or hospital that would treat you. We tell you the doctor's name and the facility before the call.
+How much does a video consultation cost?
+The fee is set by the doctor or clinic and confirmed to you in writing before the call. For reference, video consultations on Egyptian telehealth platforms are listed at about EGP 100–1,000; specialist pre-travel reviews can cost more.
+Does the video call replace an examination?
+No. It helps you understand your options, the likely length of stay and an indicative price. The doctor confirms the final plan and price after examining you in Egypt.
+Is my medical file kept private?
+Your reports are shared only with the clinic you choose, and only with your consent. We do not share them with anyone else.
+Reference fee range: Vezeeta tele-health listings, Egypt, checked October 2026.Hayakkom is a coordination company (Commercial Register 49973), not a healthcare provider. Consultations are given by independent licensed Egyptian doctors, who set their own fees and make every clinical decision. Hayakkom does not diagnose, treat or advise on treatment, and does not guarantee results.
+## Plan it with us on WhatsApp
+Tell us your dates, who is travelling and your budget. We reply in Arabic or English with a written, itemised quote.📱 WhatsApp +20 103 156 7949✉️ support@hayakkom.com
+
+---
+# استشارة طبيب في مصر بالفيديو قبل السفر | حياكم
+URL: https://www.hayakkom.com/ar/video-consultation/
+Language: ar
+> تحدّث مع طبيب مصري مختص ومرخّص عبر زوم أو فيديو واتساب قبل حجز الطيران: الأسنان والشعر والتخسيس والتجميل والعظام والعيون والليزك، مع منسّق بالعربية.
+قبل السفر
+# استشارة طبيب في مصر بالفيديو — قبل أن تحجز الطيران
+تحدّث مع الطبيب المصري المرخّص الذي سيعالجك وأنت في بيتك، قبل أن تلتزم بأي رحلة.باختصار: قبل أن تحجز أي شيء، ترسل حياكم تقاريرك وأشعتك إلى طبيب مصري مختص ومرخّص، وتحجز لك مكالمة فيديو — عبر زوم أو جوجل ميت أو فيديو واتساب — في وقت يناسب توقيت الخليج، ويمكن لمنسّق أن ينضم بالعربية. يراجع الطبيب ملفك ويشرح الخيارات ويعطيك خطة تقديرية، ثم يؤكد الخطة والسعر النهائيين بعد الكشف عليك في مصر.
+## كيف تتم
+أرسل لنا تقاريرك أو أشعتك أو صورك على واتساب أو بالبريد.
+نرسلها بموافقتك إلى عيادة أو مستشفى مرخّص، ونؤكد لك اسم الطبيب.
+نحجز مكالمة فيديو من 20 إلى 30 دقيقة في الوقت المناسب لك، ونبلغك برسوم الاستشارة كتابةً مسبقاً.
+تتحدث مع الطبيب مباشرةً، ويمكن لمنسّق أن ينضم ليساعدك بالعربية.
+ترسل العيادة خطة مكتوبة بمدة الإقامة المتوقعة ونطاق سعر تقديري.
+## التخصصات التي ننسّق لهاالأسنان والزراعةزراعة الشعرجراحات التخسيسجراحات التجميلالعظامالعيون والليزكالعلاج الطبيعيالفحص الشامل
+## ما الذي تفعله مكالمة الفيديو — وما الذي لا تفعله
+تستطيع · لا تستطيع · 
+مراجعة تقاريرك وأشعتك · أن تغني عن الكشف الحضوري · 
+شرح خيارات العلاج · إعطاء سعر نهائي قبل الكشف · 
+تقدير مدة إقامتك · ضمان النتيجة · 
+الإجابة عن أسئلتك وأسئلة عائلتك · أن تحل محل طبيبك في بلدك · 
+## أسئلة يطرحها المرضى
+من الطبيب في المكالمة؟
+طبيب مصري مختص ومرخّص في العيادة أو المستشفى الذي سيعالجك. ونخبرك باسم الطبيب والمنشأة قبل المكالمة.
+كم تكلفة الاستشارة بالفيديو؟
+يحدد الطبيب أو العيادة الرسوم، ونؤكدها لك كتابةً قبل المكالمة. وللمقارنة، تُعرض استشارات الفيديو على منصات الرعاية الصحية عن بُعد في مصر بنحو 100–1,000 جنيه، وقد تكون مراجعة الحالة قبل السفر لدى الاستشاريين أعلى.
+هل تغني مكالمة الفيديو عن الكشف؟
+لا. تساعدك على فهم الخيارات ومدة الإقامة المتوقعة وسعراً تقديرياً، ويؤكد الطبيب الخطة والسعر النهائيين بعد الكشف عليك في مصر.
+هل يبقى ملفي الطبي سرياً؟
+لا تُرسَل تقاريرك إلا إلى العيادة التي تختارها وبموافقتك فقط، ولا نشاركها مع أي جهة أخرى.
+نطاق الرسوم المرجعي: قوائم الرعاية عن بُعد في فيزيتا، مصر، راجعناها في أكتوبر 2026.حياكم شركة تنسيق (السجل التجاري 49973) وليست جهة مقدِّمة للرعاية الصحية. يقدّم الاستشارات أطباء مصريون مستقلون ومرخّصون يحددون رسومهم ويتخذون كل القرارات الطبية. ولا تشخّص حياكم ولا تعالج ولا تقدّم نصيحة علاجية، ولا تضمن النتائج.
+## خطّط رحلتك معنا على واتساب
+أخبرنا بالتواريخ ومن سيسافر وميزانيتك، ونرد عليك بالعربية بعرض سعر مكتوب ومفصّل.📱 واتساب +20 103 156 7949✉️ support@hayakkom.com
