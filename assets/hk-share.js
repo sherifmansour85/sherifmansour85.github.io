@@ -168,7 +168,7 @@
 /* HK-AR-LINKS: on Arabic pages, keep every internal link in Arabic (the app draws some links in English). */
 (function(){
   var P=location.pathname; if(P.indexOf('/ar/')!==0&&P!=='/ar')return;
-  var S={};["about","adventure","alexandria","aswan","blog","blog/about-hayakkom-who-we-are","blog/bariatric-surgery-egypt-saudi-patients","blog/cairo-day-trips-guide","blog/cosmetic-surgery-egypt-how-long-before-flying","blog/dental-implants-cost-egypt-saudi-patients","blog/dental-tourism-egypt","blog/hair-transplant-egypt-cost-guide","blog/hair-transplant-egypt-or-turkey","blog/how-long-stay-egypt-medical-treatment","blog/medical-tourism-egypt-gulf","blog/nile-cruise-planning-guide","blog/physiotherapy-sessions-egypt","blog/pre-travel-consultation","blog/questions-before-choosing-clinic-abroad","blog/saudi-insurance-treatment-egypt","business","cairo","calculator","careers","coastal","conferences","contact","cosmetic-surgery","cultural","dental","dentist-urgent","doctor-children","doctor-gp","educational","eyes-lasik","full-checkup","hair-transplant","heritage","holidays","hotel-doctor","how-to-choose","hurghada","luxor","medical","nile-cruise","north-coast","nurse-visit","orthopedics","packages","partners","physiotherapy","privacy","religious","saudi-arabia","saudi-arabia/dammam","saudi-arabia/jeddah","saudi-arabia/riyadh","services","sharm","terms","tourists","travel-guide","video-consultation","vip-trip","weight-loss","wellness","who-we-are"].forEach(function(s){S[s]=1});
+  var S={};["about","adventure","alexandria","aswan","blog","blog/about-hayakkom-who-we-are","blog/bariatric-surgery-egypt-saudi-patients","blog/cairo-day-trips-guide","blog/cosmetic-surgery-egypt-how-long-before-flying","blog/dental-implants-cost-egypt-saudi-patients","blog/dental-tourism-egypt","blog/hair-transplant-egypt-cost-guide","blog/hair-transplant-egypt-or-turkey","blog/how-long-stay-egypt-medical-treatment","blog/medical-tourism-egypt-gulf","blog/nile-cruise-planning-guide","blog/physiotherapy-sessions-egypt","blog/pre-travel-consultation","blog/questions-before-choosing-clinic-abroad","blog/saudi-insurance-treatment-egypt","business","cairo","calculator","careers","coastal","conferences","contact","cosmetic-surgery","cultural","dental","dentist-urgent","doctor-children","doctor-gp","educational","eyes-lasik","full-checkup","hair-transplant","heritage","holidays","hotel-doctor","how-to-choose","hurghada","luxor","medical","nile-cruise","north-coast","nurse-visit","orthopedics","packages","partners","physiotherapy","privacy","religious","saudi-arabia","saudi-arabia/dammam","saudi-arabia/jeddah","saudi-arabia/riyadh","safaga","services","sharm","terms","tourists","travel-guide","video-consultation","vip-trip","weight-loss","wellness","who-we-are"].forEach(function(s){S[s]=1});
   function isEn(a){return a.hasAttribute('data-hk-en')||/(^|\s)(arlang|enlang)(\s|$)/.test(a.className||'')||(a.textContent||'').trim()==='English';}
   function map(h){
     if(!h||h.charAt(0)!=='/'||h.charAt(1)==='/')return null;
@@ -249,4 +249,20 @@
   }
   if(window.MutationObserver)new MutationObserver(function(){place();}).observe(root,{childList:true,subtree:true});
   [200,900,2500].forEach(function(t){setTimeout(place,t);});
+})();
+
+/* HK-ZOOM-OK: a third-party widget injects a viewport tag that blocks pinch-zoom; undo it so visitors can always zoom (accessibility). */
+(function(){
+  function fix(){
+    var m=document.querySelectorAll('meta[name="viewport"]');
+    for(var i=0;i<m.length;i++){
+      var c=m[i].getAttribute('content')||'';
+      if(/user-scalable\s*=\s*(no|0)|maximum-scale\s*=\s*1(\.0)?(\s*[,;]|$)/i.test(c)){
+        if(m.length>1&&i>0){m[i].parentNode.removeChild(m[i]);}
+        else m[i].setAttribute('content','width=device-width, initial-scale=1, viewport-fit=cover');
+      }
+    }
+  }
+  fix();
+  try{new MutationObserver(fix).observe(document.head,{childList:true,subtree:true,attributes:true,attributeFilter:['content']});}catch(e){}
 })();
