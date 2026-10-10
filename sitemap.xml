@@ -641,9 +641,10 @@
   </url>
   <url>
     <loc>https://www.hayakkom.com/ar/who-we-are/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/who-we-are/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/who-we-are/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/who-we-are/"/>
     <lastmod>2026-10-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.hayakkom.com/aswan/</loc>
@@ -1224,6 +1225,55 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/medical-marketing/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/medical-marketing/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/medical-marketing/"/>
+    <lastmod>2026-10-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/blog/egypt-family-holiday-guide-gulf/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/blog/egypt-family-holiday-guide-gulf/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/blog/egypt-family-holiday-guide-gulf/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/blog/egypt-family-holiday-guide-gulf/"/>
+    <lastmod>2026-10-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/blog/egypt-family-holiday-guide-gulf/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/blog/egypt-family-holiday-guide-gulf/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/blog/egypt-family-holiday-guide-gulf/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/blog/egypt-family-holiday-guide-gulf/"/>
+    <lastmod>2026-10-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/blog/holiday-and-treatment-in-egypt/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/blog/holiday-and-treatment-in-egypt/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/blog/holiday-and-treatment-in-egypt/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/blog/holiday-and-treatment-in-egypt/"/>
+    <lastmod>2026-10-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/blog/holiday-and-treatment-in-egypt/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/blog/holiday-and-treatment-in-egypt/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/blog/holiday-and-treatment-in-egypt/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/blog/holiday-and-treatment-in-egypt/"/>
+    <lastmod>2026-10-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/blog/doctor-in-egypt-for-gulf-visitors/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/blog/doctor-in-egypt-for-gulf-visitors/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/blog/doctor-in-egypt-for-gulf-visitors/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/blog/doctor-in-egypt-for-gulf-visitors/"/>
+    <lastmod>2026-10-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/blog/doctor-in-egypt-for-gulf-visitors/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/blog/doctor-in-egypt-for-gulf-visitors/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/blog/doctor-in-egypt-for-gulf-visitors/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/blog/doctor-in-egypt-for-gulf-visitors/"/>
+    <lastmod>2026-10-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/who-we-are/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/who-we-are/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/who-we-are/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/who-we-are/"/>
     <lastmod>2026-10-10</lastmod>
   </url>
 </urlset>
