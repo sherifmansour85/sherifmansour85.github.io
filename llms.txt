@@ -62,7 +62,7 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 - [كيف تختار شركة تنسيق علاجي](https://www.hayakkom.com/ar/how-to-choose/)
 - [دليل السفر للعلاج](https://www.hayakkom.com/ar/travel-guide/)
 - [حاسبة تكلفة الرحلة](https://www.hayakkom.com/ar/calculator/)
-- [المدونة](https://www.hayakkom.com/ar/blog/)
+- [نصائح السفر العلاجي](https://www.hayakkom.com/ar/blog/)
 - [المؤتمرات الطبية](https://www.hayakkom.com/ar/conferences/)
 - [الدراسة في مصر](https://www.hayakkom.com/ar/educational/)
 - [رحلات VIP](https://www.hayakkom.com/ar/vip-trip/)
@@ -97,12 +97,12 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 - [Cairo day trips](https://www.hayakkom.com/blog/cairo-day-trips-guide/): the Pyramids and Saqqara, Dahshur, Memphis, Islamic and Coptic Cairo, Alexandria and Ain Sokhna as day trips from Cairo, with realistic timings.
 - [Nile cruise Luxor to Aswan](https://www.hayakkom.com/blog/nile-cruise-planning-guide/): 3, 4 and 7-night itineraries day by day, the best months to sail, and how to choose a boat.
 
-## Blog
+## Medical Travel Tips (articles)
 
 Every article is published in both languages. English articles are at /blog/, Arabic at /ar/blog/, paired with hreflang.
 
-- [Blog in English](https://www.hayakkom.com/blog/): fifteen guides on costs, preparation, length of stay, insurance and choosing a provider.
-- [المدونة بالعربية](https://www.hayakkom.com/ar/blog/): the same fifteen guides in Arabic.
+- [Medical Travel Tips in English](https://www.hayakkom.com/blog/): fifteen articles for Gulf patients travelling to Egypt for treatment, covering costs, preparation, length of stay, insurance and choosing a provider.
+- [نصائح السفر العلاجي (Arabic)](https://www.hayakkom.com/ar/blog/): the same fifteen articles in Arabic.
 
 ## Verified business profile
 
