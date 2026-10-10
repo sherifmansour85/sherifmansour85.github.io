@@ -144,3 +144,23 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(mount, 300); });
   else setTimeout(mount, 300);
 })();
+
+/* HK-ROAD-MOVE: on app-rendered pages, show the static "Plan your trip" block above the
+   footer instead of below it, and drop it if the visitor navigates inside the app. */
+(function () {
+  var road = document.getElementById('hk-road');
+  var root = document.getElementById('root');
+  if (!road || !root) return;
+  var home = location.pathname, keep = road.cloneNode(true);
+  function place() {
+    var cur = document.getElementById('hk-road');
+    if (location.pathname !== home) { if (cur && cur.parentNode) cur.parentNode.removeChild(cur); return; }
+    var foot = root.querySelector('footer');
+    if (!foot) return;
+    if (!cur) { cur = keep.cloneNode(true); }
+    if (cur.nextElementSibling !== foot) foot.parentNode.insertBefore(cur, foot);
+  }
+  if (window.MutationObserver) new MutationObserver(function () { place(); }).observe(root, { childList: true, subtree: true });
+  [200, 900, 2500].forEach(function (t) { setTimeout(place, t); });
+  window.addEventListener('popstate', function () { setTimeout(place, 50); });
+})();
