@@ -884,4 +884,58 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
+  <url>
+    <loc>https://www.hayakkom.com/holidays/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/holidays/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/holidays/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/holidays/"/>
+    <lastmod>2026-10-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/holidays/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/holidays/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/holidays/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/holidays/"/>
+    <lastmod>2026-10-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/north-coast/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/north-coast/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/north-coast/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/north-coast/"/>
+    <lastmod>2026-10-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/north-coast/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/north-coast/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/north-coast/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/north-coast/"/>
+    <lastmod>2026-10-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/video-consultation/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/video-consultation/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/video-consultation/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/video-consultation/"/>
+    <lastmod>2026-10-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/video-consultation/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/video-consultation/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/video-consultation/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/video-consultation/"/>
+    <lastmod>2026-10-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>

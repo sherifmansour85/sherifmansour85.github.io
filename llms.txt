@@ -2,7 +2,7 @@
 
 Full text of every page (English and Arabic): https://www.hayakkom.com/llms-full.txt
 
-> Hayakkom (Hayakom for Healthcare Solutions and Logistic Services) is an Egyptian company that coordinates medical treatment, dental care, hair restoration and cosmetic surgery in Egypt for patients travelling from Saudi Arabia, the UAE and Kuwait. It arranges pre-travel record review, appointments, transfers, accommodation and follow-up. Hayakkom is not a healthcare provider: treatment is delivered by independent licensed Egyptian doctors and hospitals.
+> Hayakkom (Hayakom for Healthcare Solutions and Logistic Services) is an Egyptian coordination company for Gulf families visiting Egypt from Saudi Arabia, the UAE and Kuwait. It coordinates holidays and stays (Red Sea, Nile, Cairo, North Coast, Siwa), and medical treatment, dental care, hair restoration and cosmetic surgery with licensed providers, including pre-travel video consultations, appointments, transfers, accommodation and follow-up. Hayakkom is not a healthcare provider and not a travel agency: treatment is delivered by independent licensed Egyptian doctors and hospitals, and trips, transfers and tourist transport are operated and invoiced by licensed Egyptian tourism and transport companies.
 
 ## What Hayakkom is
 
@@ -10,7 +10,17 @@ Full text of every page (English and Arabic): https://www.hayakkom.com/llms-full
 - [How to choose a medical coordinator in Egypt](https://www.hayakkom.com/how-to-choose/): eight criteria a patient can verify independently, including the one Hayakkom does not meet (it is not a licensed tourism company).
 - [كيف تختار شركة تنسيق علاجي في مصر](https://www.hayakkom.com/ar/how-to-choose/): the same eight criteria in Arabic.
 
+How Hayakkom is paid: Hayakkom earns a coordination fee from the clinics, hotels and operators it works with. The client receives an itemised written estimate before paying and is invoiced directly by the provider. Treatment prices shown on the site are indicative ranges; the final treatment price is set by the clinic after reviewing the case. Trips, transfers and tourist transport are operated and invoiced by licensed tourism and transport companies, not by Hayakkom.
+
 Founded by Sherif Mansour (شريف منصور). Registered under Egyptian Law No. 159 of 1981. Commercial Register 49973. Unified Commercial Registry 11070-01000-49973. الحي ال16 المجاورة الثانية Shiekh Zayed - Giza, Cairo 12774, Egypt. Bilingual Arabic and English. Contact support@hayakkom.com, phone +20 100 010 0529 or WhatsApp +20 103 156 7949.
+
+## Holidays and travel
+
+- [Holiday packages in Egypt for Gulf families](https://www.hayakkom.com/holidays/): ten packages with indicative 2026 price ranges in SAR, excluding flights — Sharm el-Sheikh family holiday 5 nights 3,500–9,700 SAR per room; Nile cruise Luxor–Aswan 4 nights 1,650–4,400 SAR per person; Cairo family stay 5 nights 2,700–6,200 SAR per family of four; North Coast summer 5 nights 4,250–10,500 SAR per resort room or 5,300–19,900 SAR per chalet/villa; Siwa 3 days 2,350–2,550 SAR per person; El Gouna & Safaga 5 nights 2,000–8,300 SAR per room; Ain Sokhna 2 nights 1,300–2,600 SAR per room; Marsa Alam 5 nights 1,650–4,900 SAR per room; VIP Cairo & Pyramids 3 nights 7,800–12,400 SAR per couple; Treat & Recover by the Sea (recovery stay 2,700–5,650 SAR plus treatment priced by the clinic). Sources are listed on the page.
+- [North Coast (Sahel) summer guide](https://www.hayakkom.com/north-coast/): El Alamein, Marassi, Ras El Hekma, Almaza Bay and Marsa Matrouh; season June–September; resort rooms about 690–1,880 SAR a night and chalets/villas about 900–3,750 SAR a night in summer 2026; about 3–4 hours by road from Cairo.
+- [Private car with driver](https://www.hayakkom.com/holidays/#transport): sedan with driver 375–560 SAR per day, family van 790–1,125 SAR per day, Cairo airport transfer 65–310 SAR one way — provided by licensed tourist transport companies.
+- [Video consultation before travel](https://www.hayakkom.com/video-consultation/): a video call (Zoom, Google Meet or WhatsApp) with a licensed Egyptian specialist before booking flights; the fee is set by the doctor and confirmed in writing; it does not replace an in-person examination.
+- Arabic: [باقات العطلات](https://www.hayakkom.com/ar/holidays/) · [الساحل الشمالي](https://www.hayakkom.com/ar/north-coast/) · [استشارة طبيب بالفيديو](https://www.hayakkom.com/ar/video-consultation/)
 
 ## Treatments
 
@@ -19,7 +29,7 @@ Founded by Sherif Mansour (شريف منصور). Registered under Egyptian Law N
 - [Weight-loss surgery](https://www.hayakkom.com/weight-loss): sleeve gastrectomy, gastric bypass, gastric balloon. Eligibility is assessed by the surgeon against BMI, associated conditions and fitness for anaesthesia. Typical stay 7–10 days including 1–2 hospital nights.
 - [Cosmetic surgery](https://www.hayakkom.com/cosmetic-surgery): rhinoplasty, liposuction, abdominoplasty, breast surgery, blepharoplasty. Recovery, not operating time, sets the length of stay — usually 7–14 days before the surgeon clears the patient to fly.
 - [Medical tourism](https://www.hayakkom.com/medical): specialist referrals, hospital appointments and treatment scheduling.
-- [Wellness and recovery](https://www.hayakkom.com/wellness): post-operative recovery and rehabilitation stays.
+- [Recovery and relaxation stays](https://www.hayakkom.com/wellness): post-operative recovery stays, and relaxation holidays in Safaga, Siwa, El Gouna, Ain Sokhna and the North Coast (holidays only, not treatment).
 - [Physiotherapy](https://www.hayakkom.com/physiotherapy/): physiotherapy and rehabilitation appointments with licensed Egyptian providers, with accommodation and transfers coordinated by Hayakkom.
 - [Full health check-up](https://www.hayakkom.com/full-checkup/): comprehensive check-ups booked at licensed Egyptian hospitals and diagnostic centres, with accommodation and transfers.
 
@@ -51,7 +61,7 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 - [تكلفة تكميم المعدة في مصر](https://www.hayakkom.com/ar/weight-loss/)
 - [أسعار عمليات التجميل في مصر](https://www.hayakkom.com/ar/cosmetic-surgery/)
 - [السياحة العلاجية في مصر](https://www.hayakkom.com/ar/medical/)
-- [الاستشفاء في مصر — سيوة وسفاجا وحلوان](https://www.hayakkom.com/ar/wellness/)
+- [الاستجمام والتعافي في مصر — سفاجا وسيوة والساحل](https://www.hayakkom.com/ar/wellness/)
 - [العلاج الطبيعي في مصر](https://www.hayakkom.com/ar/physiotherapy/)
 - [الفحص الطبي الشامل في مصر](https://www.hayakkom.com/ar/full-checkup/)
 - [الإقامة والتنقلات](https://www.hayakkom.com/ar/packages/)

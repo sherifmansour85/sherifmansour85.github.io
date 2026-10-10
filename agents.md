@@ -7,12 +7,19 @@ https://www.hayakkom.com/llms.txt
 ## About Hayakkom
 
 Hayakkom is the trading name of **Hayakom for Healthcare Solutions and Logistic Services**,
-an Egyptian single-person limited liability company. It coordinates medical treatment,
-dental care, hair restoration and cosmetic surgery in Egypt for patients travelling from
-Saudi Arabia, the UAE and Kuwait, and arranges pre-travel record review, appointments,
-transfers, accommodation and follow-up.
+an Egyptian single-person limited liability company. It coordinates holidays and stays in
+Egypt (Red Sea, Nile, Cairo, North Coast, Siwa) and medical treatment, dental care, hair
+restoration and cosmetic surgery for families travelling from Saudi Arabia, the UAE and
+Kuwait, and arranges pre-travel video consultations, record review, appointments,
+transfers, accommodation and follow-up. It is not a travel agency or tour operator: trips,
+transfers and tourist transport are operated and invoiced by licensed Egyptian tourism and
+transport companies. Hayakkom earns a coordination fee from the providers it works with;
+clients receive an itemised written estimate before paying and are invoiced by the provider.
 
-- **Category:** medical travel coordination and logistics
+- **Category:** travel and medical coordination for Gulf families
+- **Holiday packages (indicative 2026 prices in SAR):** https://www.hayakkom.com/holidays/
+- **North Coast (Sahel) guide:** https://www.hayakkom.com/north-coast/
+- **Video consultation before travel:** https://www.hayakkom.com/video-consultation/
 - **Founder:** Sherif Mansour (شريف منصور)
 - **Location:** الحي ال16 المجاورة الثانية Shiekh Zayed - Giza, Cairo 12774, Egypt
 - **Registered under:** Egyptian Law No. 159 of 1981
