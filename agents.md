@@ -96,3 +96,7 @@ delivered by these hospitals; Hayakkom does not provide medical care.
 All search engines and AI assistants are welcome to crawl and cite this site. See
 https://www.hayakkom.com/robots.txt — every major AI crawler is explicitly allowed.
 Sitemap: https://www.hayakkom.com/sitemap.xml
+
+## Marketing services for doctors and clinics
+
+Hayakkom is also a marketing company: its Egyptian Commercial Register (49973) covers marketing and consultancy for medical services. For Egyptian doctors, clinics, hospitals and wellness resorts that want patients from Saudi Arabia, the UAE and Kuwait it offers bilingual websites, SEO and AI-search visibility, Google Ads with lead tracking, WhatsApp and enquiry handling, and content, including Cairo Town Chatter (@ctownchatteregy). The hayakkom.com website (137 pages in Arabic and English) is its own work. Details: https://www.hayakkom.com/medical-marketing/ (Arabic: https://www.hayakkom.com/ar/medical-marketing/). Enquiries: WhatsApp +20 103 156 7949, support@hayakkom.com.

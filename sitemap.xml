@@ -1212,4 +1212,18 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://www.hayakkom.com/medical-marketing/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/medical-marketing/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/medical-marketing/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/medical-marketing/"/>
+    <lastmod>2026-10-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/medical-marketing/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/medical-marketing/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/medical-marketing/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/medical-marketing/"/>
+    <lastmod>2026-10-10</lastmod>
+  </url>
 </urlset>

@@ -164,3 +164,89 @@
   [200, 900, 2500].forEach(function (t) { setTimeout(place, t); });
   window.addEventListener('popstate', function () { setTimeout(place, 50); });
 })();
+
+/* HK-AR-LINKS: on Arabic pages, keep every internal link in Arabic (the app draws some links in English). */
+(function(){
+  var P=location.pathname; if(P.indexOf('/ar/')!==0&&P!=='/ar')return;
+  var S={};["about","adventure","alexandria","aswan","blog","blog/about-hayakkom-who-we-are","blog/bariatric-surgery-egypt-saudi-patients","blog/cairo-day-trips-guide","blog/cosmetic-surgery-egypt-how-long-before-flying","blog/dental-implants-cost-egypt-saudi-patients","blog/dental-tourism-egypt","blog/hair-transplant-egypt-cost-guide","blog/hair-transplant-egypt-or-turkey","blog/how-long-stay-egypt-medical-treatment","blog/medical-tourism-egypt-gulf","blog/nile-cruise-planning-guide","blog/physiotherapy-sessions-egypt","blog/pre-travel-consultation","blog/questions-before-choosing-clinic-abroad","blog/saudi-insurance-treatment-egypt","business","cairo","calculator","careers","coastal","conferences","contact","cosmetic-surgery","cultural","dental","dentist-urgent","doctor-children","doctor-gp","educational","eyes-lasik","full-checkup","hair-transplant","heritage","holidays","hotel-doctor","how-to-choose","hurghada","luxor","medical","nile-cruise","north-coast","nurse-visit","orthopedics","packages","partners","physiotherapy","privacy","religious","saudi-arabia","saudi-arabia/dammam","saudi-arabia/jeddah","saudi-arabia/riyadh","services","sharm","terms","tourists","travel-guide","video-consultation","vip-trip","weight-loss","wellness","who-we-are"].forEach(function(s){S[s]=1});
+  function isEn(a){return a.hasAttribute('data-hk-en')||/(^|\s)(arlang|enlang)(\s|$)/.test(a.className||'')||(a.textContent||'').trim()==='English';}
+  function map(h){
+    if(!h||h.charAt(0)!=='/'||h.charAt(1)==='/')return null;
+    var hs='',i=h.indexOf('#'); if(i>=0){hs=h.slice(i);h=h.slice(0,i);}
+    var p=h.split('?')[0]; if(p==='/'||p.indexOf('/ar/')===0||p==='/ar'||p.indexOf('/assets/')===0)return null;
+    var s=p.replace(/^\/+|\/+$/g,''); return S[s]?'/ar/'+s+'/'+hs:null;
+  }
+  function fix(){var a=document.querySelectorAll('a[href^="/"]');for(var i=0;i<a.length;i++){if(isEn(a[i]))continue;var n=map(a[i].getAttribute('href'));if(n)a[i].setAttribute('href',n);}}
+  document.addEventListener('click',function(e){
+    if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
+    var a=e.target&&e.target.closest?e.target.closest('a[href^="/"]'):null; if(!a||isEn(a)||a.target==='_blank')return;
+    var h=a.getAttribute('href'),n=map(h)||(h.indexOf('/ar/')===0&&h.split('#')[0]!==P?h:null);
+    if(n){e.preventDefault();e.stopPropagation();location.href=n;}
+  },true);
+  var t;function later(){clearTimeout(t);t=setTimeout(fix,60);}
+  if(document.readyState!=='loading')fix();else document.addEventListener('DOMContentLoaded',fix);
+  try{new MutationObserver(later).observe(document.documentElement,{childList:true,subtree:true});}catch(e){}
+})();
+
+/* HK-FULL-NAV: open internal pages with a full page load so every page keeps its own content (FAQ, plan-your-trip block, titles). */
+(function(){
+  var P=location.pathname; if(P.indexOf('/ar/')===0||P==='/ar')return;
+  document.addEventListener('click',function(e){
+    if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
+    var a=e.target&&e.target.closest?e.target.closest('a[href^="/"]'):null; if(!a||a.target==='_blank'||a.hasAttribute('download'))return;
+    var h=a.getAttribute('href'); if(h.charAt(1)==='/')return;
+    var path=h.split('#')[0].split('?')[0]; var norm=function(x){return x.replace(/\/+$/,'')||'/';};
+    if(norm(path)===norm(P)&&h.indexOf('?')<0)return;
+    e.preventDefault();e.stopPropagation();location.href=h;
+  },true);
+})();
+
+/* HK-CONVERSIONS: tell Google Ads/Analytics when a visitor contacts us.
+   Events: whatsapp_click, phone_click, email_click, generate_lead (Jotform form submitted).
+   To count them as Google Ads conversions, paste each conversion label below (from Google Ads > Goals > Conversions). */
+(function(){
+  var ADS='AW-16686203605';
+  var LABELS={whatsapp:'',lead:'',phone:''}; // e.g. lead:'AbCdEfGhIjk' -> sends AW-16686203605/AbCdEfGhIjk
+  var last={};
+  function fire(name,kind,extra){
+    var now=Date.now(); if(last[name]&&now-last[name]<1500)return; last[name]=now;
+    var p={page_path:location.pathname,page_lang:(location.pathname.indexOf('/ar')===0?'ar':'en')};
+    for(var k in extra)p[k]=extra[k];
+    try{
+      window.dataLayer=window.dataLayer||[]; window.dataLayer.push({event:name,hk_page:p.page_path});
+      if(typeof window.gtag==='function'){
+        window.gtag('event',name,p);
+        if(kind&&LABELS[kind])window.gtag('event','conversion',{send_to:ADS+'/'+LABELS[kind]});
+      }
+    }catch(e){}
+  }
+  document.addEventListener('click',function(e){
+    var a=e.target&&e.target.closest?e.target.closest('a[href]'):null; if(!a)return;
+    var h=(a.getAttribute('href')||'').toLowerCase();
+    if(h.indexOf('wa.me/')>=0||h.indexOf('whatsapp.com/send')>=0||h.indexOf('whatsapp://')===0)fire('whatsapp_click','whatsapp',{link_url:h.split('?')[0]});
+    else if(h.indexOf('tel:')===0)fire('phone_click','phone',{});
+    else if(h.indexOf('mailto:')===0)fire('email_click','',{});
+  },true);
+  window.addEventListener('message',function(e){
+    if(!e||!/jotform\.(com|eu)$/.test((e.origin||'').replace(/^https?:\/\//,'').split('/')[0].split('.').slice(-2).join('.')))return;
+    var d=e.data,s=typeof d==='string'?d:(d&&(d.action||d.type||d.event))||'';
+    if(String(s).indexOf('submission-completed')===0||s==='submit'||s==='form-submit')fire('generate_lead','lead',{form_source:'jotform'});
+  });
+})();
+
+/* HK-MKT-MOVE: keep the static "marketing for doctors" block above the footer on app-rendered pages. */
+(function(){
+  var blk=document.getElementById('hk-mkt'),root=document.getElementById('root');
+  if(!blk||!root)return;
+  var home=location.pathname,keep=blk.cloneNode(true);
+  function place(){
+    var cur=document.getElementById('hk-mkt');
+    if(location.pathname!==home){if(cur&&cur.parentNode)cur.parentNode.removeChild(cur);return;}
+    var foot=root.querySelector('footer'); if(!foot)return;
+    if(!cur)cur=keep.cloneNode(true);
+    var road=document.getElementById('hk-road'),before=(road&&road.parentNode===foot.parentNode)?road:foot;
+    if(cur.nextElementSibling!==before)foot.parentNode.insertBefore(cur,before);
+  }
+  if(window.MutationObserver)new MutationObserver(function(){place();}).observe(root,{childList:true,subtree:true});
+  [200,900,2500].forEach(function(t){setTimeout(place,t);});
+})();
