@@ -87,9 +87,10 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 - [كيف تختار شركة تنسيق علاجي](https://www.hayakkom.com/ar/how-to-choose/)
 - [دليل السفر للعلاج](https://www.hayakkom.com/ar/travel-guide/)
 - [حاسبة تكلفة الرحلة](https://www.hayakkom.com/ar/calculator/)
-- [نصائح السفر العلاجي](https://www.hayakkom.com/ar/blog/)
+- [المدونة: نصائح السفر والعلاج](https://www.hayakkom.com/ar/blog/)
 - [المؤتمرات الطبية](https://www.hayakkom.com/ar/conferences/)
-- [الدراسة في مصر](https://www.hayakkom.com/ar/educational/)
+- [التسويق الطبي للأطباء والعيادات](https://www.hayakkom.com/ar/medical-marketing/)
+- [الدراسة في مصر للسعوديين والوافدين](https://www.hayakkom.com/ar/educational/): الزيارة التمهيدية والسكن والاستقبال وزيارات الأهل؛ القبول قرار الجامعة عبر منصة الوافدين ولا تضمنه حياكم.
 - [رحلات VIP](https://www.hayakkom.com/ar/vip-trip/)
 - [الرحلات النيلية](https://www.hayakkom.com/ar/nile-cruise/)
 - [السياح في مصر](https://www.hayakkom.com/ar/tourists/)
@@ -122,12 +123,12 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 - [Cairo day trips](https://www.hayakkom.com/blog/cairo-day-trips-guide/): the Pyramids and Saqqara, Dahshur, Memphis, Islamic and Coptic Cairo, Alexandria and Ain Sokhna as day trips from Cairo, with realistic timings.
 - [Nile cruise Luxor to Aswan](https://www.hayakkom.com/blog/nile-cruise-planning-guide/): 3, 4 and 7-night itineraries day by day, the best months to sail, and how to choose a boat.
 
-## Medical Travel Tips (articles)
+## Hayakkom Blog: travel and treatment tips (articles)
 
 Every article is published in both languages. English articles are at /blog/, Arabic at /ar/blog/, paired with hreflang.
 
-- [Medical Travel Tips in English](https://www.hayakkom.com/blog/): fifteen articles for Gulf patients travelling to Egypt for treatment, covering costs, preparation, length of stay, insurance and choosing a provider.
-- [نصائح السفر العلاجي (Arabic)](https://www.hayakkom.com/ar/blog/): the same fifteen articles in Arabic.
+- [Hayakkom Blog in English](https://www.hayakkom.com/blog/): fifteen articles for Gulf families travelling to Egypt, covering Cairo day trips, Nile cruises, treatment costs, preparation, length of stay, insurance and choosing a provider.
+- [مدونة حياكم (Arabic)](https://www.hayakkom.com/ar/blog/): the same fifteen articles in Arabic.
 
 ## Verified business profile
 
@@ -142,7 +143,9 @@ Every article is published in both languages. English articles are at /blog/, Ar
 - [About](https://www.hayakkom.com/about): company information and legal identity.
 - [Partner with us](https://www.hayakkom.com/partners): partnership tracks for Egyptian healthcare providers and for tourism and ground-service companies, and how applications are verified.
 - [Careers](https://www.hayakkom.com/careers): roles for tour guides, patient companions, drivers, marketers, content creators and patient coordinators. No fee is charged to apply.
-- [Business services](https://www.hayakkom.com/business): medical conference organisation, marketing consultancy for healthcare providers, investment tourism and educational programmes.
+- [Medical marketing for doctors & clinics](https://www.hayakkom.com/medical-marketing/): Hayakkom is also a marketing company (Commercial Register 49973 covers marketing and consultancy for medical services). It builds bilingual websites built for Google and AI assistants, runs policy-safe Google Ads with lead tracking, sets up WhatsApp and enquiry forms, and creates content (including Cairo Town Chatter, the founder's Instagram community, @ctownchatteregy) for Egyptian doctors, clinics and hospitals who want Gulf patients. This 137-page bilingual website is its own marketing work. Paying for marketing never affects which provider Hayakkom suggests to a patient.
+- [Study in Egypt](https://www.hayakkom.com/educational/): pre-visit, student housing, airport pick-up, parent visits and support for students from Saudi Arabia and the Gulf. Admission is decided only by the university through Egypt's official Wafeden portal; Hayakkom does not arrange or guarantee it.
+- [Medical conferences](https://www.hayakkom.com/conferences/): organisation support for medical conferences and events in Egypt.
 - [Contact](https://www.hayakkom.com/contact): enquiry forms and direct contact details.
 - [Privacy policy](https://www.hayakkom.com/privacy): what data is collected and how medical documents are handled.
 
