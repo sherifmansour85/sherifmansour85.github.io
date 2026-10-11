@@ -48,7 +48,7 @@
   function isMobile() { return /android|iphone|ipad|ipod|mobile/i.test(navigator.userAgent); }
 
   var css = '' +
-    '.hk-take{max-width:1100px;margin:0 auto;padding:34px 5% 30px;text-align:center}' +
+    '.hk-take{position:relative;z-index:5;max-width:1100px;margin:0 auto;padding:34px 5% 30px;text-align:center}' +
     '.hk-take-card{background:linear-gradient(135deg,#0A2E36 0%,#0E5E6B 100%);color:#fff;border-radius:22px;padding:26px 22px;box-shadow:0 10px 30px rgba(10,46,54,.18)}' +
     '.hk-take h2{font-size:21px;margin:0 0 6px;color:#fff;font-weight:700}' +
     '.hk-take p{margin:0 auto 16px;max-width:520px;font-size:14px;line-height:1.7;color:rgba(255,255,255,.82)}' +
@@ -134,12 +134,29 @@
       '<button type="button" class="hk-tb-share">💬 ' + L.share + '</button></div></div></section>');
     var root = document.getElementById('root');
     var foot = document.querySelector('footer');
-    if (foot && root && root.contains(foot)) root.parentNode.insertBefore(box, root.nextSibling);
+    // Buttons work through one delegated listener, so copies made after app redraws keep working.
+    document.addEventListener('click', function (e) {
+      var t = e.target && e.target.closest ? e.target : null; if (!t) return;
+      if (t.closest('.hk-tb-install')) { e.preventDefault(); openInstall(L, ar); }
+      else if (t.closest('.hk-tb-share')) { e.preventDefault(); openShare(L, ar); }
+    });
+    if (foot && root && root.contains(foot)) {
+      // App-rendered page: keep the box above the footer (above the marketing and plan-your-trip blocks).
+      var keep = box.cloneNode(true), home = location.pathname;
+      var place = function () {
+        if (location.pathname !== home) return;
+        var f = root.querySelector('footer'); if (!f) return;
+        var cur = document.querySelector('.hk-take') || keep.cloneNode(true);
+        var m = document.getElementById('hk-mkt'), r = document.getElementById('hk-road');
+        var target = (m && m.parentNode === f.parentNode) ? m : ((r && r.parentNode === f.parentNode) ? r : f);
+        if (cur.nextElementSibling !== target || cur.parentNode !== f.parentNode) f.parentNode.insertBefore(cur, target);
+      };
+      place();
+      if (window.MutationObserver) new MutationObserver(function () { place(); }).observe(root, { childList: true, subtree: true });
+      [400, 1200, 3000].forEach(function (t) { setTimeout(place, t); });
+    }
     else if (foot) foot.parentNode.insertBefore(box, foot);
     else document.body.appendChild(box);
-    var bi = box.querySelector('.hk-tb-install');
-    if (bi) bi.addEventListener('click', function () { openInstall(L, ar); });
-    box.querySelector('.hk-tb-share').addEventListener('click', function () { openShare(L, ar); });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(mount, 300); });
   else setTimeout(mount, 300);
