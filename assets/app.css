@@ -495,3 +495,19 @@ img{max-width:100%;height:auto}
 .hk-partner-btn{display:inline-flex;align-items:center;justify-content:center;padding:8px 15px;border:1.5px solid #B8922A;color:#0B6B73;background:transparent;border-radius:999px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;line-height:1.2;font-family:inherit}
 .hk-partner-btn:hover{background:#B8922A;color:#fff}
 @media(max-width:1180px){.nav-partner{display:none}}
+
+/*HK-SPOT*/.hk-spot-wrap{margin:30px 0 8px}.hk-spot-wrap h2{margin:0 0 6px}.hk-spot-sub{margin:0 0 14px;color:#4B656C;line-height:1.7}
+.hk-spot{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.hk-spot-card{position:relative;display:block;min-height:230px;border-radius:18px;overflow:hidden;text-decoration:none!important;background:#0A2E36;box-shadow:0 8px 24px rgba(10,46,54,.14);transition:transform .2s}
+.hk-spot-card:hover{transform:translateY(-3px)}
+.hk-spot-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.hk-spot-card:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,46,54,0) 25%,rgba(10,46,54,.88) 100%)}
+.hk-spot-tag{position:absolute;top:12px;inset-inline-start:12px;z-index:2;background:#B8922A;color:#0A2E36;font-size:12px;font-weight:700;padding:4px 11px;border-radius:999px}
+.hk-spot-txt{position:absolute;z-index:2;inset-inline:0;bottom:0;padding:14px 16px 16px;color:#fff}
+.hk-spot-txt strong{display:block;font-size:19px;line-height:1.35;margin-bottom:4px;color:#fff}
+.hk-spot-txt span{display:block;font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.92)}
+.hk-spot-txt em{display:inline-block;margin-top:8px;font-style:normal;font-weight:600;font-size:13.5px;color:#F1D98B}
+.hk-spot-line{background:#FFF8E6;border:1px solid #E8D49A;border-radius:14px;padding:12px 16px;margin:14px 0;line-height:1.8;color:#173B44}
+.hk-spot-line a{color:#0B6B73;font-weight:600}
+.hk-spot-home{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:0 auto 22px;max-width:1120px;text-align:start}
+@media(max-width:560px){.hk-spot-card{min-height:200px}}
