@@ -23,7 +23,8 @@ var CH=(window.HK_RADIO_CHANNELS&&window.HK_RADIO_CHANNELS.length)?window.HK_RAD
 if(!CH.length||window.__hkRadioLoaded)return;
 window.__hkRadioLoaded=1;
 
-var SLOT=(window.HK_RADIO_SLOT||6000), FADE=(window.HK_RADIO_FADE||1000), PRE=2500, VOL=.15;
+var SLOT=(window.HK_RADIO_SLOT||6000), FADE=(window.HK_RADIO_FADE||1000), PRE=2500, VOL=.28; /* volume 0-1: change here to make it louder or quieter */
+try{if(window.matchMedia&&matchMedia("(pointer:coarse)").matches)VOL=.55}catch(e){} /* phone speakers are small: louder than on a desktop */
 var AR=/^ar/i.test(document.documentElement.lang||"")||document.documentElement.dir==="rtl";
 var TX=AR?{
   mute:"كتم إذاعة القاهرة",unmute:"تشغيل إذاعة القاهرة",
@@ -36,6 +37,12 @@ var TX=AR?{
   tip:"Cairo radio is on 🎧 Tap this button any time to mute.",
   tip2:"Tap anywhere to hear Cairo radio 🎧 Use this button to mute.",close:"Close"
 };
+var DBG=/[?&]radiodebug=1/.test(location.search),dbgEl=null;
+function dbg(m){
+  if(!DBG)return;
+  if(!dbgEl){dbgEl=document.createElement("pre");dbgEl.style.cssText="position:fixed;top:0;left:0;right:0;max-height:45vh;overflow:auto;margin:0;padding:6px 8px;background:rgba(0,0,0,.85);color:#9fe;font:11px/1.4 monospace;z-index:2147483647;white-space:pre-wrap";document.body.appendChild(dbgEl)}
+  dbgEl.textContent+=((performance.now()/1000).toFixed(1)+"s "+m+"\n");dbgEl.scrollTop=dbgEl.scrollHeight;
+}
 function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function set(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 
@@ -149,20 +156,23 @@ function stopAll(){
 function load(el,i){el.src=CH[i].u;sv(el,0);var p=el.play();return p&&p.catch?p:Promise.resolve()}
 
 function begin(){
+  dbg("begin on="+on+" playing="+playing+" suspended="+suspended+" gaveUp="+gaveUp+" hidden="+document.hidden);
   if(!on||playing||suspended||gaveUp||document.hidden)return;
   if(!els.length){
     els=[mk()];
     try{els[0].volume=.5;canVol=els[0].volume===.5}catch(e){canVol=false}
+    dbg("canVol="+canVol+" VOL="+VOL+" UA="+navigator.userAgent.slice(0,90));
     if(canVol)els.push(mk()); /* phones that cannot fade (iPhone) use one element and cut between channels */
   }
   var el=els[act];cur=Math.floor(Math.random()*CH.length);
   load(el,cur).then(function(){
     if(!on||suspended){release(el);return}
-    playing=true;armed=false;sv(el,0);ui();
+    dbg("PLAYING "+CH[cur].n);playing=true;armed=false;sv(el,0);ui();
     fade([{el:el,from:0,to:VOL}],FADE);
     if(!canVol)sv(el,1);
     schedule();watch(el);attention(TX.pill,15000,true);showTip(TX.tip);
   }).catch(function(err){
+    dbg("play failed: "+(err&&err.name)+" "+(err&&err.message||"")+" ("+CH[cur].n+")");
     release(el);
     if(err&&err.name==="NotAllowedError"){arm();attention(TX.pillWait,15000,true);showTip2()}
     else{fails++;if(fails>CH.length*2){gaveUp=true;ui()}else begin()}
@@ -216,6 +226,7 @@ function cross(nx){
   if(!canVol){sv(nx,1);setTimeout(function(){release(old)},FADE)}
 }
 function onStreamError(el){
+  dbg("stream error code="+(el.error&&el.error.code)+" src="+(el.getAttribute("src")||"").slice(0,60));
   if(!playing)return;
   if(el===els[act]){ /* current channel died: jump to the next straight away */
     fails++;if(fails>CH.length*3){gaveUp=true;stopAll();return}
@@ -246,7 +257,7 @@ function arm(){
   }
   evs.forEach(function(n){document.addEventListener(n,go,true)});
 }
-function suspend(){if(suspended)return;suspended=true;if(playing)stopAll();}
+function suspend(){dbg("suspend");if(suspended)return;suspended=true;if(playing)stopAll();}
 function resume(){
   clearTimeout(resumeTimer);
   resumeTimer=setTimeout(function(){
