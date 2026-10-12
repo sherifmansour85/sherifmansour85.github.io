@@ -7,33 +7,39 @@
 (function(){
 "use strict";
 var CHANNELS=[
-  /* Candidates found in public directories, NOT yet confirmed with the stations.
+  /* Candidates found in public radio directories, NOT yet confirmed with the stations.
      A stream that does not play is skipped automatically; if none play, the button hides itself.
-     Remove a line to remove a station. */
+     Remove a line to remove a station. Only https:// streams work on an https:// website. */
+  {n:"Radio Hits 88.2",u:"https://radiohits882.radioca.st/;"},
+  {n:"Nogoum FM",u:"https://stream.zeno.fm/qb1zvsykm98uv"},
   {n:"Radio 9090",u:"https://9090streaming.mobtada.com/9090FMEGYPT"},
   {n:"Mix FM 87.8",u:"https://stream-29.zeno.fm/na3vpvn10qruv"},
-  {n:"Nogoum FM Mix",u:"https://stream.zeno.fm/0ms1g2tgr18uv"}
+  {n:"Nogoum FM Mix",u:"https://stream.zeno.fm/0ms1g2tgr18uv"},
+  {n:"Om Kalthoum",u:"https://stream.zeno.fm/zsgrfxg71s8uv"},
+  {n:"90s FM",u:"https://eu1.fastcast4u.com/proxy/prontofm?mp=/1"},
+  {n:"Diab FM",u:"https://stream-34.zeno.fm/rf64mx02qa0uv"}
 ];
 var CH=(window.HK_RADIO_CHANNELS&&window.HK_RADIO_CHANNELS.length)?window.HK_RADIO_CHANNELS:CHANNELS;
 if(!CH.length||window.__hkRadioLoaded)return;
 window.__hkRadioLoaded=1;
 
-var SLOT=(window.HK_RADIO_SLOT||10000), FADE=(window.HK_RADIO_FADE||2500), PRE=1500, VOL=.3;
+var SLOT=(window.HK_RADIO_SLOT||6000), FADE=(window.HK_RADIO_FADE||1000), PRE=2500, VOL=.15;
 var AR=/^ar/i.test(document.documentElement.lang||"")||document.documentElement.dir==="rtl";
 var TX=AR?{
   mute:"كتم إذاعة القاهرة",unmute:"تشغيل إذاعة القاهرة",
-  tip:"إذاعات القاهرة تعمل الآن 🎧 اضغط الزر لكتم الصوت.",
+  pill:"من القاهرة على الهواء · اضغط للكتم",pillWait:"اضغط في أي مكان للتشغيل · أو هنا للكتم",pillOff:"الصوت مكتوم · اضغط للتشغيل",
+  tip:"إذاعات القاهرة تعمل الآن 🎧 اضغط الزر في أي وقت لكتم الصوت.",
   tip2:"اضغط في أي مكان لتسمع إذاعات القاهرة 🎧 والزر لكتم الصوت.",close:"إغلاق"
 }:{
   mute:"Mute Cairo radio",unmute:"Play Cairo radio",
+  pill:"On air from Cairo · tap to mute",pillWait:"Tap anywhere to start · or here to mute",pillOff:"Sound off · tap to play",
   tip:"Cairo radio is on 🎧 Tap this button any time to mute.",
   tip2:"Tap anywhere to hear Cairo radio 🎧 Use this button to mute.",close:"Close"
 };
 function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function set(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 
-var saver=false;try{saver=!!(navigator.connection&&navigator.connection.saveData)}catch(e){}
-var on=get("hkRadio")==="off"?false:(get("hkRadio")==="on"?true:!saver);
+var on=get("hkRadio")!=="off";
 var playing=false,suspended=false,gaveUp=false,armed=false;
 var cur=0,act=0,nextIdx=0,timer=0,raf=0,fails=0,tipTimer=0,resumeTimer=0;
 var els=[];
@@ -47,24 +53,32 @@ var css=".hkr{position:fixed;left:32px;bottom:96px;z-index:997;transition:opacit
 ".hkr-btn[data-state=playing]:after{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(184,146,42,.55);animation:hkrp 2.4s ease-out infinite}"+
 "@keyframes hkrp{0%{transform:scale(.85);opacity:.9}100%{transform:scale(1.25);opacity:0}}"+
 "@media(prefers-reduced-motion:reduce){.hkr-btn[data-state=playing]:after{animation:none;opacity:.6}}"+
-".hkr-tip{position:absolute;left:calc(100% + 14px);bottom:-2px;width:220px;background:#fff;color:#0A2E36;border:1px solid #D7E5E4;border-radius:14px;padding:10px 30px 10px 12px;font:13.5px/1.6 Inter,system-ui,sans-serif;box-shadow:0 10px 28px rgba(10,46,54,.22);opacity:0;transform:translateX(-6px);transition:opacity .3s,transform .3s;pointer-events:none}"+
+".hkr-tip{position:absolute;left:0;bottom:calc(100% + 14px);width:220px;background:#fff;color:#0A2E36;border:1px solid #D7E5E4;border-radius:14px;padding:10px 30px 10px 12px;font:13.5px/1.6 Inter,system-ui,sans-serif;box-shadow:0 10px 28px rgba(10,46,54,.22);opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s;pointer-events:none}"+
 ".hkr-tip.show{opacity:1;transform:none;pointer-events:auto}.hkr-tip[hidden]{display:none}"+
-".hkr-tip:before{content:'';position:absolute;left:-7px;bottom:15px;width:12px;height:12px;background:#fff;border-left:1px solid #D7E5E4;border-bottom:1px solid #D7E5E4;transform:rotate(45deg)}"+
+".hkr-tip:before{content:'';position:absolute;left:16px;bottom:-7px;width:12px;height:12px;background:#fff;border-right:1px solid #D7E5E4;border-bottom:1px solid #D7E5E4;transform:rotate(45deg)}"+
+".hkr-pill{position:absolute;left:calc(100% + 10px);top:50%;margin-top:-16px;height:32px;display:flex;align-items:center;white-space:nowrap;background:linear-gradient(90deg,#B8922A,#E8C964);color:#0A2E36;font:600 12.5px/1 Inter,system-ui,sans-serif;padding:0 14px;border-radius:999px;box-shadow:0 6px 16px rgba(10,46,54,.28);opacity:0;transform:translateX(-8px);transition:opacity .35s,transform .35s;pointer-events:none;cursor:pointer;border:0}"+
+".hkr-pill.show{opacity:1;transform:none;pointer-events:auto}.hkr-pill:before{content:'';position:absolute;left:-5px;top:11px;width:10px;height:10px;background:#B8922A;transform:rotate(45deg)}"+
+".hkr-pill.show.bounce{animation:hkrnudge 1s ease-in-out infinite}"+
+"@keyframes hkrnudge{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}"+
+".hkr-btn.flash{animation:hkrflash 1s ease-in-out infinite}"+
+"@keyframes hkrflash{0%,100%{transform:translateY(0);box-shadow:0 6px 18px rgba(10,46,54,.28)}50%{transform:translateY(-5px);box-shadow:0 0 0 6px rgba(232,201,100,.5),0 10px 22px rgba(10,46,54,.3)}}"+
+"@media(prefers-reduced-motion:reduce){.hkr-pill.show.bounce,.hkr-btn.flash{animation:none}}"+
 ".hkr-tip[dir=rtl]{padding:10px 12px 10px 30px}"+
 ".hkr-x{position:absolute;top:4px;right:6px;border:0;background:none;color:#4B656C;font-size:18px;line-height:1;cursor:pointer;padding:2px 4px}.hkr-tip[dir=rtl] .hkr-x{right:auto;left:6px}"+
 "body.form-active .hkr{opacity:.4}body.form-active .hkr:hover{opacity:1}"+
 "body.menu-open .hkr{opacity:0;visibility:hidden;pointer-events:none}body.hk-ai-open .hkr,body.cc-open .hkr-tip{display:none}"+
-"@media(max-width:600px){.hkr{left:22px;bottom:84px}.hkr-btn{width:42px;height:42px}.hkr-tip{width:190px}}";
-var wrap,btn,tip;
+"@media(max-width:600px){.hkr{left:22px;bottom:84px}.hkr-btn{width:42px;height:42px}.hkr-tip{width:190px}.hkr-pill{font-size:12px;padding:0 11px}}";
+var wrap,btn,tip,pill,pillTimer=0,flashTimer=0;
 function build(){
   var st=document.createElement("style");st.textContent=css;document.head.appendChild(st);
   wrap=document.createElement("div");wrap.className="hkr";wrap.id="hkRadioWrap";
   wrap.innerHTML='<button id="hkRadio" class="hkr-btn" type="button" aria-pressed="true">'+
    '<svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>'+
    '<svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button>'+
-   '<div class="hkr-tip" role="status" hidden><span class="hkr-msg"></span><button class="hkr-x" type="button">×</button></div>';
+   '<button class="hkr-pill" type="button" tabindex="-1" aria-hidden="true"></button><div class="hkr-tip" role="status" hidden><span class="hkr-msg"></span><button class="hkr-x" type="button">×</button></div>';
   document.body.appendChild(wrap);
-  btn=wrap.querySelector(".hkr-btn");tip=wrap.querySelector(".hkr-tip");
+  btn=wrap.querySelector(".hkr-btn");tip=wrap.querySelector(".hkr-tip");pill=wrap.querySelector(".hkr-pill");
+  pill.addEventListener("click",onBtn);
   tip.setAttribute("dir",AR?"rtl":"ltr");tip.querySelector(".hkr-x").setAttribute("aria-label",TX.close);
   btn.addEventListener("click",onBtn);
   place();window.addEventListener("resize",place);
@@ -91,6 +105,15 @@ function ui(){
   btn.setAttribute("aria-label",on?TX.mute:TX.unmute);btn.title=on?TX.mute:TX.unmute;
   btn.setAttribute("data-state",!on?"muted":(playing?"playing":"waiting"));
   btn.setAttribute("data-ch",playing&&CH[cur]?CH[cur].n:"");
+}
+/* a bouncing, flashing label next to the button that says how to mute; it settles after a few seconds */
+function attention(msg,ms,flash){
+  if(!pill)return;
+  pill.textContent=msg;pill.classList.add("show");
+  pill.classList.toggle("bounce",!!flash);btn.classList.toggle("flash",!!flash);
+  clearTimeout(pillTimer);clearTimeout(flashTimer);
+  if(flash)flashTimer=setTimeout(function(){btn.classList.remove("flash");pill.classList.remove("bounce")},Math.min(ms,9000));
+  pillTimer=setTimeout(function(){pill.classList.remove("show","bounce");btn.classList.remove("flash")},ms);
 }
 function showTip(msg){
   if(get("hkRadioTip")==="1"||!tip||!on)return;
@@ -120,31 +143,55 @@ function fade(list,ms,done){
 }
 function release(el){try{el.pause();el.removeAttribute("src");el.load()}catch(e){}}
 function stopAll(){
-  clearTimeout(timer);cancelAnimationFrame(raf);playing=false;
+  busy=false;clearTimeout(timer);cancelAnimationFrame(raf);playing=false;
   els.forEach(function(el){release(el)});ui();
 }
 function load(el,i){el.src=CH[i].u;sv(el,0);var p=el.play();return p&&p.catch?p:Promise.resolve()}
 
 function begin(){
   if(!on||playing||suspended||gaveUp||document.hidden)return;
-  if(!els.length){els=[mk(),mk()];try{els[0].volume=.5;canVol=els[0].volume===.5}catch(e){canVol=false}}
+  if(!els.length){
+    els=[mk()];
+    try{els[0].volume=.5;canVol=els[0].volume===.5}catch(e){canVol=false}
+    if(canVol)els.push(mk()); /* phones that cannot fade (iPhone) use one element and cut between channels */
+  }
   var el=els[act];cur=Math.floor(Math.random()*CH.length);
   load(el,cur).then(function(){
     if(!on||suspended){release(el);return}
     playing=true;armed=false;sv(el,0);ui();
     fade([{el:el,from:0,to:VOL}],FADE);
     if(!canVol)sv(el,1);
-    schedule();showTip(TX.tip);
+    schedule();watch(el);attention(TX.pill,15000,true);showTip(TX.tip);
   }).catch(function(err){
     release(el);
-    if(err&&err.name==="NotAllowedError"){arm();showTip2()}
+    if(err&&err.name==="NotAllowedError"){arm();attention(TX.pillWait,15000,true);showTip2()}
     else{fails++;if(fails>CH.length*2){gaveUp=true;ui()}else begin()}
   });
 }
 function showTip2(){clearTimeout(tipTimer);setTimeout(function(){if(!playing)showTip(TX.tip2)},2500)}
 function schedule(){
   if(CH.length<2)return;
-  clearTimeout(timer);timer=setTimeout(prepare,Math.max(1000,SLOT-FADE-PRE));
+  clearTimeout(timer);
+  if(!canVol)timer=setTimeout(hard,SLOT);
+  else timer=setTimeout(prepare,Math.max(1000,SLOT-FADE-PRE));
+}
+/* single-element mode: straight cut to the next channel (the same element stays "unlocked" on iPhone) */
+var busy=false;
+function hard(){
+  if(!playing||busy)return;
+  busy=true;clearTimeout(timer);
+  cur=(cur+1)%CH.length;var el=els[0];
+  load(el,cur).then(function(){busy=false;sv(el,1);fails=0;ui();schedule();watch(el)}).catch(function(){
+    busy=false;fails++;if(fails>CH.length*3){gaveUp=true;stopAll();return}hard();
+  });
+}
+/* a stream that "plays" but delivers no audio within 6 s is treated as dead */
+function watch(el){
+  setTimeout(function(){
+    if(!playing||el!==els[act]||el.paused||el.currentTime>=.5)return;
+    fails++;if(fails>CH.length*3){gaveUp=true;stopAll();return}
+    clearTimeout(timer);if(canVol)prepare();else hard();
+  },6000);
 }
 function prepare(){
   if(!playing)return;
@@ -164,7 +211,7 @@ function waitReady(nx,t0){
 function cross(nx){
   var old=els[act];
   fade([{el:old,from:VOL,to:0},{el:nx,from:0,to:VOL}],FADE,function(){
-    release(old);act=1-act;cur=nextIdx;fails=0;ui();schedule();
+    release(old);act=1-act;cur=nextIdx;fails=0;ui();schedule();watch(els[act]);
   });
   if(!canVol){sv(nx,1);setTimeout(function(){release(old)},FADE)}
 }
@@ -172,20 +219,20 @@ function onStreamError(el){
   if(!playing)return;
   if(el===els[act]){ /* current channel died: jump to the next straight away */
     fails++;if(fails>CH.length*3){gaveUp=true;stopAll();return}
-    clearTimeout(timer);prepare();
+    clearTimeout(timer);if(canVol)prepare();else hard();
   }
 }
 
 /* ---------- user intent ---------- */
 function onBtn(){
-  hideTip();
+  hideTip();pill&&pill.classList.remove("bounce");btn.classList.remove("flash");
   if(on&&!playing&&!gaveUp){begin();return} /* "on" but sound still waiting for a first tap */
   on=!on;set("hkRadio",on?"on":"off");
   if(on){gaveUp=false;fails=0;begin()}
   else{
     var el=els[act];
     if(playing&&el&&canVol)fade([{el:el,from:el.volume,to:0}],250,function(){stopAll()});else stopAll();
-    ui();
+    attention(TX.pillOff,3500,false);
   }
   ui();
 }
