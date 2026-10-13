@@ -15,9 +15,11 @@ var CHANNELS=[
   {n:"Radio 9090",u:"https://9090streaming.mobtada.com/9090FMEGYPT"},
   {n:"Mix FM 87.8",u:"https://stream-29.zeno.fm/na3vpvn10qruv"},
   {n:"Nogoum FM Mix",u:"https://stream.zeno.fm/0ms1g2tgr18uv"},
-  {n:"Om Kalthoum",u:"https://stream.zeno.fm/zsgrfxg71s8uv"},
+  {n:"Umm Kulthum",u:"https://stream.zeno.fm/hp0vu6c0pnhvv"}, /* dedicated Umm Kulthum channel; spares if it ever dies: https://stream.zeno.fm/y70e5x46kd5tv , https://stream.zeno.fm/vdws5ggv24zuv */
   {n:"90s FM",u:"https://eu1.fastcast4u.com/proxy/prontofm?mp=/1"},
-  {n:"Diab FM",u:"https://stream-34.zeno.fm/rf64mx02qa0uv"}
+  {n:"Diab FM",u:"https://stream-34.zeno.fm/rf64mx02qa0uv"},
+  {n:"NRJ Egypt",u:"https://nrjstreaming.ahmed-melege.com/nrjegypt"},
+  {n:"Nagham FM",u:"https://ahmsamir.radioca.st/stream/;"}
 ];
 var CH=(window.HK_RADIO_CHANNELS&&window.HK_RADIO_CHANNELS.length)?window.HK_RADIO_CHANNELS:CHANNELS;
 if(!CH.length||window.__hkRadioLoaded)return;
@@ -153,6 +155,7 @@ function stopAll(){
   busy=false;clearTimeout(timer);cancelAnimationFrame(raf);playing=false;
   els.forEach(function(el){release(el)});ui();
 }
+var tS=0,Ct=0; /* tS = when the current station became audible; Ct = when the next crossfade must start */
 function load(el,i){el.src=CH[i].u;sv(el,0);var p=el.play();return p&&p.catch?p:Promise.resolve()}
 
 function begin(){
@@ -170,7 +173,7 @@ function begin(){
     dbg("PLAYING "+CH[cur].n);playing=true;armed=false;sv(el,0);ui();
     fade([{el:el,from:0,to:VOL}],FADE);
     if(!canVol)sv(el,1);
-    schedule();watch(el);attention(TX.pill,15000,true);showTip(TX.tip);
+    tS=performance.now();schedule();watch(el);attention(TX.pill,15000,true);showTip(TX.tip);
   }).catch(function(err){
     dbg("play failed: "+(err&&err.name)+" "+(err&&err.message||"")+" ("+CH[cur].n+")");
     release(el);
@@ -182,8 +185,10 @@ function showTip2(){clearTimeout(tipTimer);setTimeout(function(){if(!playing)sho
 function schedule(){
   if(CH.length<2)return;
   clearTimeout(timer);
-  if(!canVol)timer=setTimeout(hard,SLOT);
-  else timer=setTimeout(prepare,Math.max(1000,SLOT-FADE-PRE));
+  var left=Math.max(0,tS+SLOT-performance.now());
+  Ct=tS+SLOT; /* every station gets exactly SLOT ms, measured from when it became audible */
+  if(!canVol)timer=setTimeout(hard,left);
+  else timer=setTimeout(prepare,Math.max(300,left-5000));
 }
 /* single-element mode: straight cut to the next channel (the same element stays "unlocked" on iPhone) */
 var busy=false;
@@ -191,7 +196,7 @@ function hard(){
   if(!playing||busy)return;
   busy=true;clearTimeout(timer);
   cur=(cur+1)%CH.length;var el=els[0];
-  load(el,cur).then(function(){busy=false;sv(el,1);fails=0;ui();schedule();watch(el)}).catch(function(){
+  load(el,cur).then(function(){busy=false;sv(el,1);fails=0;ui();tS=performance.now();schedule();watch(el)}).catch(function(){
     busy=false;fails++;if(fails>CH.length*3){gaveUp=true;stopAll();return}hard();
   });
 }
@@ -208,18 +213,20 @@ function prepare(){
   nextIdx=(cur+1)%CH.length;
   var nx=els[1-act];
   load(nx,nextIdx).catch(function(){});
-  timer=setTimeout(function(){waitReady(nx,Date.now())},PRE);
+  timer=setTimeout(function(){waitReady(nx,Date.now())},300);
 }
 function waitReady(nx,t0){
   if(!playing)return;
-  if(nx.readyState>=3||(nx.readyState>=2&&Date.now()-t0>1200))return cross(nx);
-  if(Date.now()-t0>4000){fails++;release(nx);
+  var rdy=nx.readyState>=3||(nx.readyState>=2&&Date.now()-t0>1200);
+  if(rdy&&performance.now()>=Ct-1)return cross(nx);
+  if(rdy){timer=setTimeout(function(){waitReady(nx,t0)},Math.min(250,Math.max(20,Ct-performance.now())));return}
+  if(performance.now()>Ct+4000||Date.now()-t0>12000){fails++;release(nx);
     if(fails>CH.length*3){gaveUp=true;stopAll();return}
     cur=nextIdx;return prepare()}
   timer=setTimeout(function(){waitReady(nx,t0)},250);
 }
 function cross(nx){
-  var old=els[act];
+  var old=els[act];tS=performance.now();
   fade([{el:old,from:VOL,to:0},{el:nx,from:0,to:VOL}],FADE,function(){
     release(old);act=1-act;cur=nextIdx;fails=0;ui();schedule();watch(els[act]);
   });
