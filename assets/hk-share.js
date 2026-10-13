@@ -288,3 +288,6 @@
 (function(){function L(){var e=document.createElement("script");e.src="/assets/hk-radio.js?v=20261013c";e.async=true;document.head.appendChild(e)}
 function Q(){if(window.requestIdleCallback){window.requestIdleCallback(L,{timeout:4000})}else{setTimeout(L,2000)}}
 if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventListener("load",function(){setTimeout(Q,800)})}})();
+
+/* Install-or-skip app popup: starts as early as possible. */
+(function(){var e=document.createElement("script");e.src="/assets/hk-install.js?v=20261013d";e.async=true;document.head.appendChild(e)})();
