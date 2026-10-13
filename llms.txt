@@ -166,3 +166,4 @@ Every article is published in both languages. English articles are at /blog/, Ar
 - [Healthcare partners](https://www.hayakkom.com/partners): As-Salam International Hospitals, Dar Al Fouad Hospitals, Alameda Healthcare, MGM Health & Wellness and The Zen Wellness Resort. Facility licensing and physician credentials are checked before any provider is listed.
 - [Pricing policy](https://www.hayakkom.com/dental): indicative market ranges are published for orientation only, compiled from publicly published Egyptian clinic price lists. No final price is given before clinical assessment.
 - [Tourists already in Egypt](https://www.hayakkom.com/tourists): hotel doctor visits, dental emergencies, transfers and day trips.
+- [AI agent enquiry format](https://www.hayakkom.com/agent-enquiry.json): how an AI assistant can prepare and send an enquiry for a user, to a human coordinator by WhatsApp or email.

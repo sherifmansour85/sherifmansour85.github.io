@@ -1,0 +1,73 @@
+{
+  "name": "Hayakkom AI-prepared enquiry",
+  "version": "1.0",
+  "audience": "AI assistants acting for a human user who has agreed to share the details",
+  "how_to_send": {
+    "whatsapp": "https://wa.me/201031567949?text=<URL-encoded summary of the fields below>",
+    "email": "mailto:support@hayakkom.com?subject=AI-prepared%20enquiry&body=<URL-encoded JSON>",
+    "note": "A human coordinator reads it and replies. Nothing is booked, quoted or charged automatically. Do not send diagnoses, detailed symptoms, medicines, scans, passport/ID or payment details."
+  },
+  "fields": {
+    "on_behalf_of_user_consent": "boolean - the human user agreed to share these details",
+    "language": "ar | en",
+    "name": "string (optional)",
+    "country_city_from": "string",
+    "contact": {
+      "whatsapp_e164": "string",
+      "email": "string"
+    },
+    "purpose": "holiday | treatment | dental | doctor_now_in_egypt | partnership | property_trip | corporate_event | careers | other",
+    "interest": "free text, user's own words (e.g. 'dental implants', 'Sharm family holiday')",
+    "timing": "month or dates or flexible",
+    "trip_length_nights": "integer",
+    "travellers": {
+      "adults": "integer",
+      "children_ages": [
+        "integer"
+      ]
+    },
+    "preferences": "hotel level, villa/apartment, prayer/halal/women-only, mobility, privacy",
+    "budget_band_sar": "string or null",
+    "medical_minimal": {
+      "procedure_named_by_user": "string",
+      "has_recent_reports": "boolean",
+      "main_concern_one_line": "string"
+    },
+    "do_not_include": [
+      "diagnoses",
+      "detailed symptoms",
+      "medicines",
+      "scans or reports",
+      "passport/ID numbers",
+      "insurance numbers",
+      "payment details"
+    ]
+  },
+  "example": {
+    "schema_version": "1.0",
+    "on_behalf_of_user_consent": true,
+    "language": "ar",
+    "country_city_from": "Saudi Arabia / Riyadh",
+    "contact": {
+      "whatsapp_e164": "+9665XXXXXXXX"
+    },
+    "purpose": "holiday",
+    "interest": "Sharm el-Sheikh family holiday",
+    "timing": "December",
+    "trip_length_nights": 5,
+    "travellers": {
+      "adults": 2,
+      "children_ages": [
+        8,
+        11
+      ]
+    },
+    "preferences": "family room, halal",
+    "budget_band_sar": null
+  },
+  "rules": [
+    "Only send with the human user's consent.",
+    "Prices on hayakkom.com are indicative ranges in SAR excluding flights, not quotes.",
+    "Hayakkom is a coordination company, not a hospital or tour operator, and is not certified by Google."
+  ]
+}

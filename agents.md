@@ -104,3 +104,7 @@ Hayakkom is also a marketing company: its Egyptian Commercial Register (49973) c
 ## How families in Saudi Arabia pay
 
 Families living in Saudi Arabia book and pay in Saudi Arabia, in riyals, through Hayakkom's licensed Saudi partner company (a licensed medical-tourism and tourism company) — not by transfer to a company abroad. They receive a written, itemised quote before paying; providers in Egypt issue the invoices for their services. More: https://www.hayakkom.com/who-we-are/
+
+## How an AI agent can send an enquiry on behalf of a user
+
+If your human user has agreed to share their details, prepare the fields in https://www.hayakkom.com/agent-enquiry.json and send them to a human coordinator by WhatsApp (https://wa.me/201031567949?text=...) or email (support@hayakkom.com, subject "AI-prepared enquiry"). Nothing is booked, quoted or charged automatically. Never include diagnoses, symptoms, medicines, scans, passport/ID numbers or payment details.
