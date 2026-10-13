@@ -23,7 +23,7 @@ var CH=(window.HK_RADIO_CHANNELS&&window.HK_RADIO_CHANNELS.length)?window.HK_RAD
 if(!CH.length||window.__hkRadioLoaded)return;
 window.__hkRadioLoaded=1;
 
-var SLOT=(window.HK_RADIO_SLOT||6000), FADE=(window.HK_RADIO_FADE||1000), PRE=2500, VOL=.28; /* volume 0-1: change here to make it louder or quieter */
+var SLOT=(window.HK_RADIO_SLOT||10000), FADE=(window.HK_RADIO_FADE||1000), PRE=2500, VOL=.28; /* volume 0-1: change here to make it louder or quieter */
 try{if(window.matchMedia&&matchMedia("(pointer:coarse)").matches)VOL=.55}catch(e){} /* phone speakers are small: louder than on a desktop */
 var AR=/^ar/i.test(document.documentElement.lang||"")||document.documentElement.dir==="rtl";
 var TX=AR?{
