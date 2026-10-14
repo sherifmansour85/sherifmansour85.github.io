@@ -315,6 +315,9 @@ function init(){
   try{var pw=null,fl=document.querySelectorAll(".footer-legal");for(var q=0;q<fl.length;q++){if(/Powered by|تشغيل|بدعم|Cairo Town/i.test(fl[q].textContent)&&!fl[q].classList.contains("footer-legal-links")){pw=fl[q]}}
     if(pw&&window.IntersectionObserver){new IntersectionObserver(function(en){document.documentElement.classList.toggle("hkr-away",!!en[0].isIntersecting)},{threshold:.2}).observe(pw);
       var st=document.createElement("style");st.textContent=".hkr-away .hkr-pill,.hkr-away .hkr-tip{opacity:0!important;pointer-events:none!important;transition:opacity .2s}";document.head.appendChild(st)}}catch(e){}
+  /* on the home page, keep the radio labels off the hero trust chips while they are on screen */
+  try{var ht=document.querySelector(".hero .hero-trust");if(ht&&window.IntersectionObserver){new IntersectionObserver(function(en){document.documentElement.classList.toggle("hkr-hero",!!en[0].isIntersecting)},{threshold:0}).observe(ht);
+    var st2=document.createElement("style");st2.textContent=".hkr-hero .hkr-pill,.hkr-hero .hkr-tip{opacity:0!important;pointer-events:none!important;transition:opacity .2s}";document.head.appendChild(st2)}}catch(e){}
   if(on)begin();
 }
 if(document.body)init();else document.addEventListener("DOMContentLoaded",init);
