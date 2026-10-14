@@ -663,3 +663,13 @@ body:has(.hero-actions .hk-cta) :is(.svc-card-body,.svc-sm-body) :is(h3,p){color
 body:has(.hero-actions .hk-cta) :is(.svc-card-body,.svc-sm-body) :is(.svc-card-num,.svc-link){color:#A67C12!important}
 body:has(.hero-actions .hk-cta) :is(.svc-card,.svc-sm){border:1px solid #EBDDAE!important;border-top:3px solid #C9A23A!important;box-shadow:0 6px 18px rgba(20,20,20,.07)}
 body:has(.hero-actions .hk-cta) :is(.svc-card,.svc-sm):hover{border-color:#B8922A!important;box-shadow:0 10px 26px rgba(184,146,42,.22)}
+
+/*HK-HOME-TIDY10*/
+.hero{background:linear-gradient(to bottom,rgba(10,46,54,0) 0%,rgba(10,46,54,.55) 45%,#0A2E36 82%)!important}
+.hero .hero-trust .trust-item{background:linear-gradient(180deg,#0E3E49 0%,#0A2E36 100%)!important;border:1px solid #D9B65A!important;color:#fff!important;box-shadow:0 4px 14px rgba(0,0,0,.28)}
+.hero .hero-trust .trust-item *{color:#fff!important}
+.hero .hero-trust .trust-dot{background:#E8C877!important}
+
+@media(max-width:700px){.hero .hero-trust{padding-left:78px!important;padding-right:66px!important}.hero .hero-trust .trust-item{min-width:100%;flex:1 1 100%;padding:10px 12px!important;font-size:13px!important;white-space:nowrap}}
+
+/*TIDY11*/@media(max-width:700px){.hero .hero-trust{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:8px!important;padding:0 66px 0 78px!important}.hero .hero-trust .trust-item{width:100%!important;min-width:0!important;flex:none!important;margin:0!important;white-space:nowrap!important;padding:10px 12px!important;font-size:13px!important}}
