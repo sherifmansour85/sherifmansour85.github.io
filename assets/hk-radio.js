@@ -166,6 +166,12 @@ function stopAll(){
 var tS=0,Ct=0; /* tS = when the current station became audible; Ct = when the next crossfade must start */
 function load(el,i){el.src=CH[i].u;sv(el,0);var p=el.play();return p&&p.catch?p:Promise.resolve()}
 
+function resumeIdx(){var r=null;try{r=JSON.parse(sessionStorage.getItem("hkRadioResume")||"null");sessionStorage.removeItem("hkRadioResume")}catch(e){}
+  if(r&&typeof r.i==="number"&&r.i>=0&&r.i<CH.length&&Date.now()-r.t<30000&&!isDead(r.i))return r.i;return firstOk()}
+function saveResume(){try{if(on&&(playing||armed))sessionStorage.setItem("hkRadioResume",JSON.stringify({i:cur,t:Date.now()}))}catch(e){}}
+var stallT=0,stallN=0;
+function stallCheck(){var el=els[act];if(!playing||!el||busy||suspended||document.hidden){stallN=0;return}
+  if(el.paused||el.currentTime===stallT){if(++stallN>=3){stallN=0;markDead(cur);fails++;if(fails>CH.length*3){giveUp();return}clearTimeout(timer);if(canVol)prepare();else hard()}}else{stallN=0;stallT=el.currentTime}}
 function begin(){
   dbg("begin on="+on+" playing="+playing+" suspended="+suspended+" gaveUp="+gaveUp+" hidden="+document.hidden);
   if(!on||playing||suspended||gaveUp||document.hidden)return;
@@ -176,7 +182,7 @@ function begin(){
     dbg("canVol="+canVol+" VOL="+VOL+" UA="+navigator.userAgent.slice(0,90));
     if(canVol)els.push(mk()); /* phones that cannot fade (iPhone) use one element and cut between channels */
   }
-  var el=els[act];cur=firstOk();
+  var el=els[act];cur=resumeIdx();
   load(el,cur).then(function(){
     if(!on||suspended){release(el);return}
     dbg("PLAYING "+CH[cur].n);playing=true;armed=false;sv(el,0);ui();
@@ -290,7 +296,7 @@ var otherMedia=0;
 function init(){
   build();
   document.addEventListener("visibilitychange",function(){document.hidden?suspend():resume()});
-  window.addEventListener("pagehide",function(){stopAll()});
+  window.addEventListener("pagehide",function(){saveResume();stopAll()});setInterval(stallCheck,3000);
   document.addEventListener("focusin",function(e){var t=e.target;if(t&&(/^(TEXTAREA|SELECT)$/.test(t.tagName)||(t.tagName==="INPUT"&&!/^(button|submit|checkbox|radio)$/.test(t.type))||t.isContentEditable))suspend()});
   document.addEventListener("focusout",function(){resume()});
   window.addEventListener("blur",function(){setTimeout(function(){if(document.activeElement&&document.activeElement.tagName==="IFRAME")suspend()},0)});
