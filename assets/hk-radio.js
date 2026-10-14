@@ -311,6 +311,10 @@ function init(){
   var back=function(e){if(els.indexOf(e.target)<0&&otherMedia){otherMedia--;if(!otherMedia)resume()}};
   document.addEventListener("pause",back,true);document.addEventListener("ended",back,true);
   document.addEventListener("keydown",function(e){if(e.key==="Escape")hideTip()});
+  /* keep the radio labels from covering the "Powered by" line at the bottom of the page */
+  try{var pw=null,fl=document.querySelectorAll(".footer-legal");for(var q=0;q<fl.length;q++){if(/Powered by|تشغيل|بدعم|Cairo Town/i.test(fl[q].textContent)&&!fl[q].classList.contains("footer-legal-links")){pw=fl[q]}}
+    if(pw&&window.IntersectionObserver){new IntersectionObserver(function(en){document.documentElement.classList.toggle("hkr-away",!!en[0].isIntersecting)},{threshold:.2}).observe(pw);
+      var st=document.createElement("style");st.textContent=".hkr-away .hkr-pill,.hkr-away .hkr-tip{opacity:0!important;pointer-events:none!important;transition:opacity .2s}";document.head.appendChild(st)}}catch(e){}
   if(on)begin();
 }
 if(document.body)init();else document.addEventListener("DOMContentLoaded",init);
