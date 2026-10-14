@@ -291,3 +291,25 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
 
 /* Install-or-skip app popup: starts as early as possible. */
 (function(){var e=document.createElement("script");e.src="/assets/hk-install.js?v=20261013d";e.async=true;document.head.appendChild(e)})();
+
+/* HK-QA-MOVE: keep the static "what people search for" block (.hk-qa) above the "Plan your trip" block on app-rendered pages. */
+(function () {
+  var qa = document.querySelector('.hk-qa');
+  var root = document.getElementById('root');
+  if (!qa || !root) return;
+  var home = location.pathname, keep = qa.cloneNode(true);
+  function place() {
+    var cur = document.querySelector('.hk-qa');
+    if (location.pathname !== home) { if (cur && cur.parentNode) cur.parentNode.removeChild(cur); return; }
+    var foot = root.querySelector('footer');
+    if (!foot) return;
+    if (!cur) cur = keep.cloneNode(true);
+    var road = document.getElementById('hk-road');
+    var target = (road && road.parentNode === foot.parentNode) ? road : foot;
+    var ok = cur.parentNode === foot.parentNode && (cur.compareDocumentPosition(target) & Node.DOCUMENT_POSITION_FOLLOWING);
+    if (!ok) foot.parentNode.insertBefore(cur, target);
+  }
+  if (window.MutationObserver) new MutationObserver(function () { place(); }).observe(root, { childList: true, subtree: true });
+  [300, 1100, 2800].forEach(function (t) { setTimeout(place, t); });
+  window.addEventListener('popstate', function () { setTimeout(place, 50); });
+})();
