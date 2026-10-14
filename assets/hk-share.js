@@ -342,3 +342,20 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
   [900,2200,4500].forEach(function(t){setTimeout(put,t)});
   if(document.readyState==="complete")put();else window.addEventListener("load",function(){setTimeout(put,300)});
 })();
+/* HK-TOP-MOVE: keep the static "choose your treatment" / "packages at a glance" cards (data-hk-top) directly under the page hero on app-rendered pages. */
+(function(){
+  var blk=document.querySelector('[data-hk-top]'),root=document.getElementById('root'),tpl=document.getElementById('hkTopTpl');
+  var keep=blk?blk.cloneNode(true):(tpl&&tpl.content&&tpl.content.firstElementChild?tpl.content.firstElementChild.cloneNode(true):null);
+  if(!keep||!root)return;
+  var home=location.pathname;
+  function place(){
+    var cur=document.querySelector('[data-hk-top]');
+    if(location.pathname!==home){if(cur&&cur.parentNode)cur.parentNode.removeChild(cur);return}
+    var hero=root.querySelector('.page-hero');if(!hero||!hero.parentNode)return;
+    if(!cur)cur=keep.cloneNode(true);
+    if(hero.nextElementSibling!==cur)hero.parentNode.insertBefore(cur,hero.nextSibling);
+  }
+  if(window.MutationObserver)new MutationObserver(function(){place()}).observe(root,{childList:true,subtree:true});
+  [200,900,2500].forEach(function(t){setTimeout(place,t)});
+  window.addEventListener("popstate",function(){setTimeout(place,50)});
+})();
