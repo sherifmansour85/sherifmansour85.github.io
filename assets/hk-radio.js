@@ -7,13 +7,14 @@
 (function(){
 "use strict";
 var CHANNELS=[
-  /* Favourites first, in this order: Umm Kulthum, Amr Diab (official Diab FM, then a second Amr Diab channel), Sherine.
+  /* Favourites first, in this order: Umm Kulthum, Amr Diab, then Tamer Hosny (when added), Sherine.
      Then the other Cairo stations. A stream that does not play is skipped automatically for a while and retried later.
      Remove a line to remove a station. Only https:// streams work on an https:// website. */
   {n:"Umm Kulthum",u:"https://stream.zeno.fm/hp0vu6c0pnhvv"}, /* dedicated Umm Kulthum channel; spares if it ever dies: https://stream.zeno.fm/y70e5x46kd5tv , https://stream.zeno.fm/vdws5ggv24zuv */
-  {n:"Diab FM",u:"https://stream-34.zeno.fm/rf64mx02qa0uv"},
-  {n:"Sherine",u:"https://stream.zeno.fm/njscyudhthkvv"},
   {n:"Amr Diab",u:"https://stream.zeno.fm/pet0ex02qa0uv"},
+  /* 3rd: Tamer Hosny. Paste his https stream link below, then Sherine moves to 4th:
+  {n:"Tamer Hosny",u:"PASTE-LINK-HERE"}, */
+  {n:"Sherine",u:"https://stream.zeno.fm/njscyudhthkvv"},
   {n:"Radio Hits 88.2",u:"https://radiohits882.radioca.st/;"},
   {n:"Nogoum FM",u:"https://stream.zeno.fm/qb1zvsykm98uv"},
   {n:"Radio 9090",u:"https://9090streaming.mobtada.com/9090FMEGYPT"},
@@ -190,7 +191,7 @@ function begin(){
     dbg("PLAYING "+CH[cur].n);playing=true;armed=false;sv(el,0);ui();
     fade([{el:el,from:0,to:VOL}],FADE);
     if(!canVol)sv(el,1);
-    tS=performance.now();schedule();watch(el);attention(TX.pill,45000,true);showTip(TX.tip);
+    tS=performance.now();schedule();watch(el);attention(TX.pill,6000,true);showTip(TX.tip);
   }).catch(function(err){
     dbg("play failed: "+(err&&err.name)+" "+(err&&err.message||"")+" ("+CH[cur].n+")");
     release(el);

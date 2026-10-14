@@ -285,7 +285,7 @@
 })();
 
 /* Cairo radio button: loaded after the page has finished loading, so it never delays the site. */
-(function(){function L(){var e=document.createElement("script");e.src="/assets/hk-radio.js?v=20261014d";e.async=true;document.head.appendChild(e)}
+(function(){function L(){var e=document.createElement("script");e.src="/assets/hk-radio.js?v=20261014e";e.async=true;document.head.appendChild(e)}
 function Q(){if(window.requestIdleCallback){window.requestIdleCallback(L,{timeout:4000})}else{setTimeout(L,2000)}}
 if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventListener("load",function(){setTimeout(Q,800)})}})();
 
@@ -358,4 +358,49 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
   if(window.MutationObserver)new MutationObserver(function(){place()}).observe(root,{childList:true,subtree:true});
   [200,900,2500].forEach(function(t){setTimeout(place,t)});
   window.addEventListener("popstate",function(){setTimeout(place,50)});
+})();
+
+/* HK-TOP-JUMP: "Jump to details" cards on /packages/ scroll to the recovery-stay and transport cards further down the page. */
+(function(){
+  var RX={stay:/Recovery Accommodation|إقامة التعافي/,transport:/Sedan with Driver|سيدان مع سائق/};
+  document.addEventListener("click",function(e){
+    var a=e.target&&e.target.closest?e.target.closest("[data-hk-jump]"):null;if(!a)return;
+    e.preventDefault();e.stopPropagation();
+    var rx=RX[a.getAttribute("data-hk-jump")],list=document.querySelectorAll("main .pkg-name"),t=null,i;
+    for(i=0;i<list.length;i++){if(rx.test(list[i].textContent)){t=list[i];break}}
+    if(!t)return;
+    var card=t.closest(".pkg-card")||t.parentElement.parentElement||t;
+    var y=card.getBoundingClientRect().top+window.pageYOffset-90;
+    try{window.scrollTo({top:y,behavior:"smooth"})}catch(x){window.scrollTo(0,y)}
+  },true);
+})();
+/* HK-STAY-MOVE: keep the static "where you stay and how you get around" block (data-hk-bottom) just above the "what people search for" block on app-rendered treatment pages. */
+(function(){
+  var blk=document.querySelector('[data-hk-bottom]'),root=document.getElementById('root'),tpl=document.getElementById('hkStayTpl');
+  var keep=blk?blk.cloneNode(true):(tpl&&tpl.content&&tpl.content.firstElementChild?tpl.content.firstElementChild.cloneNode(true):null);
+  if(!keep||!root)return;
+  var home=location.pathname;
+  function place(){
+    var cur=document.querySelector('[data-hk-bottom]');
+    if(location.pathname!==home){if(cur&&cur.parentNode)cur.parentNode.removeChild(cur);return}
+    var foot=root.querySelector('footer');if(!foot||!foot.parentNode)return;
+    if(!cur)cur=keep.cloneNode(true);
+    var qa=document.querySelector('.hk-qa'),road=document.getElementById('hk-road'),par=foot.parentNode;
+    var target=(qa&&qa.parentNode===par)?qa:((road&&road.parentNode===par)?road:foot);
+    var ok=cur.parentNode===par&&(cur.compareDocumentPosition(target)&Node.DOCUMENT_POSITION_FOLLOWING); /* only needs to come before the target, never fight other blocks for the exact slot */
+    if(!ok)par.insertBefore(cur,target);
+  }
+  if(window.MutationObserver)new MutationObserver(function(){place()}).observe(root,{childList:true,subtree:true});
+  [300,1100,2800].forEach(function(t){setTimeout(place,t)});
+})();
+/* HK-GO: /packages/?go=stay or ?go=transport scrolls to the recovery-stay or car-with-driver card once the page has drawn. */
+(function(){
+  var m=/[?&]go=(stay|transport)/.exec(location.search);if(!m||location.pathname.replace(/^\/ar/,"").indexOf("/packages")!==0)return;
+  var RX=m[1]==="stay"?/Recovery Accommodation|إقامة التعافي/:/Sedan with Driver|سيدان مع سائق/,tries=0;
+  function go(){
+    var list=document.querySelectorAll("main .pkg-name"),i;
+    for(i=0;i<list.length;i++){if(RX.test(list[i].textContent)){var c=list[i].closest(".pkg-card")||list[i].parentElement.parentElement;var y=c.getBoundingClientRect().top+window.pageYOffset-90;window.scrollTo(0,y);return}}
+    if(++tries<12)setTimeout(go,400);
+  }
+  setTimeout(go,900);
 })();
