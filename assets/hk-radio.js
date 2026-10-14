@@ -7,17 +7,19 @@
 (function(){
 "use strict";
 var CHANNELS=[
-  /* Candidates found in public radio directories, NOT yet confirmed with the stations.
-     A stream that does not play is skipped automatically; if none play, the button hides itself.
+  /* Favourites first, in this order: Umm Kulthum, Amr Diab (official Diab FM, then a second Amr Diab channel), Sherine.
+     Then the other Cairo stations. A stream that does not play is skipped automatically for a while and retried later.
      Remove a line to remove a station. Only https:// streams work on an https:// website. */
+  {n:"Umm Kulthum",u:"https://stream.zeno.fm/hp0vu6c0pnhvv"}, /* dedicated Umm Kulthum channel; spares if it ever dies: https://stream.zeno.fm/y70e5x46kd5tv , https://stream.zeno.fm/vdws5ggv24zuv */
+  {n:"Diab FM",u:"https://stream-34.zeno.fm/rf64mx02qa0uv"},
+  {n:"Sherine",u:"https://stream.zeno.fm/njscyudhthkvv"},
+  {n:"Amr Diab",u:"https://stream.zeno.fm/pet0ex02qa0uv"},
   {n:"Radio Hits 88.2",u:"https://radiohits882.radioca.st/;"},
   {n:"Nogoum FM",u:"https://stream.zeno.fm/qb1zvsykm98uv"},
   {n:"Radio 9090",u:"https://9090streaming.mobtada.com/9090FMEGYPT"},
   {n:"Mix FM 87.8",u:"https://stream-29.zeno.fm/na3vpvn10qruv"},
   {n:"Nogoum FM Mix",u:"https://stream.zeno.fm/0ms1g2tgr18uv"},
-  {n:"Umm Kulthum",u:"https://stream.zeno.fm/hp0vu6c0pnhvv"}, /* dedicated Umm Kulthum channel; spares if it ever dies: https://stream.zeno.fm/y70e5x46kd5tv , https://stream.zeno.fm/vdws5ggv24zuv */
   {n:"90s FM",u:"https://eu1.fastcast4u.com/proxy/prontofm?mp=/1"},
-  {n:"Diab FM",u:"https://stream-34.zeno.fm/rf64mx02qa0uv"},
   {n:"NRJ Egypt",u:"https://nrjstreaming.ahmed-melege.com/nrjegypt"},
   {n:"Nagham FM",u:"https://ahmsamir.radioca.st/stream/;"}
 ];
@@ -30,12 +32,12 @@ try{if(window.matchMedia&&matchMedia("(pointer:coarse)").matches)VOL=.55}catch(e
 var AR=/^ar/i.test(document.documentElement.lang||"")||document.documentElement.dir==="rtl";
 var TX=AR?{
   mute:"كتم إذاعة القاهرة",unmute:"تشغيل إذاعة القاهرة",
-  pill:"من القاهرة على الهواء · اضغط للكتم",pillWait:"اضغط في أي مكان للتشغيل · أو هنا للكتم",pillOff:"الصوت مكتوم · اضغط للتشغيل",
+  pill:"من القاهرة على الهواء · اضغط للكتم",pillWait:"اضغط في أي مكان للتشغيل · أو هنا للكتم",pillOff:"الصوت مكتوم · اضغط للتشغيل",pillRetry:"تعذّر التشغيل الآن · اضغط للمحاولة",
   tip:"إذاعات القاهرة تعمل الآن 🎧 اضغط الزر في أي وقت لكتم الصوت.",
   tip2:"اضغط في أي مكان لتسمع إذاعات القاهرة 🎧 والزر لكتم الصوت.",close:"إغلاق"
 }:{
   mute:"Mute Cairo radio",unmute:"Play Cairo radio",
-  pill:"On air from Cairo · tap to mute",pillWait:"Tap anywhere to start · or here to mute",pillOff:"Sound off · tap to play",
+  pill:"On air from Cairo · tap to mute",pillWait:"Tap anywhere to start · or here to mute",pillOff:"Sound off · tap to play",pillRetry:"Could not play just now · tap to retry",
   tip:"Cairo radio is on 🎧 Tap this button any time to mute.",
   tip2:"Tap anywhere to hear Cairo radio 🎧 Use this button to mute.",close:"Close"
 };
@@ -51,7 +53,11 @@ function set(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 var on=get("hkRadio")!=="off";
 var playing=false,suspended=false,gaveUp=false,armed=false;
 var cur=0,act=0,nextIdx=0,timer=0,raf=0,fails=0,tipTimer=0,resumeTimer=0;
-var els=[];
+var els=[],dead={},rafs={},muteTok=0;
+function isDead(i){return dead[i]&&Date.now()-dead[i]<420000}
+function markDead(i){dead[i]=Date.now()}
+function nextOk(i){var n=CH.length,k;for(k=1;k<=n;k++){var j=(i+k)%n;if(!isDead(j))return j}dead={};return (i+1)%n}
+function firstOk(){var k;for(k=0;k<CH.length;k++)if(!isDead(k))return k;dead={};return 0}
 var canVol=true;
 
 /* ---------- UI ---------- */
@@ -93,6 +99,7 @@ function build(){
   place();window.addEventListener("resize",place);
   try{new MutationObserver(place).observe(document.body,{attributes:true,attributeFilter:["class"]})}catch(e){}
   [400,1200,2500,5000].forEach(function(t){setTimeout(place,t)});
+  setInterval(place,800);
   tip.querySelector(".hkr-x").addEventListener("click",hideTip);
   ui();
 }
@@ -100,6 +107,7 @@ function build(){
    (it lifts when the cookie bar is open). Falls back to the CSS position if it is not found. */
 function place(){
   if(!wrap)return;
+  if(!wrap.isConnected&&document.body)document.body.appendChild(wrap);
   var list=document.querySelectorAll(".fab-wa"),w=null,i,r;
   for(i=0;i<list.length;i++){r=list[i].getBoundingClientRect();if(r.width>0&&r.height>0){w=r;break}}
   if(!w)return;
@@ -109,10 +117,10 @@ function place(){
 }
 function ui(){
   if(!btn)return;
-  wrap.style.display=gaveUp?"none":"";
+  wrap.style.display="";
   btn.setAttribute("aria-pressed",on?"true":"false");
   btn.setAttribute("aria-label",on?TX.mute:TX.unmute);btn.title=on?TX.mute:TX.unmute;
-  btn.setAttribute("data-state",!on?"muted":(playing?"playing":"waiting"));
+  btn.setAttribute("data-state",!on?"muted":(playing?"playing":(gaveUp?"error":"waiting")));
   btn.setAttribute("data-ch",playing&&CH[cur]?CH[cur].n:"");
 }
 /* a bouncing, flashing label next to the button that says how to mute; it settles after a few seconds */
@@ -140,19 +148,19 @@ function mk(){
   document.body.appendChild(a);return a;
 }
 function sv(el,v){if(canVol){try{el.volume=Math.max(0,Math.min(1,v))}catch(e){}}}
-function fade(list,ms,done){
-  cancelAnimationFrame(raf);
+function fade(list,ms,done,kind){
+  kind=kind||"m";cancelAnimationFrame(rafs[kind]);
   if(!canVol||ms<=0){list.forEach(function(x){sv(x.el,x.to)});if(done)done();return}
   var t0=performance.now();
   (function step(t){
     var k=Math.min(1,(t-t0)/ms),e=k*k*(3-2*k);
     list.forEach(function(x){sv(x.el,x.from+(x.to-x.from)*e)});
-    if(k<1)raf=requestAnimationFrame(step);else if(done)done();
+    if(k<1)rafs[kind]=requestAnimationFrame(step);else if(done)done();
   })(t0);
 }
 function release(el){try{el.pause();el.removeAttribute("src");el.load()}catch(e){}}
 function stopAll(){
-  busy=false;clearTimeout(timer);cancelAnimationFrame(raf);playing=false;
+  busy=false;clearTimeout(timer);cancelAnimationFrame(raf);cancelAnimationFrame(rafs.m);cancelAnimationFrame(rafs.x);playing=false;
   els.forEach(function(el){release(el)});ui();
 }
 var tS=0,Ct=0; /* tS = when the current station became audible; Ct = when the next crossfade must start */
@@ -161,13 +169,14 @@ function load(el,i){el.src=CH[i].u;sv(el,0);var p=el.play();return p&&p.catch?p:
 function begin(){
   dbg("begin on="+on+" playing="+playing+" suspended="+suspended+" gaveUp="+gaveUp+" hidden="+document.hidden);
   if(!on||playing||suspended||gaveUp||document.hidden)return;
+  els.forEach(function(x){release(x)});act=0;clearTimeout(timer);cancelAnimationFrame(rafs.x);
   if(!els.length){
     els=[mk()];
     try{els[0].volume=.5;canVol=els[0].volume===.5}catch(e){canVol=false}
     dbg("canVol="+canVol+" VOL="+VOL+" UA="+navigator.userAgent.slice(0,90));
     if(canVol)els.push(mk()); /* phones that cannot fade (iPhone) use one element and cut between channels */
   }
-  var el=els[act];cur=Math.floor(Math.random()*CH.length);
+  var el=els[act];cur=firstOk();
   load(el,cur).then(function(){
     if(!on||suspended){release(el);return}
     dbg("PLAYING "+CH[cur].n);playing=true;armed=false;sv(el,0);ui();
@@ -178,9 +187,10 @@ function begin(){
     dbg("play failed: "+(err&&err.name)+" "+(err&&err.message||"")+" ("+CH[cur].n+")");
     release(el);
     if(err&&err.name==="NotAllowedError"){arm();attention(TX.pillWait,15000,true);showTip2()}
-    else{fails++;if(fails>CH.length*2){gaveUp=true;ui()}else begin()}
+    else{markDead(cur);fails++;if(fails>CH.length*2){giveUp()}else setTimeout(begin,150)}
   });
 }
+function giveUp(){gaveUp=true;stopAll();ui();attention(TX.pillRetry,12000,false)}
 function showTip2(){clearTimeout(tipTimer);setTimeout(function(){if(!playing)showTip(TX.tip2)},2500)}
 function schedule(){
   if(CH.length<2)return;
@@ -195,22 +205,22 @@ var busy=false;
 function hard(){
   if(!playing||busy)return;
   busy=true;clearTimeout(timer);
-  cur=(cur+1)%CH.length;var el=els[0];
+  cur=nextOk(cur);var el=els[0];
   load(el,cur).then(function(){busy=false;sv(el,1);fails=0;ui();tS=performance.now();schedule();watch(el)}).catch(function(){
-    busy=false;fails++;if(fails>CH.length*3){gaveUp=true;stopAll();return}hard();
+    busy=false;markDead(cur);fails++;if(fails>CH.length*3){giveUp();return}hard();
   });
 }
 /* a stream that "plays" but delivers no audio within 6 s is treated as dead */
 function watch(el){
   setTimeout(function(){
     if(!playing||el!==els[act]||el.paused||el.currentTime>=.5)return;
-    fails++;if(fails>CH.length*3){gaveUp=true;stopAll();return}
+    markDead(cur);fails++;if(fails>CH.length*3){giveUp();return}
     clearTimeout(timer);if(canVol)prepare();else hard();
   },6000);
 }
 function prepare(){
   if(!playing)return;
-  nextIdx=(cur+1)%CH.length;
+  nextIdx=nextOk(cur);
   var nx=els[1-act];
   load(nx,nextIdx).catch(function(){});
   timer=setTimeout(function(){waitReady(nx,Date.now())},300);
@@ -220,23 +230,23 @@ function waitReady(nx,t0){
   var rdy=nx.readyState>=3||(nx.readyState>=2&&Date.now()-t0>1200);
   if(rdy&&performance.now()>=Ct-1)return cross(nx);
   if(rdy){timer=setTimeout(function(){waitReady(nx,t0)},Math.min(250,Math.max(20,Ct-performance.now())));return}
-  if(performance.now()>Ct+4000||Date.now()-t0>12000){fails++;release(nx);
-    if(fails>CH.length*3){gaveUp=true;stopAll();return}
-    cur=nextIdx;return prepare()}
+  if(performance.now()>Ct+4000||Date.now()-t0>12000){markDead(nextIdx);fails++;release(nx);
+    if(fails>CH.length*3){giveUp();return}
+    return prepare()}
   timer=setTimeout(function(){waitReady(nx,t0)},250);
 }
 function cross(nx){
   var old=els[act];tS=performance.now();
   fade([{el:old,from:VOL,to:0},{el:nx,from:0,to:VOL}],FADE,function(){
-    release(old);act=1-act;cur=nextIdx;fails=0;ui();schedule();watch(els[act]);
-  });
+    if(!playing)return;release(old);act=1-act;cur=nextIdx;fails=0;ui();schedule();watch(els[act]);
+  },"x");
   if(!canVol){sv(nx,1);setTimeout(function(){release(old)},FADE)}
 }
 function onStreamError(el){
   dbg("stream error code="+(el.error&&el.error.code)+" src="+(el.getAttribute("src")||"").slice(0,60));
   if(!playing)return;
   if(el===els[act]){ /* current channel died: jump to the next straight away */
-    fails++;if(fails>CH.length*3){gaveUp=true;stopAll();return}
+    markDead(cur);fails++;if(fails>CH.length*3){giveUp();return}
     clearTimeout(timer);if(canVol)prepare();else hard();
   }
 }
@@ -244,12 +254,15 @@ function onStreamError(el){
 /* ---------- user intent ---------- */
 function onBtn(){
   hideTip();pill&&pill.classList.remove("bounce");btn.classList.remove("flash");
+  if(on&&gaveUp){gaveUp=false;fails=0;dead={};begin();return} /* retry after a failure */
   if(on&&!playing&&!gaveUp){begin();return} /* "on" but sound still waiting for a first tap */
   on=!on;set("hkRadio",on?"on":"off");
   if(on){gaveUp=false;fails=0;begin()}
   else{
-    var el=els[act];
-    if(playing&&el&&canVol)fade([{el:el,from:el.volume,to:0}],250,function(){stopAll()});else stopAll();
+    /* mute: take effect at once (timers and cross-fades stop), then let the sound fade out; a quick re-tap can never leave it half-on */
+    var el=els[act],tok=++muteTok,was=playing;
+    clearTimeout(timer);cancelAnimationFrame(rafs.x);busy=false;playing=false;
+    if(was&&el&&canVol)fade([{el:el,from:el.volume,to:0}],250,function(){if(tok===muteTok&&!on)stopAll()});else stopAll();
     attention(TX.pillOff,3500,false);
   }
   ui();

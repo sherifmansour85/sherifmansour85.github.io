@@ -285,12 +285,12 @@
 })();
 
 /* Cairo radio button: loaded after the page has finished loading, so it never delays the site. */
-(function(){function L(){var e=document.createElement("script");e.src="/assets/hk-radio.js?v=20261013c";e.async=true;document.head.appendChild(e)}
+(function(){function L(){var e=document.createElement("script");e.src="/assets/hk-radio.js?v=20261014a";e.async=true;document.head.appendChild(e)}
 function Q(){if(window.requestIdleCallback){window.requestIdleCallback(L,{timeout:4000})}else{setTimeout(L,2000)}}
 if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventListener("load",function(){setTimeout(Q,800)})}})();
 
 /* Install-or-skip app popup: starts as early as possible. */
-(function(){var e=document.createElement("script");e.src="/assets/hk-install.js?v=20261013d";e.async=true;document.head.appendChild(e)})();
+(function(){var e=document.createElement("script");e.src="/assets/hk-install.js?v=20261014b";e.async=true;document.head.appendChild(e)})();
 
 /* HK-QA-MOVE: keep the static "what people search for" block (.hk-qa) above the "Plan your trip" block on app-rendered pages. */
 (function () {

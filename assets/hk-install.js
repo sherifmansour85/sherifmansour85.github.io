@@ -25,15 +25,20 @@
     function b(txt,main,fn){var x=document.createElement("button");x.type="button";x.textContent=txt;x.onclick=fn;x.style.cssText="cursor:pointer;border-radius:999px;padding:9px 18px;font:600 14px system-ui,sans-serif;min-height:40px;"+(main?"background:#E8C877;color:#0A2E36;border:0":"background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4)");return x}
     r.appendChild(b(T.s,false,skip));
     r.appendChild(b(ios?T.ok:T.i,true,ios?skip:install));
-    d.appendChild(h);d.appendChild(p);d.appendChild(r);document.body.appendChild(d);
+    var top=document.createElement("div");top.style.cssText="display:flex;gap:12px;align-items:center";
+    var im=document.createElement("img");im.src="/icon-192.png";im.alt="Hayakkom";im.width=52;im.height=52;im.style.cssText="width:52px;height:52px;border-radius:12px;flex:none;background:#fff";
+    var tx=document.createElement("div");tx.appendChild(h);tx.appendChild(p);top.appendChild(im);top.appendChild(tx);
+    d.appendChild(top);d.appendChild(r);document.body.appendChild(d);
   }
   function install(){
     if(!dp){skip();return}
     var e=dp;dp=null;
     try{e.prompt();e.userChoice.then(function(c){if(c&&c.outcome==="accepted")ls(function(){localStorage.setItem("hkInstalled","1")});else ls(function(){localStorage.setItem(KEY,String(Date.now()))});close()},close)}catch(x){close()}
   }
-  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dp=e;if(document.body)show();else document.addEventListener("DOMContentLoaded",show)});
+  var T0=Date.now(),DELAY=10000,tm=0;
+  function later(){if(tm)return;tm=setTimeout(function(){if(document.body)show();else document.addEventListener("DOMContentLoaded",show)},Math.max(0,DELAY-(Date.now()-T0)))}
+  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dp=e;later()});
   window.addEventListener("appinstalled",function(){ls(function(){localStorage.setItem("hkInstalled","1")});close()});
   if("serviceWorker" in navigator&&location.protocol==="https:"){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){})})}
-  if(ios){function go(){setTimeout(show,900)}if(document.readyState!=="loading")go();else document.addEventListener("DOMContentLoaded",go)}
+  if(ios){function go(){later()}if(document.readyState!=="loading")go();else document.addEventListener("DOMContentLoaded",go)}
 })();
