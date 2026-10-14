@@ -528,3 +528,11 @@ img{max-width:100%;height:auto}
 .hkp .hkp-grid>.pkg-card:only-child{flex-direction:row!important;max-width:860px}
 .hkp .hkp-grid>.pkg-card:only-child .pkg-img{aspect-ratio:auto!important;width:300px;flex:none;min-height:240px}
 }
+
+/*HK-HERO-CTA*/
+.hero-actions .hk-cta{display:flex!important;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-width:230px;padding:14px 22px!important;line-height:1.35;gap:0!important}
+.hero-actions .hk-cta b{font-size:15px;font-weight:700}
+.hero-actions .hk-cta small{font-size:12px;font-weight:400;opacity:.85;margin-top:3px}
+.hero-actions .hk-cta-med{background:var(--dark)!important;color:#fff!important;border:1.5px solid var(--dark)}
+.hero-actions .hk-wa{flex-basis:100%;width:auto!important;border:0!important;background:transparent!important;text-decoration:underline!important;font-size:14px;padding:4px!important}
+@media(max-width:600px){.hero-actions .hk-cta{width:100%;min-width:0;box-sizing:border-box;padding:12px 18px!important}.hero-actions .hk-wa{width:100%!important;text-align:center}}

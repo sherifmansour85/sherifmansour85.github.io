@@ -31,7 +31,7 @@
     d.appendChild(top);d.appendChild(r);document.body.appendChild(d);
   }
   function install(){
-    if(!dp){skip();return}
+    if(!dp){var m=document.querySelector(".hk-tb-install");close();if(m){ls(function(){localStorage.setItem(KEY,String(Date.now()))});m.click()}else skip();return}
     var e=dp;dp=null;
     try{e.prompt();e.userChoice.then(function(c){if(c&&c.outcome==="accepted")ls(function(){localStorage.setItem("hkInstalled","1")});else ls(function(){localStorage.setItem(KEY,String(Date.now()))});close()},close)}catch(x){close()}
   }
@@ -40,5 +40,6 @@
   window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dp=e;later()});
   window.addEventListener("appinstalled",function(){ls(function(){localStorage.setItem("hkInstalled","1")});close()});
   if("serviceWorker" in navigator&&location.protocol==="https:"){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){})})}
-  if(ios){function go(){later()}if(document.readyState!=="loading")go();else document.addEventListener("DOMContentLoaded",go)}
+  /* show on every visit after 10 s, even where the browser gives no native install event (then Install opens the how-to steps) */
+  if(document.readyState!=="loading")later();else document.addEventListener("DOMContentLoaded",later);
 })();

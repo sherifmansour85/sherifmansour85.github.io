@@ -285,12 +285,12 @@
 })();
 
 /* Cairo radio button: loaded after the page has finished loading, so it never delays the site. */
-(function(){function L(){var e=document.createElement("script");e.src="/assets/hk-radio.js?v=20261014b";e.async=true;document.head.appendChild(e)}
+(function(){function L(){var e=document.createElement("script");e.src="/assets/hk-radio.js?v=20261014d";e.async=true;document.head.appendChild(e)}
 function Q(){if(window.requestIdleCallback){window.requestIdleCallback(L,{timeout:4000})}else{setTimeout(L,2000)}}
 if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventListener("load",function(){setTimeout(Q,800)})}})();
 
 /* Install-or-skip app popup: starts as early as possible. */
-(function(){var e=document.createElement("script");e.src="/assets/hk-install.js?v=20261014b";e.async=true;document.head.appendChild(e)})();
+(function(){var e=document.createElement("script");e.src="/assets/hk-install.js?v=20261014c";e.async=true;document.head.appendChild(e)})();
 
 /* HK-QA-MOVE: keep the static "what people search for" block (.hk-qa) above the "Plan your trip" block on app-rendered pages. */
 (function () {
@@ -321,4 +321,24 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
   fix();
   if(window.MutationObserver){var t=0;new MutationObserver(function(){clearTimeout(t);t=setTimeout(fix,60);}).observe(document.documentElement,{childList:true,subtree:true});}
   [300,1200,3000].forEach(function(x){setTimeout(fix,x);});
+})();
+/* HK-HERO-CTA-TRACK: count which hero button people press (Google Analytics event, only if analytics is loaded) */
+(function(){document.addEventListener("click",function(e){var a=e.target&&e.target.closest&&e.target.closest("[data-hk-cta]");if(!a)return;try{if(window.gtag)window.gtag("event","hero_cta",{cta:a.getAttribute("data-hk-cta")})}catch(x){}},true)})();
+/* HK-PRICE-NOTE: one short note on pages that quote SAR prices (guide estimates; final price and payment currency in a written quote) */
+(function(){
+  var AR=/^\/ar(\/|$)/.test(location.pathname)||document.documentElement.lang==="ar";
+  var TXT=AR?"الأسعار بالريال السعودي تقديرية للاسترشاد فقط. يُؤكَّد السعر النهائي وعملة الدفع في عرض مكتوب قبل الحجز.":"Prices in SAR are guide estimates only. The final price and the payment currency are confirmed in a written quote before you book.";
+  function hasPrices(){var m=document.querySelector("main")||document.body;var t=m?m.innerText||"":"";return AR?/\d[\d,٬.]*\s*(ريال|SAR)|(?:ريال|SAR)\s*\d/.test(t):/\d[\d,]*\s*(SAR|riyal)|SAR\s*\d/i.test(t)}
+  function put(){
+    try{
+      if(document.getElementById("hkPriceNote")||!hasPrices())return;
+      var target=document.querySelector(".hk-qa")||document.getElementById("hk-road")||document.querySelector("section.hk-road")||document.querySelector("footer");
+      if(!target||!target.parentNode)return;
+      var p=document.createElement("p");p.id="hkPriceNote";p.dir=AR?"rtl":"ltr";
+      p.style.cssText="max-width:1120px;margin:0 auto;padding:14px 5% 4px;font-size:13px;line-height:1.6;opacity:.8;font-style:italic";
+      p.textContent=TXT;target.parentNode.insertBefore(p,target);
+    }catch(e){}
+  }
+  [900,2200,4500].forEach(function(t){setTimeout(put,t)});
+  if(document.readyState==="complete")put();else window.addEventListener("load",function(){setTimeout(put,300)});
 })();
