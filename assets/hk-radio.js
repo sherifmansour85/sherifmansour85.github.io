@@ -130,7 +130,7 @@ function attention(msg,ms,flash){
   pill.classList.toggle("bounce",!!flash);btn.classList.toggle("flash",!!flash);
   clearTimeout(pillTimer);clearTimeout(flashTimer);
   if(flash)flashTimer=setTimeout(function(){btn.classList.remove("flash");pill.classList.remove("bounce")},Math.min(ms,9000));
-  pillTimer=setTimeout(function(){pill.classList.remove("show","bounce");btn.classList.remove("flash")},ms);
+  if(ms>0)pillTimer=setTimeout(function(){pill.classList.remove("show","bounce");btn.classList.remove("flash")},ms); /* ms=0: label stays until the state changes */
 }
 function showTip(msg){
   if(get("hkRadioTip")==="1"||!tip||!on)return;
@@ -145,6 +145,7 @@ function hideTip(){if(!tip)return;tip.classList.remove("show");clearTimeout(tipT
 function mk(){
   var a=document.createElement("audio");a.preload="none";a.setAttribute("playsinline","");a.setAttribute("aria-hidden","true");a.style.display="none";
   a.addEventListener("error",function(){onStreamError(a)});
+  a.addEventListener("ended",function(){if(a.getAttribute("src")){dbg("stream ended (live streams should not)");onStreamError(a)}});
   document.body.appendChild(a);return a;
 }
 function sv(el,v){if(canVol){try{el.volume=Math.max(0,Math.min(1,v))}catch(e){}}}
@@ -171,7 +172,8 @@ function resumeIdx(){var r=null;try{r=JSON.parse(sessionStorage.getItem("hkRadio
 function saveResume(){try{if(on&&(playing||armed))sessionStorage.setItem("hkRadioResume",JSON.stringify({i:cur,t:Date.now()}))}catch(e){}}
 var stallT=0,stallN=0;
 function stallCheck(){var el=els[act];if(!playing||!el||busy||suspended||document.hidden){stallN=0;return}
-  if(el.paused||el.currentTime===stallT){if(++stallN>=3){stallN=0;markDead(cur);fails++;if(fails>CH.length*3){giveUp();return}clearTimeout(timer);if(canVol)prepare();else hard()}}else{stallN=0;stallT=el.currentTime}}
+  if(el.paused){if(++stallN>=2){stallN=0;try{var pr=el.play();if(pr&&pr.catch)pr.catch(function(){})}catch(e){}}return}
+  if(el.currentTime===stallT){if(++stallN>=5){stallN=0;clearTimeout(timer);if(canVol)prepare();else hard()}}else{stallN=0;stallT=el.currentTime}}
 function begin(){
   dbg("begin on="+on+" playing="+playing+" suspended="+suspended+" gaveUp="+gaveUp+" hidden="+document.hidden);
   if(!on||playing||suspended||gaveUp||document.hidden)return;
@@ -188,15 +190,16 @@ function begin(){
     dbg("PLAYING "+CH[cur].n);playing=true;armed=false;sv(el,0);ui();
     fade([{el:el,from:0,to:VOL}],FADE);
     if(!canVol)sv(el,1);
-    tS=performance.now();schedule();watch(el);attention(TX.pill,15000,true);showTip(TX.tip);
+    tS=performance.now();schedule();watch(el);attention(TX.pill,45000,true);showTip(TX.tip);
   }).catch(function(err){
     dbg("play failed: "+(err&&err.name)+" "+(err&&err.message||"")+" ("+CH[cur].n+")");
     release(el);
-    if(err&&err.name==="NotAllowedError"){arm();attention(TX.pillWait,15000,true);showTip2()}
+    if(err&&err.name==="NotAllowedError"){arm();attention(TX.pillWait,0,true);showTip2()}
     else{markDead(cur);fails++;if(fails>CH.length*2){giveUp()}else setTimeout(begin,150)}
   });
 }
-function giveUp(){gaveUp=true;stopAll();ui();attention(TX.pillRetry,12000,false)}
+var retryT=0;
+function giveUp(){gaveUp=true;stopAll();ui();attention(TX.pillRetry,0,false);clearTimeout(retryT);retryT=setTimeout(function(){if(on&&gaveUp&&!document.hidden){gaveUp=false;fails=0;dead={};begin()}},20000)}
 function showTip2(){clearTimeout(tipTimer);setTimeout(function(){if(!playing)showTip(TX.tip2)},2500)}
 function schedule(){
   if(CH.length<2)return;
@@ -222,7 +225,7 @@ function watch(el){
     if(!playing||el!==els[act]||el.paused||el.currentTime>=.5)return;
     markDead(cur);fails++;if(fails>CH.length*3){giveUp();return}
     clearTimeout(timer);if(canVol)prepare();else hard();
-  },6000);
+  },12000);
 }
 function prepare(){
   if(!playing)return;
@@ -251,6 +254,8 @@ function cross(nx){
 function onStreamError(el){
   dbg("stream error code="+(el.error&&el.error.code)+" src="+(el.getAttribute("src")||"").slice(0,60));
   if(!playing)return;
+  if(el!==els[act]&&canVol&&!busy&&el.getAttribute("src")){ /* the NEXT station failed while preparing: skip it at once */
+    markDead(nextIdx);fails++;release(el);clearTimeout(timer);if(fails>CH.length*3){giveUp();return}prepare();return}
   if(el===els[act]){ /* current channel died: jump to the next straight away */
     markDead(cur);fails++;if(fails>CH.length*3){giveUp();return}
     clearTimeout(timer);if(canVol)prepare();else hard();
@@ -260,7 +265,7 @@ function onStreamError(el){
 /* ---------- user intent ---------- */
 function onBtn(){
   hideTip();pill&&pill.classList.remove("bounce");btn.classList.remove("flash");
-  if(on&&gaveUp){gaveUp=false;fails=0;dead={};begin();return} /* retry after a failure */
+  if(on&&gaveUp){clearTimeout(retryT);gaveUp=false;fails=0;dead={};suspended=false;begin();return} /* retry after a failure */
   if(on&&!playing&&!gaveUp){begin();return} /* "on" but sound still waiting for a first tap */
   on=!on;set("hkRadio",on?"on":"off");
   if(on){gaveUp=false;fails=0;begin()}
