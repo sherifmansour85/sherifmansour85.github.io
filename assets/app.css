@@ -673,3 +673,14 @@ body:has(.hero-actions .hk-cta) :is(.svc-card,.svc-sm):hover{border-color:#B8922
 @media(max-width:700px){.hero .hero-trust{padding-left:78px!important;padding-right:66px!important}.hero .hero-trust .trust-item{min-width:100%;flex:1 1 100%;padding:10px 12px!important;font-size:13px!important;white-space:nowrap}}
 
 /*TIDY11*/@media(max-width:700px){.hero .hero-trust{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:8px!important;padding:0 66px 0 78px!important}.hero .hero-trust .trust-item{width:100%!important;min-width:0!important;flex:none!important;margin:0!important;white-space:nowrap!important;padding:10px 12px!important;font-size:13px!important}}
+
+/*HK-HERO-BTN-ELEGANT*/
+body:has(.hero-actions .hk-cta) .hero-actions{gap:14px!important;max-width:1020px!important}
+body:has(.hero-actions .hk-cta) .hero-actions .hk-cta{min-height:56px!important;padding:0 22px!important;border-radius:999px!important;font-size:15px!important;letter-spacing:.015em;box-shadow:none!important;transition:transform .2s,box-shadow .2s,background .2s,border-color .2s!important}
+body:has(.hero-actions .hk-cta) .hero-actions .hk-cta b{font-size:15px!important;font-weight:600!important;line-height:1.3!important}
+body:has(.hero-actions .hk-cta) .hero-actions .hk-cta-med{background:linear-gradient(180deg,#0E3E49,#0A2E36)!important;color:#fff!important;border:1px solid rgba(232,200,119,.6)!important}
+body:has(.hero-actions .hk-cta) .hero-actions .hk-cta.btn-gold:not(.hk-cta-med){background:linear-gradient(135deg,#C9A23A 0%,#EBCB7A 100%)!important;color:#0A2E36!important;border:1px solid #E8C877!important;box-shadow:0 8px 22px rgba(184,146,42,.30)!important}
+body:has(.hero-actions .hk-cta) .hero-actions .hk-cta.btn-outline{background:rgba(255,255,255,.06)!important;color:#fff!important;border:1px solid rgba(255,255,255,.5)!important;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+body:has(.hero-actions .hk-cta) .hero-actions .hk-cta:hover{transform:translateY(-2px)}
+body:has(.hero-actions .hk-cta) .hero-actions .hk-cta.btn-outline:hover,body:has(.hero-actions .hk-cta) .hero-actions .hk-cta-med:hover{border-color:#E8C877!important;background:rgba(232,200,119,.14)!important;box-shadow:0 8px 20px rgba(0,0,0,.25)!important}
+@media(max-width:700px){body:has(.hero-actions .hk-cta) .hero-actions .hk-cta{min-height:50px!important;padding:0 10px!important}body:has(.hero-actions .hk-cta) .hero-actions .hk-cta b{font-size:13.5px!important}}
