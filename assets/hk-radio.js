@@ -171,7 +171,7 @@ function load(el,i){el.src=CH[i].u;sv(el,0);var p=el.play();return p&&p.catch?p:
 function resumeIdx(){var r=null;try{r=JSON.parse(sessionStorage.getItem("hkRadioResume")||"null");sessionStorage.removeItem("hkRadioResume")}catch(e){}
   if(r&&typeof r.i==="number"&&r.i>=0&&r.i<CH.length&&Date.now()-r.t<30000&&!isDead(r.i))return r.i;return firstOk()}
 function saveResume(){try{if(on&&(playing||armed))sessionStorage.setItem("hkRadioResume",JSON.stringify({i:cur,t:Date.now()}))}catch(e){}}
-var stallT=0,stallN=0;
+var stallT=0,stallN=0,starting=false,startT=0,busyT=0;
 function stallCheck(){var el=els[act];if(!playing||!el||busy||suspended||document.hidden){stallN=0;return}
   if(el.paused){if(++stallN>=2){stallN=0;try{var pr=el.play();if(pr&&pr.catch)pr.catch(function(){})}catch(e){}}return}
   if(el.currentTime===stallT){if(++stallN>=5){stallN=0;clearTimeout(timer);if(canVol)prepare();else hard()}}else{stallN=0;stallT=el.currentTime}}
@@ -185,14 +185,16 @@ function begin(){
     dbg("canVol="+canVol+" VOL="+VOL+" UA="+navigator.userAgent.slice(0,90));
     if(canVol)els.push(mk()); /* phones that cannot fade (iPhone) use one element and cut between channels */
   }
-  var el=els[act];cur=resumeIdx();
+  var el=els[act];cur=resumeIdx();starting=true;startT=performance.now();
   load(el,cur).then(function(){
+    starting=false;
     if(!on||suspended){release(el);return}
     dbg("PLAYING "+CH[cur].n);playing=true;armed=false;sv(el,0);ui();
     fade([{el:el,from:0,to:VOL}],FADE);
     if(!canVol)sv(el,1);
     tS=performance.now();schedule();watch(el);attention(TX.pill,6000,true);showTip(TX.tip);
   }).catch(function(err){
+    starting=false;
     dbg("play failed: "+(err&&err.name)+" "+(err&&err.message||"")+" ("+CH[cur].n+")");
     release(el);
     if(err&&err.name==="NotAllowedError"){arm();attention(TX.pillWait,0,true);showTip2()}
@@ -214,7 +216,7 @@ function schedule(){
 var busy=false;
 function hard(){
   if(!playing||busy)return;
-  busy=true;clearTimeout(timer);
+  busy=true;busyT=performance.now();clearTimeout(timer);
   cur=nextOk(cur);var el=els[0];
   load(el,cur).then(function(){busy=false;sv(el,1);fails=0;ui();tS=performance.now();schedule();watch(el)}).catch(function(){
     busy=false;markDead(cur);fails++;if(fails>CH.length*3){giveUp();return}hard();
@@ -267,7 +269,7 @@ function onStreamError(el){
 function onBtn(){
   hideTip();pill&&pill.classList.remove("bounce");btn.classList.remove("flash");
   if(on&&gaveUp){clearTimeout(retryT);gaveUp=false;fails=0;dead={};suspended=false;begin();return} /* retry after a failure */
-  if(on&&!playing&&!gaveUp){begin();return} /* "on" but sound still waiting for a first tap */
+  if(on&&!playing&&!gaveUp){if(!document.hidden)suspended=false;starting=false;begin();return} /* "on" but sound still waiting for a first tap */
   on=!on;set("hkRadio",on?"on":"off");
   if(on){gaveUp=false;fails=0;begin()}
   else{
@@ -321,6 +323,41 @@ function init(){
   /* on the home page, keep the radio labels off the hero trust chips while they are on screen */
   try{var ht=document.querySelector(".hero .hero-trust");if(ht&&window.IntersectionObserver){new IntersectionObserver(function(en){document.documentElement.classList.toggle("hkr-hero",!!en[0].isIntersecting)},{threshold:0}).observe(ht);
     var st2=document.createElement("style");st2.textContent=".hkr-hero .hkr-pill,.hkr-hero .hkr-tip{opacity:0!important;pointer-events:none!important;transition:opacity .2s}";document.head.appendChild(st2)}}catch(e){}
+  /* ---------- watchdog: the radio can never stay stuck ----------
+     Every 2 s it re-checks the real state and repairs whatever is out of line:
+     a start that never finished, a stuck "suspended" flag, a drifted media counter, a
+     channel switch that never happened, a stuck busy flag, or sound that should be on but is not. */
+  function liveOtherMedia(){var n=0;try{var m=document.querySelectorAll("audio,video");for(var i=0;i<m.length;i++){var x=m[i];if(els.indexOf(x)<0&&!x.paused&&!x.ended&&!x.muted&&x.volume>0&&x.readyState>2)n++}}catch(e){}return n}
+  function mustPause(){
+    if(document.hidden||aiOpen())return true;
+    var a=document.activeElement;
+    if(a&&(/^(TEXTAREA|SELECT)$/.test(a.tagName)||a.isContentEditable||(a.tagName==="INPUT"&&!/^(button|submit|checkbox|radio)$/.test(a.type))))return true;
+    if(a&&a.tagName==="IFRAME"&&!document.hasFocus())return true;
+    return liveOtherMedia()>0;
+  }
+  var wdN=0;
+  function watchdog(){
+    try{
+      otherMedia=liveOtherMedia();                         /* self-correct a drifted counter */
+      var pause=mustPause(),now=performance.now();
+      if(pause){ if(!suspended)suspend(); return }
+      if(suspended){suspended=false}                       /* nothing justifies pausing any more */
+      if(!on||gaveUp||armed)return;
+      if(starting&&now-startT>10000){                      /* play() never settled: abandon it and try another channel */
+        dbg("watchdog: start hung");starting=false;els.forEach(function(x){release(x)});markDead(cur);fails++;
+        if(fails>CH.length*3){giveUp();return}
+        playing=false;begin();return}
+      if(!playing){ if(!starting){dbg("watchdog: should be playing, starting");begin()} return }
+      if(busy&&now-busyT>10000){dbg("watchdog: busy stuck");busy=false;clearTimeout(timer);markDead(cur);fails++;if(canVol)prepare();else hard();return}
+      if(CH.length>1&&tS&&now-tS>SLOT+15000&&!busy){       /* the channel is overdue: force the next switch */
+        dbg("watchdog: overdue switch");clearTimeout(timer);cancelAnimationFrame(rafs.x);if(canVol)prepare();else hard();return}
+      var el=els[act];
+      if(el&&el.paused&&!busy&&!starting){try{var pr=el.play();if(pr&&pr.catch)pr.catch(function(){})}catch(e){}}
+    }catch(e){}
+  }
+  setInterval(watchdog,2000);
+  window.addEventListener("online",function(){if(gaveUp){clearTimeout(retryT);gaveUp=false;fails=0;dead={}}watchdog()});
+  window.addEventListener("pageshow",function(){setTimeout(watchdog,300)});
   if(on)begin();
 }
 if(document.body)init();else document.addEventListener("DOMContentLoaded",init);
