@@ -294,11 +294,14 @@ function resume(){
   clearTimeout(resumeTimer);
   resumeTimer=setTimeout(function(){
     var a=document.activeElement;
-    if(document.hidden||otherMedia||(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)&&a.type!=="button"&&a.type!=="submit"&&a.type!=="checkbox"&&a.type!=="radio"))return;
+    if(document.hidden||otherMedia||aiOpen()||(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)&&a.type!=="button"&&a.type!=="submit"&&a.type!=="checkbox"&&a.type!=="radio"))return;
     suspended=false;if(on&&!armed)begin();
   },700);
 }
-var otherMedia=0;
+var otherMedia=0,aiWas=false;
+/* the AI assistant panel (React .ai-panel on some pages, #hkAiPanel on the static ones) pauses the radio while it is open */
+function aiOpen(){try{if(document.querySelector(".ai-panel"))return true;var p=document.getElementById("hkAiPanel");return !!(p&&!p.hidden&&p.offsetParent!==null)}catch(e){return false}}
+setInterval(function(){var o=aiOpen();if(o===aiWas)return;aiWas=o;if(o)suspend();else resume()},500);
 function init(){
   build();
   document.addEventListener("visibilitychange",function(){document.hidden?suspend():resume()});
