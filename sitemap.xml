@@ -1134,4 +1134,60 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/saudi-national-day-egypt/"/>
     <lastmod>2026-10-18</lastmod>
   </url>
+  <url>
+    <loc>https://www.hayakkom.com/uae/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/uae/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/uae/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/uae/"/>
+    <lastmod>2026-10-18</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/uae/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/uae/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/uae/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/uae/"/>
+    <lastmod>2026-10-18</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/uae/dubai/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/uae/dubai/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/uae/dubai/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/uae/dubai/"/>
+    <lastmod>2026-10-18</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/uae/dubai/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/uae/dubai/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/uae/dubai/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/uae/dubai/"/>
+    <lastmod>2026-10-18</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/uae/abu-dhabi/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/uae/abu-dhabi/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/uae/abu-dhabi/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/uae/abu-dhabi/"/>
+    <lastmod>2026-10-18</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/uae/abu-dhabi/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/uae/abu-dhabi/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/uae/abu-dhabi/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/uae/abu-dhabi/"/>
+    <lastmod>2026-10-18</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/kuwait/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/kuwait/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/kuwait/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/kuwait/"/>
+    <lastmod>2026-10-18</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/kuwait/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/kuwait/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/kuwait/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/kuwait/"/>
+    <lastmod>2026-10-18</lastmod>
+  </url>
 </urlset>
