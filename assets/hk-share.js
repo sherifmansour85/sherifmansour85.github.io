@@ -425,3 +425,84 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
   document.addEventListener("click",fix,true);
   document.addEventListener("keydown",function(e){if(e.key==="Enter")fix(e)},true);
 })();
+/* HK-POLISH: cards fade up as they scroll into view, hover lift on cards that had none, a reading bar on blog
+   articles, and a slim WhatsApp / Send-my-case bar on phones once the visitor scrolls past the first screen.
+   Only elements below the fold at load are animated, so the first screen and LCP are untouched; anything never
+   tagged simply stays visible. Floating buttons (WhatsApp, radio, assistant) move up while the bar shows. */
+(function(){
+  if(window.__hkPolish)return;window.__hkPolish=1;
+  var ar=document.documentElement.lang==="ar"||/^\/ar(\/|$)/.test(location.pathname);
+  var still=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var css=""+
+  ".hk-rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1)}"+
+  ".hk-rv.hk-in{opacity:1;transform:none}"+
+  "@media (hover:hover){.why-card,.jrn-card,.route-card,.hk-card,.contact-card,.svc-sm,.hours-card,.hk-road a{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}"+
+  ".why-card:hover,.jrn-card:hover,.route-card:hover,.hk-card:hover,.contact-card:hover,.svc-sm:hover,.hours-card:hover,.hk-road a:hover{transform:translateY(-3px);border-color:#D4A843;box-shadow:0 12px 32px rgba(14,124,134,.12)}}"+
+  "html{scroll-behavior:smooth}"+
+  ":focus-visible{outline:2px solid #D4A843;outline-offset:2px}"+
+  ".hk-prog{position:fixed;top:0;left:0;right:0;height:3px;z-index:1001;pointer-events:none;background:linear-gradient(90deg,#B8922A,#F0C96A);transform-origin:0 50%;transform:scaleX(0)}"+
+  "[dir=rtl] .hk-prog,html[lang=ar] .hk-prog{transform-origin:100% 50%}"+
+  ".hk-bar{position:fixed;left:0;right:0;bottom:0;z-index:996;display:flex;gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(10,46,54,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid rgba(212,168,67,.35);transform:translateY(110%);transition:transform .3s ease}"+
+  ".hk-bar.on{transform:none}"+
+  ".hk-bar a{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;border-radius:999px;font:600 15px/1 Inter,'Noto Sans Arabic',system-ui,sans-serif;text-decoration:none!important}"+
+  ".hk-bar .w{background:#25D366;color:#fff!important}.hk-bar .c{background:linear-gradient(135deg,#D4A843,#F0C96A);color:#0A2E36!important}"+
+  ".hk-bar svg{width:20px;height:20px;fill:currentColor}"+
+  ".hk-up{translate:0 -66px;transition:translate .3s ease}"+
+  "body.hk-bar-on .fab-wa,body.hk-bar-on .fab-stack a[href*='wa.me']{opacity:0;visibility:hidden;pointer-events:none}"+
+  "@media (min-width:769px){.hk-bar{display:none}}"+
+  "@media print{.hk-bar,.hk-prog{display:none}}";
+  if(still)css=css.replace(/\.hk-rv\{[^}]*\}/,"").replace("html{scroll-behavior:smooth}","");
+  var st=document.createElement("style");st.id="hk-polish";st.textContent=css;(document.head||document.documentElement).appendChild(st);
+
+  /* Fade-up on scroll */
+  var SEL=".pkg-card,.svc-card,.svc-sm,.why-card,.jrn-card,.route-card,.city-card,.tourist-svc-card,.contact-card,.hk-card,.hk-spot-card,.hk-road a,.blog-card,.hours-card,.sec-title,.sec-eyebrow";
+  var io=!still&&"IntersectionObserver" in window?new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("hk-in");io.unobserve(e.target)}})},{rootMargin:"0px 0px -40px 0px"}):null;
+  function tag(){
+    if(!io)return;var vh=innerHeight,list=document.querySelectorAll(SEL),i,el,r,k;
+    for(i=0;i<list.length;i++){el=list[i];if(el.__hkRv)continue;el.__hkRv=1;
+      if(el.closest("#hkCc,.hk-bar,nav,header,footer,template"))continue;
+      r=el.getBoundingClientRect();if(r.top<vh||r.height===0)continue;
+      k=Array.prototype.indexOf.call(el.parentNode.children,el);el.style.transitionDelay=Math.min(k%4*80,240)+"ms";
+      el.classList.add("hk-rv");io.observe(el)}
+  }
+  var tq;function soon(){clearTimeout(tq);tq=setTimeout(tag,120)}
+  function boot(){tag();var root=document.getElementById("root")||document.body;if(window.MutationObserver)new MutationObserver(soon).observe(root,{childList:true,subtree:true})}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
+
+  /* Reading bar on blog articles */
+  var prog=null;
+  if(/^\/(ar\/)?blog\/[^\/]+\/?$/.test(location.pathname)){prog=document.createElement("div");prog.className="hk-prog";prog.setAttribute("aria-hidden","true");document.documentElement.appendChild(prog)}
+
+  /* Mobile contact bar */
+  var onContact=/^\/(ar\/)?contact\/?$/.test(location.pathname);
+  var WA='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.3-.5 0-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>';
+  var bar=document.createElement("div");bar.className="hk-bar";bar.setAttribute("role","region");bar.setAttribute("aria-label",ar?"تواصل سريع":"Quick contact");
+  bar.innerHTML='<a class="w" href="https://wa.me/201031567949">'+WA+(ar?"واتساب":"WhatsApp")+'</a>'+(onContact?"":'<a class="c" href="'+(ar?"/ar/contact/":"/contact/")+'">'+(ar?"أرسل حالتك":"Send my case")+'</a>');
+  var shown=false,moved=[];
+  function blocked(){
+    var b=document.body;if(!b)return true;var cc=document.getElementById("hkCc");
+    if(cc&&!cc.hidden&&cc.getClientRects().length&&getComputedStyle(cc).visibility!=="hidden")return true;
+    if(/(^|\s)(menu-open|hk-ai-open|form-active)(\s|$)/.test(b.className))return true;
+    var a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName));
+  }
+  function lift(on){
+    var i;for(i=0;i<moved.length;i++)moved[i].classList.remove("hk-up");moved=[];if(!on)return;
+    var all=document.body.querySelectorAll("body > *, .fab-stack, .hkr"),vh=innerHeight,el,cs,r;
+    for(i=0;i<all.length;i++){el=all[i];if(el===bar||el.id==="hkCc"||el===prog)continue;cs=getComputedStyle(el);
+      if(cs.position!=="fixed")continue;r=el.getBoundingClientRect();if(r.height&&r.bottom>vh-150&&r.top>vh*.4){el.classList.add("hk-up");moved.push(el)}}
+  }
+  var ticking=false;
+  function frame(){ticking=false;
+    var y=pageYOffset,h=document.documentElement.scrollHeight-innerHeight;
+    if(prog)prog.style.transform="scaleX("+(h>0?Math.min(1,y/h):0)+")";
+    if(!bar.parentNode){if(!document.body)return;document.body.appendChild(bar)} /* the React pages' body clean-up can remove it */
+    var want=innerWidth<=768&&y>innerHeight*.6&&!blocked();
+    if(want!==shown){shown=want;bar.classList.toggle("on",want);document.body.classList.toggle("hk-bar-on",want);lift(want)}
+  }
+  function onScroll(){if(!ticking){ticking=true;requestAnimationFrame(frame)}}
+  function mount(){if(document.body&&!bar.parentNode)document.body.appendChild(bar);frame()}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount);else mount();
+  addEventListener("scroll",onScroll,{passive:true});addEventListener("resize",onScroll);
+  document.addEventListener("focusin",onScroll);document.addEventListener("focusout",function(){setTimeout(onScroll,50)});
+  if(window.MutationObserver)new MutationObserver(onScroll).observe(document.documentElement,{attributes:true,subtree:true,attributeFilter:["class","hidden"]});
+})();
