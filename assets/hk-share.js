@@ -404,3 +404,24 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
   }
   setTimeout(go,900);
 })();
+/* HK-WA-TEXT: WhatsApp links with no message open the chat pre-filled with the page the visitor was reading,
+   so the coordinator knows what they want and enquiries arrive ready to answer. Links that already carry ?text= are left alone. */
+(function(){
+  var RX=/^https?:\/\/(?:wa\.me|api\.whatsapp\.com\/send)\/?\+?(\d{8,15})?\/?(?:\?phone=\+?(\d{8,15}))?$/;
+  function msg(){
+    var ar=document.documentElement.lang==="ar"||/^\/ar(\/|$)/.test(location.pathname);
+    var home=/^\/(ar\/?)?$/.test(location.pathname);
+    var t=(document.title||"").split(/\s[|–—]\s/)[0].trim().slice(0,90);
+    if(ar)return home||!t?"مرحباً حياكم، أرغب في التخطيط لرحلة إلى مصر.":"مرحباً حياكم، أتصفح صفحة «"+t+"» على موقعكم وأرغب في الاستفسار.";
+    return home||!t?"Hello Hayakkom, I would like to plan a trip to Egypt.":"Hello Hayakkom, I am reading “"+t+"” on your website and would like to ask about it.";
+  }
+  function fix(e){
+    var a=e.target&&e.target.closest&&e.target.closest("a[href]");if(!a)return;
+    var m=RX.exec(a.getAttribute("href")||"");if(!m)return;
+    var n=m[1]||m[2];if(!n)return;
+    a.setAttribute("href","https://wa.me/"+n+"?text="+encodeURIComponent(msg()));
+  }
+  document.addEventListener("pointerdown",fix,true);
+  document.addEventListener("click",fix,true);
+  document.addEventListener("keydown",function(e){if(e.key==="Enter")fix(e)},true);
+})();
