@@ -486,10 +486,17 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
     var a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName));
   }
   function lift(on){
-    var i;for(i=0;i<moved.length;i++)moved[i].classList.remove("hk-up");moved=[];if(!on)return;
-    var all=document.body.querySelectorAll("body > *, .fab-stack, .hkr"),vh=innerHeight,el,cs,r;
-    for(i=0;i<all.length;i++){el=all[i];if(el===bar||el.id==="hkCc"||el===prog)continue;cs=getComputedStyle(el);
+    var i,radio=document.querySelector(".hkr"),ai=document.getElementById("hkAi")||document.querySelector(".fab-ai-own,.fab-ai");
+    for(i=0;i<moved.length;i++)moved[i].classList.remove("hk-up");moved=[];
+    if(radio)radio.style.translate="";
+    if(!on)return;
+    var all=document.body.querySelectorAll("body > *, .fab-stack"),vh=innerHeight,el,cs,r;
+    for(i=0;i<all.length;i++){el=all[i];if(el===bar||el.id==="hkCc"||el===prog||el===radio)continue;cs=getComputedStyle(el);
       if(cs.position!=="fixed")continue;r=el.getBoundingClientRect();if(r.height&&r.bottom>vh-150&&r.top>vh*.4){el.classList.add("hk-up");moved.push(el)}}
+    /* The radio sits level with the AI agent while the bar shows (the floating WhatsApp under it is hidden then). */
+    if(radio&&ai){var ra=radio.getBoundingClientRect(),aa=ai.getBoundingClientRect();
+      if(ra.height&&aa.height){var aiUp=ai.classList.contains("hk-up")||(ai.parentNode&&ai.parentNode.classList&&ai.parentNode.classList.contains("hk-up"))?66:0;
+        radio.style.transition="translate .3s ease";radio.style.translate="0 "+Math.round((aa.top+aa.height/2-aiUp)-(ra.top+ra.height/2))+"px"}}
   }
   var ticking=false;
   function frame(){ticking=false;
@@ -499,6 +506,13 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
     var want=innerWidth<=768&&y>innerHeight*.6&&!blocked();
     if(want!==shown){shown=want;bar.classList.toggle("on",want);document.body.classList.toggle("hk-bar-on",want);lift(want)}
   }
+  /* Keep the radio level with the agent if either moves while the bar is up (the radio re-places itself every 800ms). */
+  setInterval(function(){
+    if(!shown)return;var radio=document.querySelector(".hkr"),ai=document.getElementById("hkAi")||document.querySelector(".fab-ai-own,.fab-ai");if(!radio||!ai)return;
+    var ra=radio.getBoundingClientRect(),aa=ai.getBoundingClientRect();if(!ra.height||!aa.height)return;
+    var cur=parseFloat((radio.style.translate||"0 0").split(" ")[1])||0,want=Math.round(cur+(aa.top+aa.height/2)-(ra.top+ra.height/2));
+    if(Math.abs(want-cur)>1)radio.style.translate="0 "+want+"px";
+  },900);
   function onScroll(){if(!ticking){ticking=true;requestAnimationFrame(frame)}}
   function mount(){if(document.body&&!bar.parentNode)document.body.appendChild(bar);frame()}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount);else mount();
