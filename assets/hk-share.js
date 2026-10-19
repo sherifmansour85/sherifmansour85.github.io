@@ -268,6 +268,29 @@
   [200,900,2500].forEach(function(t){setTimeout(place,t);});
 })();
 
+/* HK-KEEP: static page sections marked data-hk-keep (FAQ, partner lists, ...) sit outside the app root so the
+   app does not wipe them; show them, in page order, above the share box / marketing / plan-your-trip blocks. */
+(function(){
+  var root=document.getElementById('root'),list=document.querySelectorAll('section[data-hk-keep]');
+  if(!root||!list.length)return;
+  var home=location.pathname,keep=[].map.call(list,function(s){return s.cloneNode(true);});
+  function place(){
+    var cur=keep.map(function(k){return document.getElementById(k.id);});
+    if(location.pathname!==home){cur.forEach(function(c){if(c&&c.parentNode)c.parentNode.removeChild(c);});return;}
+    var foot=root.querySelector('footer'); if(!foot)return;
+    var par=foot.parentNode,before=foot;
+    ['hk-road','hk-mkt'].forEach(function(id){var b=document.getElementById(id);if(b&&b.parentNode===par)before=b;});
+    var take=document.querySelector('.hk-take'); if(take&&take.parentNode===par)before=take;
+    for(var i=cur.length-1;i>=0;i--){
+      var c=cur[i]||keep[i].cloneNode(true);
+      if(c.nextElementSibling!==before||c.parentNode!==par)par.insertBefore(c,before);
+      before=c;
+    }
+  }
+  if(window.MutationObserver)new MutationObserver(function(){place();}).observe(root,{childList:true,subtree:true});
+  [200,900,2500].forEach(function(t){setTimeout(place,t);});
+})();
+
 /* HK-ZOOM-OK: a third-party widget injects a viewport tag that blocks pinch-zoom; undo it so visitors can always zoom (accessibility). */
 (function(){
   function fix(){
