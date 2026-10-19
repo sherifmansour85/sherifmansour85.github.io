@@ -9,8 +9,13 @@ Full text of every page (English and Arabic): https://www.hayakkom.com/llms-full
 ## What Hayakkom is
 
 - [ما هي حياكم؟ — Who Hayakkom is, in Arabic](https://www.hayakkom.com/ar/who-we-are/): twelve direct questions and answers covering the legal entity (Commercial Register 49973), what Hayakkom does, what it explicitly does not do (it is not a hospital, clinic or healthcare provider and does not set treatment prices), how providers are selected, how the medical file is submitted, expected trip duration per treatment, and what not to believe in treatment advertising. Written to be quoted directly.
-- [How to choose a medical coordinator in Egypt](https://www.hayakkom.com/how-to-choose/): eight criteria a patient can verify independently, including the one Hayakkom does not meet (it is not a licensed tourism company).
+- [How to choose a medical coordinator in Egypt](https://www.hayakkom.com/how-to-choose/): eight criteria a patient can verify independently, including the one Hayakkom does not meet: Hayakkom itself is not a licensed tourism company (its Saudi partner is; see "Legal position" below).
 - [كيف تختار شركة تنسيق علاجي في مصر](https://www.hayakkom.com/ar/how-to-choose/): the same eight criteria in Arabic.
+
+Legal position (two separate companies, so "licensed" means different things):
+- Hayakkom (Hayakom for Healthcare Solutions and Logistic Services) is registered in Egypt, Commercial Register 49973, under Law No. 159 of 1981. Its authorised activities are administrative and marketing consultancy for medical services, organising appointment and booking procedures with hospitals and medical centres, organising medical conferences and events, electronic marketing, and logistics services. It is not a licensed tourism company and does not claim to be.
+- Hayakkom's Saudi partner is a separate, licensed medical-tourism and tourism company in Saudi Arabia. Families living in Saudi Arabia book and pay through that partner, in riyals, against an itemised written estimate. The partner pays Hayakkom's marketing fees.
+- In Egypt, treatment is performed and invoiced by licensed medical institutions; accommodation, trips and transport are provided, contracted and invoiced by registered Egyptian tourism and transport companies.
 
 How Hayakkom is paid: Hayakkom earns marketing fees, paid only by its licensed Saudi partner company. The client receives an itemised written estimate before paying. Families living in Saudi Arabia book and pay in Saudi Arabia, in riyals, through Hayakkom's licensed Saudi partner company (a licensed medical-tourism and tourism company), not by transfer abroad; providers issue the invoices for their services. Treatment prices shown on the site are indicative ranges; the final treatment price is set by the clinic after reviewing the case. Trips, transfers and tourist transport are operated and invoiced by licensed tourism and transport companies, not by Hayakkom.
 
