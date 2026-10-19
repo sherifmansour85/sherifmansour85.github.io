@@ -13,8 +13,8 @@ restoration and cosmetic surgery for families travelling from Saudi Arabia, the 
 Kuwait, and arranges pre-travel video consultations, record review, appointments,
 transfers, accommodation and follow-up. It is not a travel agency or tour operator: trips,
 transfers and tourist transport are operated and invoiced by licensed Egyptian tourism and
-transport companies. Hayakkom earns a coordination fee from the providers it works with;
-clients receive an itemised written estimate before paying and are invoiced by the provider.
+transport companies. Hayakkom earns marketing fees, paid only by its licensed Saudi
+partner company; clients receive an itemised written estimate before paying and are invoiced by the provider.
 
 - **Category:** travel and medical coordination for Gulf families
 - **Holiday packages (indicative 2026 prices in SAR):** https://www.hayakkom.com/holidays/

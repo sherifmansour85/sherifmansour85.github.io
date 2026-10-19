@@ -572,7 +572,10 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
       }
     }
   }
+  var FEE=ar?"تحصل حياكم على رسوم تسويق تدفعها لها شركتها الشريكة السعودية المرخّصة فقط. تستلم عرض سعر مكتوباً ومفصّلاً قبل الدفع، وتدفع العائلات المقيمة في السعودية داخل المملكة بالريال عبر الشركة الشريكة السعودية المرخّصة لحياكم، ويصدر مقدّمو الخدمة فواتير خدماتهم.":"Hayakkom earns marketing fees, paid only by its licensed Saudi partner company. You receive an itemised written estimate before you pay. Families in Saudi Arabia pay in Saudi Arabia, in riyals, through Hayakkom’s licensed Saudi partner company; providers issue the invoices for their services.";
   function foot(){
+    var f0=document.querySelector("footer");
+    if(f0&&!document.querySelector(".hk-fee-foot")){var e=document.createElement("p");e.className="hk-fee hk-fee-foot";e.textContent=FEE;e.style.cssText="max-width:900px;margin:14px auto 0;padding:0 5%;font-size:12px;line-height:1.7;opacity:.8;text-align:center";f0.appendChild(e)}
     if(document.querySelector(".hk-legal-foot"))return;
     var f=document.querySelector("footer");if(!f)return;
     var p=document.createElement("p");p.className="hk-legal-foot";p.textContent=FOOT;f.appendChild(p);
