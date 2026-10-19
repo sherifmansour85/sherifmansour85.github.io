@@ -358,7 +358,7 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
       var target=document.querySelector(".hk-qa")||document.getElementById("hk-road")||document.querySelector("section.hk-road")||document.querySelector("footer");
       if(!target||!target.parentNode)return;
       var p=document.createElement("p");p.id="hkPriceNote";p.dir=AR?"rtl":"ltr";
-      p.style.cssText="max-width:1120px;margin:0 auto;padding:14px 5% 4px;font-size:13px;line-height:1.6;opacity:.8;font-style:italic";
+      p.style.cssText="box-sizing:border-box;max-width:min(1120px,92%);margin:16px auto;padding:10px 16px;font-size:13.5px;line-height:1.6;color:#2F4A52;background:rgba(255,255,255,.94);border:1px solid #D7E5E4;border-radius:12px;text-align:center;position:relative;z-index:2";
       p.textContent=TXT;target.parentNode.insertBefore(p,target);
     }catch(e){}
   }
