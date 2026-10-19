@@ -1,6 +1,6 @@
 # Hayakkom — full site text for AI assistants
 
-> This file contains the full text of hayakkom.com in English and Arabic. Hayakkom (Hayakom for Healthcare Solutions and Logistic Services, Commercial Register 49973) coordinates medical treatment and travel in Egypt for Gulf patients; it is not a healthcare provider. Short index: https://www.hayakkom.com/llms.txt
+> This file contains the full text of hayakkom.com in English and Arabic. Hayakkom (Hayakom for Healthcare Solutions and Logistic Services, Commercial Register 49973) coordinates medical treatment and travel in Egypt for Gulf patients; it is not a healthcare provider. Accommodation, hotel bookings, villa and chalet rentals, trips, tours and all transport are provided by registered Egyptian tourism companies; all medical treatment and operations are performed by registered, licensed medical institutions, including within packages. Short index: https://www.hayakkom.com/llms.txt
 
 ---
 
