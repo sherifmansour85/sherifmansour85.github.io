@@ -555,11 +555,12 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
     ?"تنبيه: الإقامة وحجوزات الفنادق وتأجير الفلل والشاليهات والرحلات والجولات وجميع وسائل النقل تقدّمها شركات سياحة مصرية مسجّلة. وجميع العلاجات والعمليات الطبية تُجرى في مؤسسات طبية مسجّلة ومرخّصة. ينطبق ذلك على كل الباقات والعروض في هذا الموقع، وتقتصر مهمة حياكم على تنسيق هذه الخدمات دون تقديمها بنفسها."
     :"Important: accommodation, hotel bookings, villa and chalet rentals, trips, tours and all transport are provided by registered Egyptian tourism companies. All medical treatment and operations are performed by registered, licensed medical institutions. This applies to every package and offer on this site; Hayakkom coordinates these services and does not provide them itself.";
   var NOTE=ar
-    ?{t:"ⓘ تقدّمها شركات سياحة مصرية مسجّلة.",m:"ⓘ العلاج لدى مؤسسات طبية مسجّلة ومرخّصة.",b:"ⓘ الإقامة والتنقلات عبر شركات سياحة مسجّلة، والعلاج لدى مؤسسات طبية مسجّلة."}
-    :{t:"ⓘ Provided by registered Egyptian tourism companies.",m:"ⓘ Treatment by registered, licensed medical institutions.",b:"ⓘ Stays & transport by registered tourism companies; treatment by registered medical institutions."};
+    ?{t:"ⓘ عبر شركات سياحة مسجّلة",m:"ⓘ العلاج لدى مؤسسات طبية مرخّصة",b:"ⓘ عيادات مرخّصة وشركات سياحة مسجّلة"}
+    :{t:"ⓘ Via registered tourism companies",m:"ⓘ Treatment at licensed medical institutions",b:"ⓘ Licensed clinics & registered tourism companies"};
   var st=document.createElement("style");
   st.textContent=".hk-legal-foot{max-width:900px;margin:12px auto 0;padding:0 5%;font-size:12px;line-height:1.7;opacity:.85;text-align:center}"+
     ".hk-card-note{display:block;margin-top:8px;font-size:11px;line-height:1.5;font-style:normal;font-weight:400;opacity:.8;letter-spacing:0;text-transform:none}"+
+    ".hk-spot-card .hk-card-note{font-size:11px!important;line-height:1.35!important;margin-top:4px!important;font-weight:400!important}"+
     ".featured-wrap .hk-card-note,.tourist-svc-card.urgent .hk-card-note{opacity:1}.featured-wrap .hk-card-note{color:rgba(255,255,255,.78)!important}";
   (document.head||document.documentElement).appendChild(st);
   var MED=/wellness|rehab|recovery|تعافي|التعافي|تعافٍ|تأهيل|استجمام|dental|teeth|implant|veneer|smile|hair|weight|bariatric|cosmetic|surgery|surgeon|medical|treatment|treat|clinic|hospital|doctor|nurse|dentist|orthop|lasik|eye|check-?up|physio|consult|علاج|طب|أسنان|اسنان|جراح|زراعة|تجميل|سمنة|تكميم|عيادة|مستشفى|طبيب|ممرض|فحص|ليزك|عظام|استشارة/i;

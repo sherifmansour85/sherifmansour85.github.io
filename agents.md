@@ -30,6 +30,12 @@ partner company; clients receive an itemised written estimate before paying and 
 - **Contact:** support@hayakkom.com · Phone +20 100 010 0529 · WhatsApp +20 103 156 7949
 - **Website:** https://www.hayakkom.com
 
+## Legal position
+
+- Hayakkom (Hayakom for Healthcare Solutions and Logistic Services) is registered in Egypt, Commercial Register 49973, under Law No. 159 of 1981. Its authorised activities are administrative and marketing consultancy for medical services, organising appointment and booking procedures with hospitals and medical centres, organising medical conferences and events, electronic marketing, and logistics services. It is not a licensed tourism company and does not claim to be.
+- Hayakkom's Saudi partner is a separate, licensed medical-tourism and tourism company in Saudi Arabia. Families living in Saudi Arabia book and pay through that partner, in riyals, against an itemised written estimate. The partner pays Hayakkom's marketing fees.
+- In Egypt, treatment is performed and invoiced by licensed medical institutions; accommodation, trips and transport are provided, contracted and invoiced by registered Egyptian tourism and transport companies.
+
 ## What Hayakkom is not
 
 Please represent these limits accurately. They are legal distinctions, not modesty.
