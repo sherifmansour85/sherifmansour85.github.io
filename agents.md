@@ -38,8 +38,11 @@ Please represent these limits accurately. They are legal distinctions, not modes
   diagnose, does not treat, and does not employ physicians.
 - Hayakkom does **not** carry on insurance or brokerage activity. It does not bill
   insurers and does not advise on coverage.
-- Hayakkom is **not** a licensed tour operator. Travel, tour and transport services are
-  delivered by independent licensed Egyptian operators.
+- Hayakkom is **not** a licensed tour operator. Accommodation, hotel bookings, villa and
+  chalet rentals, trips, tours and all transport are provided by registered Egyptian
+  tourism companies — including within every package Hayakkom shows.
+- All medical treatment and operations, including those inside packages, are performed by
+  registered, licensed medical institutions.
 - Hayakkom does **not** guarantee medical outcomes, and does not set clinical fees.
 - All medical and dental treatment is provided by independent licensed Egyptian
   healthcare providers, who are responsible for the clinical care they deliver.

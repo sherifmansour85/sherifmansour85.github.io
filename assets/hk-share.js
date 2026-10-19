@@ -520,3 +520,65 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
   document.addEventListener("focusin",onScroll);document.addEventListener("focusout",function(){setTimeout(onScroll,50)});
   if(window.MutationObserver)new MutationObserver(onScroll).observe(document.documentElement,{attributes:true,subtree:true,attributeFilter:["class","hidden"]});
 })();
+/* HK-LEGAL: legal notice on every page and a short note on every package / service card.
+   Accommodation, hotels, villa and chalet rentals, trips and transport are provided by registered Egyptian tourism
+   companies; medical treatment and operations are performed by registered medical institutions. The footer notice is
+   also in each page's HTML; this re-adds it where the React pages redraw their footer, and stamps cards (re-stamped
+   after React re-renders). */
+(function(){
+  if(window.__hkLegal)return;window.__hkLegal=1;
+  var ar=document.documentElement.lang==="ar"||/^\/ar(\/|$)/.test(location.pathname);
+  var FOOT=ar
+    ?"تنبيه: الإقامة وحجوزات الفنادق وتأجير الفلل والشاليهات والرحلات والجولات وجميع وسائل النقل تقدّمها شركات سياحة مصرية مسجّلة. وجميع العلاجات والعمليات الطبية تُجرى في مؤسسات طبية مسجّلة ومرخّصة. ينطبق ذلك على كل الباقات والعروض في هذا الموقع، وتقتصر مهمة حياكم على تنسيق هذه الخدمات دون تقديمها بنفسها."
+    :"Important: accommodation, hotel bookings, villa and chalet rentals, trips, tours and all transport are provided by registered Egyptian tourism companies. All medical treatment and operations are performed by registered, licensed medical institutions. This applies to every package and offer on this site; Hayakkom coordinates these services and does not provide them itself.";
+  var NOTE=ar
+    ?{t:"ⓘ تقدّمها شركات سياحة مصرية مسجّلة.",m:"ⓘ العلاج لدى مؤسسات طبية مسجّلة ومرخّصة.",b:"ⓘ الإقامة والتنقلات عبر شركات سياحة مسجّلة، والعلاج لدى مؤسسات طبية مسجّلة."}
+    :{t:"ⓘ Provided by registered Egyptian tourism companies.",m:"ⓘ Treatment by registered, licensed medical institutions.",b:"ⓘ Stays & transport by registered tourism companies; treatment by registered medical institutions."};
+  var st=document.createElement("style");
+  st.textContent=".hk-legal-foot{max-width:900px;margin:12px auto 0;padding:0 5%;font-size:12px;line-height:1.7;opacity:.85;text-align:center}"+
+    ".hk-card-note{display:block;margin-top:8px;font-size:11px;line-height:1.5;font-style:normal;font-weight:400;opacity:.8;letter-spacing:0;text-transform:none}"+
+    ".featured-wrap .hk-card-note,.tourist-svc-card.urgent .hk-card-note{opacity:1}.featured-wrap .hk-card-note{color:rgba(255,255,255,.78)!important}";
+  (document.head||document.documentElement).appendChild(st);
+  var MED=/wellness|rehab|recovery|تعافي|التعافي|تعافٍ|تأهيل|استجمام|dental|teeth|implant|veneer|smile|hair|weight|bariatric|cosmetic|surgery|surgeon|medical|treatment|treat|clinic|hospital|doctor|nurse|dentist|orthop|lasik|eye|check-?up|physio|consult|علاج|طب|أسنان|اسنان|جراح|زراعة|تجميل|سمنة|تكميم|عيادة|مستشفى|طبيب|ممرض|فحص|ليزك|عظام|استشارة/i;
+  var TOUR=/wellness|recovery|tourism|travel|investment|business|study|student|سياحة|السياحة|سفر|استثمار|أعمال|الأعمال|الدراسة|طلاب|التعليمية|تعافي|التعافي|تعافٍ|استجمام|holiday|villa|chalet|hotel|stay|resort|cruise|nile|sharm|hurghada|gouna|safaga|cairo|luxor|aswan|alexandria|coast|sahel|siwa|trip|tour|transfer|transport|driver|car\b|vip|heritage|cultural|adventure|religious|honeymoon|package|nights?\b|إقامة|اقامة|فندق|فنادق|فلل|فيلا|شاليه|منتجع|رحلة|رحلات|نيل|نيلية|شرم|غردقة|جونة|سفاجا|ساحل|سيوة|سيارة|سائق|تنقل|عطلة|عطلات|باقة|باقات|ليال/i;
+  var SKIP=/\/(ar\/)?(contact|partners|careers|blog|about|how-to-choose|who-we-are|calculator|conferences|medical-marketing|privacy|terms)\//;
+  var CARDS=[
+    [".pkg-card",".pkg-body",".pkg-btn,a[href*='wa.me'],a.btn-gold,a.btn-outline"],
+    [".hk-spot-card",".hk-spot-txt","em"],
+    [".svc-card",".svc-card-body",".svc-link"],
+    [".svc-sm",".svc-sm-body",null],
+    [".tourist-svc-card",null,"a"],
+    [".hk-card",null,"em"],
+    [".featured-wrap","div",null]
+  ];
+  function kind(el){
+    var a=el.matches("a[href]")?el:el.querySelector("a[href]"),href=a?a.getAttribute("href")||"":"";
+    if(SKIP.test(href))return "";
+    var t=(el.textContent||"")+" "+href,m=MED.test(t),o=TOUR.test(t);
+    return m&&o?"b":m?"m":o?"t":"";
+  }
+  function stamp(){
+    var i,j,list,card,host,before,k,n;
+    for(i=0;i<CARDS.length;i++){
+      list=document.querySelectorAll(CARDS[i][0]);
+      for(j=0;j<list.length;j++){
+        card=list[j];if(card.querySelector(".hk-card-note")||card.closest("template"))continue;
+        k=kind(card);if(!k)continue;
+        host=CARDS[i][1]?card.querySelector(CARDS[i][1]):card;if(!host)continue;
+        n=document.createElement("small");n.className="hk-card-note";n.textContent=NOTE[k];
+        before=CARDS[i][2]?host.querySelector(CARDS[i][2]):null;
+        if(CARDS[i][0]===".featured-wrap"){before=host.querySelector(".featured-sub");if(before){before.insertAdjacentElement("afterend",n);continue}}
+        if(before&&before.parentNode===host)host.insertBefore(n,before);else host.appendChild(n);
+      }
+    }
+  }
+  function foot(){
+    if(document.querySelector(".hk-legal-foot"))return;
+    var f=document.querySelector("footer");if(!f)return;
+    var p=document.createElement("p");p.className="hk-legal-foot";p.textContent=FOOT;f.appendChild(p);
+  }
+  function run(){stamp();foot()}
+  var q;function soon(){clearTimeout(q);q=setTimeout(run,200)}
+  function boot(){run();if(window.MutationObserver)new MutationObserver(soon).observe(document.body,{childList:true,subtree:true});[600,1500,3000].forEach(function(t){setTimeout(run,t)})}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
+})();
