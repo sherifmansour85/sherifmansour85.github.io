@@ -25,6 +25,12 @@ Founded by Sherif Mansour (شريف منصور). Registered under Egyptian Law N
 - [Nile cruise for families and private events](https://www.hayakkom.com/nile-cruise-events/): Luxor–Aswan, 4 nights from about 1,650 SAR per person; family groups and private events arranged with licensed operators. Arabic: [رحلة نيلية للعائلات والفعاليات](https://www.hayakkom.com/ar/nile-cruise-events/)
 - [5-star hotels in Sharm el-Sheikh](https://www.hayakkom.com/sharm-5-star-hotels/): 5-night family packages, 3,500–9,700 SAR per room (indicative, excluding flights). Arabic: [فنادق شرم الشيخ خمس نجوم](https://www.hayakkom.com/ar/sharm-5-star-hotels/)
 - [North Coast (Sahel) summer guide](https://www.hayakkom.com/north-coast/): El Alamein, Marassi, Ras El Hekma, Almaza Bay and Marsa Matrouh; season June–September; resort rooms about 690–1,880 SAR a night and chalets/villas about 900–3,750 SAR a night in summer 2026; about 3–4 hours by road from Cairo.
+- [Nile cruise between Luxor and Aswan](https://www.hayakkom.com/nile-cruise/): cruise itineraries for Gulf families, booked through licensed Egyptian operators. Arabic: [نايل كروز](https://www.hayakkom.com/ar/nile-cruise/)
+- [Cultural tours](https://www.hayakkom.com/cultural/): the Pyramids, Luxor, Aswan and Cairo with Arabic-speaking guides, operated by licensed Egyptian tourism companies. Arabic: [السياحة الثقافية](https://www.hayakkom.com/ar/cultural/)
+- [Heritage travel](https://www.hayakkom.com/heritage/): museums, Islamic and Coptic Cairo, arranged through licensed Egyptian operators. Arabic: [السياحة التراثية](https://www.hayakkom.com/ar/heritage/)
+- [Religious and spiritual sites](https://www.hayakkom.com/religious/): Islamic Cairo, Coptic heritage and Sinai, with licensed guides and transfers. Arabic: [السياحة الدينية](https://www.hayakkom.com/ar/religious/)
+- [Adventure](https://www.hayakkom.com/adventure/): desert safari, diving and outdoor experiences run by licensed operators. Arabic: [المغامرات](https://www.hayakkom.com/ar/adventure/)
+- [VIP private trips](https://www.hayakkom.com/vip-trip/): bespoke private itineraries across Egypt, operated and invoiced by licensed tourism companies. Arabic: [رحلات VIP](https://www.hayakkom.com/ar/vip-trip/)
 - [Private car with driver](https://www.hayakkom.com/holidays/#transport): sedan with driver 375–560 SAR per day, family van 790–1,125 SAR per day, Cairo airport transfer 65–310 SAR one way — provided by licensed tourist transport companies.
 - [Video consultation before travel](https://www.hayakkom.com/video-consultation/): a video call (Zoom, Google Meet or WhatsApp) with a licensed Egyptian specialist before booking flights; the fee is set by the doctor and confirmed in writing; it does not replace an in-person examination.
 - Arabic: [باقات العطلات](https://www.hayakkom.com/ar/holidays/) · [الساحل الشمالي](https://www.hayakkom.com/ar/north-coast/) · [استشارة طبيب بالفيديو](https://www.hayakkom.com/ar/video-consultation/)
@@ -165,6 +171,7 @@ Every article is published in both languages. English articles are at /blog/, Ar
 
 ## Company
 
+- [Home](https://www.hayakkom.com/): overview of holidays, treatment coordination and how Hayakkom works for families from Saudi Arabia, the UAE and Kuwait. Arabic: [الرئيسية](https://www.hayakkom.com/ar/)
 - [About](https://www.hayakkom.com/about): company information and legal identity.
 - [Partner with us](https://www.hayakkom.com/partners): partnership tracks for Egyptian healthcare providers and for tourism and ground-service companies, and how applications are verified.
 - [Careers](https://www.hayakkom.com/careers): roles for tour guides, patient companions, drivers, marketers, content creators and patient coordinators. No fee is charged to apply.
@@ -172,8 +179,11 @@ Every article is published in both languages. English articles are at /blog/, Ar
 - [Medical marketing for doctors & clinics](https://www.hayakkom.com/medical-marketing/): Hayakkom is also a marketing company (Commercial Register 49973 covers marketing and consultancy for medical services). It builds bilingual websites built for Google and AI assistants, runs policy-safe Google Ads with lead tracking, sets up WhatsApp and enquiry forms, and creates content (including Cairo Town Chatter, the founder's Instagram community, @ctownchatteregy) for Egyptian doctors, clinics and hospitals who want Gulf patients. This 137-page bilingual website is its own marketing work. Paying for marketing never affects which provider Hayakkom suggests to a patient.
 - [Study in Egypt](https://www.hayakkom.com/educational/): pre-visit, student housing, airport pick-up, parent visits and support for students from Saudi Arabia and the Gulf. Admission is decided only by the university through Egypt's official Wafeden portal; Hayakkom does not arrange or guarantee it.
 - [Medical conferences](https://www.hayakkom.com/conferences/): organisation support for medical conferences and events in Egypt.
+- [All services](https://www.hayakkom.com/services/): every medical, dental and travel service Hayakkom coordinates, in one list.
+- [Packages](https://www.hayakkom.com/packages/): packages combining treatment, recovery and travel; each part is provided by a licensed provider.
 - [Contact](https://www.hayakkom.com/contact): enquiry forms and direct contact details.
 - [Privacy policy](https://www.hayakkom.com/privacy): what data is collected and how medical documents are handled.
+- [Terms of service](https://www.hayakkom.com/terms/): booking policies and the medical disclaimer.
 
 ## Optional
 
