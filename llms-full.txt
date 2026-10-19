@@ -8,11 +8,17 @@
 URL: https://www.hayakkom.com/about/
 Language: en
 
-> Hayakkom is a licensed Egyptian company facilitating tourism and medical care for Gulf travelers.
+> Hayakkom is a registered Egyptian company facilitating tourism and medical care for Gulf travelers.
 
 About us
 About Hayakkom
 Egypt's licensed bridge between Gulf travelers and coordinated tourism and medical care.
+
+## Legal position
+
+- Hayakkom (Hayakom for Healthcare Solutions and Logistic Services) is registered in Egypt, Commercial Register 49973, under Law No. 159 of 1981. Its authorised activities are administrative and marketing consultancy for medical services, organising appointment and booking procedures with hospitals and medical centres, organising medical conferences and events, electronic marketing, and logistics services. It is not a licensed tourism company and does not claim to be.
+- Hayakkom's Saudi partner is a separate, licensed medical-tourism and tourism company in Saudi Arabia. Families living in Saudi Arabia book and pay through that partner, in riyals, against an itemised written estimate. The partner pays Hayakkom's marketing fees.
+- In Egypt, treatment is performed and invoiced by licensed medical institutions; accommodation, trips and transport are provided, contracted and invoiced by registered Egyptian tourism and transport companies.
 
 ## Who we are
 Hayakkom is the trading name of Hayakom for Healthcare Solutions and Logistic Services — an Egyptian single-person limited liability company registered under Egyptian Law No. 159 of 1981, Commercial Register 49973, Unified Commercial Registry 11070-01000-49973, registered at الحي ال16 المجاورة الثانية Shiekh Zayed - Giza, Cairo 12774, Egypt. Our registered activities include administrative and marketing consultancy for medical services, organising appointment and booking procedures with hospitals and medical centres, organising medical conferences, exhibitions and events, electronic marketing, and logistics services.
@@ -166,7 +172,7 @@ Powered by Cairo Town Chatter
 URL: https://www.hayakkom.com/ar/about/
 Language: ar
 
-> حياكم شركة مصرية مرخّصة لتنسيق السياحة العلاجية لمرضى الخليج. سجل تجاري 49973 تحت القانون 159 لسنة 1981، الشيخ زايد، الجيزة.
+> حياكم شركة مصرية مسجّلة لتنسيق السياحة العلاجية لمرضى الخليج. سجل تجاري 49973 تحت القانون 159 لسنة 1981، الشيخ زايد، الجيزة.
 
 من نحن
 من نحن — حياكم
@@ -1396,7 +1402,7 @@ Powered by Cairo Town Chatter
 URL: https://www.hayakkom.com/ar/conferences/
 Language: ar
 
-> تنظيم وتنسيق المؤتمرات والفعاليات الطبية في مصر: القاعات والإقامة والتنقلات والوفود الخليجية. شركة مصرية مرخّصة، سجل تجاري 49973.
+> تنظيم وتنسيق المؤتمرات والفعاليات الطبية في مصر: القاعات والإقامة والتنقلات والوفود الخليجية. شركة مصرية مسجّلة، سجل تجاري 49973.
 
 المؤتمرات والفعاليات
 تنظيم المؤتمرات والفعاليات الطبية
@@ -2206,7 +2212,7 @@ Powered by Cairo Town Chatter
 URL: https://www.hayakkom.com/ar/medical/
 Language: ar
 
-> السياحة العلاجية في مصر لمرضى الخليج: مراجعة السجلات قبل السفر، وتنسيق المواعيد والإقامة والتنقلات والمتابعة. شركة مصرية مرخّصة، سجل تجاري 49973.
+> السياحة العلاجية في مصر لمرضى الخليج: مراجعة السجلات قبل السفر، وتنسيق المواعيد والإقامة والتنقلات والمتابعة. شركة مصرية مسجّلة، سجل تجاري 49973.
 
 السياحة العلاجية
 السياحة العلاجية في مصر
