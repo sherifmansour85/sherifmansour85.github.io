@@ -615,7 +615,7 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
    past they bounce back. IntersectionObserver plus transform-only motion: no scroll handler, no layout work. */
 (function(){
   if(window.__hkDodge||!("IntersectionObserver" in window))return;window.__hkDodge=1;
-  var FAB=".fab-ai-own,.fab-wa,.hkr",FORMS='.jf-wrap,iframe[src*="jotform"],iframe[src*="jotfor.ms"],form,.enquiry-box';
+  var FAB=".fab-ai-own,.fab-wa,.hkr",FORMS='.jf-wrap,iframe[src*="jotform"],iframe[src*="jotfor.ms"],form,.enquiry-box,#hk-mini-calc .hk-mc';
   var X=".hk-fab-d.hk-fab-d",R='[data-hk-side="r"]',L='[data-hk-side="l"]';
   var st=document.createElement("style");
   st.textContent="html body "+X+"{transition:transform .6s cubic-bezier(.34,1.56,.64,1),opacity .3s ease!important}"+
@@ -624,7 +624,7 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
     "html body.hk-dock "+X+":hover,html body.hk-dock "+X+":focus-visible{transform:none!important}"+
     "html body.hk-type "+X+R+"{transform:translateX(calc(100% + 40px))!important;opacity:0;pointer-events:none}"+
     "html body.hk-type "+X+L+"{transform:translateX(calc(-100% - 40px))!important;opacity:0;pointer-events:none}"+
-    "html body.hk-dock .hkr .hkr-pill,html body.hk-dock .hkr .hkr-tip,html body.hk-type .hkr .hkr-pill,html body.hk-type .hkr .hkr-tip{opacity:0!important;visibility:hidden!important;transition:opacity .2s}"+"@media (prefers-reduced-motion:reduce){html body "+X+"{transition:opacity .2s ease!important}}";
+    "html body.hk-dock .hkr .hkr-pill,html body.hk-dock .hkr .hkr-tip,html body.hk-type .hkr .hkr-pill,html body.hk-type .hkr .hkr-tip{opacity:0!important;visibility:hidden!important;transition:opacity .2s}"+"html body.hk-dock .to-top,html body.hk-type .to-top{opacity:0!important;pointer-events:none!important;transition:opacity .3s}"+"@media (prefers-reduced-motion:reduce){html body "+X+"{transition:opacity .2s ease!important}}";
   document.head.appendChild(st);
   var b=document.body,fabs=[],inBand=new Set(),seen=new WeakSet(),io;
   function cls(c,on){if(b)b.classList.toggle(c,on)}
