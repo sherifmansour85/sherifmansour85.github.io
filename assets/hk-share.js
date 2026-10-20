@@ -615,7 +615,7 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
    past they bounce back. IntersectionObserver plus transform-only motion: no scroll handler, no layout work. */
 (function(){
   if(window.__hkDodge||!("IntersectionObserver" in window))return;window.__hkDodge=1;
-  var FAB=".fab-ai-own,.fab-wa,.hkr",FORMS='.jf-wrap,iframe[src*="jotform"],iframe[src*="jotfor.ms"],form,.enquiry-box';
+  var FAB=".fab-ai-own,.fab-wa,.hkr",FORMS='.jf-wrap,iframe[src*="jotform"],iframe[src*="jotfor.ms"],form,.enquiry-box,#hk-mini-calc .hk-mc';
   var X=".hk-fab-d.hk-fab-d",R='[data-hk-side="r"]',L='[data-hk-side="l"]';
   var st=document.createElement("style");
   st.textContent="html body "+X+"{transition:transform .6s cubic-bezier(.34,1.56,.64,1),opacity .3s ease!important}"+
@@ -624,7 +624,7 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
     "html body.hk-dock "+X+":hover,html body.hk-dock "+X+":focus-visible{transform:none!important}"+
     "html body.hk-type "+X+R+"{transform:translateX(calc(100% + 40px))!important;opacity:0;pointer-events:none}"+
     "html body.hk-type "+X+L+"{transform:translateX(calc(-100% - 40px))!important;opacity:0;pointer-events:none}"+
-    "html body.hk-dock .hkr .hkr-pill,html body.hk-dock .hkr .hkr-tip,html body.hk-type .hkr .hkr-pill,html body.hk-type .hkr .hkr-tip{opacity:0!important;visibility:hidden!important;transition:opacity .2s}"+"@media (prefers-reduced-motion:reduce){html body "+X+"{transition:opacity .2s ease!important}}";
+    "html body.hk-dock .hkr .hkr-pill,html body.hk-dock .hkr .hkr-tip,html body.hk-type .hkr .hkr-pill,html body.hk-type .hkr .hkr-tip{opacity:0!important;visibility:hidden!important;transition:opacity .2s}"+"html body.hk-dock .to-top,html body.hk-type .to-top{opacity:0!important;pointer-events:none!important;transition:opacity .3s}"+"@media (prefers-reduced-motion:reduce){html body "+X+"{transition:opacity .2s ease!important}}";
   document.head.appendChild(st);
   var b=document.body,fabs=[],inBand=new Set(),seen=new WeakSet(),io;
   function cls(c,on){if(b)b.classList.toggle(c,on)}
@@ -757,5 +757,75 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
   measure();addEventListener("resize",measure);addEventListener("orientationchange",function(){w=0;setTimeout(measure,250)});
   var tq;function soon(){clearTimeout(tq);tq=setTimeout(tag,60)}
   function boot(){tag();var r=document.getElementById("root");if(r&&window.MutationObserver)new MutationObserver(soon).observe(r,{childList:true});[300,1200,3000].forEach(function(t){setTimeout(tag,t)})}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
+})();
+/* HK-SPOT-FX: the homepage holiday cards (.hk-spot-home). On first view each card rises out of a curtain wipe in
+   turn while its photo settles from a zoom, the tag pops and the text slides up; afterwards the photos drift slowly
+   (Ken Burns) and a gold light sweeps across each card in turn, only while they are on screen. Desktop: the card
+   tilts toward the pointer with a moving glare and a gold edge. Phones: a press-and-spring on tap. Transforms and
+   opacity only; nothing runs for reduced-motion users. */
+(function(){
+  if(window.__hkSpotFx)return;window.__hkSpotFx=1;
+  if(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+  var rtl=document.documentElement.dir==="rtl"||/^\/ar(\/|$)/.test(location.pathname);
+  var X=".hk-spot-home.hk-fx .hk-spot-card";
+  var st=document.createElement("style");
+  st.textContent=
+    X+"{opacity:0;transform:translateY(42px) scale(.94);clip-path:inset(22% 0 0 0 round 14px);will-change:transform;"+
+      "transition:opacity .7s ease,transform .9s cubic-bezier(.2,.8,.2,1),clip-path 1s cubic-bezier(.2,.8,.2,1),box-shadow .4s ease!important;transition-delay:calc(var(--i)*130ms)!important}"+
+    ".hk-spot-home.hk-fx.hk-in .hk-spot-card{opacity:1;clip-path:inset(0 0 0 0 round 14px);"+
+      "transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px)) scale(var(--sc,1))}"+
+    ".hk-spot-home.hk-fx.hk-done .hk-spot-card{transition:transform .6s cubic-bezier(.2,.8,.2,1),box-shadow .4s ease!important;transition-delay:0s!important}"+
+    ".hk-spot-home.hk-fx.hk-done .hk-spot-card.hk-tilt{transition:transform .12s linear,box-shadow .4s ease!important}"+
+    X+" img{transform:scale(1.28);transition:transform 1.7s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--i)*130ms)}"+
+    ".hk-spot-home.hk-fx.hk-in .hk-spot-card img{transform:scale(1.06)}"+
+    ".hk-spot-home.hk-fx.hk-live .hk-spot-card img{animation:hkKB 18s ease-in-out infinite alternate;animation-delay:calc(var(--i)*-4.5s);animation-play-state:paused}"+
+    ".hk-spot-home.hk-fx.hk-live.hk-vis .hk-spot-card img{animation-play-state:running}"+
+    "@keyframes hkKB{0%{transform:scale(1.06) translate3d(0,0,0)}100%{transform:scale(1.17) translate3d(-2.5%,-2%,0)}}"+
+    X+" .hk-spot-tag{opacity:0;transform:scale(.5);transition:opacity .4s ease,transform .6s cubic-bezier(.34,1.7,.64,1);transition-delay:calc(var(--i)*130ms + 450ms)}"+
+    ".hk-spot-home.hk-fx.hk-in .hk-spot-card .hk-spot-tag{opacity:1;transform:none}"+
+    X+" .hk-spot-txt>*{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.8,.2,1)}"+
+    X+" .hk-spot-txt>:nth-child(1){transition-delay:calc(var(--i)*130ms + 350ms)}"+
+    X+" .hk-spot-txt>:nth-child(2){transition-delay:calc(var(--i)*130ms + 450ms)}"+
+    X+" .hk-spot-txt>:nth-child(3){transition-delay:calc(var(--i)*130ms + 550ms)}"+
+    ".hk-spot-home.hk-fx.hk-in .hk-spot-card .hk-spot-txt>*{opacity:1;transform:none}"+
+    ".hk-spot-home.hk-fx.hk-in .hk-spot-card .hk-spot-txt em{transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .6s ease}"+
+    ".hk-fx-shine,.hk-fx-glare{position:absolute;inset:0;z-index:1;pointer-events:none}"+
+    ".hk-fx-shine{background:linear-gradient(115deg,transparent 35%,rgba(255,233,170,.38) 48%,rgba(255,255,255,.12) 52%,transparent 64%);transform:translateX(-130%)}"+
+    ".hk-spot-home.hk-fx.hk-live.hk-vis .hk-fx-shine{animation:hkShine 7s ease-in-out infinite;animation-delay:calc(var(--i)*1.3s + .6s)}"+
+    "@keyframes hkShine{0%{transform:translateX(-130%)}16%,100%{transform:translateX(130%)}}"+
+    ".hk-fx-glare{opacity:0;transition:opacity .35s ease;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.28),transparent 46%)}"+
+    "@media(hover:hover) and (pointer:fine){"+
+      ".hk-spot-home.hk-fx.hk-done .hk-spot-card:hover{--ty:-8px;box-shadow:0 0 0 1px rgba(232,200,119,.75),0 22px 48px rgba(10,46,54,.32),0 0 28px rgba(232,200,119,.25)!important}"+
+      ".hk-spot-home.hk-fx.hk-done .hk-spot-card:hover .hk-fx-glare{opacity:1}"+
+      ".hk-spot-home.hk-fx.hk-done .hk-spot-card:hover .hk-spot-txt em{transform:translateX("+(rtl?"-":"")+"6px)}}"+
+    ".hk-spot-home.hk-fx.hk-done .hk-spot-card:active{--sc:.97}";
+  document.head.appendChild(st);
+  var fine=window.matchMedia&&matchMedia("(hover:hover) and (pointer:fine)").matches;
+  function tilt(card){
+    var raf=0,ev=null;
+    card.addEventListener("pointermove",function(e){ev=e;if(raf)return;raf=requestAnimationFrame(function(){raf=0;
+      var r=card.getBoundingClientRect(),x=(ev.clientX-r.left)/r.width,y=(ev.clientY-r.top)/r.height;
+      card.classList.add("hk-tilt");card.style.setProperty("--ry",((x-.5)*10).toFixed(2)+"deg");card.style.setProperty("--rx",((.5-y)*8).toFixed(2)+"deg");
+      card.style.setProperty("--mx",(x*100).toFixed(1)+"%");card.style.setProperty("--my",(y*100).toFixed(1)+"%")})});
+    card.addEventListener("pointerleave",function(){card.classList.remove("hk-tilt");card.style.setProperty("--rx","0deg");card.style.setProperty("--ry","0deg")});
+  }
+  function enhance(grid){
+    if(grid.__hkFx)return;grid.__hkFx=1;
+    var cards=grid.querySelectorAll(".hk-spot-card");
+    [].forEach.call(cards,function(c,i){c.style.setProperty("--i",i);
+      if(!c.querySelector(".hk-fx-shine")){var s=document.createElement("span");s.className="hk-fx-shine";s.setAttribute("aria-hidden","true");c.appendChild(s);
+        var g=document.createElement("span");g.className="hk-fx-glare";g.setAttribute("aria-hidden","true");c.appendChild(g)}
+      if(fine)tilt(c)});
+    grid.classList.add("hk-fx");
+    if(!window.IntersectionObserver){grid.classList.add("hk-in","hk-done","hk-live","hk-vis");return}
+    new IntersectionObserver(function(es,o){if(!es[0].isIntersecting)return;o.disconnect();
+      requestAnimationFrame(function(){grid.classList.add("hk-in")});
+      setTimeout(function(){grid.classList.add("hk-done","hk-live")},1900+cards.length*130)},{threshold:.25}).observe(grid);
+    new IntersectionObserver(function(es){grid.classList.toggle("hk-vis",es[0].isIntersecting)},{threshold:0}).observe(grid);
+  }
+  function scan(){var gs=document.querySelectorAll(".hk-spot-home");for(var i=0;i<gs.length;i++)enhance(gs[i])}
+  var tq;function soon(){clearTimeout(tq);tq=setTimeout(scan,200)}
+  function boot(){scan();var r=document.getElementById("root")||document.body;if(window.MutationObserver)new MutationObserver(soon).observe(r,{childList:true,subtree:true});[1000,3000,6000].forEach(function(t){setTimeout(scan,t)})}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
 })();
