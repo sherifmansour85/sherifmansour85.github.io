@@ -308,7 +308,7 @@
 })();
 
 /* Cairo radio button: loaded after the page has finished loading, so it never delays the site. */
-(function(){function L(){var e=document.createElement("script");e.src="/assets/hk-radio.js?v=20261016a";e.async=true;document.head.appendChild(e)}
+(function(){function L(){var e=document.createElement("script");e.src="/assets/hk-radio.js?v=20261021a";e.async=true;document.head.appendChild(e)}
 function Q(){if(window.requestIdleCallback){window.requestIdleCallback(L,{timeout:4000})}else{setTimeout(L,2000)}}
 if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventListener("load",function(){setTimeout(Q,800)})}})();
 
@@ -646,5 +646,74 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
   addEventListener("resize",function(){if(b&&!b.classList.contains("hk-dock"))fabs.forEach(side)});
   var sq;function soon(){clearTimeout(sq);sq=setTimeout(scan,400)}
   function boot(){scan();if(window.MutationObserver)new MutationObserver(soon).observe(document.body,{childList:true,subtree:true});[1500,4000].forEach(function(t){setTimeout(scan,t)})}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
+})();
+/* HK-SVC-TABS: the grouped service grid becomes category tabs, one group of 3-6 services at a time
+   (Hick's law / progressive disclosure), while the tab labels still show the full range of what Hayakkom
+   coordinates. Phones get a compact two-column grid. Without JavaScript every card stays visible under its
+   group heading. */
+(function(){
+  if(window.__hkTabs)return;window.__hkTabs=1;
+  var ar=document.documentElement.lang==="ar"||/^\/ar(\/|$)/.test(location.pathname);
+  var st=document.createElement("style");
+  st.textContent=".hk-svc-tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 auto 22px;max-width:780px}"+
+    ".hk-svc-tab{font:inherit;font-size:14px;font-weight:600;line-height:1.2;padding:9px 16px;border-radius:999px;border:1px solid #E4CF8E;background:#fff;color:#0A2E36;cursor:pointer;transition:background .2s,color .2s,border-color .2s;-webkit-tap-highlight-color:transparent}"+
+    ".hk-svc-tab span{opacity:.55;font-weight:500;margin-inline-start:6px}"+
+    ".hk-svc-tab[aria-selected=true]{background:#0A2E36;border-color:#0A2E36;color:#fff}"+
+    ".hk-svc-tab[aria-selected=true] span{opacity:.75}"+
+    ".hk-svc-tab:focus-visible{outline:2px solid #C9A23A;outline-offset:2px}"+
+    ".grid-sm.hk-tabbed>.svc-group,.grid-sm.hk-tabbed>.hk-off{display:none!important}"+
+    ".grid-sm.hk-tabbed>.svc-sm{animation:hkTabIn .35s ease both}"+
+    "@keyframes hkTabIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}"+
+    ".hk-svc-help{margin:22px auto 0;max-width:620px;text-align:center;font-size:14.5px;line-height:1.6;color:#3d4b4f}"+
+    ".hk-svc-help a{color:#0B6B73;font-weight:600;white-space:nowrap}"+
+    "@media(max-width:600px){html body .grid-sm{grid-template-columns:1fr 1fr!important;gap:10px!important}"+
+      "html body .grid-sm .svc-sm .img-wrap{aspect-ratio:4/3}html body .grid-sm .svc-sm-body{padding:9px 10px 10px!important}"+
+      "html body .grid-sm .svc-sm-body h3{font-size:13.5px!important;line-height:1.3}"+
+      "html body .grid-sm .svc-sm .hk-card-note{font-size:10.5px!important;line-height:1.3!important}"+
+      ".hk-svc-tab{font-size:13px;padding:8px 13px}}"+
+    "@media (prefers-reduced-motion:reduce){.grid-sm.hk-tabbed>.svc-sm{animation:none}}";
+  document.head.appendChild(st);
+  function esc(s){return s.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  function build(grid){
+    if(grid.__hkT)return;
+    var groups=[],g=-1;
+    [].slice.call(grid.children).forEach(function(k){
+      if(k.classList.contains("svc-group")){groups.push({label:k.textContent.trim(),cards:[]});g++}
+      else if(g>=0&&k.classList.contains("svc-sm"))groups[g].cards.push(k);
+    });
+    if(groups.length<2)return;grid.__hkT=1;
+    var prev=grid.previousElementSibling;if(prev&&prev.classList.contains("hk-svc-tabs"))prev.remove();
+    var bar=document.createElement("div");bar.className="hk-svc-tabs";bar.setAttribute("role","tablist");
+    bar.setAttribute("aria-label",ar?"فئات الخدمات":"Service categories");
+    function show(i,focus){
+      groups.forEach(function(G,j){var on=i===j;G.b.setAttribute("aria-selected",on?"true":"false");G.b.tabIndex=on?0:-1;
+        G.cards.forEach(function(c){c.classList.toggle("hk-off",!on)})});
+      if(focus)groups[i].b.focus();
+      try{sessionStorage.setItem("hkSvcTab",String(i))}catch(e){}
+    }
+    groups.forEach(function(G,i){
+      var b=document.createElement("button");b.type="button";b.className="hk-svc-tab";b.setAttribute("role","tab");
+      b.innerHTML=esc(G.label)+"<span>"+G.cards.length+"</span>";b.addEventListener("click",function(){show(i)});G.b=b;bar.appendChild(b);
+    });
+    bar.addEventListener("keydown",function(e){
+      var i=groups.findIndex(function(G){return G.b===document.activeElement});if(i<0)return;
+      var fwd=ar?"ArrowLeft":"ArrowRight",back=ar?"ArrowRight":"ArrowLeft",n=groups.length;
+      if(e.key===fwd){show((i+1)%n,true);e.preventDefault()}else if(e.key===back){show((i+n-1)%n,true);e.preventDefault()}
+    });
+    grid.parentNode.insertBefore(bar,grid);grid.classList.add("hk-tabbed");
+    var nx=grid.nextElementSibling;
+    if(!(nx&&nx.classList.contains("hk-svc-help"))){
+      var help=document.createElement("p");help.className="hk-svc-help";
+      help.innerHTML=ar?'لست متأكداً أيّها يناسبك؟ <a href="/ar/contact/">أخبرنا بحالتك</a> وسيقترح عليك المنسّق الخيارات المناسبة.'
+        :'Not sure which one fits? <a href="/contact/">Tell us about your case</a> and a coordinator will suggest suitable options.';
+      grid.parentNode.insertBefore(help,grid.nextSibling);
+    }
+    var start=0;try{start=parseInt(sessionStorage.getItem("hkSvcTab"),10)||0}catch(e){}
+    show(start<groups.length?start:0);
+  }
+  function scan(){var gs=document.querySelectorAll(".grid-sm");for(var i=0;i<gs.length;i++)if(gs[i].querySelector(".svc-group"))build(gs[i])}
+  var tq;function soon(){clearTimeout(tq);tq=setTimeout(scan,150)}
+  function boot(){scan();var r=document.getElementById("root")||document.body;if(window.MutationObserver)new MutationObserver(soon).observe(r,{childList:true,subtree:true});[800,2500].forEach(function(t){setTimeout(scan,t)})}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
 })();
