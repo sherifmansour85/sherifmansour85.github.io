@@ -53,6 +53,10 @@ function set(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 
 var on=get("hkRadio")!=="off";
 var playing=false,suspended=false,gaveUp=false,armed=false;
+/* Once the visitor starts on a form, the radio holds for the rest of the page view; only a tap on its own button brings it back. */
+var formHold=false,FORMSEL='form,.jf-wrap,.enquiry-box,iframe[src*="jotform"],iframe[src*="jotfor.ms"]';
+function inForm(t){try{return !!(t&&t.closest&&t.closest(FORMSEL)&&!t.closest("#hkAiPanel,.ai-own"))}catch(e){return false}}
+function holdForForm(){if(formHold)return;formHold=true;suspend()}
 var cur=0,act=0,nextIdx=0,timer=0,raf=0,fails=0,tipTimer=0,resumeTimer=0;
 var els=[],dead={},rafs={},muteTok=0;
 function isDead(i){return dead[i]&&Date.now()-dead[i]<420000}
@@ -267,6 +271,7 @@ function onStreamError(el){
 
 /* ---------- user intent ---------- */
 function onBtn(){
+  if(formHold){formHold=false;suspended=false}
   hideTip();pill&&pill.classList.remove("bounce");btn.classList.remove("flash");
   if(on&&gaveUp){clearTimeout(retryT);gaveUp=false;fails=0;dead={};suspended=false;begin();return} /* retry after a failure */
   if(on&&!playing&&!gaveUp){if(!document.hidden)suspended=false;starting=false;begin();return} /* "on" but sound still waiting for a first tap */
@@ -286,6 +291,7 @@ function arm(){
   var evs=["pointerup","click","keydown","touchend"];
   function go(e){
     if(wrap&&wrap.contains(e.target))return;
+    if(formHold||inForm(e.target))return;
     evs.forEach(function(n){document.removeEventListener(n,go,true)});
     armed=false;begin();
   }
@@ -296,7 +302,7 @@ function resume(){
   clearTimeout(resumeTimer);
   resumeTimer=setTimeout(function(){
     var a=document.activeElement;
-    if(document.hidden||otherMedia||aiOpen()||(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)&&a.type!=="button"&&a.type!=="submit"&&a.type!=="checkbox"&&a.type!=="radio"))return;
+    if(formHold||document.hidden||otherMedia||aiOpen()||(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)&&a.type!=="button"&&a.type!=="submit"&&a.type!=="checkbox"&&a.type!=="radio"))return;
     suspended=false;if(on&&!armed)begin();
   },700);
 }
@@ -308,9 +314,10 @@ function init(){
   build();
   document.addEventListener("visibilitychange",function(){document.hidden?suspend():resume()});
   window.addEventListener("pagehide",function(){saveResume();stopAll()});setInterval(stallCheck,3000);
-  document.addEventListener("focusin",function(e){var t=e.target;if(t&&(/^(TEXTAREA|SELECT)$/.test(t.tagName)||(t.tagName==="INPUT"&&!/^(button|submit|checkbox|radio)$/.test(t.type))||t.isContentEditable))suspend()});
+  document.addEventListener("pointerdown",function(e){if(inForm(e.target))holdForForm()},true);
+  document.addEventListener("focusin",function(e){var t=e.target;if(inForm(t)&&t.tagName!=="FORM")holdForForm();if(t&&(/^(TEXTAREA|SELECT)$/.test(t.tagName)||(t.tagName==="INPUT"&&!/^(button|submit|checkbox|radio)$/.test(t.type))||t.isContentEditable))suspend()});
   document.addEventListener("focusout",function(){resume()});
-  window.addEventListener("blur",function(){setTimeout(function(){if(document.activeElement&&document.activeElement.tagName==="IFRAME")suspend()},0)});
+  window.addEventListener("blur",function(){setTimeout(function(){var a=document.activeElement;if(a&&a.tagName==="IFRAME"){if(a.id!=="hkAiFrame"&&inForm(a))holdForForm();else suspend()}},0)});
   window.addEventListener("focus",function(){resume()});
   document.addEventListener("play",function(e){if(els.indexOf(e.target)<0){otherMedia++;suspend()}},true);
   var back=function(e){if(els.indexOf(e.target)<0&&otherMedia){otherMedia--;if(!otherMedia)resume()}};
@@ -329,7 +336,7 @@ function init(){
      channel switch that never happened, a stuck busy flag, or sound that should be on but is not. */
   function liveOtherMedia(){var n=0;try{var m=document.querySelectorAll("audio,video");for(var i=0;i<m.length;i++){var x=m[i];if(els.indexOf(x)<0&&!x.paused&&!x.ended&&!x.muted&&x.volume>0&&x.readyState>2)n++}}catch(e){}return n}
   function mustPause(){
-    if(document.hidden||aiOpen())return true;
+    if(formHold||document.hidden||aiOpen())return true;
     var a=document.activeElement;
     if(a&&(/^(TEXTAREA|SELECT)$/.test(a.tagName)||a.isContentEditable||(a.tagName==="INPUT"&&!/^(button|submit|checkbox|radio)$/.test(a.type))))return true;
     if(a&&a.tagName==="IFRAME"&&!document.hasFocus())return true;
