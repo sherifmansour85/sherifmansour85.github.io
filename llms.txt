@@ -6,6 +6,14 @@ Full text of every page (English and Arabic): https://www.hayakkom.com/llms-full
 
 **Who provides the services:** accommodation, hotel bookings, villa and chalet rentals, trips, tours and all transport are provided by registered Egyptian tourism companies; all medical treatment and operations are performed by registered, licensed medical institutions. This applies to every package and offer on hayakkom.com. Hayakkom coordinates these services and does not provide them itself.
 
+## Services at a glance (as grouped on the homepage)
+
+- Treatments, performed by licensed Egyptian medical institutions: [Dental & Hollywood Smile](https://www.hayakkom.com/dental/), [Hair Transplant](https://www.hayakkom.com/hair-transplant/), [Cosmetic Surgery](https://www.hayakkom.com/cosmetic-surgery/), [Weight-Loss Surgery](https://www.hayakkom.com/weight-loss/), [Eyes & LASIK](https://www.hayakkom.com/eyes-lasik/), [Medical Tourism](https://www.hayakkom.com/medical/).
+- Check-ups & recovery: [Full Check-up](https://www.hayakkom.com/full-checkup/), [Physiotherapy](https://www.hayakkom.com/physiotherapy/), [Wellness & Rehab](https://www.hayakkom.com/wellness/).
+- Holidays & trips, operated by registered Egyptian tourism companies: [VIP Luxury Trips](https://www.hayakkom.com/vip-trip/), [Red Sea holidays](https://www.hayakkom.com/holidays/), [Nile Cruises](https://www.hayakkom.com/nile-cruise/), [Cultural Tourism](https://www.hayakkom.com/cultural/), [Adventure Trips](https://www.hayakkom.com/adventure/), [Religious Tourism](https://www.hayakkom.com/religious/).
+- Business, study & marketing: [Investment Tourism](https://www.hayakkom.com/business/), [Educational Tourism](https://www.hayakkom.com/educational/), [Marketing for Hospitals & Doctors](https://www.hayakkom.com/medical-marketing/), [Medical conferences and events](https://www.hayakkom.com/conferences/).
+- The same groups in Arabic: [العلاجات](https://www.hayakkom.com/ar/medical/) · [الفحوصات والتعافي](https://www.hayakkom.com/ar/full-checkup/) · [العطلات والرحلات](https://www.hayakkom.com/ar/holidays/) · [الأعمال والتعليم والتسويق](https://www.hayakkom.com/ar/business/) — all on the [Arabic homepage](https://www.hayakkom.com/ar/).
+
 ## What Hayakkom is
 
 - [ما هي حياكم؟ — Who Hayakkom is, in Arabic](https://www.hayakkom.com/ar/who-we-are/): twelve direct questions and answers covering the legal entity (Commercial Register 49973), what Hayakkom does, what it explicitly does not do (it is not a hospital, clinic or healthcare provider and does not set treatment prices), how providers are selected, how the medical file is submitted, expected trip duration per treatment, and what not to believe in treatment advertising. Written to be quoted directly.
