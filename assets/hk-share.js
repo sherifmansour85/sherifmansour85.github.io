@@ -672,7 +672,18 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
       "html body .grid-sm .svc-sm-body h3{font-size:13.5px!important;line-height:1.3}"+
       "html body .grid-sm .svc-sm .hk-card-note{font-size:10.5px!important;line-height:1.3!important}"+
       ".hk-svc-tab{font-size:13px;padding:8px 13px}}"+
-    "@media (prefers-reduced-motion:reduce){.grid-sm.hk-tabbed>.svc-sm{animation:none}}";
+    ".hk-svc-hint{display:flex;align-items:center;justify-content:center;gap:8px;margin:-6px auto 12px;font-size:13.5px!important;font-weight:600!important;color:#A67C12!important;letter-spacing:.01em;transition:opacity .4s,max-height .4s,margin .4s;max-height:40px;overflow:hidden}"+
+    ".hk-svc-hint i{font-style:normal;font-size:18px;display:inline-block;animation:hkHand 1.4s ease-in-out infinite}"+
+    ".hk-svc-hint.hk-gone{opacity:0;max-height:0;margin:0 auto}"+
+    "@keyframes hkHand{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}"+
+    ".hk-svc-tabs.hk-call .hk-svc-tab{animation:hkChip 2.6s ease-in-out infinite}"+
+    ".hk-svc-tabs.hk-call .hk-svc-tab:nth-child(2){animation-delay:.15s}.hk-svc-tabs.hk-call .hk-svc-tab:nth-child(3){animation-delay:.3s}.hk-svc-tabs.hk-call .hk-svc-tab:nth-child(4){animation-delay:.45s}"+
+    "@keyframes hkChip{0%,62%,100%{transform:translateY(0);box-shadow:0 0 0 0 rgba(201,162,58,0)}"+
+      "8%{transform:translateY(-5px);box-shadow:0 0 0 0 rgba(201,162,58,.55)}16%{transform:translateY(0)}22%{transform:translateY(-2px)}"+
+      "34%{transform:translateY(0);box-shadow:0 0 0 9px rgba(201,162,58,0)}}"+
+    ".hk-svc-tab[aria-selected=true]{box-shadow:0 0 0 3px rgba(201,162,58,.35),0 6px 18px rgba(10,46,54,.22)}"+
+    ".hk-svc-tab:not([aria-selected=true]):hover{border-color:#C9A23A;box-shadow:0 0 14px rgba(201,162,58,.45)}"+
+    "@media (prefers-reduced-motion:reduce){.grid-sm.hk-tabbed>.svc-sm,.hk-svc-tabs.hk-call .hk-svc-tab,.hk-svc-hint i{animation:none}}";
   document.head.appendChild(st);
   function esc(s){return s.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
   function build(grid){
@@ -702,6 +713,16 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
       if(e.key===fwd){show((i+1)%n,true);e.preventDefault()}else if(e.key===back){show((i+n-1)%n,true);e.preventDefault()}
     });
     grid.parentNode.insertBefore(bar,grid);grid.classList.add("hk-tabbed");
+    /* Point the tabs out: a short hint and a gold glow/bounce while they are on screen, until the first tap. */
+    var seen=false;try{seen=sessionStorage.getItem("hkSvcTapped")==="1"}catch(e){}
+    if(!seen){
+      var hint=document.createElement("p");hint.className="hk-svc-hint";
+      hint.innerHTML="<i aria-hidden=\"true\">\ud83d\udc47</i>"+(ar?"اضغط على فئة لعرض خدماتها":"Tap a category to see its services");
+      bar.parentNode.insertBefore(hint,bar);
+      var io=window.IntersectionObserver?new IntersectionObserver(function(es){bar.classList.toggle("hk-call",es[0].isIntersecting)},{threshold:.6}):null;
+      if(io)io.observe(bar);else bar.classList.add("hk-call");
+      bar.addEventListener("click",function(){bar.classList.remove("hk-call");hint.classList.add("hk-gone");if(io)io.disconnect();try{sessionStorage.setItem("hkSvcTapped","1")}catch(e){}},{once:true});
+    }
     var nx=grid.nextElementSibling;
     if(!(nx&&nx.classList.contains("hk-svc-help"))){
       var help=document.createElement("p");help.className="hk-svc-help";
@@ -715,5 +736,28 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
   function scan(){var gs=document.querySelectorAll(".grid-sm");for(var i=0;i<gs.length;i++)if(gs[i].querySelector(".svc-group"))build(gs[i])}
   var tq;function soon(){clearTimeout(tq);tq=setTimeout(scan,150)}
   function boot(){scan();var r=document.getElementById("root")||document.body;if(window.MutationObserver)new MutationObserver(soon).observe(r,{childList:true,subtree:true});[800,2500].forEach(function(t){setTimeout(scan,t)})}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
+})();
+/* HK-HERO-PIN: the English homepage drew its hero photo layers fixed to the viewport, so on phones the photo
+   was re-sized and re-cropped whenever the browser bar showed or hid while scrolling (it "jumped"). They are now
+   placed over the hero only, sized from the hero itself, and scroll with the page as on the Arabic homepage. */
+(function(){
+  if(window.__hkPin)return;window.__hkPin=1;
+  var st=document.createElement("style");
+  st.textContent="html body .hk-pinned{position:absolute!important;top:var(--hk-ht,0px)!important;left:0!important;right:0!important;bottom:auto!important;width:100%!important;height:var(--hk-hh,100svh)!important;inset:auto!important;inset-inline:0!important}";
+  document.head.appendChild(st);
+  var ro=null,cur=null;
+  function fit(){
+    var hero=document.querySelector("#root .hero");if(!hero)return;
+    var ls=[],el=hero.previousElementSibling;
+    while(el&&/hero-bg-(img|grad)/.test(el.className)){ls.push(el);el=el.previousElementSibling}
+    if(!ls.length)return;
+    ls.forEach(function(l){if(!l.classList.contains("hk-pinned")&&getComputedStyle(l).position==="fixed")l.classList.add("hk-pinned")});
+    var op=ls[0].offsetParent,base=op?op.getBoundingClientRect().top:-pageYOffset,r=hero.getBoundingClientRect();
+    ls.forEach(function(l){if(!l.classList.contains("hk-pinned"))return;l.style.setProperty("--hk-ht",Math.round(r.top-base)+"px");l.style.setProperty("--hk-hh",Math.round(r.height)+"px")});
+    if(hero!==cur&&window.ResizeObserver){if(ro)ro.disconnect();ro=new ResizeObserver(function(){requestAnimationFrame(fit)});ro.observe(hero);cur=hero}
+  }
+  var tq;function soon(){clearTimeout(tq);tq=setTimeout(fit,60)}
+  function boot(){fit();var r=document.getElementById("root");if(r&&window.MutationObserver)new MutationObserver(soon).observe(r,{childList:true});[300,1200,3000].forEach(function(t){setTimeout(fit,t)})}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
 })();
