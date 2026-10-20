@@ -665,8 +665,8 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
     ".grid-sm.hk-tabbed>.svc-group,.grid-sm.hk-tabbed>.hk-off{display:none!important}"+
     ".grid-sm.hk-tabbed>.svc-sm{animation:hkTabIn .35s ease both}"+
     "@keyframes hkTabIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}"+
-    ".hk-svc-help{margin:22px auto 0;max-width:620px;text-align:center;font-size:14.5px;line-height:1.6;color:#3d4b4f}"+
-    ".hk-svc-help a{color:#0B6B73;font-weight:600;white-space:nowrap}"+
+    ".hk-svc-help{margin:36px auto 0!important;padding-top:4px;max-width:620px;text-align:center;font-size:14.5px;line-height:1.6;color:#3d4b4f}"+
+    "html body section .grid-sm+p.hk-svc-help.hk-svc-help{margin-top:36px!important}"+".hk-svc-help a{color:#0B6B73;font-weight:600;white-space:nowrap}"+
     "@media(max-width:600px){html body .grid-sm{grid-template-columns:1fr 1fr!important;gap:10px!important}"+
       "html body .grid-sm .svc-sm .img-wrap{aspect-ratio:4/3}html body .grid-sm .svc-sm-body{padding:9px 10px 10px!important}"+
       "html body .grid-sm .svc-sm-body h3{font-size:13.5px!important;line-height:1.3}"+
