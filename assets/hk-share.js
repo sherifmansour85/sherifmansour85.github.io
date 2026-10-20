@@ -609,3 +609,42 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
   function boot(){run();if(window.MutationObserver)new MutationObserver(soon).observe(document.body,{childList:true,subtree:true});[600,1500,3000].forEach(function(t){setTimeout(run,t)})}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
 })();
+/* HK-FAB-DODGE: the floating assistant, WhatsApp and radio buttons step aside for forms. When a form reaches the
+   bottom of the screen where they sit, each tucks into its own screen edge with a springy bounce, leaving a
+   small tappable peek; while a field is being filled in they slide fully away; once the form has scrolled
+   past they bounce back. IntersectionObserver plus transform-only motion: no scroll handler, no layout work. */
+(function(){
+  if(window.__hkDodge||!("IntersectionObserver" in window))return;window.__hkDodge=1;
+  var FAB=".fab-ai-own,.fab-wa,.hkr",FORMS='.jf-wrap,iframe[src*="jotform"],iframe[src*="jotfor.ms"],form,.enquiry-box';
+  var X=".hk-fab-d.hk-fab-d",R='[data-hk-side="r"]',L='[data-hk-side="l"]';
+  var st=document.createElement("style");
+  st.textContent="html body "+X+"{transition:transform .6s cubic-bezier(.34,1.56,.64,1),opacity .3s ease!important}"+
+    "html body.hk-dock "+X+R+"{transform:translateX(calc(100% - 16px)) scale(.84)!important}"+
+    "html body.hk-dock "+X+L+"{transform:translateX(calc(-100% + 16px)) scale(.84)!important}"+
+    "html body.hk-dock "+X+":hover,html body.hk-dock "+X+":focus-visible{transform:none!important}"+
+    "html body.hk-type "+X+R+"{transform:translateX(calc(100% + 40px))!important;opacity:0;pointer-events:none}"+
+    "html body.hk-type "+X+L+"{transform:translateX(calc(-100% - 40px))!important;opacity:0;pointer-events:none}"+
+    "html body.hk-dock .hkr .hkr-pill,html body.hk-dock .hkr .hkr-tip,html body.hk-type .hkr .hkr-pill,html body.hk-type .hkr .hkr-tip{opacity:0!important;visibility:hidden!important;transition:opacity .2s}"+"@media (prefers-reduced-motion:reduce){html body "+X+"{transition:opacity .2s ease!important}}";
+  document.head.appendChild(st);
+  var b=document.body,fabs=[],inBand=new Set(),seen=new WeakSet(),io;
+  function cls(c,on){if(b)b.classList.toggle(c,on)}
+  function sync(){var on=inBand.size>0&&!b.classList.contains("hk-ai-open");if(on&&!b.classList.contains("hk-dock"))fabs.forEach(side);cls("hk-dock",on)}
+  function side(el){var r=el.getBoundingClientRect();if(r.width)el.setAttribute("data-hk-side",r.left+r.width/2>innerWidth/2?"r":"l")}
+  function scan(){
+    b=document.body;if(!b)return;
+    var f=document.querySelectorAll(FAB),i;
+    for(i=0;i<f.length;i++)if(!f[i].classList.contains("hk-fab-d")){f[i].classList.add("hk-fab-d");side(f[i]);fabs.push(f[i])}
+    if(!io)io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)inBand.add(e.target);else inBand.delete(e.target)});sync()},{rootMargin:"-78% 0px 0px 0px"});
+    var fm=document.querySelectorAll(FORMS);
+    for(i=0;i<fm.length;i++){var el=fm[i];if(seen.has(el)||el.closest("#hkAiPanel,.ai-own,nav,header,.hk-bar"))continue;seen.add(el);io.observe(el)}
+  }
+  /* Typing: a field on the page, or focus moving into a form iframe (the window blurs). */
+  function field(a){return a&&(/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)||(a.tagName==="IFRAME"&&a.id!=="hkAiFrame"))&&!a.closest("#hkAiPanel,.ai-own")}
+  var tt;function typing(){clearTimeout(tt);tt=setTimeout(function(){cls("hk-type",field(document.activeElement))},60)}
+  document.addEventListener("focusin",typing);document.addEventListener("focusout",typing);
+  addEventListener("blur",typing);addEventListener("focus",typing);
+  addEventListener("resize",function(){if(b&&!b.classList.contains("hk-dock"))fabs.forEach(side)});
+  var sq;function soon(){clearTimeout(sq);sq=setTimeout(scan,400)}
+  function boot(){scan();if(window.MutationObserver)new MutationObserver(soon).observe(document.body,{childList:true,subtree:true});[1500,4000].forEach(function(t){setTimeout(scan,t)})}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
+})();
