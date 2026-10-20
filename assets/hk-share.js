@@ -656,7 +656,8 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
   if(window.__hkTabs)return;window.__hkTabs=1;
   var ar=document.documentElement.lang==="ar"||/^\/ar(\/|$)/.test(location.pathname);
   var st=document.createElement("style");
-  st.textContent=".hk-svc-tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 auto 22px;max-width:780px}"+
+  st.textContent=".hk-svc-tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 auto 22px;max-width:780px;contain:layout paint;padding:8px 6px;isolation:isolate}"+
+    ".hk-svc-tabs.hk-call .hk-svc-tab{will-change:transform}"+
     ".hk-svc-tab{font:inherit;font-size:14px;font-weight:600;line-height:1.2;padding:9px 16px;border-radius:999px;border:1px solid #E4CF8E;background:#fff;color:#0A2E36;cursor:pointer;transition:background .2s,color .2s,border-color .2s;-webkit-tap-highlight-color:transparent}"+
     ".hk-svc-tab span{opacity:.55;font-weight:500;margin-inline-start:6px}"+
     ".hk-svc-tab[aria-selected=true]{background:#0A2E36;border-color:#0A2E36;color:#fff}"+
@@ -671,7 +672,9 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
       "html body .grid-sm .svc-sm .img-wrap{aspect-ratio:4/3}html body .grid-sm .svc-sm-body{padding:9px 10px 10px!important}"+
       "html body .grid-sm .svc-sm-body h3{font-size:13.5px!important;line-height:1.3}"+
       "html body .grid-sm .svc-sm .hk-card-note{font-size:10.5px!important;line-height:1.3!important}"+
-      ".hk-svc-tab{font-size:13px;padding:8px 13px}}"+
+      ".hk-svc-tabs{display:grid!important;grid-template-columns:1fr 1fr;gap:8px!important}"+
+      ".hk-svc-tab{font-size:13px;padding:10px 8px;text-align:center;display:flex;align-items:center;justify-content:center;gap:4px;min-height:44px;width:100%}"+
+      ".hk-svc-tab span{margin-inline-start:2px}}"+
     ".hk-svc-tabs.hk-call .hk-svc-tab{animation:hkChip 4s ease-in-out infinite}"+
     ".hk-svc-tabs.hk-call .hk-svc-tab:nth-child(2){animation-delay:.15s}.hk-svc-tabs.hk-call .hk-svc-tab:nth-child(3){animation-delay:.3s}.hk-svc-tabs.hk-call .hk-svc-tab:nth-child(4){animation-delay:.45s}"+
     "@keyframes hkChip{0%,30%,100%{transform:translateY(0);box-shadow:0 0 0 0 rgba(201,162,58,0)}"+
