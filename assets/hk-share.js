@@ -734,7 +734,7 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
   function boot(){scan();var r=document.getElementById("root")||document.body;if(window.MutationObserver)new MutationObserver(soon).observe(r,{childList:true,subtree:true});[800,2500].forEach(function(t){setTimeout(scan,t)})}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
 })();
-/* HK-HERO-STEADY: the English homepage keeps its hero photo fixed behind the page, so the content slides over
+/* HK-HERO-STEADY: the English and Arabic homepages keep their hero photo fixed behind the page, so the content slides over
    it. On phones the photo used to jump because its height followed the viewport, which changes whenever the
    browser bar shows or hides. Its height is now fixed in pixels (the tallest the screen can be) and only
    re-measured when the width changes (rotation, window resize on desktop), so the photo never re-crops mid-scroll. */
@@ -751,7 +751,7 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
     document.documentElement.style.setProperty("--hk-vh",Math.round(h)+"px");
   }
   function tag(){
-    var ls=document.querySelectorAll("#root .hero-bg-img,#root .hero-bg-grad");
+    var ls=document.querySelectorAll("#root .hero-bg-img,#root .hero-bg-grad,main.arwrap>.hero-bg-img,main.arwrap>.hero-bg-grad");
     for(var i=0;i<ls.length;i++)if(!ls[i].classList.contains("hk-steady"))ls[i].classList.add("hk-steady");
   }
   measure();addEventListener("resize",measure);addEventListener("orientationchange",function(){w=0;setTimeout(measure,250)});
