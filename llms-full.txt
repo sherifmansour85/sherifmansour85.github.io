@@ -2120,7 +2120,7 @@ Language: ar
 ابدأ استشارة →
 
 الباقة المميّزة
-ابتسامة هوليوود في 5 أيام
+ابتسامتك الجديدة وإجازة في القاهرة
 الأكثر طلباً: علاج أسنان كامل مع الإقامة والتنقلات وبرنامج في القاهرة.
 
 عرض الباقات
@@ -2355,7 +2355,7 @@ Language: ar
 
 الأكثر طلباً
 
-ابتسامة هوليوود في 5 أيام
+ابتسامتك الجديدة وإجازة في القاهرة
 تقديري من نحو 4,500 ريال
 باقتنا الرائدة لمدة 5 أيام تجمع بين علاج الأسنان الفاخر وتجربة القاهرة VIP. الباقة الأكثر طلباً من زوار الخليج. السعر النهائي للعلاج تحدده العيادة بعد مراجعة حالتك.
 ✓استشارة وعلاج الأسنان (قشرة/زراعة/ابتسامة)
@@ -5642,7 +5642,7 @@ Strategic corporate tourism, real estate facilitation and executive travel coord
 Start consultation →
 
 Signature Package
-Hollywood Smile in 5 Days
+Your New Smile & a Cairo Getaway
 Our most sought-after bundle — premium dental treatment paired with a VIP Cairo experience.
 
 View Packages
@@ -5899,7 +5899,7 @@ Curated experiences combining tourism, medical care, and luxury — every detail
 
 Most Popular
 
-Hollywood Smile in 5 Days
+Your New Smile & a Cairo Getaway
 Indicative from about 4,500 SAR
 Our signature 5-day bundle combining premium dental treatment with a VIP Cairo experience. The most sought-after package for Gulf visitors. Final treatment price is set by the clinic after reviewing your case.
 ✓Dental consultation + treatment (veneers/implants/smile)
