@@ -1,4 +1,5 @@
 {
+  "id": "/",
   "name": "Hayakkom — حياكم",
   "short_name": "Hayakkom",
   "description": "Holidays, stays and treatment in Egypt for Gulf families — coordinated in Arabic and English.",
@@ -9,9 +10,76 @@
   "theme_color": "#0A2E36",
   "dir": "auto",
   "lang": "en",
+  "categories": [
+    "travel",
+    "medical",
+    "health",
+    "lifestyle"
+  ],
   "icons": [
-    {"src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
-    {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
-    {"src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "العربية — الصفحة الرئيسية",
+      "short_name": "العربية",
+      "url": "/ar/?source=shortcut",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Trip cost calculator",
+      "short_name": "Calculator",
+      "url": "/calculator/?source=shortcut",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Holiday & treatment packages",
+      "short_name": "Packages",
+      "url": "/packages/?source=shortcut",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Send my case / Contact",
+      "short_name": "Contact",
+      "url": "/contact/?source=shortcut",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
   ]
 }
