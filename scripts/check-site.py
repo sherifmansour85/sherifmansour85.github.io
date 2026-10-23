@@ -64,7 +64,8 @@ def link_target(href, base):
 def main():
     pages = load_pages()
     redirects = {u for u, h in pages.items() if 'http-equiv="refresh"' in h}
-    real = sorted(u for u in pages if u not in redirects and u != '/404.html')
+    # 404 and the app's offline fallback are bilingual utility pages, not site pages.
+    real = sorted(u for u in pages if u not in redirects and u not in ('/404.html', '/offline.html'))
     problems = []
 
     with open(os.path.join(ROOT, 'sitemap.xml'), encoding='utf-8') as fh:
