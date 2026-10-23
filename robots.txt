@@ -3,6 +3,8 @@
 
 User-agent: *
 Allow: /
+# Google Play launch kit (store graphics and notes), not site content
+Disallow: /play-store/
 
 # ── AI / LLM crawlers (explicitly allowed) ──
 User-agent: GPTBot
