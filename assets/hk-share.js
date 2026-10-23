@@ -223,7 +223,7 @@
    To count them as Google Ads conversions, paste each conversion label below (from Google Ads > Goals > Conversions). */
 (function(){
   var ADS='AW-16686203605';
-  var LABELS={whatsapp:'',lead:'',phone:''}; // e.g. lead:'AbCdEfGhIjk' -> sends AW-16686203605/AbCdEfGhIjk
+  var LABELS={whatsapp:'G8FvCOiJtNgZENWFzZQ-',lead:'FU0DCM-orNgZENWFzZQ-',phone:'obQRCMP2ss4ZENWFzZQ-'}; // Google Ads conversion actions: Whatsapp Click, Home Form, Phone Call
   var last={};
   function fire(name,kind,extra){
     var now=Date.now(); if(last[name]&&now-last[name]<1500)return; last[name]=now;
