@@ -1,0 +1,60 @@
+# Tells IndexNow search engines (Bing, Yandex and the services that use Bing, such as Copilot,
+# ChatGPT search and DuckDuckGo) which pages changed, after each push to main.
+# Run it by hand with "all" to submit every page in sitemap.xml. Google does not use IndexNow.
+name: IndexNow
+
+on:
+  push:
+    branches: [main]
+    paths: ['**.html', 'sitemap.xml']
+  workflow_dispatch:
+    inputs:
+      all:
+        description: 'Submit every URL in sitemap.xml'
+        type: boolean
+        default: true
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Wait for GitHub Pages to publish the new version
+        if: github.event_name == 'push'
+        run: sleep 120
+      - name: Submit URLs
+        env:
+          ALL: ${{ github.event_name == 'workflow_dispatch' && inputs.all }}
+        run: |
+          python3 - <<'EOF'
+          import json, os, re, subprocess, urllib.request
+          HOST = 'www.hayakkom.com'
+          KEY = '3677260a11cf646412964635caf782d5'
+          sitemap = re.findall(r'<loc>([^<]+)</loc>', open('sitemap.xml', encoding='utf-8').read())
+          if os.environ.get('ALL') == 'true':
+              urls = sitemap
+          else:
+              changed = subprocess.run(['git', 'diff', '--name-only', 'HEAD~1', 'HEAD'],
+                                       capture_output=True, text=True).stdout.split()
+              urls = []
+              for f in changed:
+                  if f.endswith('/index.html'):
+                      urls.append(f'https://{HOST}/' + f[:-len('index.html')])
+                  elif f == 'index.html':
+                      urls.append(f'https://{HOST}/')
+              # Only live pages: redirects and utility pages are not in the sitemap.
+              urls = [u for u in urls if u in sitemap]
+          if not urls:
+              print('Nothing to submit'); raise SystemExit
+          body = json.dumps({'host': HOST, 'key': KEY,
+                             'keyLocation': f'https://{HOST}/{KEY}.txt',
+                             'urlList': urls[:10000]}).encode()
+          req = urllib.request.Request('https://api.indexnow.org/indexnow', data=body,
+                                       headers={'Content-Type': 'application/json; charset=utf-8'})
+          with urllib.request.urlopen(req, timeout=30) as r:
+              print(r.status, f'submitted {len(urls)} URL(s)')
+          for u in urls:
+              print(' ', u)
+          EOF
