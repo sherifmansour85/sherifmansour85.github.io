@@ -1,0 +1,33 @@
+# Temporary helper for the promo video: downloads the holiday photos the website already uses
+# (from Pexels) into this side branch, because the editing machine cannot reach Pexels directly.
+# This branch is not part of the site and can be deleted after use.
+name: Fetch video photos
+on:
+  push:
+    branches: [claude/video-assets]
+    paths: ['.github/workflows/fetch-video-photos.yml']
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download photos
+        run: |
+          mkdir -p photos
+          get() { curl -fsSL "https://images.pexels.com/photos/$2/pexels-photo-$2.jpeg?auto=compress&cs=tinysrgb&w=2000" -o "photos/$1.jpg"; }
+          get sharm 18886592
+          get nile 32286115
+          get cairo 262786
+          get pyramids 5778711
+          get gouna 11573473
+          get marsa-alam 29116365
+          ls -la photos
+      - name: Commit photos
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898341+github-actions[bot]@users.noreply.github.com"
+          git add photos
+          git commit -m "Add holiday photos for the promo video"
+          git push
