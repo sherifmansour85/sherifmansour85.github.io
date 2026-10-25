@@ -1,6 +1,6 @@
 /* Hayakkom — "Cairo on the dial": a small floating radio button.
-   Plays one Cairo station continuously; if it stalls it reconnects, and only if it keeps failing it fades
-   into the next station. (Set window.HK_RADIO_SLOT to a number of ms to bring back timed station changes.)
+   Moves to the next Cairo station every 15 seconds (SLOT). If a stream stalls it reconnects within a few seconds;
+   a station that keeps failing is skipped. (Set window.HK_RADIO_SLOT to 0 to stay on one station.)
    - Nothing is downloaded until the visitor's first tap/click (browsers block sound before that).
    - On by default; one tap on the button mutes it, and the choice is remembered.
    - Pauses while the tab is hidden, while a form field is focused and while other media plays.
@@ -11,11 +11,12 @@ var CHANNELS=[
   /* Favourites first, in this order: Umm Kulthum, Amr Diab, then Tamer Hosny (when added), Sherine.
      Then the other Cairo stations. A stream that does not play is skipped automatically for a while and retried later.
      Remove a line to remove a station. Only https:// streams work on an https:// website. */
-  {n:"Umm Kulthum",u:"https://stream.zeno.fm/hp0vu6c0pnhvv"}, /* dedicated Umm Kulthum channel; spares if it ever dies: https://stream.zeno.fm/y70e5x46kd5tv , https://stream.zeno.fm/vdws5ggv24zuv */
+  {n:"Umm Kulthum",u:"https://stream.zeno.fm/hp0vu6c0pnhvv"}, /* dedicated Umm Kulthum channel; spare if it ever dies: https://stream.zeno.fm/vdws5ggv24zuv (y70e5x46kd5tv was off air in Oct 2026) */
   {n:"Amr Diab",u:"https://stream.zeno.fm/pet0ex02qa0uv"},
   /* 3rd: Tamer Hosny. Paste his https stream link below, then Sherine moves to 4th:
   {n:"Tamer Hosny",u:"PASTE-LINK-HERE"}, */
-  {n:"Sherine",u:"https://stream.zeno.fm/njscyudhthkvv"},
+  /* Sherine: off air in an Oct 2026 check (HTTP 503 every time), so left out to avoid silent gaps. Put it back if it returns:
+  {n:"Sherine",u:"https://stream.zeno.fm/njscyudhthkvv"}, */
   {n:"Radio Hits 88.2",u:"https://radiohits882.radioca.st/;"},
   {n:"Nogoum FM",u:"https://stream.zeno.fm/qb1zvsykm98uv"},
   {n:"Radio 9090",u:"https://9090streaming.mobtada.com/9090FMEGYPT"},
@@ -29,7 +30,7 @@ var CH=(window.HK_RADIO_CHANNELS&&window.HK_RADIO_CHANNELS.length)?window.HK_RAD
 if(!CH.length||window.__hkRadioLoaded)return;
 window.__hkRadioLoaded=1;
 
-var SLOT=(window.HK_RADIO_SLOT||0), FADE=(window.HK_RADIO_FADE||1000), PRE=2500, VOL=.28; /* volume 0-1: change here to make it louder or quieter */
+var SLOT=(window.HK_RADIO_SLOT==null?15000:window.HK_RADIO_SLOT), FADE=(window.HK_RADIO_FADE||1000), PRE=2500, VOL=.28; /* volume 0-1: change here to make it louder or quieter */
 try{if(window.matchMedia&&matchMedia("(pointer:coarse)").matches)VOL=.55}catch(e){} /* phone speakers are small: louder than on a desktop */
 var AR=/^ar/i.test(document.documentElement.lang||"")||document.documentElement.dir==="rtl";
 var TX=AR?{
@@ -169,7 +170,7 @@ function fade(list,ms,done,kind){
 }
 function release(el){try{el.pause();el.removeAttribute("src");el.load()}catch(e){}}
 function stopAll(){
-  gen++;starting=false;busy=false;pend=false;clearTimeout(timer);cancelAnimationFrame(raf);cancelAnimationFrame(rafs.m);cancelAnimationFrame(rafs.x);playing=false;
+  gen++;hgen++;starting=false;busy=false;pend=false;clearTimeout(timer);cancelAnimationFrame(raf);cancelAnimationFrame(rafs.m);cancelAnimationFrame(rafs.x);playing=false;
   els.forEach(function(el){release(el)});ui();
 }
 var tS=0,Ct=0; /* tS = when the current station became audible; Ct = when the next crossfade must start */
@@ -251,14 +252,15 @@ function reconnect(why){
   var p=el.play();(p&&p.then?p:Promise.resolve()).then(function(){reconBusy=false;stallN=0;watch(el)}).catch(function(){reconBusy=false;markDead(i);fails++;failover()});
 }
 /* single-element mode: straight cut to the next channel (the same element stays "unlocked" on iPhone) */
-var busy=false;
+var busy=false,hgen=0;
 function hard(){
   if(!playing||busy)return;
   busy=true;busyT=performance.now();clearTimeout(timer);
-  cur=nextOk(cur);var el=els[0];
-  load(el,cur).then(function(){busy=false;sv(el,1);fails=0;ui();tS=performance.now();schedule();watch(el)}).catch(function(){
-    busy=false;markDead(cur);fails++;if(fails>CH.length*3){giveUp();return}hard();
-  });
+  var my=++hgen;cur=nextOk(cur);var el=els[0];
+  function failed(){clearTimeout(to);if(my!==hgen)return;hgen++;busy=false;markDead(cur);fails++;if(fails>CH.length*3){giveUp();return}hard()}
+  var to=setTimeout(function(){dbg("no sound from "+CH[cur].n+" within 6 s: next");failed()},6000); /* a station that will not start is skipped quickly */
+  load(el,cur).then(function(){clearTimeout(to);if(my!==hgen)return; /* an older attempt finishing late is ignored */
+    busy=false;sv(el,1);fails=0;ui();tS=performance.now();schedule();watch(el)}).catch(failed);
 }
 /* a stream that "plays" but delivers no audio within 6 s is treated as dead */
 function watch(el){
@@ -271,16 +273,20 @@ function watch(el){
 function prepare(){
   if(!playing)return;pend=true;
   nextIdx=nextOk(cur);
-  var nx=els[1-act];
+  var nx=els[1-act];nx._lt=0;nx._la=0;
   load(nx,nextIdx).catch(function(){});
   timer=setTimeout(function(){waitReady(nx,Date.now())},300);
 }
 function waitReady(nx,t0){
   if(!playing)return;
-  var rdy=nx.readyState>=3||(nx.readyState>=2&&Date.now()-t0>1200);
+  /* ready = has data AND its (silent) playback is actually moving, so we never fade into a frozen stream */
+  var now=Date.now();if(nx.currentTime>(nx._lt||0)+.05){nx._lt=nx.currentTime;nx._la=now}
+  var rdy=(nx.readyState>=3||(nx.readyState>=2&&now-t0>1200))&&nx._la&&now-nx._la<1200;
   if(rdy&&performance.now()>=Ct-1)return cross(nx);
   if(rdy){timer=setTimeout(function(){waitReady(nx,t0)},Math.min(250,Math.max(20,Ct-performance.now())));return}
-  if((SLOT>0&&performance.now()>Ct+4000)||Date.now()-t0>(SLOT>0?12000:9000)){markDead(nextIdx);fails++;release(nx);
+  /* each candidate gets its own 8 s (the current station keeps playing meanwhile); measuring from the slot end
+     instead made every later candidate look late and wiped the whole list */
+  if(now-t0>8000){markDead(nextIdx);fails++;release(nx);
     if(fails>CH.length*3){giveUp();return}
     return prepare()}
   timer=setTimeout(function(){waitReady(nx,t0)},250);
@@ -344,7 +350,7 @@ var otherMedia=0,aiWas=false;
 function aiOpen(){try{if(document.querySelector(".ai-panel"))return true;var p=document.getElementById("hkAiPanel");return !!(p&&!p.hidden&&p.offsetParent!==null)}catch(e){return false}}
 setInterval(function(){var o=aiOpen();if(o===aiWas)return;aiWas=o;if(o)suspend();else resume()},500);
 function preconnect(){try{var r=JSON.parse(sessionStorage.getItem("hkRadioResume")||"null"),i=(r&&typeof r.i==="number"&&CH[r.i])?r.i:0,h=new URL(CH[i].u).origin;
-  if(document.querySelector('link[rel=preconnect][href="'+h+'"]'))return;var l=document.createElement("link");l.rel="preconnect";l.href=h;l.crossOrigin="anonymous";document.head.appendChild(l)}catch(e){}}
+  if(document.querySelector('link[rel=preconnect][href="'+h+'"]'))return;var l=document.createElement("link");l.rel="preconnect";l.href=h;document.head.appendChild(l)}catch(e){}}
 function init(){
   build();if(on)preconnect();
   document.addEventListener("visibilitychange",function(){document.hidden?suspend():resume()});
@@ -390,7 +396,7 @@ function init(){
         if(fails>CH.length*3){giveUp();return}
         playing=false;begin();return}
       if(!playing){ if(!starting){dbg("watchdog: should be playing, starting");begin()} return }
-      if(busy&&now-busyT>10000){dbg("watchdog: busy stuck");busy=false;clearTimeout(timer);markDead(cur);fails++;if(canVol)prepare();else hard();return}
+      if(busy&&now-busyT>10000){dbg("watchdog: busy stuck");hgen++;busy=false;clearTimeout(timer);markDead(cur);fails++;if(canVol)prepare();else hard();return}
       if(SLOT>0&&CH.length>1&&tS&&now-tS>SLOT+15000&&!busy){       /* the channel is overdue: force the next switch */
         dbg("watchdog: overdue switch");clearTimeout(timer);cancelAnimationFrame(rafs.x);if(canVol)prepare();else hard();return}
       var el=els[act];
