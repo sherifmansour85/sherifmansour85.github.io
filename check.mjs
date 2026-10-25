@@ -1,8 +1,10 @@
 // Walks the homepage quick guide with real photos, on the live site and on the PR branch, phone and desktop, EN and AR.
 import { chromium, devices } from 'playwright';
-const TARGETS = [];
+const TARGETS = [['live', 'https://www.hayakkom.com']];
 const DEV = [['phone', { ...devices['iPhone 13'] }], ['desktop', { viewport: { width: 1366, height: 820 } }]];
 const b = await chromium.launch();
+// wait until GitHub Pages serves the new version (hk-share v3540)
+for (let i = 0; i < 36; i++) { const h = await (await fetch('https://www.hayakkom.com/?w=' + Date.now())).text(); if (h.includes('hk-share.js?v=3540')) { console.log('live has v3540'); break } await new Promise(r => setTimeout(r, 5000)) }
 for (const [tn, base] of TARGETS) for (const [dn, dopt] of DEV) for (const path of ['/', '/ar/']) {
   const L = path === '/' ? 'en' : 'ar', tag = `${tn}-${dn}-${L}`, errs = [];
   const ctx = await b.newContext(dopt); const p = await ctx.newPage();
@@ -43,7 +45,7 @@ for (const [tn, base] of TARGETS) for (const [dn, dopt] of DEV) for (const path 
 for (const [dn, dopt] of DEV) for (const path of ['/', '/ar/']) {
   const L = path === '/' ? 'en' : 'ar', tag = `return-${dn}-${L}`;
   const ctx = await b.newContext(dopt); const p = await ctx.newPage();
-  await p.addInitScript(() => { try { localStorage.setItem('hkInstallSkip', String(Date.now())); localStorage.setItem('hkTourDone2', '1') } catch (e) {} });
+  await p.addInitScript(() => { try { localStorage.setItem('hkInstallSkip', String(Date.now())); localStorage.setItem('hkTourDone3', '1') } catch (e) {} });
   try {
     await p.goto('https://www.hayakkom.com' + path + '?lc=' + Date.now(), { waitUntil: 'networkidle', timeout: 45000 });
     await p.waitForTimeout(1500); const cc = await p.$('#hkCcYes'); if (cc && await cc.isVisible()) await cc.click();
@@ -63,7 +65,7 @@ for (const [dn, dopt] of DEV) for (const path of ['/', '/ar/']) {
 // a visitor who saw the OLD guide (old flag only): the new guide must be offered once
 for (const path of ['/', '/ar/']) {
   const ctx = await b.newContext(DEV[0][1]); const p = await ctx.newPage();
-  await p.addInitScript(() => { try { localStorage.setItem('hkInstallSkip', String(Date.now())); if (!sessionStorage.getItem('r')) { localStorage.setItem('hkTourDone', '1'); sessionStorage.setItem('r', '1') } } catch (e) {} });
+  await p.addInitScript(() => { try { localStorage.setItem('hkInstallSkip', String(Date.now())); if (!sessionStorage.getItem('r')) { localStorage.setItem('hkTourDone2', '1'); sessionStorage.setItem('r', '1') } } catch (e) {} });
   await p.goto('https://www.hayakkom.com' + path + '?lc=' + Date.now(), { waitUntil: 'networkidle', timeout: 45000 });
   await p.waitForTimeout(1500); const cc = await p.$('#hkCcYes'); if (cc && await cc.isVisible()) await cc.click();
   const offered = await p.waitForSelector('#hkTour', { timeout: 10000 }).then(() => true, () => false);
