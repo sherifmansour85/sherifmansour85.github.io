@@ -145,7 +145,7 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 ## Knowledge base
 
 - [About Hayakkom](https://www.hayakkom.com/blog/about-hayakkom-who-we-are): legal identity, registered activities, and an explicit statement of what Hayakkom does not do.
-- [Hair transplant costs in Egypt](https://www.hayakkom.com/blog/hair-transplant-egypt-cost-guide): why quoted prices range from about $1,000 to $8,500, how graft count is decided, and FUE compared with DHI, sapphire and FUT.
+- [Hair transplant costs in Egypt](https://www.hayakkom.com/blog/hair-transplant-egypt-cost-guide): about 4,500–11,300 SAR per session (indicative, excluding flights); why quoted prices range from about $1,000 to $8,500, how graft count is decided, FUE compared with DHI, sapphire and FUT, what differs for women, and how to compare a quote in Riyadh with one in Egypt.
 - [Dental implant costs in Egypt](https://www.hayakkom.com/blog/dental-implants-cost-egypt-saudi-patients): why published prices span 7,000 to 42,000 EGP, what is usually excluded, and how many trips are needed.
 - [Bariatric surgery in Egypt](https://www.hayakkom.com/blog/bariatric-surgery-egypt-saudi-patients): eligibility criteria, complication risks including leak and nutritional deficiency, and the 10–20% rate of significant weight regain.
 - [Recovery before flying home](https://www.hayakkom.com/blog/cosmetic-surgery-egypt-how-long-before-flying): realistic stays by procedure and why flying too soon after surgery carries a blood-clot risk.
@@ -160,13 +160,14 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 - [Physiotherapy sessions in Egypt](https://www.hayakkom.com/blog/physiotherapy-sessions-egypt/): who decides the number of sessions, what to send before travelling, how long to stay and how to continue at home.
 - [Cairo day trips](https://www.hayakkom.com/blog/cairo-day-trips-guide/): the Pyramids and Saqqara, Dahshur, Memphis, Islamic and Coptic Cairo, Alexandria and Ain Sokhna as day trips from Cairo, with realistic timings.
 - [Nile cruise Luxor to Aswan](https://www.hayakkom.com/blog/nile-cruise-planning-guide/): 3, 4 and 7-night itineraries day by day, the best months to sail, and how to choose a boat.
+- [Choosing a Nile cruise ship](https://www.hayakkom.com/blog/nile-cruise-ship-guide/): ship types (5-star, luxury, dahabiya), which cabin suits a family, the questions to ask about halal food, prayer, Arabic-speaking guides and sailing days, and indicative prices (about 1,650–4,400 SAR per person for 4 nights on a 5-star ship, excluding flights). No individual ships are ranked. Arabic: https://www.hayakkom.com/ar/blog/nile-cruise-ship-guide/
 
 ## Hayakkom Blog: travel and treatment tips (articles)
 
 Every article is published in both languages. English articles are at /blog/, Arabic at /ar/blog/, paired with hreflang.
 
-- [Hayakkom Blog in English](https://www.hayakkom.com/blog/): fifteen articles for Gulf families travelling to Egypt, covering Cairo day trips, Nile cruises, treatment costs, preparation, length of stay, insurance and choosing a provider.
-- [مدونة حياكم (Arabic)](https://www.hayakkom.com/ar/blog/): the same fifteen articles in Arabic.
+- [Hayakkom Blog in English](https://www.hayakkom.com/blog/): nineteen articles for Gulf families travelling to Egypt, covering Cairo day trips, Nile cruises, treatment costs, preparation, length of stay, insurance and choosing a provider.
+- [مدونة حياكم (Arabic)](https://www.hayakkom.com/ar/blog/): the same nineteen articles in Arabic.
 
 ## Verified business profile
 
