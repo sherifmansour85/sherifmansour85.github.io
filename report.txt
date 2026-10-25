@@ -1,43 +1,49 @@
-live has v3540
-== live-phone-en  (hk-share.js?v=3540)
-   Step 1 of 6 :: Pick a category, then a service :: If you tap “Treatments” → Its 6 services appear below; tap any card for its full guide.
-   Step 2 of 6 :: See your cost in seconds :: If you tap “WhatsApp” → Your selection goes to a coordinator, who replies with a written, itemised estimate before you pay anything.
-   Step 3 of 6 :: Holidays, fully coordinated :: If you tap “North Coast villas” → You see villas and chalets with nightly prices in SAR (indicative, excluding flights).
-   Step 4 of 6 :: Licensed providers only :: Tip Drag the logos sideways to see the whole network.
-   Step 5 of 6 :: Everything is in the menu :: If you tap “the menu button” → The full list of pages opens; tap any page to go there.
-   Step 6 of 6 :: Help is one tap away :: If you tap “WhatsApp” → WhatsApp opens with our number, ready for your message.
+live has v3542
+== live-phone-en  (hk-share.js?v=3542)
+   Step 1 of 7 :: Everything is in the menu :: If you tap “the menu button” → The full list of pages opens; tap any page to go there.
+   Step 2 of 7 :: Start with what you need :: If you tap “Medical Care in Egypt” → You reach the treatments page, with indicative 2026 prices in SAR.
+   Step 3 of 7 :: Pick a category, then a service :: If you tap “Treatments” → Its 6 services appear below; tap any card for its full guide.
+   Step 4 of 7 :: See your cost in seconds :: If you tap “WhatsApp” → Your selection goes to a coordinator, who replies with a written, itemised estimate before you pay anything.
+   Step 5 of 7 :: Holidays, fully coordinated :: If you tap “North Coast villas” → You see villas and chalets with nightly prices in SAR (indicative, excluding flights).
+   Step 6 of 7 :: Licensed providers only :: Tip Drag the logos sideways to see the whole network.
+   Step 7 of 7 :: Help is one tap away :: If you tap “WhatsApp” → WhatsApp opens with our number, ready for your message.
    All set :: You’re ready to plan :: 
    tiles: {"cardTop":330,"vh":664,"photoLoaded":true,"tileH":69} errors: []
-== live-phone-ar  (hk-share.js?v=3540)
-   الخطوة 1 من 6 :: اختر فئة ثم خدمة :: إذا ضغطت «العلاجات» ← تظهر 6 خدمات أسفلها؛ اضغط أي بطاقة لترى دليلها الكامل.
-   الخطوة 2 من 6 :: اعرف التكلفة في ثوانٍ :: إذا ضغطت «واتساب» ← يصل اختيارك إلى منسّق يردّ عليك بتقدير مكتوب ومفصّل قبل أن تدفع أي شيء.
-   الخطوة 3 من 6 :: عطلات ننسّقها لك بالكامل :: إذا ضغطت «فلل الساحل الشمالي» ← تجد الفلل والشاليهات بأسعار الليلة بالريال (تقديرية، بدون الطيران).
-   الخطوة 4 من 6 :: جهات مرخّصة فقط :: نصيحة اسحب الشعارات جانباً لترى الشبكة كاملة.
-   الخطوة 5 من 6 :: كل شيء في القائمة :: إذا ضغطت «زر القائمة» ← تُفتح قائمة الصفحات كاملة؛ اضغط أي صفحة للانتقال إليها.
-   الخطوة 6 من 6 :: المساعدة على بُعد ضغطة :: إذا ضغطت «واتساب» ← يُفتح واتساب على رقمنا، جاهزاً لرسالتك.
+== live-phone-ar  (hk-share.js?v=3542)
+   الخطوة 1 من 7 :: كل شيء في القائمة :: إذا ضغطت «زر القائمة» ← تُفتح قائمة الصفحات كاملة؛ اضغط أي صفحة للانتقال إليها.
+   الخطوة 2 من 7 :: ابدأ بما تحتاجه :: إذا ضغطت «الرعاية الطبية في مصر» ← تنتقل إلى صفحة العلاجات مع أسعار تقديرية لعام 2026 بالريال السعودي.
+   الخطوة 3 من 7 :: اختر فئة ثم خدمة :: إذا ضغطت «العلاجات» ← تظهر 6 خدمات أسفلها؛ اضغط أي بطاقة لترى دليلها الكامل.
+   الخطوة 4 من 7 :: اعرف التكلفة في ثوانٍ :: إذا ضغطت «واتساب» ← يصل اختيارك إلى منسّق يردّ عليك بتقدير مكتوب ومفصّل قبل أن تدفع أي شيء.
+   الخطوة 5 من 7 :: عطلات ننسّقها لك بالكامل :: إذا ضغطت «فلل الساحل الشمالي» ← تجد الفلل والشاليهات بأسعار الليلة بالريال (تقديرية، بدون الطيران).
+   الخطوة 6 من 7 :: جهات مرخّصة فقط :: نصيحة اسحب الشعارات جانباً لترى الشبكة كاملة.
+   الخطوة 7 من 7 :: المساعدة على بُعد ضغطة :: إذا ضغطت «واتساب» ← يُفتح واتساب على رقمنا، جاهزاً لرسالتك.
    انتهت الجولة :: أنت جاهز للتخطيط :: 
    tiles: {"cardTop":310,"vh":664,"photoLoaded":true,"tileH":69} errors: []
-== live-desktop-en  (hk-share.js?v=3540)
-   Step 1 of 6 :: Pick a category, then a service :: If you tap “Treatments” → Its 6 services appear below; tap any card for its full guide.
-   Step 2 of 6 :: See your cost in seconds :: If you tap “Send on WhatsApp” → Your selection goes to a coordinator, who replies with a written, itemised estimate before you pay anything.
-   Step 3 of 6 :: Holidays, fully coordinated :: If you tap “North Coast villas” → You see villas and chalets with nightly prices in SAR (indicative, excluding flights).
-   Step 4 of 6 :: Licensed providers only :: Tip Drag the logos sideways to see the whole network.
-   Step 5 of 6 :: Everything is at the top :: 
-   Step 6 of 6 :: Help is one tap away :: If you tap “WhatsApp” → WhatsApp opens with our number, ready for your message.
+== live-desktop-en  (hk-share.js?v=3542)
+   Step 1 of 7 :: Everything is at the top :: 
+   Step 2 of 7 :: Start with what you need :: If you tap “Medical Care in Egypt” → You reach the treatments page, with indicative 2026 prices in SAR.
+   Step 3 of 7 :: Pick a category, then a service :: If you tap “Treatments” → Its 6 services appear below; tap any card for its full guide.
+   Step 4 of 7 :: See your cost in seconds :: If you tap “Send on WhatsApp” → Your selection goes to a coordinator, who replies with a written, itemised estimate before you pay anything.
+   Step 5 of 7 :: Holidays, fully coordinated :: If you tap “North Coast villas” → You see villas and chalets with nightly prices in SAR (indicative, excluding flights).
+   Step 6 of 7 :: Licensed providers only :: Tip Drag the logos sideways to see the whole network.
+   Step 7 of 7 :: Help is one tap away :: If you tap “WhatsApp” → WhatsApp opens with our number, ready for your message.
    All set :: You’re ready to plan :: 
    tiles: {"cardTop":275,"vh":820,"photoLoaded":true,"tileH":119} errors: []
-== live-desktop-ar  (hk-share.js?v=3540)
-   الخطوة 1 من 6 :: اختر فئة ثم خدمة :: إذا ضغطت «العلاجات» ← تظهر 6 خدمات أسفلها؛ اضغط أي بطاقة لترى دليلها الكامل.
-   الخطوة 2 من 6 :: اعرف التكلفة في ثوانٍ :: إذا ضغطت «أرسل التقدير عبر واتساب» ← يصل اختيارك إلى منسّق يردّ عليك بتقدير مكتوب ومفصّل قبل أن تدفع أي شيء.
-   الخطوة 3 من 6 :: عطلات ننسّقها لك بالكامل :: إذا ضغطت «فلل الساحل الشمالي» ← تجد الفلل والشاليهات بأسعار الليلة بالريال (تقديرية، بدون الطيران).
-   الخطوة 4 من 6 :: جهات مرخّصة فقط :: نصيحة اسحب الشعارات جانباً لترى الشبكة كاملة.
-   الخطوة 5 من 6 :: كل شيء في الأعلى :: 
-   الخطوة 6 من 6 :: المساعدة على بُعد ضغطة :: إذا ضغطت «واتساب» ← يُفتح واتساب على رقمنا، جاهزاً لرسالتك.
+== live-desktop-ar  (hk-share.js?v=3542)
+   الخطوة 1 من 7 :: كل شيء في الأعلى :: 
+   الخطوة 2 من 7 :: ابدأ بما تحتاجه :: إذا ضغطت «الرعاية الطبية في مصر» ← تنتقل إلى صفحة العلاجات مع أسعار تقديرية لعام 2026 بالريال السعودي.
+   الخطوة 3 من 7 :: اختر فئة ثم خدمة :: إذا ضغطت «العلاجات» ← تظهر 6 خدمات أسفلها؛ اضغط أي بطاقة لترى دليلها الكامل.
+   الخطوة 4 من 7 :: اعرف التكلفة في ثوانٍ :: إذا ضغطت «أرسل التقدير عبر واتساب» ← يصل اختيارك إلى منسّق يردّ عليك بتقدير مكتوب ومفصّل قبل أن تدفع أي شيء.
+   الخطوة 5 من 7 :: عطلات ننسّقها لك بالكامل :: إذا ضغطت «فلل الساحل الشمالي» ← تجد الفلل والشاليهات بأسعار الليلة بالريال (تقديرية، بدون الطيران).
+   الخطوة 6 من 7 :: جهات مرخّصة فقط :: نصيحة اسحب الشعارات جانباً لترى الشبكة كاملة.
+   الخطوة 7 من 7 :: المساعدة على بُعد ضغطة :: إذا ضغطت «واتساب» ← يُفتح واتساب على رقمنا، جاهزاً لرسالتك.
    انتهت الجولة :: أنت جاهز للتخطيط :: 
    tiles: {"cardTop":288,"vh":820,"photoLoaded":true,"tileH":119} errors: []
-== return-phone-en: auto-popup=false scripts=[hk-share.js?v=3540 hk-tour.js?v=20261025d] footer="Quick guide: how this site works" step2="See your cost in seconds"
-== return-phone-ar: auto-popup=false scripts=[hk-share.js?v=3540 hk-tour.js?v=20261025d] footer="الدليل السريع: كيف يعمل الموقع" step2="اعرف التكلفة في ثوانٍ"
-== return-desktop-en: auto-popup=false scripts=[hk-share.js?v=3540 hk-tour.js?v=20261025d] footer="Quick guide: how this site works" step2="See your cost in seconds"
-== return-desktop-ar: auto-popup=false scripts=[hk-share.js?v=3540 hk-tour.js?v=20261025d] footer="الدليل السريع: كيف يعمل الموقع" step2="اعرف التكلفة في ثوانٍ"
+== return-phone-en: auto-popup=false scripts=[hk-share.js?v=3542 hk-tour.js?v=20261025f] footer="Quick guide: how this site works" step2="Start with what you need"
+== return-phone-ar: auto-popup=false scripts=[hk-share.js?v=3542 hk-tour.js?v=20261025f] footer="الدليل السريع: كيف يعمل الموقع" step2="ابدأ بما تحتاجه"
+== return-desktop-en: auto-popup=false scripts=[hk-share.js?v=3542 hk-tour.js?v=20261025f] footer="Quick guide: how this site works" step2="Start with what you need"
+== return-desktop-ar: auto-popup=false scripts=[hk-share.js?v=3542 hk-tour.js?v=20261025f] footer="الدليل السريع: كيف يعمل الموقع" step2="ابدأ بما تحتاجه"
 == oldflag-en: new guide offered=true, shows again after skipping=false
 == oldflag-ar: new guide offered=true, shows again after skipping=false
+== currency /dental/: fab-wa:visible hkAi:visible hkRadioWrap:visible | body=hk-dock
+== currency /ar/dental/: fab-wa:visible hkAi:visible hkRadioWrap:visible | body=hk-dock
