@@ -28,6 +28,7 @@ var W=AR?{
   hi:{eb:"دليل سريع · 30 ثانية",t:"أهلاً بك في حياكم",b:"دعنا نعرّفك على الموقع في جولة قصيرة: من أين تبدأ، وكيف ترى الأسعار، وكيف تتواصل مع منسّق.",go:"ابدأ الجولة",no:"تخطَّ، سأتصفّح بنفسي"},
   end:{eb:"انتهت الجولة",t:"أنت جاهز للتخطيط",b:"أخبرنا بما تحتاجه، وسيردّ عليك منسّق عبر واتساب ويرسل لك تقديراً مكتوباً ومفصّلاً قبل أن تدفع أي شيء.",go:"راسلنا على واتساب",no:"سأتصفّح بنفسي",ft:"يمكنك إعادة هذا الدليل في أي وقت من «الدليل السريع» أسفل الصفحة.",msg:"مرحباً حياكم، شاهدت الدليل السريع في الموقع وأودّ المساعدة في تخطيط رحلتي."},
   again:"الدليل السريع: كيف يعمل الموقع",
+  paths:{t:"ابدأ بما تحتاجه",b:"اختر طريقك: الرعاية الطبية، أو العلاج مع السياحة، أو السياحة وحدها، أو رحلات الأعمال والتعليم.",x:"الرعاية الطبية في مصر",r:"تنتقل إلى صفحة العلاجات مع أسعار تقديرية لعام 2026 بالريال السعودي."},
   cats:{t:"اختر فئة ثم خدمة",b:"اضغط على فئة لتظهر خدماتها. كل بطاقة خدمة تفتح دليلاً كاملاً بأسعار تقديرية بالريال السعودي.",r:function(n){return "تظهر "+n+" أسفلها؛ اضغط أي بطاقة لترى دليلها الكامل."}},
   services:{t:"لكل خدمة دليلها الخاص",b:"كل بطاقة تفتح صفحة كاملة عن هذا العلاج أو هذه الرحلة.",x:"الأسنان وابتسامة هوليوود",r:"تجد أسعاراً تقديرية لزراعة الأسنان والقشور وابتسامة هوليوود بالريال السعودي."},
   calc:{t:"اعرف التكلفة في ثوانٍ",b:"اختر العلاج وعدد المسافرين والفندق ومدينة السفر، ويظهر لك فوراً تقدير للرحلة كاملة بالريال السعودي.",x:"أرسل التقدير عبر واتساب",r:"يصل اختيارك إلى منسّق يردّ عليك بتقدير مكتوب ومفصّل قبل أن تدفع أي شيء."},
@@ -45,6 +46,7 @@ var W=AR?{
   hi:{eb:"Quick guide · 30 seconds",t:"Welcome to Hayakkom",b:"Let us show you around in a few short steps: where to start, how to see prices, and how to reach a coordinator.",go:"Show me around",no:"Skip, I’ll explore"},
   end:{eb:"All set",t:"You’re ready to plan",b:"Tell us what you need. A coordinator replies on WhatsApp and sends a written, itemised estimate before you pay anything.",go:"Message us on WhatsApp",no:"Explore on my own",ft:"You can replay this guide any time from “Quick guide” at the bottom of the page.",msg:"Hello Hayakkom, I watched the quick guide on your website and would like help planning my trip."},
   again:"Quick guide: how this site works",
+  paths:{t:"Start with what you need",b:"Pick your path: medical care, treatment combined with a holiday, a holiday on its own, or business and education trips.",x:"Medical Care in Egypt",r:"You reach the treatments page, with indicative 2026 prices in SAR."},
   cats:{t:"Pick a category, then a service",b:"Tap a category to show its services. Each service card opens a full guide with indicative prices in SAR.",r:function(n){return "Its "+n+" appear below; tap any card for its full guide."}},
   services:{t:"Every service has its own guide",b:"Each card opens a full page about that treatment or trip.",x:"Dental & Hollywood Smile",r:"You see indicative prices in SAR for implants, veneers and a Hollywood smile."},
   calc:{t:"See your cost in seconds",b:"Pick a treatment, the number of travellers, your hotel and the city you fly from. An indicative estimate in SAR for the whole trip appears instantly.",x:"Send on WhatsApp",r:"Your selection goes to a coordinator, who replies with a written, itemised estimate before you pay anything."},
@@ -62,6 +64,7 @@ function top(f){f.top=1;return f}
 var STEPS=[
   top(function(){var b=q("#enBurger")||q("#arBurger"),c;if(b){c=W.menuM;return {holes:[b],tap:b,t:c.t,b:c.b,ex:[W.tap(c.x),c.r]}}
     var n=AR?q("header.arnav"):q("nav.nav");if(!n)return null;c=W.menuD;return {holes:[n],t:c.t,b:c.b}}),
+  function(){var t=q(".hero-actions");if(!t)return null;var c=W.paths;return {holes:[t],tap:q(".hk-cta-med",t),t:c.t,b:c.b,ex:[W.tap(c.x),c.r]}},
   function(){var bar=q(".hk-svc-tabs"),c;
     if(bar){var tile=q(".hk-svc-tab",bar),nm=tile&&q(".hk-svc-t",tile),ct=tile&&q(".hk-svc-n",tile),ask=bar.previousElementSibling;c=W.cats;
       return {holes:ask&&ask.classList.contains("hk-svc-ask")?[ask,bar]:[bar],union:true,tap:tile,t:c.t,b:c.b,

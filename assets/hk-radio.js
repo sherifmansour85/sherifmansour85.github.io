@@ -58,7 +58,17 @@ var playing=false,suspended=false,gaveUp=false,armed=false;
 /* Once the visitor starts on a form, the radio holds for the rest of the page view; only a tap on its own button brings it back. */
 var formHold=false,FORMSEL='form,.jf-wrap,.enquiry-box,iframe[src*="jotform"],iframe[src*="jotfor.ms"]';
 function inForm(t){try{return !!(t&&t.closest&&t.closest(FORMSEL)&&!t.closest("#hkAiPanel,.ai-own"))}catch(e){return false}}
-function holdForForm(){if(formHold)return;formHold=true;suspend()}
+/* a form pauses the radio while the visitor fills it in; once the form has scrolled off the screen the music comes back */
+var formEl=null,formIO=null;
+function holdForForm(t){
+  var el=null;try{el=t&&t.closest?t.closest(FORMSEL):null}catch(e){}
+  if(el&&el!==formEl&&window.IntersectionObserver){if(formIO)formIO.disconnect();formEl=el;
+    formIO=new IntersectionObserver(function(es){if(!es[0].isIntersecting&&formHold)releaseForm()},{threshold:0});formIO.observe(el)}
+  if(formHold)return;formHold=true;suspend()}
+function releaseForm(){
+  if(formIO){formIO.disconnect();formIO=null}var fe=formEl;formEl=null;formHold=false;
+  var a=document.activeElement;try{if(a&&a!==document.body&&fe&&(fe===a||fe.contains(a))){a.blur();if(a.tagName==="IFRAME")window.focus()}}catch(e){}
+  dbg("form scrolled away: music back");resume()}
 var cur=0,act=0,nextIdx=0,timer=0,raf=0,fails=0,tipTimer=0,resumeTimer=0;
 var els=[],dead={},rafs={},muteTok=0;
 function isDead(i){return dead[i]&&Date.now()-dead[i]<420000}
@@ -341,7 +351,7 @@ function resume(){
   clearTimeout(resumeTimer);
   resumeTimer=setTimeout(function(){
     var a=document.activeElement;
-    if(formHold||document.hidden||otherMedia||aiOpen()||(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)&&a.type!=="button"&&a.type!=="submit"&&a.type!=="checkbox"&&a.type!=="radio"))return;
+    if(formHold||document.hidden||otherMedia||aiOpen()||(a&&/^(INPUT|TEXTAREA)$/.test(a.tagName)&&a.type!=="button"&&a.type!=="submit"&&a.type!=="checkbox"&&a.type!=="radio"))return;
     suspended=false;if(on&&!armed)begin();
   },700);
 }
@@ -355,10 +365,10 @@ function init(){
   build();if(on)preconnect();
   document.addEventListener("visibilitychange",function(){document.hidden?suspend():resume()});
   window.addEventListener("pagehide",function(){saveResume();stopAll()});setInterval(stallCheck,1500);
-  document.addEventListener("pointerdown",function(e){if(inForm(e.target))holdForForm()},true);
-  document.addEventListener("focusin",function(e){var t=e.target;if(inForm(t)&&t.tagName!=="FORM")holdForForm();if(t&&(/^(TEXTAREA|SELECT)$/.test(t.tagName)||(t.tagName==="INPUT"&&!/^(button|submit|checkbox|radio)$/.test(t.type))||t.isContentEditable))suspend()});
+  document.addEventListener("pointerdown",function(e){if(inForm(e.target))holdForForm(e.target)},true);
+  document.addEventListener("focusin",function(e){var t=e.target;if(inForm(t)&&t.tagName!=="FORM")holdForForm(t);if(t&&(t.tagName==="TEXTAREA"||(t.tagName==="INPUT"&&!/^(button|submit|checkbox|radio)$/.test(t.type))||t.isContentEditable))suspend()});
   document.addEventListener("focusout",function(){resume()});
-  window.addEventListener("blur",function(){setTimeout(function(){var a=document.activeElement;if(a&&a.tagName==="IFRAME"){if(a.id!=="hkAiFrame"&&inForm(a))holdForForm();else suspend()}},0)});
+  window.addEventListener("blur",function(){setTimeout(function(){var a=document.activeElement;if(a&&a.tagName==="IFRAME"){if(a.id!=="hkAiFrame"&&inForm(a))holdForForm(a);else suspend()}},0)});
   window.addEventListener("focus",function(){resume()});
   document.addEventListener("play",function(e){if(els.indexOf(e.target)<0){otherMedia++;suspend()}},true);
   var back=function(e){if(els.indexOf(e.target)<0&&otherMedia){otherMedia--;if(!otherMedia)resume()}};
@@ -379,7 +389,7 @@ function init(){
   function mustPause(){
     if(formHold||document.hidden||aiOpen())return true;
     var a=document.activeElement;
-    if(a&&(/^(TEXTAREA|SELECT)$/.test(a.tagName)||a.isContentEditable||(a.tagName==="INPUT"&&!/^(button|submit|checkbox|radio)$/.test(a.type))))return true;
+    if(a&&(a.tagName==="TEXTAREA"||a.isContentEditable||(a.tagName==="INPUT"&&!/^(button|submit|checkbox|radio)$/.test(a.type))))return true;
     if(a&&a.tagName==="IFRAME"&&!document.hasFocus())return true;
     return liveOtherMedia()>0;
   }
