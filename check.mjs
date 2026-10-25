@@ -4,7 +4,7 @@ const TARGETS = [['live', 'https://www.hayakkom.com']];
 const DEV = [['phone', { ...devices['iPhone 13'] }], ['desktop', { viewport: { width: 1366, height: 820 } }]];
 const b = await chromium.launch();
 // wait until GitHub Pages serves the new version (hk-share v3540)
-for (let i = 0; i < 36; i++) { const h = await (await fetch('https://www.hayakkom.com/?w=' + Date.now())).text(); if (h.includes('hk-share.js?v=3540')) { console.log('live has v3540'); break } await new Promise(r => setTimeout(r, 5000)) }
+for (let i = 0; i < 36; i++) { const h = await (await fetch('https://www.hayakkom.com/?w=' + Date.now())).text(); if (h.includes('hk-share.js?v=3542')) { console.log('live has v3542'); break } await new Promise(r => setTimeout(r, 5000)) }
 for (const [tn, base] of TARGETS) for (const [dn, dopt] of DEV) for (const path of ['/', '/ar/']) {
   const L = path === '/' ? 'en' : 'ar', tag = `${tn}-${dn}-${L}`, errs = [];
   const ctx = await b.newContext(dopt); const p = await ctx.newPage();
@@ -45,7 +45,7 @@ for (const [tn, base] of TARGETS) for (const [dn, dopt] of DEV) for (const path 
 for (const [dn, dopt] of DEV) for (const path of ['/', '/ar/']) {
   const L = path === '/' ? 'en' : 'ar', tag = `return-${dn}-${L}`;
   const ctx = await b.newContext(dopt); const p = await ctx.newPage();
-  await p.addInitScript(() => { try { localStorage.setItem('hkInstallSkip', String(Date.now())); localStorage.setItem('hkTourDone3', '1') } catch (e) {} });
+  await p.addInitScript(() => { try { localStorage.setItem('hkInstallSkip', String(Date.now())); localStorage.setItem('hkTourDone4', '1') } catch (e) {} });
   try {
     await p.goto('https://www.hayakkom.com' + path + '?lc=' + Date.now(), { waitUntil: 'networkidle', timeout: 45000 });
     await p.waitForTimeout(1500); const cc = await p.$('#hkCcYes'); if (cc && await cc.isVisible()) await cc.click();
@@ -65,13 +65,28 @@ for (const [dn, dopt] of DEV) for (const path of ['/', '/ar/']) {
 // a visitor who saw the OLD guide (old flag only): the new guide must be offered once
 for (const path of ['/', '/ar/']) {
   const ctx = await b.newContext(DEV[0][1]); const p = await ctx.newPage();
-  await p.addInitScript(() => { try { localStorage.setItem('hkInstallSkip', String(Date.now())); if (!sessionStorage.getItem('r')) { localStorage.setItem('hkTourDone2', '1'); sessionStorage.setItem('r', '1') } } catch (e) {} });
+  await p.addInitScript(() => { try { localStorage.setItem('hkInstallSkip', String(Date.now())); if (!sessionStorage.getItem('r')) { localStorage.setItem('hkTourDone3', '1'); sessionStorage.setItem('r', '1') } } catch (e) {} });
   await p.goto('https://www.hayakkom.com' + path + '?lc=' + Date.now(), { waitUntil: 'networkidle', timeout: 45000 });
   await p.waitForTimeout(1500); const cc = await p.$('#hkCcYes'); if (cc && await cc.isVisible()) await cc.click();
   const offered = await p.waitForSelector('#hkTour', { timeout: 10000 }).then(() => true, () => false);
   if (offered) { await p.screenshot({ path: `shots/oldflag-${path === '/' ? 'en' : 'ar'}.jpg`, quality: 70 }); await p.click('#hkTour .hkt-link'); await p.waitForTimeout(600) }
   await p.reload({ waitUntil: 'networkidle' }); await p.waitForTimeout(5000);
   console.log(`== oldflag-${path === '/' ? 'en' : 'ar'}: new guide offered=${offered}, shows again after skipping=${!!(await p.$('#hkTour'))}`);
+  await ctx.close();
+}
+// currency list on the price pages: buttons tuck aside, never vanish
+for (const path of ['/dental/', '/ar/dental/']) {
+  const ctx = await b.newContext(DEV[0][1]); const p = await ctx.newPage();
+  await p.addInitScript(() => { try { localStorage.setItem('hkInstallSkip', String(Date.now())) } catch (e) {} });
+  await p.goto('https://www.hayakkom.com' + path + '?lc=' + Date.now(), { waitUntil: 'networkidle', timeout: 45000 });
+  await p.waitForTimeout(1500); const cc = await p.$('#hkCcYes'); if (cc && await cc.isVisible()) await cc.click();
+  const sel = await p.$('.price-cur select');
+  if (!sel) { console.log(`== currency ${path}: no currency list found`); await ctx.close(); continue }
+  await sel.scrollIntoViewIfNeeded(); await p.evaluate(() => scrollBy(0, -200)); await p.waitForTimeout(1500);
+  await p.focus('.price-cur select'); await p.waitForTimeout(1200);
+  await p.screenshot({ path: `shots/currency-${path === '/dental/' ? 'en' : 'ar'}.jpg`, quality: 70 });
+  const st = await p.evaluate(() => [...document.querySelectorAll('.hk-fab-d')].map(e => { const cs = getComputedStyle(e); return (e.id || e.className.split(' ')[1] || e.className.split(' ')[0]) + ':' + (cs.opacity === '1' && cs.visibility === 'visible' ? 'visible' : 'HIDDEN') }).join(' ') + ' | body=' + document.body.className.split(' ').filter(c => /hk-(dock|type)/.test(c)).join(' '));
+  console.log(`== currency ${path}: ${st}`);
   await ctx.close();
 }
 await b.close();
