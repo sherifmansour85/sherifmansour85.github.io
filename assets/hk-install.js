@@ -16,7 +16,9 @@
   function skip(){ls(function(){localStorage.setItem(KEY,String(Date.now()))});close()}
   function close(){var e=document.getElementById("hkInst");if(e)e.remove()}
   function show(){
-    if(shown||document.getElementById("hkInst"))return;shown=true;
+    if(shown||document.getElementById("hkInst"))return;
+    if(document.getElementById("hkTour")){window.addEventListener("hk-tour-end",function(){setTimeout(show,4000)},{once:true});return} /* wait for the quick guide to close */
+    shown=true;
     var d=document.createElement("div");d.id="hkInst";d.setAttribute("role","dialog");d.setAttribute("aria-label",T.h);d.dir=ar?"rtl":"ltr";
     d.style.cssText="position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:2147483000;width:min(94vw,420px);box-sizing:border-box;background:#0A2E36;color:#fff;border:1px solid rgba(232,200,119,.5);border-radius:16px;padding:14px 16px;box-shadow:0 10px 30px rgba(0,0,0,.35);font:15px/1.5 system-ui,-apple-system,Segoe UI,Tahoma,sans-serif";
     var h=document.createElement("strong");h.textContent=T.h;h.style.cssText="display:block;font-size:16px;margin-bottom:2px";
