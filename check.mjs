@@ -1,6 +1,6 @@
 // Walks the homepage quick guide with real photos, on the live site and on the PR branch, phone and desktop, EN and AR.
 import { chromium, devices } from 'playwright';
-const TARGETS = [['live', 'https://www.hayakkom.com'], ['branch', 'http://localhost:8080']];
+const TARGETS = [['live', 'https://www.hayakkom.com']];
 const DEV = [['phone', { ...devices['iPhone 13'] }], ['desktop', { viewport: { width: 1366, height: 820 } }]];
 const b = await chromium.launch();
 for (const [tn, base] of TARGETS) for (const [dn, dopt] of DEV) for (const path of ['/', '/ar/']) {
@@ -37,6 +37,27 @@ for (const [tn, base] of TARGETS) for (const [dn, dopt] of DEV) for (const path 
     console.log(`== ${tag}  (${v.split('/').pop()})`); steps.forEach(s => console.log('   ' + s));
     console.log('   tiles:', JSON.stringify(after), 'errors:', JSON.stringify(errs));
   } catch (e) { console.log(`== ${tag} FAILED: ${e.message.split('\n')[0]}`, JSON.stringify(errs)); await p.screenshot({ path: `shots/${tag}-fail.jpg`, quality: 70 }).catch(() => {}) }
+  await ctx.close();
+}
+// a returning visitor who already skipped the guide: it must not pop up again, and the footer button must open the new guide
+for (const [dn, dopt] of DEV) for (const path of ['/', '/ar/']) {
+  const L = path === '/' ? 'en' : 'ar', tag = `return-${dn}-${L}`;
+  const ctx = await b.newContext(dopt); const p = await ctx.newPage();
+  await p.addInitScript(() => { try { localStorage.setItem('hkInstallSkip', String(Date.now())); localStorage.setItem('hkTourDone', '1') } catch (e) {} });
+  try {
+    await p.goto('https://www.hayakkom.com' + path + '?lc=' + Date.now(), { waitUntil: 'networkidle', timeout: 45000 });
+    await p.waitForTimeout(1500); const cc = await p.$('#hkCcYes'); if (cc && await cc.isVisible()) await cc.click();
+    await p.waitForTimeout(4000);
+    const auto = !!(await p.$('#hkTour'));
+    const ver = await p.evaluate(() => [...document.scripts].map(s => s.src).filter(s => /hk-(share|tour)/.test(s)).map(s => s.split('/').pop()).join(' '));
+    const btn = await p.$('footer .hkt-again'); const btnText = btn ? await btn.textContent() : 'MISSING';
+    if (btn) { await btn.scrollIntoViewIfNeeded(); await p.waitForTimeout(400); await p.screenshot({ path: `shots/${tag}-footer.jpg`, quality: 70 }); await btn.click() }
+    await p.waitForSelector('#hkTour', { timeout: 8000 }); await p.waitForTimeout(800);
+    await p.click('#hkTour .hkt-main'); await p.waitForTimeout(1800); await p.click('#hkTour .hkt-main'); await p.waitForTimeout(2000);
+    await p.screenshot({ path: `shots/${tag}-step2.jpg`, quality: 70 });
+    const t = await p.evaluate(() => document.querySelector('#hkTour .hkt-t')?.textContent);
+    console.log(`== ${tag}: auto-popup=${auto} scripts=[${ver}] footer="${btnText}" step2="${t}"`);
+  } catch (e) { console.log(`== ${tag} FAILED: ${e.message.split('\n')[0]}`) }
   await ctx.close();
 }
 await b.close();
