@@ -1,0 +1,42 @@
+// Walks the homepage quick guide with real photos, on the live site and on the PR branch, phone and desktop, EN and AR.
+import { chromium, devices } from 'playwright';
+const TARGETS = [['live', 'https://www.hayakkom.com'], ['branch', 'http://localhost:8080']];
+const DEV = [['phone', { ...devices['iPhone 13'] }], ['desktop', { viewport: { width: 1366, height: 820 } }]];
+const b = await chromium.launch();
+for (const [tn, base] of TARGETS) for (const [dn, dopt] of DEV) for (const path of ['/', '/ar/']) {
+  const L = path === '/' ? 'en' : 'ar', tag = `${tn}-${dn}-${L}`, errs = [];
+  const ctx = await b.newContext(dopt); const p = await ctx.newPage();
+  p.on('pageerror', e => errs.push(e.message));
+  await p.addInitScript(() => { try { localStorage.setItem('hkInstallSkip', String(Date.now())) } catch (e) {} });
+  try {
+    await p.goto(base + path + '?lc=' + Date.now(), { waitUntil: 'networkidle', timeout: 45000 });
+    await p.waitForTimeout(1500);
+    const cc = await p.$('#hkCcYes'); if (cc && await cc.isVisible()) await cc.click();
+    const v = await p.evaluate(() => (document.querySelector('script[src*="hk-share.js"]') || {}).src || '');
+    await p.waitForSelector('#hkTour', { timeout: 20000 }); await p.waitForTimeout(900);
+    await p.screenshot({ path: `shots/${tag}-0.jpg`, quality: 70 });
+    await p.click('#hkTour .hkt-main');
+    const steps = [];
+    for (let i = 1; i <= 9; i++) {
+      await p.waitForTimeout(1800);
+      await p.screenshot({ path: `shots/${tag}-${i}.jpg`, quality: 70 });
+      const t = await p.evaluate(() => (document.querySelector('#hkTour .hkt-eb')?.textContent || '') + ' :: ' + (document.querySelector('#hkTour .hkt-t')?.textContent || '') + ' :: ' + [...document.querySelectorAll('#hkTour .hkt-ex p')].map(e => e.textContent).join(' '));
+      steps.push(t);
+      if (await p.$('#hkTour a.hkt-main')) break;
+      await p.click('#hkTour .hkt-main');
+    }
+    await p.click('#hkTour .hkt-link'); await p.waitForTimeout(600);
+    // category tiles: scroll them under the header, tap the 4th like a visitor, and check the services are on screen
+    await p.evaluate(() => { const a = document.querySelector('.hk-svc-ask') || document.querySelector('.hk-svc-tabs'); scrollTo(0, a.getBoundingClientRect().top + scrollY - 80) });
+    await p.waitForTimeout(1200);
+    await p.screenshot({ path: `shots/${tag}-tiles-a.jpg`, quality: 70 });
+    const bb = await (await p.$('.hk-svc-tab:nth-child(4)')).boundingBox();
+    await p.mouse.click(bb.x + bb.width / 2, bb.y + bb.height / 2); await p.waitForTimeout(1500);
+    await p.screenshot({ path: `shots/${tag}-tiles-b.jpg`, quality: 70 });
+    const after = await p.evaluate(() => { const c = [...document.querySelectorAll('.grid-sm .svc-sm')].find(x => !x.classList.contains('hk-off')); const r = c.getBoundingClientRect(); const img = c.querySelector('img'); return { cardTop: Math.round(r.top), vh: innerHeight, photoLoaded: !!(img && img.complete && img.naturalWidth > 0), tileH: Math.round(document.querySelector('.hk-svc-tab').getBoundingClientRect().height) } });
+    console.log(`== ${tag}  (${v.split('/').pop()})`); steps.forEach(s => console.log('   ' + s));
+    console.log('   tiles:', JSON.stringify(after), 'errors:', JSON.stringify(errs));
+  } catch (e) { console.log(`== ${tag} FAILED: ${e.message.split('\n')[0]}`, JSON.stringify(errs)); await p.screenshot({ path: `shots/${tag}-fail.jpg`, quality: 70 }).catch(() => {}) }
+  await ctx.close();
+}
+await b.close();
