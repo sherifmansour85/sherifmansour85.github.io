@@ -1,5 +1,6 @@
 /* Hayakkom — "Cairo on the dial": a small floating radio button.
-   Plays a Cairo radio channel for ~10 s, then fades slowly into the next, like turning a dial.
+   Plays one Cairo station continuously; if it stalls it reconnects, and only if it keeps failing it fades
+   into the next station. (Set window.HK_RADIO_SLOT to a number of ms to bring back timed station changes.)
    - Nothing is downloaded until the visitor's first tap/click (browsers block sound before that).
    - On by default; one tap on the button mutes it, and the choice is remembered.
    - Pauses while the tab is hidden, while a form field is focused and while other media plays.
@@ -28,7 +29,7 @@ var CH=(window.HK_RADIO_CHANNELS&&window.HK_RADIO_CHANNELS.length)?window.HK_RAD
 if(!CH.length||window.__hkRadioLoaded)return;
 window.__hkRadioLoaded=1;
 
-var SLOT=(window.HK_RADIO_SLOT||15000), FADE=(window.HK_RADIO_FADE||1000), PRE=2500, VOL=.28; /* volume 0-1: change here to make it louder or quieter */
+var SLOT=(window.HK_RADIO_SLOT||0), FADE=(window.HK_RADIO_FADE||1000), PRE=2500, VOL=.28; /* volume 0-1: change here to make it louder or quieter */
 try{if(window.matchMedia&&matchMedia("(pointer:coarse)").matches)VOL=.55}catch(e){} /* phone speakers are small: louder than on a desktop */
 var AR=/^ar/i.test(document.documentElement.lang||"")||document.documentElement.dir==="rtl";
 var TX=AR?{
@@ -151,6 +152,8 @@ function mk(){
   var a=document.createElement("audio");a.preload="none";a.setAttribute("playsinline","");a.setAttribute("aria-hidden","true");a.style.display="none";
   a.addEventListener("error",function(){onStreamError(a)});
   a.addEventListener("ended",function(){if(a.getAttribute("src")){dbg("stream ended (live streams should not)");onStreamError(a)}});
+  var wt=0;a.addEventListener("waiting",function(){clearTimeout(wt);wt=setTimeout(function(){if(a===els[act]&&playing&&!a.paused&&a.readyState<3)reconnect("buffering")},3000)});
+  a.addEventListener("playing",function(){clearTimeout(wt)});
   document.body.appendChild(a);return a;
 }
 function sv(el,v){if(canVol){try{el.volume=Math.max(0,Math.min(1,v))}catch(e){}}}
@@ -166,11 +169,22 @@ function fade(list,ms,done,kind){
 }
 function release(el){try{el.pause();el.removeAttribute("src");el.load()}catch(e){}}
 function stopAll(){
-  busy=false;clearTimeout(timer);cancelAnimationFrame(raf);cancelAnimationFrame(rafs.m);cancelAnimationFrame(rafs.x);playing=false;
+  gen++;starting=false;busy=false;pend=false;clearTimeout(timer);cancelAnimationFrame(raf);cancelAnimationFrame(rafs.m);cancelAnimationFrame(rafs.x);playing=false;
   els.forEach(function(el){release(el)});ui();
 }
 var tS=0,Ct=0; /* tS = when the current station became audible; Ct = when the next crossfade must start */
-function load(el,i){el.src=CH[i].u;sv(el,0);var p=el.play();return p&&p.catch?p:Promise.resolve()}
+/* resolves as soon as sound actually starts ("playing" event) or play() settles, whichever comes first;
+   live streams often start playing before the play() promise resolves */
+function load(el,i){
+  return new Promise(function(res,rej){
+    var done=false;function ok(){if(done)return;done=true;off();res()}function bad(e){if(done)return;done=true;off();rej(e)}
+    function onP(){ok()}function onE(){bad({name:"MediaError",message:"code "+(el.error&&el.error.code)})}
+    function off(){el.removeEventListener("playing",onP);el.removeEventListener("error",onE)}
+    el.addEventListener("playing",onP);el.addEventListener("error",onE);
+    el.src=CH[i].u;sv(el,0);
+    try{var p=el.play();if(p&&p.then)p.then(ok,bad);}catch(e){bad(e)}
+  });
+}
 
 function resumeIdx(){var r=null;try{r=JSON.parse(sessionStorage.getItem("hkRadioResume")||"null");sessionStorage.removeItem("hkRadioResume")}catch(e){}
   if(r&&typeof r.i==="number"&&r.i>=0&&r.i<CH.length&&Date.now()-r.t<30000&&!isDead(r.i))return r.i;return firstOk()}
@@ -178,10 +192,12 @@ function saveResume(){try{if(on&&(playing||armed))sessionStorage.setItem("hkRadi
 var stallT=0,stallN=0,starting=false,startT=0,busyT=0;
 function stallCheck(){var el=els[act];if(!playing||!el||busy||suspended||document.hidden){stallN=0;return}
   if(el.paused){if(++stallN>=2){stallN=0;try{var pr=el.play();if(pr&&pr.catch)pr.catch(function(){})}catch(e){}}return}
-  if(el.currentTime===stallT){if(++stallN>=5){stallN=0;clearTimeout(timer);if(canVol)prepare();else hard()}}else{stallN=0;stallT=el.currentTime}}
+  if(el.currentTime===stallT){if(++stallN>=2){stallN=0;reconnect("stalled")}}else{stallN=0;stallT=el.currentTime}}
+var gen=0;
 function begin(){
   dbg("begin on="+on+" playing="+playing+" suspended="+suspended+" gaveUp="+gaveUp+" hidden="+document.hidden);
-  if(!on||playing||suspended||gaveUp||document.hidden)return;
+  if(!on||playing||suspended||gaveUp||document.hidden||starting)return;
+  var my=++gen;
   els.forEach(function(x){release(x)});act=0;clearTimeout(timer);cancelAnimationFrame(rafs.x);
   if(!els.length){
     els=[mk()];
@@ -191,6 +207,7 @@ function begin(){
   }
   var el=els[act];cur=resumeIdx();starting=true;startT=performance.now();
   load(el,cur).then(function(){
+    if(my!==gen)return; /* a newer start attempt took over */
     starting=false;
     if(!on||suspended){release(el);return}
     dbg("PLAYING "+CH[cur].n);playing=true;armed=false;sv(el,0);ui();
@@ -198,9 +215,11 @@ function begin(){
     if(!canVol)sv(el,1);
     tS=performance.now();schedule();watch(el);attention(TX.pill,6000,true);showTip(TX.tip);
   }).catch(function(err){
+    if(my!==gen)return; /* superseded: not this station's fault */
     starting=false;
     dbg("play failed: "+(err&&err.name)+" "+(err&&err.message||"")+" ("+CH[cur].n+")");
     release(el);
+    if(err&&err.name==="AbortError"){setTimeout(begin,400);return} /* interrupted, not broken: try again */
     if(err&&err.name==="NotAllowedError"){arm();attention(TX.pillWait,0,true);showTip2()}
     else{markDead(cur);fails++;if(fails>CH.length*2){giveUp()}else setTimeout(begin,150)}
   });
@@ -209,12 +228,27 @@ var retryT=0;
 function giveUp(){gaveUp=true;stopAll();ui();attention(TX.pillRetry,0,false);clearTimeout(retryT);retryT=setTimeout(function(){if(on&&gaveUp&&!document.hidden){gaveUp=false;fails=0;dead={};begin()}},20000)}
 function showTip2(){clearTimeout(tipTimer);setTimeout(function(){if(!playing)showTip(TX.tip2)},2500)}
 function schedule(){
-  if(CH.length<2)return;
+  if(CH.length<2||SLOT<=0)return;
   clearTimeout(timer);
   var left=Math.max(0,tS+SLOT-performance.now());
   Ct=tS+SLOT; /* every station gets exactly SLOT ms, measured from when it became audible */
   if(!canVol)timer=setTimeout(hard,left);
   else timer=setTimeout(prepare,Math.max(300,left-5000));
+}
+/* move to the next working station now (used when the current one keeps failing) */
+function failover(){if(!playing)return;clearTimeout(timer);Ct=performance.now();if(canVol)prepare();else hard()}
+/* a stall or a network blip: reconnect the same station first; after two failed reconnects within a minute, move on */
+var recon={},reconT={},reconBusy=false,pend=false; /* pend: a switch to the next station is under way */
+function reconnect(why){
+  var el=els[act],i=cur;if(!playing||!el||busy||reconBusy||pend)return;
+  if(reconT[i]&&Date.now()-reconT[i]>60000)recon[i]=0;
+  recon[i]=(recon[i]||0)+1;reconT[i]=Date.now();
+  dbg("reconnect "+CH[i].n+" #"+recon[i]+" ("+why+")");
+  if(recon[i]>2){recon[i]=0;markDead(i);fails++;if(fails>CH.length*3){giveUp();return}failover();return}
+  reconBusy=true;var v=canVol?el.volume:1;
+  try{el.pause();el.removeAttribute("src");el.load()}catch(e){}
+  el.src=CH[i].u;sv(el,v);
+  var p=el.play();(p&&p.then?p:Promise.resolve()).then(function(){reconBusy=false;stallN=0;watch(el)}).catch(function(){reconBusy=false;markDead(i);fails++;failover()});
 }
 /* single-element mode: straight cut to the next channel (the same element stays "unlocked" on iPhone) */
 var busy=false;
@@ -231,11 +265,11 @@ function watch(el){
   setTimeout(function(){
     if(!playing||el!==els[act]||el.paused||el.currentTime>=.5)return;
     markDead(cur);fails++;if(fails>CH.length*3){giveUp();return}
-    clearTimeout(timer);if(canVol)prepare();else hard();
-  },12000);
+    failover();
+  },8000);
 }
 function prepare(){
-  if(!playing)return;
+  if(!playing)return;pend=true;
   nextIdx=nextOk(cur);
   var nx=els[1-act];
   load(nx,nextIdx).catch(function(){});
@@ -246,7 +280,7 @@ function waitReady(nx,t0){
   var rdy=nx.readyState>=3||(nx.readyState>=2&&Date.now()-t0>1200);
   if(rdy&&performance.now()>=Ct-1)return cross(nx);
   if(rdy){timer=setTimeout(function(){waitReady(nx,t0)},Math.min(250,Math.max(20,Ct-performance.now())));return}
-  if(performance.now()>Ct+4000||Date.now()-t0>12000){markDead(nextIdx);fails++;release(nx);
+  if((SLOT>0&&performance.now()>Ct+4000)||Date.now()-t0>(SLOT>0?12000:9000)){markDead(nextIdx);fails++;release(nx);
     if(fails>CH.length*3){giveUp();return}
     return prepare()}
   timer=setTimeout(function(){waitReady(nx,t0)},250);
@@ -254,7 +288,7 @@ function waitReady(nx,t0){
 function cross(nx){
   var old=els[act];tS=performance.now();
   fade([{el:old,from:VOL,to:0},{el:nx,from:0,to:VOL}],FADE,function(){
-    if(!playing)return;release(old);act=1-act;cur=nextIdx;fails=0;ui();schedule();watch(els[act]);
+    pend=false;if(!playing)return;release(old);act=1-act;cur=nextIdx;fails=0;ui();schedule();watch(els[act]);
   },"x");
   if(!canVol){sv(nx,1);setTimeout(function(){release(old)},FADE)}
 }
@@ -263,9 +297,8 @@ function onStreamError(el){
   if(!playing)return;
   if(el!==els[act]&&canVol&&!busy&&el.getAttribute("src")){ /* the NEXT station failed while preparing: skip it at once */
     markDead(nextIdx);fails++;release(el);clearTimeout(timer);if(fails>CH.length*3){giveUp();return}prepare();return}
-  if(el===els[act]){ /* current channel died: jump to the next straight away */
-    markDead(cur);fails++;if(fails>CH.length*3){giveUp();return}
-    clearTimeout(timer);if(canVol)prepare();else hard();
+  if(el===els[act]&&!reconBusy){ /* current channel dropped: reconnect it, then move on if it keeps failing */
+    reconnect("error");
   }
 }
 
@@ -310,10 +343,12 @@ var otherMedia=0,aiWas=false;
 /* the AI assistant panel (React .ai-panel on some pages, #hkAiPanel on the static ones) pauses the radio while it is open */
 function aiOpen(){try{if(document.querySelector(".ai-panel"))return true;var p=document.getElementById("hkAiPanel");return !!(p&&!p.hidden&&p.offsetParent!==null)}catch(e){return false}}
 setInterval(function(){var o=aiOpen();if(o===aiWas)return;aiWas=o;if(o)suspend();else resume()},500);
+function preconnect(){try{var r=JSON.parse(sessionStorage.getItem("hkRadioResume")||"null"),i=(r&&typeof r.i==="number"&&CH[r.i])?r.i:0,h=new URL(CH[i].u).origin;
+  if(document.querySelector('link[rel=preconnect][href="'+h+'"]'))return;var l=document.createElement("link");l.rel="preconnect";l.href=h;l.crossOrigin="anonymous";document.head.appendChild(l)}catch(e){}}
 function init(){
-  build();
+  build();if(on)preconnect();
   document.addEventListener("visibilitychange",function(){document.hidden?suspend():resume()});
-  window.addEventListener("pagehide",function(){saveResume();stopAll()});setInterval(stallCheck,3000);
+  window.addEventListener("pagehide",function(){saveResume();stopAll()});setInterval(stallCheck,1500);
   document.addEventListener("pointerdown",function(e){if(inForm(e.target))holdForForm()},true);
   document.addEventListener("focusin",function(e){var t=e.target;if(inForm(t)&&t.tagName!=="FORM")holdForForm();if(t&&(/^(TEXTAREA|SELECT)$/.test(t.tagName)||(t.tagName==="INPUT"&&!/^(button|submit|checkbox|radio)$/.test(t.type))||t.isContentEditable))suspend()});
   document.addEventListener("focusout",function(){resume()});
@@ -350,20 +385,20 @@ function init(){
       if(pause){ if(!suspended)suspend(); return }
       if(suspended){suspended=false}                       /* nothing justifies pausing any more */
       if(!on||gaveUp||armed)return;
-      if(starting&&now-startT>10000){                      /* play() never settled: abandon it and try another channel */
-        dbg("watchdog: start hung");starting=false;els.forEach(function(x){release(x)});markDead(cur);fails++;
+      if(starting&&now-startT>8000){                      /* play() never settled: abandon it and try another channel */
+        dbg("watchdog: start hung");gen++;starting=false;els.forEach(function(x){release(x)});markDead(cur);fails++;
         if(fails>CH.length*3){giveUp();return}
         playing=false;begin();return}
       if(!playing){ if(!starting){dbg("watchdog: should be playing, starting");begin()} return }
       if(busy&&now-busyT>10000){dbg("watchdog: busy stuck");busy=false;clearTimeout(timer);markDead(cur);fails++;if(canVol)prepare();else hard();return}
-      if(CH.length>1&&tS&&now-tS>SLOT+15000&&!busy){       /* the channel is overdue: force the next switch */
+      if(SLOT>0&&CH.length>1&&tS&&now-tS>SLOT+15000&&!busy){       /* the channel is overdue: force the next switch */
         dbg("watchdog: overdue switch");clearTimeout(timer);cancelAnimationFrame(rafs.x);if(canVol)prepare();else hard();return}
       var el=els[act];
       if(el&&el.paused&&!busy&&!starting){try{var pr=el.play();if(pr&&pr.catch)pr.catch(function(){})}catch(e){}}
     }catch(e){}
   }
   setInterval(watchdog,2000);
-  window.addEventListener("online",function(){if(gaveUp){clearTimeout(retryT);gaveUp=false;fails=0;dead={}}watchdog()});
+  window.addEventListener("online",function(){if(gaveUp){clearTimeout(retryT);gaveUp=false;fails=0;dead={}}if(playing)reconnect("back online");watchdog()});
   window.addEventListener("pageshow",function(){setTimeout(watchdog,300)});
   if(on)begin();
 }
