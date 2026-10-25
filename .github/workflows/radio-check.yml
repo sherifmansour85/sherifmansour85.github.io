@@ -1,0 +1,50 @@
+# Temporary helper: tests each radio stream the website uses (start time, steady delivery over 20 s,
+# content type, bitrate) three times, and commits a report to this side branch. Not part of the site.
+name: Radio stream check
+on:
+  push:
+    branches: [claude/radio-check]
+    paths: ['.github/workflows/radio-check.yml']
+permissions:
+  contents: write
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test streams
+        run: |
+          cat > s.txt <<'L'
+          Umm Kulthum|https://stream.zeno.fm/hp0vu6c0pnhvv
+          Umm Kulthum spare 1|https://stream.zeno.fm/y70e5x46kd5tv
+          Umm Kulthum spare 2|https://stream.zeno.fm/vdws5ggv24zuv
+          Amr Diab|https://stream.zeno.fm/pet0ex02qa0uv
+          Sherine|https://stream.zeno.fm/njscyudhthkvv
+          Radio Hits 88.2|https://radiohits882.radioca.st/;
+          Nogoum FM|https://stream.zeno.fm/qb1zvsykm98uv
+          Radio 9090|https://9090streaming.mobtada.com/9090FMEGYPT
+          Mix FM 87.8|https://stream-29.zeno.fm/na3vpvn10qruv
+          Nogoum FM Mix|https://stream.zeno.fm/0ms1g2tgr18uv
+          90s FM|https://eu1.fastcast4u.com/proxy/prontofm?mp=/1
+          NRJ Egypt|https://nrjstreaming.ahmed-melege.com/nrjegypt
+          Nagham FM|https://ahmsamir.radioca.st/stream/;
+          L
+          echo "name|try|http|content_type|redirects|final_host|ttfb_s|bytes_20s|kbps_20s|cors" > report.txt
+          while IFS='|' read -r n u; do
+            n=$(echo "$n" | xargs); [ -z "$n" ] && continue
+            for t in 1 2 3; do
+              out=$(curl -s -L -o /tmp/a.bin -D /tmp/h.txt --max-time 20 -H 'Origin: https://www.hayakkom.com' -H 'Icy-MetaData: 0' -w '%{http_code}|%{content_type}|%{num_redirects}|%{url_effective}|%{time_starttransfer}|%{size_download}' "$u" 2>/dev/null)
+              IFS='|' read -r code ct rd eff tt sz <<< "$out"
+              host=$(echo "$eff" | awk -F/ '{print $3}')
+              kbps=$(( sz * 8 / 20000 ))
+              cors=$(grep -i '^access-control-allow-origin' /tmp/h.txt | tail -1 | tr -d '\r' | cut -d' ' -f2-)
+              echo "$n|$t|$code|$ct|$rd|$host|$tt|$sz|$kbps|${cors:-none}" >> report.txt
+              sleep 2
+            done
+          done < s.txt
+          cat report.txt
+      - name: Commit report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898341+github-actions[bot]@users.noreply.github.com"
+          git add report.txt && git commit -m "Radio stream check report" && git push
