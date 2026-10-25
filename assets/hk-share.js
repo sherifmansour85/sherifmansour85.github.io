@@ -308,13 +308,13 @@
 })();
 
 /* Cairo radio button: loaded after the page has finished loading, so it never delays the site. */
-(function(){function L(){var e=document.createElement("script");e.src="/assets/hk-radio.js?v=20261025b";e.async=true;document.head.appendChild(e)}
+(function(){function L(){var e=document.createElement("script");e.src="/assets/hk-radio.js?v=20261025c";e.async=true;document.head.appendChild(e)}
 function Q(){if(window.requestIdleCallback){window.requestIdleCallback(L,{timeout:4000})}else{setTimeout(L,2000)}}
 if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventListener("load",function(){setTimeout(Q,800)})}})();
 
 /* Quick guide (homepage walkthrough, English and Arabic): loaded after the page has finished loading. */
 (function(){var p=location.pathname.replace(/index\.html$/,"");if(p!=="/"&&p!=="/ar/")return;
-function L(){var e=document.createElement("script");e.src="/assets/hk-tour.js?v=20261025d";e.async=true;document.head.appendChild(e)}
+function L(){var e=document.createElement("script");e.src="/assets/hk-tour.js?v=20261025f";e.async=true;document.head.appendChild(e)}
 if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListener("load",function(){setTimeout(L,500)})}})();
 
 /* Install-or-skip app popup: starts as early as possible. */
@@ -511,7 +511,7 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
     var b=document.body;if(!b)return true;var cc=document.getElementById("hkCc");
     if(cc&&!cc.hidden&&cc.getClientRects().length&&getComputedStyle(cc).visibility!=="hidden")return true;
     if(/(^|\s)(menu-open|hk-ai-open|form-active)(\s|$)/.test(b.className))return true;
-    var a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName));
+    var a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA)$/.test(a.tagName));
   }
   function lift(on){
     var i,radio=document.querySelector(".hkr"),ai=document.getElementById("hkAi")||document.querySelector(".fab-ai-own,.fab-ai");
@@ -633,7 +633,8 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   document.head.appendChild(st);
   var b=document.body,fabs=[],inBand=new Set(),seen=new WeakSet(),io;
   function cls(c,on){if(b)b.classList.toggle(c,on)}
-  function sync(){var on=inBand.size>0&&!b.classList.contains("hk-ai-open");if(on&&!b.classList.contains("hk-dock"))fabs.forEach(side);cls("hk-dock",on)}
+  var picking=false; /* a dropdown (e.g. the currency list) is open: tuck the buttons aside, never hide them */
+  function sync(){var on=(inBand.size>0||picking)&&!b.classList.contains("hk-ai-open");if(on&&!b.classList.contains("hk-dock"))fabs.forEach(side);cls("hk-dock",on)}
   function side(el){var r=el.getBoundingClientRect();if(r.width)el.setAttribute("data-hk-side",r.left+r.width/2>innerWidth/2?"r":"l")}
   function scan(){
     b=document.body;if(!b)return;
@@ -645,7 +646,8 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   }
   /* Typing: a field on the page, or focus moving into a form iframe (the window blurs). */
   function field(a){return a&&(/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)||(a.tagName==="IFRAME"&&a.id!=="hkAiFrame"))&&!a.closest("#hkAiPanel,.ai-own")}
-  var tt;function typing(){clearTimeout(tt);tt=setTimeout(function(){cls("hk-type",field(document.activeElement))},60)}
+  var tt;function typing(){clearTimeout(tt);tt=setTimeout(function(){var a=document.activeElement,pk=!!(a&&a.tagName==="SELECT"&&field(a));
+    cls("hk-type",field(a)&&!pk);if(pk!==picking){picking=pk;sync()}},60)}
   document.addEventListener("focusin",typing);document.addEventListener("focusout",typing);
   addEventListener("blur",typing);addEventListener("focus",typing);
   addEventListener("resize",function(){if(b&&!b.classList.contains("hk-dock"))fabs.forEach(side)});
