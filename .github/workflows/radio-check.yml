@@ -33,7 +33,7 @@ jobs:
           while IFS='|' read -r n u; do
             n=$(echo "$n" | xargs); [ -z "$n" ] && continue
             for t in 1 2 3; do
-              out=$(curl -s -L -o /tmp/a.bin -D /tmp/h.txt --max-time 20 -H 'Origin: https://www.hayakkom.com' -H 'Icy-MetaData: 0' -w '%{http_code}|%{content_type}|%{num_redirects}|%{url_effective}|%{time_starttransfer}|%{size_download}' "$u" 2>/dev/null)
+              out=$(curl -s -L -o /tmp/a.bin -D /tmp/h.txt --max-time 20 -H 'Origin: https://www.hayakkom.com' -H 'Icy-MetaData: 0' -w '%{http_code}|%{content_type}|%{num_redirects}|%{url_effective}|%{time_starttransfer}|%{size_download}' "$u" 2>/dev/null || true)
               IFS='|' read -r code ct rd eff tt sz <<< "$out"
               host=$(echo "$eff" | awk -F/ '{print $3}')
               kbps=$(( sz * 8 / 20000 ))
