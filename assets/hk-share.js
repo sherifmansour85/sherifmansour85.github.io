@@ -308,12 +308,17 @@
 })();
 
 /* Cairo radio button: loaded after the page has finished loading, so it never delays the site. */
-(function(){function L(){var e=document.createElement("script");e.src="/assets/hk-radio.js?v=20261021a";e.async=true;document.head.appendChild(e)}
+(function(){function L(){var e=document.createElement("script");e.src="/assets/hk-radio.js?v=20261025b";e.async=true;document.head.appendChild(e)}
 function Q(){if(window.requestIdleCallback){window.requestIdleCallback(L,{timeout:4000})}else{setTimeout(L,2000)}}
 if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventListener("load",function(){setTimeout(Q,800)})}})();
 
+/* Quick guide (homepage walkthrough, English and Arabic): loaded after the page has finished loading. */
+(function(){var p=location.pathname.replace(/index\.html$/,"");if(p!=="/"&&p!=="/ar/")return;
+function L(){var e=document.createElement("script");e.src="/assets/hk-tour.js?v=20261025a";e.async=true;document.head.appendChild(e)}
+if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListener("load",function(){setTimeout(L,500)})}})();
+
 /* Install-or-skip app popup: starts as early as possible. */
-(function(){var e=document.createElement("script");e.src="/assets/hk-install.js?v=20261014c";e.async=true;document.head.appendChild(e)})();
+(function(){var e=document.createElement("script");e.src="/assets/hk-install.js?v=20261025a";e.async=true;document.head.appendChild(e)})();
 
 /* HK-QA-MOVE: keep the static "what people search for" block (.hk-qa) above the "Plan your trip" block on app-rendered pages. */
 (function () {
@@ -657,12 +662,26 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
   var ar=document.documentElement.lang==="ar"||/^\/ar(\/|$)/.test(location.pathname);
   var st=document.createElement("style");
   st.textContent=".hk-svc-tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 auto 22px;max-width:780px;contain:layout paint;padding:8px 6px;isolation:isolate}"+
+    ".hk-svc-ask{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 auto 12px;color:#0B6B73;font-size:14.5px;font-weight:700;letter-spacing:.01em;text-align:center}"+
+    ".hk-svc-ask svg{width:18px;height:18px;flex:none;animation:hkAskNudge 2s ease-in-out infinite}"+
+    "@keyframes hkAskNudge{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(3px)}}"+
+    "html body .hk-svc-tabs{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px!important;max-width:980px;padding:6px 4px 14px}"+
     ".hk-svc-tabs.hk-call .hk-svc-tab{will-change:transform}"+
-    ".hk-svc-tab{font:inherit;font-size:14px;font-weight:600;line-height:1.2;padding:9px 16px;border-radius:999px;border:1px solid #E4CF8E;background:#fff;color:#0A2E36;cursor:pointer;transition:background .2s,color .2s,border-color .2s;-webkit-tap-highlight-color:transparent}"+
-    ".hk-svc-tab span{opacity:.55;font-weight:500;margin-inline-start:6px}"+
-    ".hk-svc-tab[aria-selected=true]{background:#0A2E36;border-color:#0A2E36;color:#fff}"+
-    ".hk-svc-tab[aria-selected=true] span{opacity:.75}"+
-    ".hk-svc-tab:focus-visible{outline:2px solid #C9A23A;outline-offset:2px}"+
+    ".hk-svc-tab{position:relative;font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:6px;text-align:center;padding:16px 12px 14px;min-height:150px;border-radius:18px;border:1.5px solid #E4CF8E;background:linear-gradient(180deg,#fff 0%,#FBF7EC 100%);color:#0A2E36;cursor:pointer;box-shadow:0 2px 10px rgba(10,46,54,.06);transition:background .2s,color .2s,border-color .2s,transform .2s,box-shadow .2s;-webkit-tap-highlight-color:transparent}"+
+    ".hk-svc-ico{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:rgba(201,162,58,.14);color:#9A7A22;transition:background .2s,color .2s}"+
+    ".hk-svc-ico svg{width:24px;height:24px}"+
+    ".hk-svc-t{display:block;font-size:15px;font-weight:700;line-height:1.25}"+
+    ".hk-svc-s{display:block;font-size:12.5px;font-weight:500;line-height:1.4;color:#4b656c;transition:color .2s}"+
+    ".hk-svc-n{display:inline-block;margin-top:auto;padding:4px 11px;border-radius:999px;background:#0A2E36;color:#fff;font-size:12px;font-weight:700;line-height:1.3;transition:background .2s,color .2s}"+
+    ".hk-svc-ok{position:absolute;top:10px;inset-inline-end:10px;width:22px;height:22px;border-radius:50%;background:#E8C877;color:#0A2E36;display:none;align-items:center;justify-content:center}"+
+    ".hk-svc-ok svg{width:13px;height:13px}"+
+    ".hk-svc-tab[aria-selected=true]{background:linear-gradient(180deg,#0E3B45 0%,#0A2E36 100%);border-color:#0A2E36;color:#fff}"+
+    ".hk-svc-tab[aria-selected=true] .hk-svc-ico{background:rgba(232,200,119,.16);color:#E8C877}"+
+    ".hk-svc-tab[aria-selected=true] .hk-svc-s{color:#C9DAD8}"+
+    ".hk-svc-tab[aria-selected=true] .hk-svc-n{background:#E8C877;color:#0A2E36}"+
+    ".hk-svc-tab[aria-selected=true] .hk-svc-ok{display:flex}"+
+    ".hk-svc-tab[aria-selected=true]::after{content:'';position:absolute;left:50%;bottom:-9px;width:16px;height:16px;background:#0A2E36;transform:translateX(-50%) rotate(45deg);border-radius:0 0 4px 0}"+
+    ".hk-svc-tab:focus-visible{outline:2px solid #C9A23A;outline-offset:3px}"+
     ".grid-sm.hk-tabbed>.svc-group,.grid-sm.hk-tabbed>.hk-off{display:none!important}"+
     ".grid-sm.hk-tabbed>.svc-sm{animation:hkTabIn .35s ease both}"+
     "@keyframes hkTabIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}"+
@@ -672,19 +691,37 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
       "html body .grid-sm .svc-sm .img-wrap{aspect-ratio:4/3}html body .grid-sm .svc-sm-body{padding:9px 10px 10px!important}"+
       "html body .grid-sm .svc-sm-body h3{font-size:13.5px!important;line-height:1.3}"+
       "html body .grid-sm .svc-sm .hk-card-note{font-size:10.5px!important;line-height:1.3!important}"+
-      ".hk-svc-tabs{display:grid!important;grid-template-columns:1fr 1fr;gap:8px!important}"+
-      ".hk-svc-tab{font-size:13px;padding:10px 8px;text-align:center;display:flex;align-items:center;justify-content:center;gap:4px;min-height:44px;width:100%}"+
-      ".hk-svc-tab span{margin-inline-start:2px}}"+
-    ".hk-svc-tabs.hk-call .hk-svc-tab{animation:hkChip 4s ease-in-out infinite}"+
+      "html body .hk-svc-tabs{grid-template-columns:1fr 1fr;gap:10px!important}"+
+      ".hk-svc-tab{min-height:0;padding:13px 8px 12px;gap:5px;border-radius:16px;width:100%}"+
+      ".hk-svc-ico{width:38px;height:38px}.hk-svc-ico svg{width:21px;height:21px}"+
+      ".hk-svc-t{font-size:14px}.hk-svc-s{font-size:11.5px}.hk-svc-n{font-size:11.5px;padding:3px 10px}}"+
+    /* every 2 s the categories not yet open give a small bounce and gold glow, until the first tap */
+    ".hk-svc-tabs.hk-call .hk-svc-tab:not([aria-selected=true]){animation:hkChip 2s ease-in-out infinite}"+
     ".hk-svc-tabs.hk-call .hk-svc-tab:nth-child(2){animation-delay:.15s}.hk-svc-tabs.hk-call .hk-svc-tab:nth-child(3){animation-delay:.3s}.hk-svc-tabs.hk-call .hk-svc-tab:nth-child(4){animation-delay:.45s}"+
-    "@keyframes hkChip{0%,30%,100%{transform:translateY(0);box-shadow:0 0 0 0 rgba(201,162,58,0)}"+
-      "5%{transform:translateY(-6px);box-shadow:0 0 0 0 rgba(201,162,58,.6),0 0 18px rgba(201,162,58,.55)}10%{transform:translateY(0)}14%{transform:translateY(-2px)}"+
-      "18%{transform:translateY(0)}24%{box-shadow:0 0 0 10px rgba(201,162,58,0),0 0 0 rgba(201,162,58,0)}}"+
-    ".hk-svc-tab[aria-selected=true]{box-shadow:0 0 0 3px rgba(201,162,58,.35),0 6px 18px rgba(10,46,54,.22)}"+
-    ".hk-svc-tab:not([aria-selected=true]):hover{border-color:#C9A23A;box-shadow:0 0 14px rgba(201,162,58,.45)}"+
-    "@media (prefers-reduced-motion:reduce){.grid-sm.hk-tabbed>.svc-sm,.hk-svc-tabs.hk-call .hk-svc-tab{animation:none}}";
+    "@keyframes hkChip{0%,45%,100%{transform:translateY(0);box-shadow:0 0 0 0 rgba(201,162,58,0)}"+
+      "9%{transform:translateY(-6px);box-shadow:0 0 0 0 rgba(201,162,58,.6),0 0 18px rgba(201,162,58,.55)}18%{transform:translateY(0)}25%{transform:translateY(-2px)}"+
+      "32%{transform:translateY(0)}40%{box-shadow:0 0 0 10px rgba(201,162,58,0),0 0 0 rgba(201,162,58,0)}}"+
+    ".hk-svc-tab[aria-selected=true]{box-shadow:0 0 0 3px rgba(201,162,58,.35),0 10px 24px rgba(10,46,54,.25)}"+
+    ".hk-svc-tab:not([aria-selected=true]):hover{border-color:#C9A23A;transform:translateY(-2px);box-shadow:0 0 0 3px rgba(201,162,58,.18),0 10px 22px rgba(10,46,54,.12)}"+
+    ".hk-svc-tab:active{transform:scale(.97)}"+
+    "@media (prefers-reduced-motion:reduce){.grid-sm.hk-tabbed>.svc-sm,.hk-svc-tabs.hk-call .hk-svc-tab,.hk-svc-ask svg{animation:none!important}}";
   document.head.appendChild(st);
   function esc(s){return s.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  /* each category tile: an icon, its name, a short line of what is inside, and the count written out */
+  var SV='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+  var KIND=[
+    {re:/treat|علاج/i,ico:'<path d="M12 5.6c-1.6-1.3-3.4-2-5-1.4C4.6 5 4 7.6 4.6 10c.4 1.7 1 3.1 1.4 4.8.4 1.8.7 5.2 2.3 5.2 1.5 0 1.4-3.6 2.4-5 .4-.6 1.2-.6 1.6 0 1 1.4.9 5 2.4 5 1.6 0 1.9-3.4 2.3-5.2.4-1.7 1-3.1 1.4-4.8.6-2.4 0-5-2.4-5.9-1.6-.6-3.4.1-5 1.4z"/>',
+      en:"Dental, hair, cosmetic, weight loss and LASIK",ar:"الأسنان والشعر والتجميل والسمنة والليزك"},
+    {re:/check|فحص/i,ico:'<path d="M12 20s-7-4.4-9-9.2C1.8 7.6 3.9 4.5 7 4.5c2 0 3.3 1.1 5 3 1.7-1.9 3-3 5-3 3.1 0 5.2 3.1 4 6.3-2 4.8-9 9.2-9 9.2z"/><path d="M6 12h3l1.5-2.5 2.5 5 1.5-2.5H18"/>',
+      en:"Full check-up, physiotherapy and rehab",ar:"الفحص الشامل والعلاج الطبيعي والتعافي"},
+    {re:/holiday|trip|عطل|رحل/i,ico:'<circle cx="12" cy="9" r="3.2"/><path d="M12 2.8v1.4M5.6 9H4.2M19.8 9h-1.4M7.5 4.5l1 1M16.5 4.5l-1 1"/><path d="M3 16.5c2 0 2-1.4 4.5-1.4s2.5 1.4 4.5 1.4 2-1.4 4.5-1.4 2.5 1.4 4.5 1.4M3 20c2 0 2-1.4 4.5-1.4S10 20 12 20s2-1.4 4.5-1.4S19 20 21 20"/>',
+      en:"Red Sea, Nile cruises, culture and VIP trips",ar:"البحر الأحمر والرحلات النيلية والثقافة ورحلات VIP"},
+    {re:/business|study|أعمال|تعليم/i,ico:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3 12.5h18M11 12.5v1.5h2v-1.5"/>',
+      en:"Investment, study and medical marketing",ar:"الاستثمار والدراسة والتسويق الطبي"}
+  ];
+  var TICK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  function count(n){return ar?(n===1?"خدمة واحدة":n===2?"خدمتان":n<=10?n+" خدمات":n+" خدمة"):(n===1?"1 service":n+" services")}
+  function kindOf(label,i){for(var k=0;k<KIND.length;k++)if(KIND[k].re.test(label))return KIND[k];return KIND[i]||null}
   function build(grid){
     if(grid.__hkT)return;
     var groups=[],g=-1;
@@ -693,7 +730,7 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
       else if(g>=0&&k.classList.contains("svc-sm"))groups[g].cards.push(k);
     });
     if(groups.length<2)return;grid.__hkT=1;
-    var prev=grid.previousElementSibling;if(prev&&prev.classList.contains("hk-svc-tabs"))prev.remove();
+    var prev=grid.previousElementSibling;if(prev&&prev.classList.contains("hk-svc-tabs")){var pp=prev.previousElementSibling;prev.remove();if(pp&&pp.classList.contains("hk-svc-ask"))pp.remove()}
     var bar=document.createElement("div");bar.className="hk-svc-tabs";bar.setAttribute("role","tablist");
     bar.setAttribute("aria-label",ar?"فئات الخدمات":"Service categories");
     function show(i,focus){
@@ -704,7 +741,11 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
     }
     groups.forEach(function(G,i){
       var b=document.createElement("button");b.type="button";b.className="hk-svc-tab";b.setAttribute("role","tab");
-      b.innerHTML=esc(G.label)+"<span>"+G.cards.length+"</span>";b.addEventListener("click",function(){show(i)});G.b=b;bar.appendChild(b);
+      var K=kindOf(G.label,i),sub=K?(ar?K.ar:K.en):G.cards.slice(0,3).map(function(c){var h=c.querySelector("h3");return h?h.textContent.trim():""}).join(ar?"، ":", ");
+      b.innerHTML='<span class="hk-svc-ok">'+TICK+'</span>'+(K?'<span class="hk-svc-ico">'+SV+K.ico+'</svg></span>':'')+
+        '<span class="hk-svc-t">'+esc(G.label)+'</span><span class="hk-svc-s">'+esc(sub)+'</span><span class="hk-svc-n">'+count(G.cards.length)+'</span>';
+      b.setAttribute("aria-label",G.label+", "+count(G.cards.length));
+      b.addEventListener("click",function(){show(i)});G.b=b;bar.appendChild(b);
     });
     bar.addEventListener("keydown",function(e){
       var i=groups.findIndex(function(G){return G.b===document.activeElement});if(i<0)return;
@@ -712,7 +753,12 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
       if(e.key===fwd){show((i+1)%n,true);e.preventDefault()}else if(e.key===back){show((i+n-1)%n,true);e.preventDefault()}
     });
     grid.parentNode.insertBefore(bar,grid);grid.classList.add("hk-tabbed");
-    /* Point the tabs out: a gold glow and bounce every 4 s while they are on screen, until the first tap. */
+    if(!(bar.previousElementSibling&&bar.previousElementSibling.classList.contains("hk-svc-ask"))){
+      var ask=document.createElement("p");ask.className="hk-svc-ask";
+      ask.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg><span>'+(ar?"اختر ما تحتاجه، ثم تصفّح خدماته":"Choose what you need, then browse its services")+'</span>';
+      grid.parentNode.insertBefore(ask,bar);
+    }
+    /* Point the tabs out: a gold glow and bounce every 2 s while they are on screen, until the first tap. */
     var seen=false;try{seen=sessionStorage.getItem("hkSvcTapped")==="1"}catch(e){}
     if(!seen){
       var io=window.IntersectionObserver?new IntersectionObserver(function(es){bar.classList.toggle("hk-call",es[0].isIntersecting)},{threshold:.6}):null;
