@@ -10,7 +10,7 @@ if(path!=="/"&&path!=="/ar/")return;
 if(window.__hkTour)return;window.__hkTour=1;
 
 /* KEY carries the guide version: when the steps change, visitors who saw an older guide are offered the new one once */
-var KEY="hkTourDone4",WA="https://wa.me/+201031567949";
+var KEY="hkTourDone5",WA="https://wa.me/+201031567949";
 var AR=(document.documentElement.lang||"").slice(0,2)==="ar";
 var reduce=!!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
 function ls(f){try{return f()}catch(e){return null}}
@@ -35,7 +35,7 @@ var W=AR?{
   holidays:{t:"عطلات ننسّقها لك بالكامل",b:"باقات عائلية للبحر الأحمر والرحلات النيلية والقاهرة والساحل الشمالي بأسعار تقديرية. الإقامة والتنقلات تقدّمها شركات سياحة مصرية مسجّلة.",x:"فلل الساحل الشمالي",r:"تجد الفلل والشاليهات بأسعار الليلة بالريال (تقديرية، بدون الطيران)."},
   trust:{t:"جهات مرخّصة فقط",b:"يقدّم العلاج مستشفيات وعيادات مرخّصة ومستقلة. تنسّق حياكم مواعيدك وإقامتك وتنقّلاتك، ولا تقدّم العلاج بنفسها.",r:"اسحب الشعارات جانباً لترى الشبكة كاملة."},
   menuM:{t:"كل شيء في القائمة",b:"العلاجات والعطلات والأدلة وحاسبة التكلفة وبيانات التواصل، كلها في قائمة واحدة.",x:"زر القائمة",r:"تُفتح قائمة الصفحات كاملة؛ اضغط أي صفحة للانتقال إليها."},
-  menuD:{t:"كل شيء في الأعلى",b:"العطلات والعلاجات والأسعار والإرشادات وبيانات التواصل موجودة دائماً أعلى الصفحة."},
+  menuD:{t:"كل شيء في الأعلى",b:"العطلات والعلاجات والأسعار والإرشادات وبيانات التواصل موجودة دائماً أعلى الصفحة.",r:"تُفتح قائمة بكل العلاجات: الأسنان والشعر والتجميل والعيون وغيرها؛ اضغط أيّها لفتح صفحته."},
   help:{t:"المساعدة على بُعد ضغطة",wa:"واتساب",ai:"المساعد",ra:"الراديو",
     waL:"راسل منسّقاً بالعربية أو الإنجليزية.",aiL:"محادثة تجيب عن الأسئلة الشائعة في أي وقت.",raL:"محطات من القاهرة أثناء التصفّح، اضغط لكتم الصوت.",
     r:"يُفتح واتساب على رقمنا، جاهزاً لرسالتك."}
@@ -53,7 +53,7 @@ var W=AR?{
   holidays:{t:"Holidays, fully coordinated",b:"Family packages for the Red Sea, Nile cruises, Cairo and the North Coast, with indicative prices. Stays and transport are provided by registered Egyptian tourism companies.",x:"North Coast villas",r:"You see villas and chalets with nightly prices in SAR (indicative, excluding flights)."},
   trust:{t:"Licensed providers only",b:"Treatment is delivered by independent licensed hospitals and clinics. Hayakkom coordinates your appointments, stay and transfers; it does not provide treatment itself.",r:"Drag the logos sideways to see the whole network."},
   menuM:{t:"Everything is in the menu",b:"Treatments, holidays, guides, the cost calculator and contact details, all in one list.",x:"the menu button",r:"The full list of pages opens; tap any page to go there."},
-  menuD:{t:"Everything is at the top",b:"Holidays, treatments, costs and guides, and contact details are always at the top of the page."},
+  menuD:{t:"Everything is at the top",b:"Holidays, treatments, costs and guides, and contact details are always at the top of the page.",r:"A list of every treatment opens: dental, hair, cosmetic surgery, eyes and more; click one to open its page."},
   help:{t:"Help is one tap away",wa:"WhatsApp",ai:"Assistant",ra:"Radio",
     waL:"message a coordinator in Arabic or English.",aiL:"a chat that answers common questions, any time.",raL:"Cairo stations while you browse; tap to mute.",
     r:"WhatsApp opens with our number, ready for your message."}
@@ -63,7 +63,8 @@ var W=AR?{
 function top(f){f.top=1;return f}
 var STEPS=[
   top(function(){var b=q("#enBurger")||q("#arBurger"),c;if(b){c=W.menuM;return {holes:[b],tap:b,t:c.t,b:c.b,ex:[W.tap(c.x),c.r]}}
-    var n=AR?q("header.arnav"):q("nav.nav");if(!n)return null;c=W.menuD;return {holes:[n],t:c.t,b:c.b}}),
+    var n=AR?q("header.arnav"):q("nav.nav");if(!n)return null;c=W.menuD;var ul=q("ul.nav-links",n)||n,dd=ul.querySelectorAll(".nav-drop-btn"),tb=dd[1]||dd[0]||null;
+    return {holes:[ul],tap:tb,t:c.t,b:c.b,ex:tb?[W.tap(tb.textContent.trim()),c.r]:null}}),
   function(){var t=q(".hero-actions");if(!t)return null;var c=W.paths;return {holes:[t],tap:q(".hk-cta-med",t),t:c.t,b:c.b,ex:[W.tap(c.x),c.r]}},
   function(){var bar=q(".hk-svc-tabs"),c;
     if(bar){var tile=q(".hk-svc-tab",bar),nm=tile&&q(".hk-svc-t",tile),ct=tile&&q(".hk-svc-n",tile),ask=bar.previousElementSibling;c=W.cats;
