@@ -314,7 +314,7 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
 
 /* Quick guide (homepage walkthrough, English and Arabic): loaded after the page has finished loading. */
 (function(){var p=location.pathname.replace(/index\.html$/,"");if(p!=="/"&&p!=="/ar/")return;
-function L(){var e=document.createElement("script");e.src="/assets/hk-tour.js?v=20261025a";e.async=true;document.head.appendChild(e)}
+function L(){var e=document.createElement("script");e.src="/assets/hk-tour.js?v=20261025b";e.async=true;document.head.appendChild(e)}
 if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListener("load",function(){setTimeout(L,500)})}})();
 
 /* Install-or-skip app popup: starts as early as possible. */
