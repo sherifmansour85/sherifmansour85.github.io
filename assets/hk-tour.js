@@ -9,7 +9,8 @@ var path=location.pathname.replace(/index\.html$/,"");
 if(path!=="/"&&path!=="/ar/")return;
 if(window.__hkTour)return;window.__hkTour=1;
 
-var KEY="hkTourDone",WA="https://wa.me/+201031567949";
+/* KEY carries the guide version: when the steps change, visitors who saw an older guide are offered the new one once */
+var KEY="hkTourDone2",WA="https://wa.me/+201031567949";
 var AR=(document.documentElement.lang||"").slice(0,2)==="ar";
 var reduce=!!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
 function ls(f){try{return f()}catch(e){return null}}
