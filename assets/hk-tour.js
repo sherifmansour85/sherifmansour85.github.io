@@ -10,7 +10,7 @@ if(path!=="/"&&path!=="/ar/")return;
 if(window.__hkTour)return;window.__hkTour=1;
 
 /* KEY carries the guide version: when the steps change, visitors who saw an older guide are offered the new one once */
-var KEY="hkTourDone3",WA="https://wa.me/+201031567949";
+var KEY="hkTourDone4",WA="https://wa.me/+201031567949";
 var AR=(document.documentElement.lang||"").slice(0,2)==="ar";
 var reduce=!!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
 function ls(f){try{return f()}catch(e){return null}}
@@ -60,6 +60,8 @@ var W=AR?{
 /* ---------- steps: each finds its own targets; a step whose target is missing is left out ---------- */
 function top(f){f.top=1;return f}
 var STEPS=[
+  top(function(){var b=q("#enBurger")||q("#arBurger"),c;if(b){c=W.menuM;return {holes:[b],tap:b,t:c.t,b:c.b,ex:[W.tap(c.x),c.r]}}
+    var n=AR?q("header.arnav"):q("nav.nav");if(!n)return null;c=W.menuD;return {holes:[n],t:c.t,b:c.b}}),
   function(){var bar=q(".hk-svc-tabs"),c;
     if(bar){var tile=q(".hk-svc-tab",bar),nm=tile&&q(".hk-svc-t",tile),ct=tile&&q(".hk-svc-n",tile),ask=bar.previousElementSibling;c=W.cats;
       return {holes:ask&&ask.classList.contains("hk-svc-ask")?[ask,bar]:[bar],union:true,tap:tile,t:c.t,b:c.b,
@@ -69,8 +71,6 @@ var STEPS=[
     return {holes:hs,union:true,tap:w,t:c.t,b:c.b,ex:[W.tap(x&&x.length<40?x:c.x),c.r]}},
   function(){var t=q("#hk-holi .hk-spot-home");if(!t)return null;var c=W.holidays;return {holes:[t],tap:q("a[href$='north-coast-villas/']",t)||q(".hk-spot-card",t),t:c.t,b:c.b,ex:[W.tap(c.x),c.r]}},
   function(){var w=q(".pm-wrap");if(!w)return null;var s=w.closest("section"),h=s&&q(".sec-title",s),c=W.trust;return {holes:h?[h,w]:[w],union:true,t:c.t,b:c.b,ex:[W.tip,c.r],isTip:true}},
-  top(function(){var b=q("#enBurger")||q("#arBurger"),c;if(b){c=W.menuM;return {holes:[b],tap:b,t:c.t,b:c.b,ex:[W.tap(c.x),c.r]}}
-    var n=AR?q("header.arnav"):q("nav.nav");if(!n)return null;c=W.menuD;return {holes:[n],t:c.t,b:c.b}}),
   top(function(){var c=W.help,h=[],chips=[],li=[],wa=q(".fab-wa"),ai=q("#hkAi"),ra=q("#hkRadioWrap");
     if(wa){h.push(wa);chips.push([wa,c.wa]);li.push([c.wa,c.waL])}
     if(ai){h.push(ai);chips.push([ai,c.ai]);li.push([c.ai,c.aiL])}
