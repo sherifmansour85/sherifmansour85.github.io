@@ -29,3 +29,7 @@ answer engines; read `agents.md` before writing any copy.
 `python3 scripts/check-site.py` checks English/Arabic twins, sitemap and llms.txt coverage, the legal
 notice, broken internal links, `data-hk-keep` placement and the hk-share.js version. A hook runs it
 after every page edit; fix anything it reports.
+
+`python3 scripts/secret-scan.py` checks that no credential (API key, token, private key, password, database
+connection string) is committed: everything in this repository is public. A GitHub Action runs it on every push.
+Only public browser IDs belong in the site (Google Ads ID, Jotform IDs, the IndexNow key).
