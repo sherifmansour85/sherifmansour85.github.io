@@ -22,7 +22,7 @@
   };
   /* Same figures as /calculator/ (D, C and H there). */
   var D=[
-    {k:"implant",en:"Dental implants",ar:"زراعة الأسنان",lo:1300,hi:3000,trips:2,days:[3,5],nights:5,q:2,qmax:32,ql:"teeth"},
+    {k:"implant",en:"Dental implants",ar:"زراعة الأسنان",lo:940,hi:2300,trips:2,days:[3,5],nights:5,q:2,qmax:32,ql:"teeth"},
     {k:"veneer",en:"Porcelain veneers",ar:"قشور البورسلين (الفينير)",lo:340,hi:680,trips:1,days:[5,7],nights:6,q:8,qmax:32,ql:"teeth"},
     {k:"hollywood",en:"Hollywood smile",ar:"ابتسامة هوليوود",lo:6800,hi:12000,trips:1,days:[7,10],nights:8},
     {k:"hair",en:"Hair transplant",ar:"زراعة الشعر",lo:4500,hi:11300,trips:1,days:[4,6],nights:5},
