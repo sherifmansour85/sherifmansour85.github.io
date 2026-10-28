@@ -1,49 +1,43 @@
-live has v3542
-== live-phone-en  (hk-share.js?v=3542)
-   Step 1 of 7 :: Everything is in the menu :: If you tap “the menu button” → The full list of pages opens; tap any page to go there.
-   Step 2 of 7 :: Start with what you need :: If you tap “Medical Care in Egypt” → You reach the treatments page, with indicative 2026 prices in SAR.
-   Step 3 of 7 :: Pick a category, then a service :: If you tap “Treatments” → Its 6 services appear below; tap any card for its full guide.
-   Step 4 of 7 :: See your cost in seconds :: If you tap “WhatsApp” → Your selection goes to a coordinator, who replies with a written, itemised estimate before you pay anything.
-   Step 5 of 7 :: Holidays, fully coordinated :: If you tap “North Coast villas” → You see villas and chalets with nightly prices in SAR (indicative, excluding flights).
-   Step 6 of 7 :: Licensed providers only :: Tip Drag the logos sideways to see the whole network.
-   Step 7 of 7 :: Help is one tap away :: If you tap “WhatsApp” → WhatsApp opens with our number, ready for your message.
-   All set :: You’re ready to plan :: 
-   tiles: {"cardTop":330,"vh":664,"photoLoaded":true,"tileH":69} errors: []
-== live-phone-ar  (hk-share.js?v=3542)
-   الخطوة 1 من 7 :: كل شيء في القائمة :: إذا ضغطت «زر القائمة» ← تُفتح قائمة الصفحات كاملة؛ اضغط أي صفحة للانتقال إليها.
-   الخطوة 2 من 7 :: ابدأ بما تحتاجه :: إذا ضغطت «الرعاية الطبية في مصر» ← تنتقل إلى صفحة العلاجات مع أسعار تقديرية لعام 2026 بالريال السعودي.
-   الخطوة 3 من 7 :: اختر فئة ثم خدمة :: إذا ضغطت «العلاجات» ← تظهر 6 خدمات أسفلها؛ اضغط أي بطاقة لترى دليلها الكامل.
-   الخطوة 4 من 7 :: اعرف التكلفة في ثوانٍ :: إذا ضغطت «واتساب» ← يصل اختيارك إلى منسّق يردّ عليك بتقدير مكتوب ومفصّل قبل أن تدفع أي شيء.
-   الخطوة 5 من 7 :: عطلات ننسّقها لك بالكامل :: إذا ضغطت «فلل الساحل الشمالي» ← تجد الفلل والشاليهات بأسعار الليلة بالريال (تقديرية، بدون الطيران).
-   الخطوة 6 من 7 :: جهات مرخّصة فقط :: نصيحة اسحب الشعارات جانباً لترى الشبكة كاملة.
-   الخطوة 7 من 7 :: المساعدة على بُعد ضغطة :: إذا ضغطت «واتساب» ← يُفتح واتساب على رقمنا، جاهزاً لرسالتك.
-   انتهت الجولة :: أنت جاهز للتخطيط :: 
-   tiles: {"cardTop":310,"vh":664,"photoLoaded":true,"tileH":69} errors: []
-== live-desktop-en  (hk-share.js?v=3542)
-   Step 1 of 7 :: Everything is at the top :: 
-   Step 2 of 7 :: Start with what you need :: If you tap “Medical Care in Egypt” → You reach the treatments page, with indicative 2026 prices in SAR.
-   Step 3 of 7 :: Pick a category, then a service :: If you tap “Treatments” → Its 6 services appear below; tap any card for its full guide.
-   Step 4 of 7 :: See your cost in seconds :: If you tap “Send on WhatsApp” → Your selection goes to a coordinator, who replies with a written, itemised estimate before you pay anything.
-   Step 5 of 7 :: Holidays, fully coordinated :: If you tap “North Coast villas” → You see villas and chalets with nightly prices in SAR (indicative, excluding flights).
-   Step 6 of 7 :: Licensed providers only :: Tip Drag the logos sideways to see the whole network.
-   Step 7 of 7 :: Help is one tap away :: If you tap “WhatsApp” → WhatsApp opens with our number, ready for your message.
-   All set :: You’re ready to plan :: 
-   tiles: {"cardTop":275,"vh":820,"photoLoaded":true,"tileH":119} errors: []
-== live-desktop-ar  (hk-share.js?v=3542)
-   الخطوة 1 من 7 :: كل شيء في الأعلى :: 
-   الخطوة 2 من 7 :: ابدأ بما تحتاجه :: إذا ضغطت «الرعاية الطبية في مصر» ← تنتقل إلى صفحة العلاجات مع أسعار تقديرية لعام 2026 بالريال السعودي.
-   الخطوة 3 من 7 :: اختر فئة ثم خدمة :: إذا ضغطت «العلاجات» ← تظهر 6 خدمات أسفلها؛ اضغط أي بطاقة لترى دليلها الكامل.
-   الخطوة 4 من 7 :: اعرف التكلفة في ثوانٍ :: إذا ضغطت «أرسل التقدير عبر واتساب» ← يصل اختيارك إلى منسّق يردّ عليك بتقدير مكتوب ومفصّل قبل أن تدفع أي شيء.
-   الخطوة 5 من 7 :: عطلات ننسّقها لك بالكامل :: إذا ضغطت «فلل الساحل الشمالي» ← تجد الفلل والشاليهات بأسعار الليلة بالريال (تقديرية، بدون الطيران).
-   الخطوة 6 من 7 :: جهات مرخّصة فقط :: نصيحة اسحب الشعارات جانباً لترى الشبكة كاملة.
-   الخطوة 7 من 7 :: المساعدة على بُعد ضغطة :: إذا ضغطت «واتساب» ← يُفتح واتساب على رقمنا، جاهزاً لرسالتك.
-   انتهت الجولة :: أنت جاهز للتخطيط :: 
-   tiles: {"cardTop":288,"vh":820,"photoLoaded":true,"tileH":119} errors: []
-== return-phone-en: auto-popup=false scripts=[hk-share.js?v=3542 hk-tour.js?v=20261025f] footer="Quick guide: how this site works" step2="Start with what you need"
-== return-phone-ar: auto-popup=false scripts=[hk-share.js?v=3542 hk-tour.js?v=20261025f] footer="الدليل السريع: كيف يعمل الموقع" step2="ابدأ بما تحتاجه"
-== return-desktop-en: auto-popup=false scripts=[hk-share.js?v=3542 hk-tour.js?v=20261025f] footer="Quick guide: how this site works" step2="Start with what you need"
-== return-desktop-ar: auto-popup=false scripts=[hk-share.js?v=3542 hk-tour.js?v=20261025f] footer="الدليل السريع: كيف يعمل الموقع" step2="ابدأ بما تحتاجه"
-== oldflag-en: new guide offered=true, shows again after skipping=false
-== oldflag-ar: new guide offered=true, shows again after skipping=false
-== currency /dental/: fab-wa:visible hkAi:visible hkRadioWrap:visible | body=hk-dock
-== currency /ar/dental/: fab-wa:visible hkAi:visible hkRadioWrap:visible | body=hk-dock
+gtag.js bytes 586132
+G- IDs inside the AW tag: G-YM2MCB9756
+AW IDs inside: AW-16686203605
+
+== EN consent=default loaded tags: AW-16686203605
+GA4 collect hits: 1 tid=G-YM2MCB9756 gcs=G100 
+   https://www.googletagmanager.com/gtag/js?id=AW-16686203605
+   https://pagead2.googlesyndication.com/ccm/collect?rcb=7&frm=0&apvc=1&tid=AW-16686203605&en=page_view&dl=https%3A%2F%2Fwww.hayakkom.com%2F&scrsrc=www.googletagmanager.com&rnd=1522145355.1793208358&navt=n&npa=1&gtm=45be6ar
+
+== EN consent=accepted loaded tags: AW-16686203605
+GA4 collect hits: 2 tid=G-YM2MCB9756 gcs=G100  | tid=G-YM2MCB9756 gcs=G111 
+   https://www.googletagmanager.com/gtag/js?id=AW-16686203605
+   https://pagead2.googlesyndication.com/ccm/collect?rcb=7&frm=0&apvc=1&tid=AW-16686203605&en=page_view&dl=https%3A%2F%2Fwww.hayakkom.com%2F&scrsrc=www.googletagmanager.com&rnd=1451361934.1793208362&navt=n&npa=1&gtm=45be6ar
+   https://googleads.g.doubleclick.net/pagead/viewthroughconversion/16686203605/?random=1793208366115&cv=11&fst=1793208366115&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6ar0v9194383398za208zd9194383398xecxf1&gcd=13r3r
+   https://www.google.com/rmkt/collect/16686203605/?random=1793208366115&cv=11&fst=1793208366115&fmt=8&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6ar0v9194383398za208zd9194383398xecxf1&gcd=13r3r3r3r5l1&dma=0&tag_exp=1
+   https://www.google.com/ccm/collect?rcb=7&frm=0&apvc=1&auid=2067201117.1793208366&dt=Luxury%20Travel%20%26%20Medical%20Care%20in%20Egypt%20for%20Gulf%20Families%20%7C%20Hayakkom&tid=AW-16686203605&en=consent_update&dl=htt
+   https://ad.doubleclick.net/ccm/s/collect?auid=2067201117.1793208366&gtm=45be6ar0v9194383398za208zd9194383398xecxf1&fmt=8
+   https://googleads.g.doubleclick.net/pagead/viewthroughconversion/16686203605/?random=1793208366115&cv=11&fst=1793208366115&fmt=3&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6ar0v9194383398za208zd9194383398xecxf1&gcd
+   https://www.google.com/pagead/1p-user-list/16686203605/?random=1793208366115&cv=11&fst=1793206800000&fmt=3&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6ar0v9194383398za208zd9194383398xecxf1&gcd=13r3r3r3r5l1&dma=0&ta
+   https://googleads.g.doubleclick.net/pagead/viewthroughconversion/16686203605/?random=1793208368185&cv=11&fst=1793208368185&bg=ffffff&guid=ON&async=1&en=tour_offer&gtm=45be6ar0v9194383398za200zd9194383398xecxf1&gcd=13r3r3
+   https://www.google.com/rmkt/collect/16686203605/?random=1793208368185&cv=11&fst=1793208368185&fmt=8&bg=ffffff&guid=ON&async=1&en=tour_offer&gtm=45be6ar0v9194383398za200zd9194383398xecxf1&gcd=13r3r3r3r5l1&dma=0&tag_exp=11
+   https://www.google.com/ccm/collect?rcb=7&frm=0&apvc=0&auid=2067201117.1793208366&dt=Luxury%20Travel%20%26%20Medical%20Care%20in%20Egypt%20for%20Gulf%20Families%20%7C%20Hayakkom&tid=AW-16686203605&en=tour_offer&dl=https%3
+   https://googleads.g.doubleclick.net/pagead/viewthroughconversion/16686203605/?random=1793208368185&cv=11&fst=1793208368185&fmt=3&bg=ffffff&guid=ON&async=1&en=tour_offer&gtm=45be6ar0v9194383398za200zd9194383398xecxf1&gcd=
+   https://www.google.com/pagead/1p-user-list/16686203605/?random=1793208368185&cv=11&fst=1793206800000&fmt=3&bg=ffffff&guid=ON&async=1&en=tour_offer&gtm=45be6ar0v9194383398za200zd9194383398xecxf1&gcd=13r3r3r3r5l1&dma=0&tag
+
+== AR consent=default loaded tags: AW-16686203605
+GA4 collect hits: 1 tid=G-YM2MCB9756 gcs=G100 
+   https://www.googletagmanager.com/gtag/js?id=AW-16686203605
+   https://pagead2.googlesyndication.com/ccm/collect?rcb=15&frm=0&apvc=1&tid=AW-16686203605&en=page_view&dl=https%3A%2F%2Fwww.hayakkom.com%2Far%2F&scrsrc=www.googletagmanager.com&rnd=887116840.1793208372&navt=n&npa=1&gtm=45
+
+== AR consent=accepted loaded tags: AW-16686203605
+GA4 collect hits: 2 tid=G-YM2MCB9756 gcs=G100  | tid=G-YM2MCB9756 gcs=G111 
+   https://www.googletagmanager.com/gtag/js?id=AW-16686203605
+   https://pagead2.googlesyndication.com/ccm/collect?rcb=10&frm=0&apvc=1&tid=AW-16686203605&en=page_view&dl=https%3A%2F%2Fwww.hayakkom.com%2Far%2F&scrsrc=www.googletagmanager.com&rnd=292655689.1793208376&navt=n&npa=1&gtm=45
+   https://googleads.g.doubleclick.net/pagead/viewthroughconversion/16686203605/?random=1793208379911&cv=11&fst=1793208379911&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6ar1h2v9194383398za208zd9194383398xecxf1&gcd=13r
+   https://www.google.com/rmkt/collect/16686203605/?random=1793208379911&cv=11&fst=1793208379911&fmt=8&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6ar1h2v9194383398za208zd9194383398xecxf1&gcd=13r3r3r3r5l1&dma=0&tag_exp
+   https://www.google.com/ccm/collect?rcb=10&frm=0&apvc=1&auid=783590224.1793208380&dt=%D8%AD%D9%8A%D8%A7%D9%83%D9%85%20Hayakkom%20%7C%20%D8%B1%D8%AD%D9%84%D8%A7%D8%AA%20%D9%81%D8%A7%D8%AE%D8%B1%D8%A9%20%D9%88%D8%B1%D8%B9%D
+   https://ad.doubleclick.net/ccm/s/collect?auid=783590224.1793208380&gtm=45be6ar1h2v9194383398za208zd9194383398xecxf1&fmt=8
+   https://www.google.com/pagead/1p-user-list/16686203605/?random=1793208379911&cv=11&fst=1793206800000&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6ar1h2v9194383398za208zd9194383398xecxf1&gcd=13r3r3r3r5l1&dma=0&tag_ex
+   https://googleads.g.doubleclick.net/pagead/viewthroughconversion/16686203605/?random=1793208381974&cv=11&fst=1793208381974&bg=ffffff&guid=ON&async=1&en=tour_offer&gtm=45be6ar1h2v9194383398za200zd9194383398xecxf1&gcd=13r3
+   https://www.google.com/rmkt/collect/16686203605/?random=1793208381974&cv=11&fst=1793208381974&fmt=8&bg=ffffff&guid=ON&async=1&en=tour_offer&gtm=45be6ar1h2v9194383398za200zd9194383398xecxf1&gcd=13r3r3r3r5l1&dma=0&tag_exp=
+   https://www.google.com/ccm/collect?rcb=10&frm=0&apvc=0&auid=783590224.1793208380&dt=%D8%AD%D9%8A%D8%A7%D9%83%D9%85%20Hayakkom%20%7C%20%D8%B1%D8%AD%D9%84%D8%A7%D8%AA%20%D9%81%D8%A7%D8%AE%D8%B1%D8%A9%20%D9%88%D8%B1%D8%B9%D
+   https://www.google.com/pagead/1p-user-list/16686203605/?random=1793208381974&cv=11&fst=1793206800000&bg=ffffff&guid=ON&async=1&en=tour_offer&gtm=45be6ar1h2v9194383398za200zd9194383398xecxf1&gcd=13r3r3r3r5l1&dma=0&tag_exp
