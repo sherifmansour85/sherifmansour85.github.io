@@ -2,7 +2,7 @@ name: Live site check
 on:
   push:
     branches: [claude/live-check]
-    paths: [".github/workflows/live-check.yml", "check.mjs", "ga.mjs"]
+    paths: [".github/workflows/live-check.yml", "check.mjs", "ga.mjs", "live.mjs"]
   workflow_dispatch:
 permissions:
   contents: write
@@ -29,7 +29,7 @@ jobs:
           (cd site && python3 -m http.server 8080 >/dev/null 2>&1 &)
           sleep 2
           rm -rf shots && mkdir shots
-          node ga.mjs | tee report.txt
+          node live.mjs | tee report.txt
       - name: Commit screenshots
         if: always()
         run: |
