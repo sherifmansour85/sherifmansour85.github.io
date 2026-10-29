@@ -360,10 +360,7 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }</style>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<!--HK-HERO-IMG: the homepage photo is hosted on the site in a size for each screen and requested first, so the top of the page draws without waiting for app.js.-->
-<link rel="preload" as="image" href="/assets/hero-pyramids-tall.webp" media="(orientation:portrait)" fetchpriority="high">
-<link rel="preload" as="image" href="/assets/hero-pyramids-1440.webp" media="(orientation:landscape) and (max-width:1100px)" fetchpriority="high">
-<link rel="preload" as="image" href="/assets/hero-pyramids-1920.webp" media="(orientation:landscape) and (min-width:1101px)" fetchpriority="high">
+<!--HK-HERO-IMG: the homepage photo is hosted on the site in a size for each screen. It is not preloaded: a full-screen background never counts as the largest paint, and a preload only slows the headline.-->
 <style>/*HK-HERO-IMG*/.hero-bg-img.hero-layer-a{background-image:url(/assets/hero-pyramids-1920.webp)!important}@media(orientation:landscape) and (max-width:1100px){.hero-bg-img.hero-layer-a{background-image:url(/assets/hero-pyramids-1440.webp)!important}}@media(orientation:portrait){.hero-bg-img.hero-layer-a{background-image:url(/assets/hero-pyramids-tall.webp)!important}}</style>
 
 <meta name="build" content="2026-10-10-3100">
