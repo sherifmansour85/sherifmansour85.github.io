@@ -1,43 +1,35 @@
-gtag.js bytes 586132
-G- IDs inside the AW tag: G-YM2MCB9756
-AW IDs inside: AW-16686203605
+live serves hk-share v3545: true
 
-== EN consent=default loaded tags: AW-16686203605
-GA4 collect hits: 1 tid=G-YM2MCB9756 gcs=G100 
-   https://www.googletagmanager.com/gtag/js?id=AW-16686203605
-   https://pagead2.googlesyndication.com/ccm/collect?rcb=7&frm=0&apvc=1&tid=AW-16686203605&en=page_view&dl=https%3A%2F%2Fwww.hayakkom.com%2F&scrsrc=www.googletagmanager.com&rnd=1522145355.1793208358&navt=n&npa=1&gtm=45be6ar
+== en-phone {"shown":true,"text":"Allow cookies so we can see which pages help families most a","accept":"Accept all","reject":"Essential only","oneRow":true,"glow":true}
+consent calls: ["default:denied","update:granted"]
+guide opened: true
+ step 0 {"title":"Welcome to Hayakkom","hand":false,"at":[195,509]}
+ step 1 {"title":"Everything is in the menu","hand":false,"at":[40,32]}
+ step 2 {"title":"Start with what you need","hand":false,"at":[282,238]}
+mini-calc: https://www.hayakkom.com/assets/hk-mini-calc.js?v=7 errors: none
 
-== EN consent=accepted loaded tags: AW-16686203605
-GA4 collect hits: 2 tid=G-YM2MCB9756 gcs=G100  | tid=G-YM2MCB9756 gcs=G111 
-   https://www.googletagmanager.com/gtag/js?id=AW-16686203605
-   https://pagead2.googlesyndication.com/ccm/collect?rcb=7&frm=0&apvc=1&tid=AW-16686203605&en=page_view&dl=https%3A%2F%2Fwww.hayakkom.com%2F&scrsrc=www.googletagmanager.com&rnd=1451361934.1793208362&navt=n&npa=1&gtm=45be6ar
-   https://googleads.g.doubleclick.net/pagead/viewthroughconversion/16686203605/?random=1793208366115&cv=11&fst=1793208366115&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6ar0v9194383398za208zd9194383398xecxf1&gcd=13r3r
-   https://www.google.com/rmkt/collect/16686203605/?random=1793208366115&cv=11&fst=1793208366115&fmt=8&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6ar0v9194383398za208zd9194383398xecxf1&gcd=13r3r3r3r5l1&dma=0&tag_exp=1
-   https://www.google.com/ccm/collect?rcb=7&frm=0&apvc=1&auid=2067201117.1793208366&dt=Luxury%20Travel%20%26%20Medical%20Care%20in%20Egypt%20for%20Gulf%20Families%20%7C%20Hayakkom&tid=AW-16686203605&en=consent_update&dl=htt
-   https://ad.doubleclick.net/ccm/s/collect?auid=2067201117.1793208366&gtm=45be6ar0v9194383398za208zd9194383398xecxf1&fmt=8
-   https://googleads.g.doubleclick.net/pagead/viewthroughconversion/16686203605/?random=1793208366115&cv=11&fst=1793208366115&fmt=3&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6ar0v9194383398za208zd9194383398xecxf1&gcd
-   https://www.google.com/pagead/1p-user-list/16686203605/?random=1793208366115&cv=11&fst=1793206800000&fmt=3&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6ar0v9194383398za208zd9194383398xecxf1&gcd=13r3r3r3r5l1&dma=0&ta
-   https://googleads.g.doubleclick.net/pagead/viewthroughconversion/16686203605/?random=1793208368185&cv=11&fst=1793208368185&bg=ffffff&guid=ON&async=1&en=tour_offer&gtm=45be6ar0v9194383398za200zd9194383398xecxf1&gcd=13r3r3
-   https://www.google.com/rmkt/collect/16686203605/?random=1793208368185&cv=11&fst=1793208368185&fmt=8&bg=ffffff&guid=ON&async=1&en=tour_offer&gtm=45be6ar0v9194383398za200zd9194383398xecxf1&gcd=13r3r3r3r5l1&dma=0&tag_exp=11
-   https://www.google.com/ccm/collect?rcb=7&frm=0&apvc=0&auid=2067201117.1793208366&dt=Luxury%20Travel%20%26%20Medical%20Care%20in%20Egypt%20for%20Gulf%20Families%20%7C%20Hayakkom&tid=AW-16686203605&en=tour_offer&dl=https%3
-   https://googleads.g.doubleclick.net/pagead/viewthroughconversion/16686203605/?random=1793208368185&cv=11&fst=1793208368185&fmt=3&bg=ffffff&guid=ON&async=1&en=tour_offer&gtm=45be6ar0v9194383398za200zd9194383398xecxf1&gcd=
-   https://www.google.com/pagead/1p-user-list/16686203605/?random=1793208368185&cv=11&fst=1793206800000&fmt=3&bg=ffffff&guid=ON&async=1&en=tour_offer&gtm=45be6ar0v9194383398za200zd9194383398xecxf1&gcd=13r3r3r3r5l1&dma=0&tag
+== ar-phone {"shown":true,"text":"اسمح بملفات تعريف الارتباط لنعرف أي الصفحات تفيد العائلات أك","accept":"قبول الكل","reject":"الضرورية فقط","oneRow":true,"glow":true}
+consent calls: ["default:denied","update:granted"]
+guide opened: true
+ step 0 {"title":"أهلاً بك في حياكم","hand":false,"at":[195,501]}
+ step 1 {"title":"كل شيء في القائمة","hand":false,"at":[40,34]}
+ step 2 {"title":"ابدأ بما تحتاجه","hand":false,"at":[107,242]}
+mini-calc: https://www.hayakkom.com/assets/hk-mini-calc.js?v=7 errors: none
 
-== AR consent=default loaded tags: AW-16686203605
-GA4 collect hits: 1 tid=G-YM2MCB9756 gcs=G100 
-   https://www.googletagmanager.com/gtag/js?id=AW-16686203605
-   https://pagead2.googlesyndication.com/ccm/collect?rcb=15&frm=0&apvc=1&tid=AW-16686203605&en=page_view&dl=https%3A%2F%2Fwww.hayakkom.com%2Far%2F&scrsrc=www.googletagmanager.com&rnd=887116840.1793208372&navt=n&npa=1&gtm=45
+== en-desk {"shown":true,"text":"Allow cookies so we can see which pages help families most a","accept":"Accept all","reject":"Essential only","oneRow":true,"glow":true}
+consent calls: ["default:denied","update:granted"]
+guide opened: true
+ step 0 {"title":"Welcome to Hayakkom","hand":false,"at":[683,498]}
+ step 1 {"title":"Everything is at the top","hand":false,"at":[338,32]}
+ step 2 {"title":"Start with what you need","hand":false,"at":[550,269]}
+mini-calc: https://www.hayakkom.com/assets/hk-mini-calc.js?v=7 errors: none
 
-== AR consent=accepted loaded tags: AW-16686203605
-GA4 collect hits: 2 tid=G-YM2MCB9756 gcs=G100  | tid=G-YM2MCB9756 gcs=G111 
-   https://www.googletagmanager.com/gtag/js?id=AW-16686203605
-   https://pagead2.googlesyndication.com/ccm/collect?rcb=10&frm=0&apvc=1&tid=AW-16686203605&en=page_view&dl=https%3A%2F%2Fwww.hayakkom.com%2Far%2F&scrsrc=www.googletagmanager.com&rnd=292655689.1793208376&navt=n&npa=1&gtm=45
-   https://googleads.g.doubleclick.net/pagead/viewthroughconversion/16686203605/?random=1793208379911&cv=11&fst=1793208379911&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6ar1h2v9194383398za208zd9194383398xecxf1&gcd=13r
-   https://www.google.com/rmkt/collect/16686203605/?random=1793208379911&cv=11&fst=1793208379911&fmt=8&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6ar1h2v9194383398za208zd9194383398xecxf1&gcd=13r3r3r3r5l1&dma=0&tag_exp
-   https://www.google.com/ccm/collect?rcb=10&frm=0&apvc=1&auid=783590224.1793208380&dt=%D8%AD%D9%8A%D8%A7%D9%83%D9%85%20Hayakkom%20%7C%20%D8%B1%D8%AD%D9%84%D8%A7%D8%AA%20%D9%81%D8%A7%D8%AE%D8%B1%D8%A9%20%D9%88%D8%B1%D8%B9%D
-   https://ad.doubleclick.net/ccm/s/collect?auid=783590224.1793208380&gtm=45be6ar1h2v9194383398za208zd9194383398xecxf1&fmt=8
-   https://www.google.com/pagead/1p-user-list/16686203605/?random=1793208379911&cv=11&fst=1793206800000&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6ar1h2v9194383398za208zd9194383398xecxf1&gcd=13r3r3r3r5l1&dma=0&tag_ex
-   https://googleads.g.doubleclick.net/pagead/viewthroughconversion/16686203605/?random=1793208381974&cv=11&fst=1793208381974&bg=ffffff&guid=ON&async=1&en=tour_offer&gtm=45be6ar1h2v9194383398za200zd9194383398xecxf1&gcd=13r3
-   https://www.google.com/rmkt/collect/16686203605/?random=1793208381974&cv=11&fst=1793208381974&fmt=8&bg=ffffff&guid=ON&async=1&en=tour_offer&gtm=45be6ar1h2v9194383398za200zd9194383398xecxf1&gcd=13r3r3r3r5l1&dma=0&tag_exp=
-   https://www.google.com/ccm/collect?rcb=10&frm=0&apvc=0&auid=783590224.1793208380&dt=%D8%AD%D9%8A%D8%A7%D9%83%D9%85%20Hayakkom%20%7C%20%D8%B1%D8%AD%D9%84%D8%A7%D8%AA%20%D9%81%D8%A7%D8%AE%D8%B1%D8%A9%20%D9%88%D8%B1%D8%B9%D
-   https://www.google.com/pagead/1p-user-list/16686203605/?random=1793208381974&cv=11&fst=1793206800000&bg=ffffff&guid=ON&async=1&en=tour_offer&gtm=45be6ar1h2v9194383398za200zd9194383398xecxf1&gcd=13r3r3r3r5l1&dma=0&tag_exp
+== ar-desk {"shown":true,"text":"اسمح بملفات تعريف الارتباط لنعرف أي الصفحات تفيد العائلات أك","accept":"قبول الكل","reject":"الضرورية فقط","oneRow":true,"glow":true}
+consent calls: ["default:denied","update:granted"]
+guide opened: true
+ step 0 {"title":"أهلاً بك في حياكم","hand":false,"at":[683,490]}
+ step 1 {"title":"كل شيء في الأعلى","hand":false,"at":[1029,31]}
+ step 2 {"title":"ابدأ بما تحتاجه","hand":false,"at":[816,263]}
+mini-calc: https://www.hayakkom.com/assets/hk-mini-calc.js?v=7 errors: none
+
+implant range live: lo:940,hi:2300 | lo:340,hi:680 | lo:6800,hi:12000 | lo:4500,hi:11300
