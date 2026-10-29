@@ -1,35 +1,30 @@
-live serves hk-share v3545: true
 
-== en-phone {"shown":true,"text":"Allow cookies so we can see which pages help families most a","accept":"Accept all","reject":"Essential only","oneRow":true,"glow":true}
-consent calls: ["default:denied","update:granted"]
-guide opened: true
- step 0 {"title":"Welcome to Hayakkom","hand":false,"at":[195,509]}
- step 1 {"title":"Everything is in the menu","hand":false,"at":[40,32]}
- step 2 {"title":"Start with what you need","hand":false,"at":[282,238]}
-mini-calc: https://www.hayakkom.com/assets/hk-mini-calc.js?v=7 errors: none
+### live-home scores 46/81/82 | median: FCP 2.6s LCP 3.0s TBT 265ms CLS 0.022 SI 5.6 s
+  largest-contentful-paint-element:  
+  cpu by script: app.js?v=20261024b 1208 |  1203 | hk-share.js?v=3545 620 | js?id=AW-16686203605 531 | hk-mini-calc.js?v=7 404 | Unattributable 336
+  bytes Total size was 2,358 KiB: /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F4 275K | /assets/app.js?v=20261024b 224K | /gtag/js?id=AW-16686203605 190K | /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F4 177K | /photos/71241/pexels-photo-71241.jpeg?auto=compres 148K | /assets/video/hayakkom-holidays-en-poster.jpg?v=3 143K
 
-== ar-phone {"shown":true,"text":"اسمح بملفات تعريف الارتباط لنعرف أي الصفحات تفيد العائلات أك","accept":"قبول الكل","reject":"الضرورية فقط","oneRow":true,"glow":true}
-consent calls: ["default:denied","update:granted"]
-guide opened: true
- step 0 {"title":"أهلاً بك في حياكم","hand":false,"at":[195,501]}
- step 1 {"title":"كل شيء في القائمة","hand":false,"at":[40,34]}
- step 2 {"title":"ابدأ بما تحتاجه","hand":false,"at":[107,242]}
-mini-calc: https://www.hayakkom.com/assets/hk-mini-calc.js?v=7 errors: none
+### branch-home scores 73/75/76 | median: FCP 2.3s LCP 4.2s TBT 305ms CLS 0.011 SI 3.9 s
+  largest-contentful-paint-element:  
+  cpu by script:  1365 | app.js?v=20261024b 1259 | js?id=AW-16686203605 586 | hk-share.js?v=3546 539 | hk-mini-calc.js?v=7 364 | Unattributable 335
+  bytes Total size was 2,293 KiB: /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F4 275K | /assets/app.js?v=20261024b 220K | /gtag/js?id=AW-16686203605 190K | /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F4 177K | /assets/video/hayakkom-holidays-en-poster.jpg?v=3 143K | /assets/hero-pyramids-tall.webp 83K
 
-== en-desk {"shown":true,"text":"Allow cookies so we can see which pages help families most a","accept":"Accept all","reject":"Essential only","oneRow":true,"glow":true}
-consent calls: ["default:denied","update:granted"]
-guide opened: true
- step 0 {"title":"Welcome to Hayakkom","hand":false,"at":[683,498]}
- step 1 {"title":"Everything is at the top","hand":false,"at":[338,32]}
- step 2 {"title":"Start with what you need","hand":false,"at":[550,269]}
-mini-calc: https://www.hayakkom.com/assets/hk-mini-calc.js?v=7 errors: none
+### live-dental scores 54/55/57 | median: FCP 3.6s LCP 7.7s TBT 324ms CLS 0.025 SI 6.8 s
+  largest-contentful-paint-element:  
+  cpu by script:  9399 | Unattributable 591 | js?id=AW-16686203605 581 | app.js?v=20261024b 445 | hk-share.js?v=3545 442 | hk-radio.js?v=20261025c 131
+  bytes Total size was 5,606 KiB: /s/ai-agent/4b6f78860d2/static/js/index.42a672cc.j 1411K | /s/ai-agent/4b6f78860d2/static/js/28.3e45434d.js 1013K | /jufs/sherifmansour85%2Fagent_files%2Favatar_image 341K | /assets/app.js?v=20261024b 224K | /s/static/cbdb599e589/static/jotform.forms.js 207K | /gtag/js?id=AW-16686203605 190K
 
-== ar-desk {"shown":true,"text":"اسمح بملفات تعريف الارتباط لنعرف أي الصفحات تفيد العائلات أك","accept":"قبول الكل","reject":"الضرورية فقط","oneRow":true,"glow":true}
-consent calls: ["default:denied","update:granted"]
-guide opened: true
- step 0 {"title":"أهلاً بك في حياكم","hand":false,"at":[683,490]}
- step 1 {"title":"كل شيء في الأعلى","hand":false,"at":[1029,31]}
- step 2 {"title":"ابدأ بما تحتاجه","hand":false,"at":[816,263]}
-mini-calc: https://www.hayakkom.com/assets/hk-mini-calc.js?v=7 errors: none
+### branch-dental scores 77/78/78 | median: FCP 2.3s LCP 4.3s TBT 254ms CLS 0.025 SI 2.3 s
+  largest-contentful-paint-element:  
+  cpu by script:  1458 | js?id=AW-16686203605 547 | app.js?v=20261024b 326 | hk-share.js?v=3546 324 | Unattributable 190 | hk-radio.js?v=20261025c 55
+  bytes Total size was 741 KiB: /assets/app.js?v=20261024b 220K | /gtag/js?id=AW-16686203605 190K | /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F3 63K | /assets/fonts/inter-latin-6ab57b19.woff2 47K | /?url=images.pexels.com%2Fphotos%2F3845653%2Fpexel 45K | /dental/ 44K
 
-implant range live: lo:940,hi:2300 | lo:340,hi:680 | lo:6800,hi:12000 | lo:4500,hi:11300
+### live-ar-home scores 77/83/87 | median: FCP 1.7s LCP 4.0s TBT 182ms CLS 0.006 SI 3.5 s
+  largest-contentful-paint-element:  
+  cpu by script:  1834 | hk-share.js?v=3545 672 | hk-mini-calc.js?v=7 545 | js?id=AW-16686203605 346 | Unattributable 261 | hk-tour.js?v=20261027a 75
+  bytes Total size was 1,442 KiB: /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F4 275K | /gtag/js?id=AW-16686203605 190K | /photos/71241/pexels-photo-71241.jpeg?auto=compres 148K | /assets/video/hayakkom-holidays-ar-poster.jpg?v=3 136K | /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F2 69K | /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F5 55K
+
+### branch-ar-home scores 84/88/89 | median: FCP 1.8s LCP 3.3s TBT 192ms CLS 0.028 SI 1.8 s
+  largest-contentful-paint-element:  
+  cpu by script:  1828 | hk-mini-calc.js?v=7 503 | hk-share.js?v=3546 361 | js?id=AW-16686203605 351 | Unattributable 215 | hk-radio.js?v=20261025c 66
+  bytes Total size was 1,259 KiB: /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F4 275K | /gtag/js?id=AW-16686203605 190K | /assets/video/hayakkom-holidays-ar-poster.jpg?v=3 136K | /assets/hero-pyramids-tall.webp 83K | /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F2 69K | /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F5 55K
