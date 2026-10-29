@@ -26,7 +26,7 @@ jobs:
           npx playwright install --with-deps chromium >/dev/null
       - name: Walk the quick guide on the live site and on the PR branch
         run: |
-                    rm -rf shots && mkdir shots
+          mkdir -p shots
           BRANCH=1 ./lh.sh | tee report.txt
       - name: Commit screenshots
         if: always()
