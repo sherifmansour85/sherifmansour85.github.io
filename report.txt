@@ -1,30 +1,20 @@
 
-### live-home scores 46/81/82 | median: FCP 2.6s LCP 3.0s TBT 265ms CLS 0.022 SI 5.6 s
+### live-home scores 52/60/62 | median: FCP 2.6s LCP 8.3s TBT 300ms CLS 0.001 SI 5.8 s
   largest-contentful-paint-element:  
-  cpu by script: app.js?v=20261024b 1208 |  1203 | hk-share.js?v=3545 620 | js?id=AW-16686203605 531 | hk-mini-calc.js?v=7 404 | Unattributable 336
-  bytes Total size was 2,358 KiB: /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F4 275K | /assets/app.js?v=20261024b 224K | /gtag/js?id=AW-16686203605 190K | /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F4 177K | /photos/71241/pexels-photo-71241.jpeg?auto=compres 148K | /assets/video/hayakkom-holidays-en-poster.jpg?v=3 143K
+  cpu by script: app.js?v=20261024b 1050 |  929 | hk-share.js?v=3545 540 | js?id=AW-16686203605 463 | Unattributable 235 | hk-mini-calc.js?v=7 127
+  bytes Total size was 1,133 KiB: /assets/app.js?v=20261024b 223K | /gtag/js?id=AW-16686203605 190K | /photos/71241/pexels-photo-71241.jpeg?auto=compres 148K | /assets/video/hayakkom-holidays-en-poster.jpg?v=3 143K | / 54K | /assets/fonts/inter-latin-6ab57b19.woff2 47K
 
-### branch-home scores 73/75/76 | median: FCP 2.3s LCP 4.2s TBT 305ms CLS 0.011 SI 3.9 s
+### branch-home scores 70/71/72 | median: FCP 2.3s LCP 5.0s TBT 271ms CLS 0.011 SI 4.2 s
   largest-contentful-paint-element:  
-  cpu by script:  1365 | app.js?v=20261024b 1259 | js?id=AW-16686203605 586 | hk-share.js?v=3546 539 | hk-mini-calc.js?v=7 364 | Unattributable 335
+  cpu by script:  1263 | app.js?v=20261024b 1239 | hk-share.js?v=3546 566 | js?id=AW-16686203605 540 | Unattributable 373 | hk-mini-calc.js?v=7 372
   bytes Total size was 2,293 KiB: /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F4 275K | /assets/app.js?v=20261024b 220K | /gtag/js?id=AW-16686203605 190K | /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F4 177K | /assets/video/hayakkom-holidays-en-poster.jpg?v=3 143K | /assets/hero-pyramids-tall.webp 83K
 
-### live-dental scores 54/55/57 | median: FCP 3.6s LCP 7.7s TBT 324ms CLS 0.025 SI 6.8 s
+### live-ar-home scores 68/69/79 | median: FCP 1.7s LCP 8.5s TBT 129ms CLS 0.001 SI 5.8 s
   largest-contentful-paint-element:  
-  cpu by script:  9399 | Unattributable 591 | js?id=AW-16686203605 581 | app.js?v=20261024b 445 | hk-share.js?v=3545 442 | hk-radio.js?v=20261025c 131
-  bytes Total size was 5,606 KiB: /s/ai-agent/4b6f78860d2/static/js/index.42a672cc.j 1411K | /s/ai-agent/4b6f78860d2/static/js/28.3e45434d.js 1013K | /jufs/sherifmansour85%2Fagent_files%2Favatar_image 341K | /assets/app.js?v=20261024b 224K | /s/static/cbdb599e589/static/jotform.forms.js 207K | /gtag/js?id=AW-16686203605 190K
+  cpu by script:  1704 | hk-share.js?v=3545 467 | js?id=AW-16686203605 325 | Unattributable 191 | hk-radio.js?v=20261025c 71 | hk-tour.js?v=20261027a 50
+  bytes Total size was 973 KiB: /gtag/js?id=AW-16686203605 190K | /photos/71241/pexels-photo-71241.jpeg?auto=compres 148K | /assets/video/hayakkom-holidays-ar-poster.jpg?v=3 136K | /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F2 69K | /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F5 53K | /ar/ 41K
 
-### branch-dental scores 77/78/78 | median: FCP 2.3s LCP 4.3s TBT 254ms CLS 0.025 SI 2.3 s
+### branch-ar-home scores 81/88/89 | median: FCP 1.8s LCP 3.3s TBT 200ms CLS 0.028 SI 1.8 s
   largest-contentful-paint-element:  
-  cpu by script:  1458 | js?id=AW-16686203605 547 | app.js?v=20261024b 326 | hk-share.js?v=3546 324 | Unattributable 190 | hk-radio.js?v=20261025c 55
-  bytes Total size was 741 KiB: /assets/app.js?v=20261024b 220K | /gtag/js?id=AW-16686203605 190K | /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F3 63K | /assets/fonts/inter-latin-6ab57b19.woff2 47K | /?url=images.pexels.com%2Fphotos%2F3845653%2Fpexel 45K | /dental/ 44K
-
-### live-ar-home scores 77/83/87 | median: FCP 1.7s LCP 4.0s TBT 182ms CLS 0.006 SI 3.5 s
-  largest-contentful-paint-element:  
-  cpu by script:  1834 | hk-share.js?v=3545 672 | hk-mini-calc.js?v=7 545 | js?id=AW-16686203605 346 | Unattributable 261 | hk-tour.js?v=20261027a 75
-  bytes Total size was 1,442 KiB: /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F4 275K | /gtag/js?id=AW-16686203605 190K | /photos/71241/pexels-photo-71241.jpeg?auto=compres 148K | /assets/video/hayakkom-holidays-ar-poster.jpg?v=3 136K | /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F2 69K | /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F5 55K
-
-### branch-ar-home scores 84/88/89 | median: FCP 1.8s LCP 3.3s TBT 192ms CLS 0.028 SI 1.8 s
-  largest-contentful-paint-element:  
-  cpu by script:  1828 | hk-mini-calc.js?v=7 503 | hk-share.js?v=3546 361 | js?id=AW-16686203605 351 | Unattributable 215 | hk-radio.js?v=20261025c 66
+  cpu by script:  1821 | hk-mini-calc.js?v=7 488 | js?id=AW-16686203605 380 | hk-share.js?v=3546 373 | Unattributable 206 | hk-radio.js?v=20261025c 73
   bytes Total size was 1,259 KiB: /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F4 275K | /gtag/js?id=AW-16686203605 190K | /assets/video/hayakkom-holidays-ar-poster.jpg?v=3 136K | /assets/hero-pyramids-tall.webp 83K | /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F2 69K | /?url=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F5 55K
