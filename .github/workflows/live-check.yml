@@ -27,7 +27,7 @@ jobs:
       - name: Walk the quick guide on the live site and on the PR branch
         run: |
           mkdir -p shots
-          BRANCH=1 ./lh.sh | tee report.txt
+          PAGES="home:/ ar-home:/ar/" BRANCH=1 ./lh.sh | tee report.txt
       - name: Commit screenshots
         if: always()
         run: |
