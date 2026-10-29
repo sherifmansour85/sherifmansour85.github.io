@@ -898,7 +898,7 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   st.textContent=
     B+"{border-top:1px solid rgba(212,168,67,.45)!important;box-shadow:0 -10px 30px rgba(0,0,0,.28)!important}"+
     B+":not([hidden]){animation:"+(calm?"none":"hkCcUp .5s cubic-bezier(.2,.8,.2,1) both")+"}"+
-    "@keyframes hkCcUp{from{transform:translateY(100%);opacity:0}to{transform:none;opacity:1}}"+
+    "@keyframes hkCcUp{from{transform:translateY(100%)}to{transform:none}}"+
     B+" p{color:#EEF6F5!important}"+
     B+" .cc-btns{align-items:center!important}"+
     B+" .cc-accept{order:-1;padding:11px 28px!important;font-size:14.5px!important;min-height:44px;box-shadow:0 4px 14px rgba(212,168,67,.35)}"+
