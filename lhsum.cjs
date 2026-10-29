@@ -1,10 +1,14 @@
 const fs=require('fs');const [name,...files]=process.argv.slice(2);
-for(const f of files){let j;try{j=JSON.parse(fs.readFileSync(f))}catch(e){console.log(name,'no result');continue}
- const a=j.audits,n=k=>a[k]&&a[k].displayValue;
- console.log(`\n### ${name} score ${Math.round(j.categories.performance.score*100)} | FCP ${n('first-contentful-paint')} LCP ${n('largest-contentful-paint')} TBT ${n('total-blocking-time')} CLS ${n('cumulative-layout-shift')} SI ${n('speed-index')}`);
- const le=a['largest-contentful-paint-element'];if(le&&le.details){const it=JSON.stringify(le.details).slice(0,700);console.log('LCP element:',it)}
- for(const k of ['render-blocking-resources','bootup-time','mainthread-work-breakdown','total-byte-weight','unused-javascript','unused-css-rules','lcp-lazy-loaded','prioritize-lcp-image','third-party-summary','server-response-time','redirects']){
-  const x=a[k];if(!x)continue;let s=`${k}: ${x.displayValue||''} score=${x.score}`;
-  if(x.details&&x.details.items)s+=' :: '+x.details.items.slice(0,6).map(i=>(i.url||i.entity||i.groupLabel||i.node&&i.node.snippet||'').toString().slice(-70)+' '+Math.round(i.wastedMs||i.total||i.totalBytes||i.transferSize||i.scripting||i.blockingTime||0)).join(' | ');
-  console.log(' ',s)}
- break}
+const rows=[];
+for(const f of files){let j;try{j=JSON.parse(fs.readFileSync(f))}catch(e){continue}
+ const a=j.audits,v=k=>a[k]&&a[k].numericValue;
+ rows.push({s:Math.round(j.categories.performance.score*100),fcp:v('first-contentful-paint'),lcp:v('largest-contentful-paint'),tbt:v('total-blocking-time'),j});}
+if(!rows.length){console.log(name,'no result');process.exit()}
+rows.sort((x,y)=>x.s-y.s);const m=rows[Math.floor(rows.length/2)],a=m.j.audits;
+console.log(`\n### ${name} scores ${rows.map(r=>r.s).join('/')} | median: FCP ${(m.fcp/1000).toFixed(1)}s LCP ${(m.lcp/1000).toFixed(1)}s TBT ${Math.round(m.tbt)}ms CLS ${a['cumulative-layout-shift'].displayValue} SI ${a['speed-index'].displayValue}`);
+const walk=(o,f)=>{if(!o||typeof o!=='object')return;f(o);for(const k in o)walk(o[k],f)};
+for(const k of ['largest-contentful-paint-element','lcp-breakdown-insight','lcp-discovery-insight','render-blocking-insight','network-dependency-tree-insight']){const x=a[k];if(!x)continue;
+ const bits=[];walk(x.details,o=>{if(o.snippet)bits.push('EL '+o.snippet.slice(0,160));if(o.phase&&o.timing!=null)bits.push(o.phase+' '+Math.round(o.timing));if(o.subpart&&o.duration!=null)bits.push(o.subpart+' '+Math.round(o.duration));if(o.label&&o.duration!=null)bits.push(o.label+' '+Math.round(o.duration))});
+ console.log('  '+k+': '+(x.displayValue||'')+' '+[...new Set(bits)].slice(0,8).join(' | '))}
+const bt=a['bootup-time'];if(bt&&bt.details)console.log('  cpu by script: '+bt.details.items.slice(0,6).map(i=>i.url.split('/').pop().slice(0,40)+' '+Math.round(i.total)).join(' | '));
+const tw=a['total-byte-weight'];if(tw&&tw.details)console.log('  bytes '+tw.displayValue+': '+tw.details.items.slice(0,6).map(i=>i.url.replace(/^https?:\/\/[^/]+/,'').slice(0,50)+' '+Math.round(i.totalBytes/1024)+'K').join(' | '));
