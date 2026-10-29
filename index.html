@@ -1260,17 +1260,8 @@ body:has(.hero-actions .hk-cta) .hero-actions .hk-cta.btn-outline:hover,body:has
   }
   function start(){ if(started) return; started=true; fr.src='https://agent.jotform.com/019568594d0a79c6a0dc6cb7237c86324108?embedMode=popup'; }
   fr.addEventListener('load', function(){ fr.classList.add('ready'); if(load) load.classList.add('gone'); });
-  /* begin loading as soon as the browser is idle, so the click is instant */
-  /* Do not preload on page load — the agent pulls several megabytes and blocks
-     the main thread. Warm it only on intent, or long after the page is usable. */
-  var warm=false;
-  function idleWarm(){
-    if(warm) return; warm=true;
-    if('requestIdleCallback' in window) requestIdleCallback(start,{timeout:2000}); else start();
-  }
-  /* after first scroll or 12s, whichever comes first */
-  window.addEventListener('scroll', function(){ setTimeout(idleWarm, 1500); }, {once:true, passive:true});
-  setTimeout(idleWarm, 12000);
+  /* The agent pulls several megabytes and blocks the main thread, so it loads only on intent: hover, touch or
+     keyboard focus on the button. The branded loading state covers the wait after a tap. */
   /* and immediately on intent */
   ['pointerenter','touchstart','focus'].forEach(function(ev){ b.addEventListener(ev, start, {once:true, passive:true}); });
   b.addEventListener('click', function(){ start(); p.hidden=false; document.body.classList.add('hk-ai-open'); });
