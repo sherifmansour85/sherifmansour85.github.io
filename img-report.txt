@@ -1,4 +1,5 @@
 source 2400 x 1359 393988 bytes
+img/hero-pyramids-tall.webp 815x1359 84624 bytes
 img/hero-pyramids-640.webp 640x362 15074 bytes
 img/hero-pyramids-960.webp 960x544 34200 bytes
 img/hero-pyramids-1440.webp 1440x815 73498 bytes
