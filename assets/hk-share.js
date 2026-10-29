@@ -314,7 +314,7 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
 
 /* Quick guide (homepage walkthrough, English and Arabic): loaded after the page has finished loading. */
 (function(){var p=location.pathname.replace(/index\.html$/,"");if(p!=="/"&&p!=="/ar/")return;
-function L(){var e=document.createElement("script");e.src="/assets/hk-tour.js?v=20261025f";e.async=true;document.head.appendChild(e)}
+function L(){var e=document.createElement("script");e.src="/assets/hk-tour.js?v=20261027a";e.async=true;document.head.appendChild(e)}
 if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListener("load",function(){setTimeout(L,500)})}})();
 
 /* Install-or-skip app popup: starts as early as possible. */
@@ -886,4 +886,31 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   var tq;function soon(){clearTimeout(tq);tq=setTimeout(scan,200)}
   function boot(){scan();var r=document.getElementById("root")||document.body;if(window.MutationObserver)new MutationObserver(soon).observe(r,{childList:true,subtree:true});[1000,3000,6000].forEach(function(t){setTimeout(scan,t)})}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
+})();
+
+/* HK-CC-BOOST: the cookie bar (#hkCc, in every page) slides up, shows "Accept all" first and larger, and gives it a
+   short gold glow after a few seconds so visitors notice it. "Essential only" stays on the bar, readable and one tap
+   away, as the Saudi PDPL expects a real choice. The footer "Cookie settings" button reopens the bar. */
+(function(){
+  if(window.__hkCcBoost)return;window.__hkCcBoost=1;
+  var B="html body #hkCc",calm=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches;
+  var st=document.createElement("style");
+  st.textContent=
+    B+"{border-top:1px solid rgba(212,168,67,.45)!important;box-shadow:0 -10px 30px rgba(0,0,0,.28)!important}"+
+    B+":not([hidden]){animation:"+(calm?"none":"hkCcUp .5s cubic-bezier(.2,.8,.2,1) both")+"}"+
+    "@keyframes hkCcUp{from{transform:translateY(100%);opacity:0}to{transform:none;opacity:1}}"+
+    B+" p{color:#EEF6F5!important}"+
+    B+" .cc-btns{align-items:center!important}"+
+    B+" .cc-accept{order:-1;padding:11px 28px!important;font-size:14.5px!important;min-height:44px;box-shadow:0 4px 14px rgba(212,168,67,.35)}"+
+    B+" .cc-accept.hk-glow{animation:hkCcGlow 1.6s ease-in-out 2}"+
+    "@keyframes hkCcGlow{0%,100%{box-shadow:0 4px 14px rgba(212,168,67,.35);transform:none}50%{box-shadow:0 0 0 7px rgba(212,168,67,.28),0 6px 20px rgba(212,168,67,.5);transform:scale(1.05)}}"+
+    B+" .cc-reject{padding:10px 18px!important;font-size:13px!important;min-height:44px;color:#E3DACA!important}"+
+    "@media(max-width:600px){"+B+" .cc-btns{flex-wrap:nowrap!important;width:100%;max-width:400px}"+B+" .cc-accept{flex:1 1 auto;padding:11px 16px!important}"+B+" .cc-reject{flex:0 0 auto;padding:10px 14px!important}}";
+  (document.head||document.documentElement).appendChild(st);
+  if(calm)return;
+  var t;function glow(){var b=document.getElementById("hkCc"),a=b&&b.querySelector(".cc-accept");
+    if(!a||b.hidden)return;a.classList.remove("hk-glow");void a.offsetWidth;a.classList.add("hk-glow")}
+  function watch(){var b=document.getElementById("hkCc");if(!b)return;clearTimeout(t);if(!b.hidden)t=setTimeout(glow,4000);
+    if(window.MutationObserver)new MutationObserver(function(){clearTimeout(t);if(!b.hidden)t=setTimeout(glow,4000)}).observe(b,{attributes:true,attributeFilter:["hidden"]})}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",watch);else watch();
 })();
