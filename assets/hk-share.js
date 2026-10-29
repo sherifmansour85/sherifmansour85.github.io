@@ -898,7 +898,7 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   st.textContent=
     B+"{border-top:1px solid rgba(212,168,67,.45)!important;box-shadow:0 -10px 30px rgba(0,0,0,.28)!important}"+
     B+":not([hidden]){animation:"+(calm?"none":"hkCcUp .5s cubic-bezier(.2,.8,.2,1) both")+"}"+
-    "@keyframes hkCcUp{from{transform:translateY(100%);opacity:0}to{transform:none;opacity:1}}"+
+    "@keyframes hkCcUp{from{transform:translateY(100%)}to{transform:none}}"+
     B+" p{color:#EEF6F5!important}"+
     B+" .cc-btns{align-items:center!important}"+
     B+" .cc-accept{order:-1;padding:11px 28px!important;font-size:14.5px!important;min-height:44px;box-shadow:0 4px 14px rgba(212,168,67,.35)}"+
@@ -913,4 +913,53 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   function watch(){var b=document.getElementById("hkCc");if(!b)return;clearTimeout(t);if(!b.hidden)t=setTimeout(glow,4000);
     if(window.MutationObserver)new MutationObserver(function(){clearTimeout(t);if(!b.hidden)t=setTimeout(glow,4000)}).observe(b,{attributes:true,attributeFilter:["hidden"]})}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",watch);else watch();
+})();
+
+/* HK-FORM-LOADER: Jotform draws its form a second or two after the frame has loaded, which showed an empty white
+   box. Every enquiry form frame (not the assistant, which has its own loading state) gets a branded cover with a
+   spinner that lifts when the form reports its height (Jotform's setHeight message), 2.5 s after the frame loads,
+   or at the latest 15 s after the form comes into view. */
+(function(){
+  if(window.__hkFormLoader)return;window.__hkFormLoader=1;
+  var ar=document.documentElement.lang==="ar"||/^\/ar(\/|$)/.test(location.pathname);
+  var st=document.createElement("style");
+  st.textContent=
+    ".hk-fl{position:absolute;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px;"+
+      "padding-top:clamp(60px,18%,140px);background:#fff;color:#0A2E36;text-align:center;font-family:inherit;transition:opacity .35s ease}"+
+    ".hk-fl.hk-fl-out{opacity:0;pointer-events:none}"+
+    ".hk-fl i{width:38px;height:38px;border-radius:50%;border:3px solid rgba(212,168,67,.25);border-top-color:#D4A843;animation:hkFlSpin .9s linear infinite}"+
+    ".hk-fl b{font-size:15.5px;font-weight:600;margin-top:6px}"+
+    ".hk-fl span{font-size:12.5px;color:#5E7479}"+
+    "@keyframes hkFlSpin{to{transform:rotate(360deg)}}"+
+    "@media(prefers-reduced-motion:reduce){.hk-fl i{animation-duration:2.4s}}";
+  (document.head||document.documentElement).appendChild(st);
+  var items=[];
+  function isForm(f){return f&&f.tagName==="IFRAME"&&f.id!=="hkAiFrame"&&/\/\/form\.jotform\.com\//.test(f.getAttribute("src")||"")}
+  function attach(f){
+    if(f.__hkFl)return;f.__hkFl=1;
+    var p=f.parentNode;if(!p)return;
+    if(getComputedStyle(p).position==="static")p.style.position="relative";
+    var c=document.createElement("div");c.className="hk-fl";c.setAttribute("role","status");
+    c.innerHTML='<i aria-hidden="true"></i><b>'+(ar?"جارٍ تحميل نموذج الاستفسار…":"Loading your enquiry form…")+'</b><span>'+(ar?"لحظات فقط":"This takes a moment")+'</span>';
+    p.insertBefore(c,f.nextSibling);
+    var it={f:f,c:c,done:false},ro,io,cap;items.push(it);
+    function place(){if(it.done)return;var h=f.offsetHeight;
+      if(!h||!f.offsetParent){c.style.display="none";return}
+      c.style.display="";c.style.top=f.offsetTop+"px";c.style.left=f.offsetLeft+"px";c.style.width=f.offsetWidth+"px";c.style.height=h+"px"}
+    it.lift=function(){if(it.done)return;it.done=true;c.classList.add("hk-fl-out");setTimeout(function(){if(c.parentNode)c.parentNode.removeChild(c)},400);
+      if(ro)ro.disconnect();if(io)io.disconnect();clearTimeout(cap)};
+    f.addEventListener("load",function(){setTimeout(it.lift,2500)});
+    if(window.ResizeObserver){ro=new ResizeObserver(place);ro.observe(f)}
+    addEventListener("resize",place);place();
+    var arm=function(){if(!cap)cap=setTimeout(it.lift,15000)};
+    if(window.IntersectionObserver){io=new IntersectionObserver(function(es){if(es.some(function(e){return e.isIntersecting}))arm()});io.observe(f)}else arm();
+  }
+  addEventListener("message",function(e){
+    if(typeof e.data!=="string"||e.data.indexOf("setHeight")<0)return;
+    for(var i=0;i<items.length;i++)if(!items[i].done&&items[i].f.contentWindow===e.source){var it=items[i];setTimeout(it.lift,250)}
+  });
+  function scan(root){var l=(root.querySelectorAll?root.querySelectorAll("iframe"):[]);if(root.tagName==="IFRAME")l=[root];
+    for(var i=0;i<l.length;i++)if(isForm(l[i]))attach(l[i])}
+  function boot(){scan(document);if(window.MutationObserver)new MutationObserver(function(ms){for(var i=0;i<ms.length;i++)for(var j=0;j<ms[i].addedNodes.length;j++){var n=ms[i].addedNodes[j];if(n.nodeType===1)scan(n)}}).observe(document.body,{childList:true,subtree:true})}
+  if(document.body)boot();else document.addEventListener("DOMContentLoaded",boot);
 })();
