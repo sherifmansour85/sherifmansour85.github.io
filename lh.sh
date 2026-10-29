@@ -8,4 +8,4 @@ run(){ for k in 1 2 3; do npx lighthouse "$2" --quiet --form-factor=mobile --onl
   node lhsum.cjs "$1" lh/$1-1.json lh/$1-2.json lh/$1-3.json; }
 mkdir -p lh
 for p in ${PAGES:-"home:/" "dental:/dental/" "ar-home:/ar/"}; do n=${p%%:*}; u=${p#*:}
-  run "live-$n" "https://www.hayakkom.com$u"; run "branch-$n" "http://localhost:8080$u"; done
+  run "live-$n" "https://www.hayakkom.com$u"; [ -n "$BRANCH" ] && run "branch-$n" "http://localhost:8080$u"; done
