@@ -21,7 +21,7 @@ partner company; clients receive an itemised written estimate before paying and 
 - **North Coast (Sahel) guide:** https://www.hayakkom.com/north-coast/
 - **Video consultation before travel:** https://www.hayakkom.com/video-consultation/
 - **Founder:** Sherif Mansour (شريف منصور)
-- **Location:** الحي ال16 المجاورة الثانية Shiekh Zayed - Giza, Cairo 12774, Egypt
+- **Location:** الحي 16، المجاورة الثانية، الشيخ زايد، الجيزة 12774، مصر
 - **Registered under:** Egyptian Law No. 159 of 1981
 - **Commercial Register:** 49973
 - **Unified Commercial Registry:** 11070-01000-49973
