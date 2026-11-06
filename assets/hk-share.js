@@ -963,3 +963,18 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   function boot(){scan(document);if(window.MutationObserver)new MutationObserver(function(ms){for(var i=0;i<ms.length;i++)for(var j=0;j<ms[i].addedNodes.length;j++){var n=ms[i].addedNodes[j];if(n.nodeType===1)scan(n)}}).observe(document.body,{childList:true,subtree:true})}
   if(document.body)boot();else document.addEventListener("DOMContentLoaded",boot);
 })();
+
+/* HK-FORM-UP: on phones the enquiry box of the service pages (.sp-grid) used to sit below all the page text,
+   where few visitors reach it. It now follows the first block (the price table where there is one), so the
+   page reads: prices, then the form, then the details. Desktop keeps the sticky side column. */
+(function(){
+  if(window.__hkFormUp)return;window.__hkFormUp=1;
+  var st=document.createElement("style");
+  st.textContent="@media (max-width:768px){"+
+    ".sp-grid{display:flex!important;flex-direction:column;gap:28px!important}"+
+    ".sp-grid>div:first-child{display:contents}"+
+    ".sp-grid>div:first-child>*{order:3}"+
+    ".sp-grid>div:first-child>*:first-child{order:1}"+
+    ".sp-grid>.enquiry-box{order:2;scroll-margin-top:72px}}";
+  (document.head||document.documentElement).appendChild(st);
+})();
