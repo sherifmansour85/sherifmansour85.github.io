@@ -1,8 +1,7 @@
-live serves hk-share v3548: true
-/dental/ 412 {"title":"Dental Implants in Egypt 2026: Cost in SAR | Hayakkom","page":13612,"form":2266,"boxTitle":"Get your free quote","boxSub":"No obligation · Written quote before you pay · Reply on What","address":"District 16, Neighbourhood 2, Sheikh Zayed City, Giza 12774, Egypt "} errors: none
-/ar/dental/ 412 {"title":"أسعار زراعة الأسنان في مصر 2026 بالريال | حياكم","page":14378,"form":2364,"boxTitle":"احصل على عرض سعر مجاني","boxSub":"بلا التزام · عرض سعر مكتوب قبل الدفع · نرد على واتساب خلال 1","address":"الحي 16، المجاورة الثانية، الشيخ زايد، الجيزة 12774، مصر "} errors: none
-/medical/ 412 {"title":"Medical Tourism in Egypt 2026: Costs in SAR | Hayakkom","page":9029,"form":2116,"boxTitle":"Get your free quote","boxSub":"No obligation · Written quote before you pay · Reply on What","address":"District 16, Neighbourhood 2, Sheikh Zayed City, Giza 12774, Egypt "} errors: none
-/educational/ 412 {"title":"Study in Egypt for Gulf Students: Housing | Hayakkom","page":10099,"form":2235,"boxTitle":"Tell us about your study plans","boxSub":"","address":"District 16, Neighbourhood 2, Sheikh Zayed City, Giza 12774, Egypt. Co"} errors: none
-/ar/educational/ 412 {"title":"الدراسة في مصر للسعوديين والوافدين: السكن والاستقبال | حياكم","page":8357,"form":1719,"boxTitle":"أخبرنا عن خطتك للدراسة","boxSub":"","address":"الحي 16، المجاورة الثانية، الشيخ زايد، الجيزة 12774، مصر "} errors: none
-/dental/ 1366 {"title":"Dental Implants in Egypt 2026: Cost in SAR | Hayakkom","page":8257,"form":595,"boxTitle":"Get your free quote","boxSub":"No obligation · Written quote before you pay · Reply on What","address":"District 16, Neighbourhood 2, Sheikh Zayed City, Giza 12774, Egypt "} errors: none
-/ 412 {"title":"Egypt Medical Tourism & Luxury Travel | Hayakkom","page":10406,"form":null,"boxTitle":"","boxSub":"","address":"District 16, Neighbourhood 2, Sheikh Zayed City, Giza 12774, Egypt "} errors: none
+live serves the new Arabic dental form: true
+/dental/ 412 {"form":2266,"frames":["263095260665057"]} errors: none
+/ar/dental/ 412 {"form":2364,"frames":["263095990075062"]} errors: none
+/educational/ 412 {"form":2235,"frames":["263088230595058"]} errors: none
+/ar/educational/ 412 {"form":1719,"frames":["263087942282060"]} errors: none
+/ar/medical/ 412 {"form":2072,"frames":["242362990310553"]} errors: none
+/ar/dental/ 1366 {"form":548,"frames":["263095990075062"]} errors: none
