@@ -82,10 +82,11 @@ def main():
         twin = u[3:] if ar else '/ar' + u
         if twin not in pages:
             problems.append(f'{u}: no {"English" if ar else "Arabic"} twin page {twin}')
-        # 2. Sitemap and llms.txt coverage
-        if u not in sitemap:
+        # 2. Sitemap and llms.txt coverage (pages marked noindex, e.g. the personal /estimate/ page, are exempt)
+        noindex = re.search(r'<meta name="robots" content="noindex', h) is not None
+        if u not in sitemap and not noindex:
             problems.append(f'{u}: missing from sitemap.xml')
-        if not ar and u not in llms:
+        if not ar and u not in llms and not noindex:
             problems.append(f'{u}: missing from llms.txt')
         # 3. Legal notice
         if 'hk-legal-foot' not in h or LEGAL['ar' if ar else 'en'] not in h:
