@@ -1,7 +1,4 @@
-live serves the new Arabic dental form: true
-/dental/ 412 {"form":2266,"frames":["263095260665057"]} errors: none
-/ar/dental/ 412 {"form":2364,"frames":["263095990075062"]} errors: none
-/educational/ 412 {"form":2235,"frames":["263088230595058"]} errors: none
-/ar/educational/ 412 {"form":1719,"frames":["263087942282060"]} errors: none
-/ar/medical/ 412 {"form":2072,"frames":["242362990310553"]} errors: none
-/ar/dental/ 1366 {"form":548,"frames":["263095990075062"]} errors: none
+status 400 location null
+len 6173 has-estimate -1
+links null
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <meta http-equiv="X-UA-Compatible" content="ie=edge"> <meta name="robots" content="noindex, nofollow"/> <title>Incomplete Values</title> <script type="text/javascript">window.branding21 = true;</script><link rel="shortcut icon" href="https://cdn.jotfor.ms/assets/img/favicons/favicon-2021-light.png"> <link rel="apple-touch-icon" href="https://cdn.jotfor.ms/assets/img/favicons/apple-touch-icon.png"> <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.jotfor.ms/assets/img/favicons/apple-touch-icon-180x180.png"> <link rel="apple-touch-icon-precomposed" href="https://cdn.jotfor.ms/assets/img/favicons/apple-touch-icon-precomposed.png"> <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://cdn.jotfor.ms/assets/img/favicons/apple-touch-icon-120x120-precomposed.png"> <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://cdn.jotfor.ms/assets/img/favicons/apple-touch-icon-152x152-precomposed.png"> <script> function updateFavicon(dark) { var iconFile = dark ? "/assets/img/favicons/favicon-2021-dark.png?v=0.2" : "/assets/img/favicons/favicon-2021-light.png?v=0.2"; var iconRoot = "https://cdn.jotfor.ms"; var iconElement = document.querySelector('[rel="icon"]') || document.querySelector('[rel="shortcut icon"]'); if (!iconElement) { iconEleme
