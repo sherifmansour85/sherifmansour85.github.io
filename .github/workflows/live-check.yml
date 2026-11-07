@@ -2,7 +2,7 @@ name: Live site check
 on:
   push:
     branches: [claude/live-check]
-    paths: [".github/workflows/live-check.yml", "check.mjs", "ga.mjs", "live.mjs", "lh.sh", "lhsum.cjs", "live2.mjs", "live3.mjs", "live4.mjs"]
+    paths: [".github/workflows/live-check.yml", "check.mjs", "ga.mjs", "live.mjs", "lh.sh", "lhsum.cjs", "live2.mjs", "live3.mjs", "live4.mjs", "est.mjs"]
   workflow_dispatch:
 permissions:
   contents: write
@@ -27,7 +27,7 @@ jobs:
       - name: Walk the quick guide on the live site and on the PR branch
         run: |
           mkdir -p shots
-          node live4.mjs 2>&1 | tee report.txt
+          node est.mjs 2>&1 | tee report.txt
       - name: Commit screenshots
         if: always()
         run: |
