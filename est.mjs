@@ -31,5 +31,6 @@ console.log('final url:', p.url());
 const txt = await p.evaluate(() => document.body ? document.body.innerText.replace(/\s+/g, ' ').slice(0, 900) : '');
 console.log('page text:', txt);
 const links = await p.evaluate(() => [...document.querySelectorAll('a[href*="estimate"]')].map(a => a.href));
+const raw = await p.content(); const i = raw.indexOf('hayakkom.com/estimate'); console.log('RAW:', JSON.stringify(raw.slice(Math.max(0,i-200), i+1400)));
 console.log('estimate links:', JSON.stringify(links));
 await b.close();
