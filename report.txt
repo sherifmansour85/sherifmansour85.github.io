@@ -2,23 +2,14 @@
  hidden: ["estm=Cosmetic and plastic surgery, Hair transplant (head, beard or eyebrows)","estk=The cost, Recovery time","esta=Airport pick-up, Car with driver"]
  thank-you: Medical Treatment in Egypt with Hayakkom
  link: NONE
-### 263096472028056
- hidden: ["estm=جراحة التجميل والتجميل الترميمي, زراعة الشعر (الرأس أو اللحية أو الحواجب)","estk=التكلفة, مدة التعافي","este=نعم — أنا في مصر الآن","estw=المريض فقط","estt=2","ests=فندق قريب من المستشفى","esth=4 نجوم","esta=الاستقبال من المطار, سيارة مع سائق"]
- thank-you: شكراً لك — وصل طلبك إلى فريقنا.
- link: https://www.hayakkom.com/ar/estimate/?f=medical&e=%D9%86%D8%B9%D9%85%20%E2%80%94%20%D8%A3%D9%86%D8%A7%20%D9%81%D9%8A%20%D9%85%D8%B5%D8%B1%20%D8%A7%D9%84%D8%A2%D9%86&w=%D8%A7%D9%84%D9%85%D8%B1%D9%8A%D8%B6%20%D9%81%D9%82%D8%B7&t=2&s=%D9%81%D9%86%D8%AF%D9%82%20%D9%82%D8%B1%D9%8A%D8%A8%20%D9%85%D9%86%20%D8%A7%D9%84%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89&h=4%20%D9%86%D8%AC%D9%88%D9%85&k=%D8%A7%D9%84%D8%AA%D9%83%D9%84%D9%81%D8%A9,%20%D9%85%D8%AF%D8%A9%20%D8%A7%D9%84%D8%AA%D8%B9%D8%A7%D9%81%D9%8A&a=%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%82%D8%A8%D8%A7%D9%84%20%D9%85%D9%86%20%D8%A7%D9%84%D9%85%D8%B7%D8%A7%D8%B1,%20%D8%B3%D9%8A%D8%A7%D8%B1%D8%A9%20%D9%85%D8%B9%20%D8%B3%D8%A7%D8%A6%D9%82&m=%D8%AC%D8%B1%D8%A7%D8%AD%D8%A9%20%D8%A7%D9%84%D8%AA%D8%AC%D9%85%D9%8A%D9%84%20%D9%88%D8%A7%D9%84%D8%AA%D8%AC%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D8%AA%D8%B1%D9%85%D9%8A%D9%85%D9%8A,%20%D8%B2%D8%B1%D8%A7%D8%B9%D8%A9%20%D8%A7%D9%84%D8%B4%D8%B9%D8%B1%20(%D8%A7%D9%84%D8%B1%D8%A3%D8%B3%20%D8%A3%D9%88%20%D8%A7%D9%84%D9%84%D8%AD%D9%8A%D8%A9%20%D8%A3%D9%88%20%D8%A7%D9%84%D8%AD%D9%88%D8%A7%D8%AC%D8%A8)
-### 263102962904051
- hidden: ["estx=منطاد الشروق (190–480 ريال), البر الغربي: وادي الملوك ومعبد حتشبسوت وتمثالا ممنو","este=نعم — أنا في مصر الآن","estn=2","estw=أنا فقط","estt=2","ests=فندق 3 نجوم","estb=2","esta=الاستقبال من المطار, سيارة خاصة مع سائق"]
- thank-you: شكراً لك — وصل طلبك إلى فريقنا.
- link: https://www.hayakkom.com/ar/estimate/?f=luxor&e=%D9%86%D8%B9%D9%85%20%E2%80%94%20%D8%A3%D9%86%D8%A7%20%D9%81%D9%8A%20%D9%85%D8%B5%D8%B1%20%D8%A7%D9%84%D8%A2%D9%86&n=2&w=%D8%A3%D9%86%D8%A7%20%D9%81%D9%82%D8%B7&t=2&s=%D9%81%D9%86%D8%AF%D9%82%203%20%D9%86%D8%AC%D9%88%D9%85&b=2&a=%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%82%D8%A8%D8%A7%D9%84%20%D9%85%D9%86%20%D8%A7%D9%84%D9%85%D8%B7%D8%A7%D8%B1,%20%D8%B3%D9%8A%D8%A7%D8%B1%D8%A9%20%D8%AE%D8%A7%D8%B5%D8%A9%20%D9%85%D8%B9%20%D8%B3%D8%A7%D8%A6%D9%82&x=%D9%85%D9%86%D8%B7%D8%A7%D8%AF%20%D8%A7%D9%84%D8%B4%D8%B1%D9%88%D9%82%20(190%E2%80%93480%20%D8%B1%D9%8A%D8%A7%D9%84),%20%D8%A7%D9%84%D8%A8%D8%B1%20%D8%A7%D9%84%D8%BA%D8%B1%D8%A8%D9%8A:%20%D9%88%D8%A7%D8%AF%D9%8A%20%D8%A7%D9%84%D9%85%D9%84%D9%88%D9%83%20%D9%88%D9%85%D8%B9%D8%A8%D8%AF%20%D8%AD%D8%AA%D8%B4%D8%A8%D8%B3%D9%88%D8%AA%20%D9%88%D8%AA%D9%85%D8%AB%D8%A7%D9%84%D8%A7%20%D9%85%D9%85%D9%86%D9%88%D9%86%20(110%E2%80%93560%20%D8%B1%D9%8A%D8%A7%D9%84)
-### 263095260665057
- hidden: ["estm=Dental implants, surgery and restoration, Cosmetic dentistry (Hollywood smile, v","estd=Hotel or apartment, Airport pick-up"]
- thank-you: Thank you — your request has reached our team.
- link: https://www.hayakkom.com/estimate/?f=dental&t=2&s=5-star%20hotel&r=2&y=Under%20400&d=Hotel%20or%20apartment,%20Airport%20pick-up&m=Dental%20implants,%20surgery%20and%20restoration,%20Cosmetic%20dentistry%20(Hollywood%20smile,%20veneers,%20orthodontics)
+ page: https://form.jotform.com/263097117701051 :: START 2 What would you like to know?* This field is required. The cost Recovery time Whether it is right for me The best dates to travel Something else PREVIOUS NEXT PRESS ENTER 2 of 14 There are errors on the form. Please fix them before continuing.
 ### 263095990075062
  hidden: ["estm=زراعة الأسنان والجراحة والترميم, تجميل الأسنان (ابتسامة هوليوود، الفينير، التقوي","estd=فندق أو شقة, الاستقبال من المطار","ests=فندق 5 نجوم","estr=2","esty=أقل من 400","estt=2"]
  thank-you: علاج الأسنان في مصر مع حياكم
  link: NONE
+ page: https://form.jotform.com/263095990075062 :: START 2 ما العلاج الذي يهمّك؟ (اختر كل ما يناسبك)* هذا الحقل مطلوب. نشارك معك اسم طبيب الأسنان المعالج وترخيصه قبل سفرك. زراعة الأسنان والجراحة والترميم تجميل الأسنان (ابتسامة هوليوود، الفينير، التقويم) علاج الأسنان (حشوات تجميلية، علاج العصب، ترميم كامل) تبييض الأسنان بالليزر وتنظيف اللثة علاج أسنان الأطفال، بما في ذلك التخدير عندما يوصي به الطبيب لست متأكداً — أريد رأي طبيب الأسنان السابق التالي PRESS ENTER 2 من 18 توجد أخطاء في هذا النموذج. الرجاء تصحيح الأخطاء قبل المتابعة.
 ### 263103636339052
  hidden: ["estx=Luxor ↔ Aswan cruise, 3–4 nights (1,650–4,400 SAR per person), Longer Nile cruis","estv=Luxor sunrise balloon (190–480 SAR), Abu Simbel by road (150–360 SAR)","esta=Airport pick-up, Hotel before or after the cruise"]
  thank-you: Nile Cruise & Private Events with Hayakkom
  link: NONE
+ page: https://form.jotform.com/263103636339052 :: START 2 Cabin level Please Select Standard 5-star ship Luxury ship Suite Charter the whole boat Standard 5-star ship Please Select Standard 5-star ship Luxury ship Suite Charter the whole boat PREVIOUS NEXT PRESS ENTER 2 of 13 There are errors on the form. Please fix them before continuing.
