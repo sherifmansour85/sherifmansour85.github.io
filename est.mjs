@@ -8,7 +8,7 @@ const req = await p.evaluate(() => [...document.querySelectorAll('.jf-required, 
 console.log('required inputs:', JSON.stringify(req));
 await p.evaluate(() => {
   const set = (sel, v) => { const e = document.querySelector(sel); if (e) { e.value = v; e.dispatchEvent(new Event('change', { bubbles: true })); } return !!e; };
-  const tick = (name, valueStart) => { const e = [...document.querySelectorAll('input[name="' + name + '"]')].find(i => i.value.startsWith(valueStart)); if (e) { e.checked = true; e.dispatchEvent(new Event('change', { bubbles: true })); } return !!e; };
+  const tick = (name, valueStart) => { const e = [...document.querySelectorAll('input[name="' + name + '"]')].find(i => i.value.startsWith(valueStart)); if (e) { e.click(); if(!e.checked) e.checked = true; e.dispatchEvent(new Event('change', { bubbles: true })); } return !!e; };
   const out = {};
   out.exc1 = tick('q24_whichExcursions[]', 'Pyramids & Sphinx half day');
   out.exc2 = tick('q24_whichExcursions[]', 'Nile dinner cruise');
@@ -16,7 +16,7 @@ await p.evaluate(() => {
   out.nights = set('[name="q6_q6_number4"]', '4');
   out.who = tick('q8_q8_radio6', 'Couple');
   out.stay = tick('q12_q12_radio10', '4-star');
-  out.add = tick('q16_q16_checkbox14[]', 'Airport');
+  out.add = tick('q16_q16_checkbox14[]', 'Airport'); out.add2 = tick('q16_q16_checkbox14[]', 'Private car');
   out.first = set('[name="q19_q19_fullname17[first]"]', 'TEST');
   out.last = set('[name="q19_q19_fullname17[last]"]', 'Estimate check please delete');
   out.phone = set('[name="q20_q20_phone18[full]"]', '+20 100 000 0000') || set('[name^="q20_"]', '+20 100 000 0000');
@@ -24,7 +24,7 @@ await p.evaluate(() => {
   out.src = set('[name="q26_sourcePage"]', 'test-estimate');
   window.__set = out;
 });
-console.log('set:', JSON.stringify(await p.evaluate(() => window.__set)));
+await p.waitForTimeout(1500); console.log('summaries:', JSON.stringify(await p.evaluate(() => [...document.querySelectorAll('input')].filter(i => /summary/i.test(i.name)).map(i => i.name + '=' + i.value)))); console.log('set:', JSON.stringify(await p.evaluate(() => window.__set)));
 const [resp] = await Promise.all([p.waitForNavigation({ timeout: 30000 }).catch(e => null), p.evaluate(() => { const f = document.querySelector('form.jotform-form'); HTMLFormElement.prototype.submit.call(f); })]);
 await p.waitForTimeout(3000);
 console.log('final url:', p.url());
