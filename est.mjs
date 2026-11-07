@@ -1,17 +1,35 @@
-// Post one clearly marked TEST submission to a Jotform form and show what the thank-you page returns.
-const id='263103163535045';
-const f=new URLSearchParams();
-const add=(k,v)=>f.append(k,v);
-add('formID',id); add('simple_spc',id+'-'+id);
-add('q24_whichExcursions[]','Pyramids & Sphinx half day (160–360 SAR)');
-add('q24_whichExcursions[]','Nile dinner cruise with show (190–270 SAR)');
-add('q3_q3_radio1',"No — I'm planning a trip"); add('q6_q6_number4','4'); add('q8_q8_radio6','Couple');
-add('q12_q12_radio10','4-star hotel'); add('q16_q16_checkbox14[]','Airport pick-up');
-add('q19_q19_fullname17[first]','TEST'); add('q19_q19_fullname17[last]','Estimate check please delete');
-add('q20_q20_phone18[full]','+20 100 000 0000'); add('q22_q22_checkbox20[]','I agree'); add('q26_sourcePage','test-estimate');
-const r=await fetch('https://submit.jotform.com/submit/'+id+'/',{method:'POST',body:f,redirect:'manual',headers:{'content-type':'application/x-www-form-urlencoded','referer':'https://form.jotform.com/'+id}});
-console.log('status',r.status,'location',r.headers.get('location'));
-const t=await r.text();
-const i=t.indexOf('estimate'); console.log('len',t.length,'has-estimate',i);
-const m=t.match(/https?:\/\/www\.hayakkom\.com\/estimate\/[^"'<\s]*/g); console.log('links',JSON.stringify(m&&m.slice(0,3)));
-console.log(t.replace(/\s+/g,' ').slice(0,1500));
+// Fill a real Jotform form in a browser with clearly marked TEST answers, submit it, and report the thank-you page
+// (and the estimate link it shows). Answers are set on the real inputs, then the form is submitted natively.
+import { chromium } from 'playwright';
+const id = process.env.FORM || '263103163535045';
+const b = await chromium.launch(); const p = await b.newPage();
+await p.goto('https://form.jotform.com/' + id, { waitUntil: 'networkidle' }); await p.waitForTimeout(2000);
+const req = await p.evaluate(() => [...document.querySelectorAll('.jf-required, [class*="validate[required"]')].map(e => e.name || e.id).slice(0, 40));
+console.log('required inputs:', JSON.stringify(req));
+await p.evaluate(() => {
+  const set = (sel, v) => { const e = document.querySelector(sel); if (e) { e.value = v; e.dispatchEvent(new Event('change', { bubbles: true })); } return !!e; };
+  const tick = (name, valueStart) => { const e = [...document.querySelectorAll('input[name="' + name + '"]')].find(i => i.value.startsWith(valueStart)); if (e) { e.checked = true; e.dispatchEvent(new Event('change', { bubbles: true })); } return !!e; };
+  const out = {};
+  out.exc1 = tick('q24_whichExcursions[]', 'Pyramids & Sphinx half day');
+  out.exc2 = tick('q24_whichExcursions[]', 'Nile dinner cruise');
+  out.egypt = tick('q3_q3_radio1', 'No');
+  out.nights = set('[name="q6_q6_number4"]', '4');
+  out.who = tick('q8_q8_radio6', 'Couple');
+  out.stay = tick('q12_q12_radio10', '4-star');
+  out.add = tick('q16_q16_checkbox14[]', 'Airport');
+  out.first = set('[name="q19_q19_fullname17[first]"]', 'TEST');
+  out.last = set('[name="q19_q19_fullname17[last]"]', 'Estimate check please delete');
+  out.phone = set('[name="q20_q20_phone18[full]"]', '+20 100 000 0000') || set('[name^="q20_"]', '+20 100 000 0000');
+  out.consent = !!document.querySelector('[name^="q22_"]') && (document.querySelector('[name^="q22_"]').checked = true);
+  out.src = set('[name="q26_sourcePage"]', 'test-estimate');
+  window.__set = out;
+});
+console.log('set:', JSON.stringify(await p.evaluate(() => window.__set)));
+const [resp] = await Promise.all([p.waitForNavigation({ timeout: 30000 }).catch(e => null), p.evaluate(() => { const f = document.querySelector('form.jotform-form'); HTMLFormElement.prototype.submit.call(f); })]);
+await p.waitForTimeout(3000);
+console.log('final url:', p.url());
+const txt = await p.evaluate(() => document.body ? document.body.innerText.replace(/\s+/g, ' ').slice(0, 900) : '');
+console.log('page text:', txt);
+const links = await p.evaluate(() => [...document.querySelectorAll('a[href*="estimate"]')].map(a => a.href));
+console.log('estimate links:', JSON.stringify(links));
+await b.close();
