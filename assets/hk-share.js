@@ -314,7 +314,7 @@ if(document.readyState==="complete"){setTimeout(Q,1200)}else{window.addEventList
 
 /* Quick guide (homepage walkthrough, English and Arabic): loaded after the page has finished loading. */
 (function(){var p=location.pathname.replace(/index\.html$/,"");if(p!=="/"&&p!=="/ar/")return;
-function L(){var e=document.createElement("script");e.src="/assets/hk-tour.js?v=20261025f";e.async=true;document.head.appendChild(e)}
+function L(){var e=document.createElement("script");e.src="/assets/hk-tour.js?v=20261027a";e.async=true;document.head.appendChild(e)}
 if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListener("load",function(){setTimeout(L,500)})}})();
 
 /* Install-or-skip app popup: starts as early as possible. */
@@ -886,4 +886,146 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   var tq;function soon(){clearTimeout(tq);tq=setTimeout(scan,200)}
   function boot(){scan();var r=document.getElementById("root")||document.body;if(window.MutationObserver)new MutationObserver(soon).observe(r,{childList:true,subtree:true});[1000,3000,6000].forEach(function(t){setTimeout(scan,t)})}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
+})();
+
+/* HK-CC-BOOST: the cookie bar (#hkCc, in every page) slides up, shows "Accept all" first and larger, and gives it a
+   short gold glow after a few seconds so visitors notice it. "Essential only" stays on the bar, readable and one tap
+   away, as the Saudi PDPL expects a real choice. The footer "Cookie settings" button reopens the bar. */
+(function(){
+  if(window.__hkCcBoost)return;window.__hkCcBoost=1;
+  var B="html body #hkCc",calm=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches;
+  var st=document.createElement("style");
+  st.textContent=
+    B+"{border-top:1px solid rgba(212,168,67,.45)!important;box-shadow:0 -10px 30px rgba(0,0,0,.28)!important}"+
+    B+":not([hidden]){animation:"+(calm?"none":"hkCcUp .5s cubic-bezier(.2,.8,.2,1) both")+"}"+
+    "@keyframes hkCcUp{from{transform:translateY(100%)}to{transform:none}}"+
+    B+" p{color:#EEF6F5!important}"+
+    B+" .cc-btns{align-items:center!important}"+
+    B+" .cc-accept{order:-1;padding:11px 28px!important;font-size:14.5px!important;min-height:44px;box-shadow:0 4px 14px rgba(212,168,67,.35)}"+
+    B+" .cc-accept.hk-glow{animation:hkCcGlow 1.6s ease-in-out 2}"+
+    "@keyframes hkCcGlow{0%,100%{box-shadow:0 4px 14px rgba(212,168,67,.35);transform:none}50%{box-shadow:0 0 0 7px rgba(212,168,67,.28),0 6px 20px rgba(212,168,67,.5);transform:scale(1.05)}}"+
+    B+" .cc-reject{padding:10px 18px!important;font-size:13px!important;min-height:44px;color:#E3DACA!important}"+
+    "@media(max-width:600px){"+B+" .cc-btns{flex-wrap:nowrap!important;width:100%;max-width:400px}"+B+" .cc-accept{flex:1 1 auto;padding:11px 16px!important}"+B+" .cc-reject{flex:0 0 auto;padding:10px 14px!important}}";
+  (document.head||document.documentElement).appendChild(st);
+  if(calm)return;
+  var t;function glow(){var b=document.getElementById("hkCc"),a=b&&b.querySelector(".cc-accept");
+    if(!a||b.hidden)return;a.classList.remove("hk-glow");void a.offsetWidth;a.classList.add("hk-glow")}
+  function watch(){var b=document.getElementById("hkCc");if(!b)return;clearTimeout(t);if(!b.hidden)t=setTimeout(glow,4000);
+    if(window.MutationObserver)new MutationObserver(function(){clearTimeout(t);if(!b.hidden)t=setTimeout(glow,4000)}).observe(b,{attributes:true,attributeFilter:["hidden"]})}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",watch);else watch();
+})();
+
+/* HK-FORM-LOADER: Jotform draws its form a second or two after the frame has loaded, which showed an empty white
+   box. Every enquiry form frame (not the assistant, which has its own loading state) gets a branded cover with a
+   spinner that lifts when the form reports its height (Jotform's setHeight message), 2.5 s after the frame loads,
+   or at the latest 15 s after the form comes into view. */
+(function(){
+  if(window.__hkFormLoader)return;window.__hkFormLoader=1;
+  var ar=document.documentElement.lang==="ar"||/^\/ar(\/|$)/.test(location.pathname);
+  var st=document.createElement("style");
+  st.textContent=
+    ".hk-fl{position:absolute;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px;"+
+      "padding-top:clamp(60px,18%,140px);background:#fff;color:#0A2E36;text-align:center;font-family:inherit;transition:opacity .35s ease}"+
+    ".hk-fl.hk-fl-out{opacity:0;pointer-events:none}"+
+    ".hk-fl i{width:38px;height:38px;border-radius:50%;border:3px solid rgba(212,168,67,.25);border-top-color:#D4A843;animation:hkFlSpin .9s linear infinite}"+
+    ".hk-fl b{font-size:15.5px;font-weight:600;margin-top:6px}"+
+    ".hk-fl span{font-size:12.5px;color:#5E7479}"+
+    "@keyframes hkFlSpin{to{transform:rotate(360deg)}}"+
+    "@media(prefers-reduced-motion:reduce){.hk-fl i{animation-duration:2.4s}}";
+  (document.head||document.documentElement).appendChild(st);
+  var items=[];
+  function isForm(f){return f&&f.tagName==="IFRAME"&&f.id!=="hkAiFrame"&&/\/\/form\.jotform\.com\//.test(f.getAttribute("src")||"")}
+  function attach(f){
+    if(f.__hkFl)return;f.__hkFl=1;
+    var p=f.parentNode;if(!p)return;
+    if(getComputedStyle(p).position==="static")p.style.position="relative";
+    var c=document.createElement("div");c.className="hk-fl";c.setAttribute("role","status");
+    c.innerHTML='<i aria-hidden="true"></i><b>'+(ar?"جارٍ تحميل نموذج الاستفسار…":"Loading your enquiry form…")+'</b><span>'+(ar?"لحظات فقط":"This takes a moment")+'</span>';
+    p.insertBefore(c,f.nextSibling);
+    var it={f:f,c:c,done:false},ro,io,cap;items.push(it);
+    function place(){if(it.done)return;var h=f.offsetHeight;
+      if(!h||!f.offsetParent){c.style.display="none";return}
+      c.style.display="";c.style.top=f.offsetTop+"px";c.style.left=f.offsetLeft+"px";c.style.width=f.offsetWidth+"px";c.style.height=h+"px"}
+    it.lift=function(){if(it.done)return;it.done=true;c.classList.add("hk-fl-out");setTimeout(function(){if(c.parentNode)c.parentNode.removeChild(c)},400);
+      if(ro)ro.disconnect();if(io)io.disconnect();clearTimeout(cap)};
+    f.addEventListener("load",function(){setTimeout(it.lift,2500)});
+    if(window.ResizeObserver){ro=new ResizeObserver(place);ro.observe(f)}
+    addEventListener("resize",place);place();
+    var arm=function(){if(!cap)cap=setTimeout(it.lift,15000)};
+    if(window.IntersectionObserver){io=new IntersectionObserver(function(es){if(es.some(function(e){return e.isIntersecting}))arm()});io.observe(f)}else arm();
+  }
+  addEventListener("message",function(e){
+    if(typeof e.data!=="string"||e.data.indexOf("setHeight")<0)return;
+    for(var i=0;i<items.length;i++)if(!items[i].done&&items[i].f.contentWindow===e.source){var it=items[i];setTimeout(it.lift,250)}
+  });
+  function scan(root){var l=(root.querySelectorAll?root.querySelectorAll("iframe"):[]);if(root.tagName==="IFRAME")l=[root];
+    for(var i=0;i<l.length;i++)if(isForm(l[i]))attach(l[i])}
+  function boot(){scan(document);if(window.MutationObserver)new MutationObserver(function(ms){for(var i=0;i<ms.length;i++)for(var j=0;j<ms[i].addedNodes.length;j++){var n=ms[i].addedNodes[j];if(n.nodeType===1)scan(n)}}).observe(document.body,{childList:true,subtree:true})}
+  if(document.body)boot();else document.addEventListener("DOMContentLoaded",boot);
+})();
+
+/* HK-FORM-UP: on phones the enquiry box of the service pages (.sp-grid) used to sit below all the page text,
+   where few visitors reach it. It now follows the first block (the price table where there is one), so the
+   page reads: prices, then the form, then the details. Desktop keeps the sticky side column. */
+(function(){
+  if(window.__hkFormUp)return;window.__hkFormUp=1;
+  var st=document.createElement("style");
+  st.textContent="@media (max-width:768px){"+
+    ".sp-grid{display:flex!important;flex-direction:column;gap:28px!important}"+
+    ".sp-grid>div:first-child{display:contents}"+
+    ".sp-grid>div:first-child>*{order:3}"+
+    ".sp-grid>div:first-child>*:first-child{order:1}"+
+    ".sp-grid>.enquiry-box{order:2;scroll-margin-top:72px}}";
+  (document.head||document.documentElement).appendChild(st);
+})();
+
+/* HK-ENQ: every enquiry button keeps the visitor on the website. Clicks on WhatsApp buttons (except the floating
+   WhatsApp button), "#quote" links and Jotform links scroll to the page's own form, or open the right form in a
+   pop-up when the page has none. Runs before HK-CONVERSIONS (window, capture) so these clicks are not counted as
+   WhatsApp conversions; the form submission is still counted as a lead. Forms and page map: scratchpad cfg.py. */
+(function(){
+  if(window.__hkEnq)return;window.__hkEnq=1;
+  var F={"medical": ["263097117701051", "263096472028056", "input22", "q19_textbox17"], "dental": ["263095260665057", "263095990075062", "", ""], "education": ["263088230595058", "263087942282060", "", ""], "vip": ["263096488689076", "263096950374061", "sourcePage", "q3_textbox1"], "investor": ["263096824130051", "263096595743066", "q8_textbox6", "input"], "normal": ["263096737222056", "263097092698068", "q17_textbox15", "q2_textbox0"], "cairo": ["263103163535045", "263103008336042", "sourcePage", "q23_textbox21"], "luxor": ["263103777672058", "263102962904051", "q4_textbox2", "q12_textbox10"], "aswan": ["263103042715041", "263103938536056", "sourcePage", "q14_textbox12"], "hurghada": ["263102909793058", "263103653057048", "sourcePage", "input"], "sharm": ["263103247695055", "263103174380045", "q10_textbox8", "q11_textbox9"], "redsea": ["263103504152039", "263103657584057", "q12_textbox10", "q2_textbox0"], "alex": ["263103517377052", "263103490829054", "q10_textbox8", "input"], "siwa": ["263103465460047", "263103695828060", "q3_textbox1", "input"], "nile": ["263103636339052", "263103722538049", "q20_textbox18", "q20_textbox18"]},P={"about": "normal", "adventure": "normal", "alexandria": "alex", "aswan": "aswan", "business": "investor", "cairo": "cairo", "calculator": "normal", "conferences": "normal", "cosmetic-surgery": "medical", "cultural": "normal", "dental": "dental", "dentist-urgent": "medical", "doctor-children": "medical", "doctor-gp": "medical", "educational": "education", "eid-al-adha-egypt-2027": "normal", "eid-al-fitr-egypt-2027": "normal", "eyes-lasik": "medical", "first-time-in-egypt": "normal", "full-checkup": "medical", "hair-transplant": "medical", "heritage": "vip", "holidays": "normal", "honeymoon-egypt": "normal", "hotel-doctor": "medical", "how-to-choose": "medical", "hurghada": "hurghada", "kuwait": "medical", "luxor": "luxor", "medical": "medical", "nile-cruise": "nile", "nile-cruise-events": "nile", "north-coast": "alex", "north-coast-villas": "alex", "nurse-visit": "medical", "orthopedics": "medical", "physiotherapy": "medical", "religious": "normal", "safaga": "redsea", "saudi-arabia": "medical", "saudi-national-day-egypt": "normal", "saudi-school-holidays-egypt": "normal", "services": "normal", "sharm": "sharm", "sharm-5-star-hotels": "sharm", "tourists": "normal", "travel-guide": "medical", "uae": "medical", "video-consultation": "medical", "vip-trip": "vip", "weight-loss": "medical", "wellness": "medical", "who-we-are": "normal", "excursions": "normal", "wellness-retreats": "medical", "marsa-alam": "redsea", "dahab": "sharm", "siwa": "siwa"},B={"about-hayakkom-who-we-are": "normal", "bariatric-surgery-egypt-saudi-patients": "medical", "cairo-day-trips-guide": "cairo", "cosmetic-surgery-egypt-how-long-before-flying": "medical", "dental-implants-cost-egypt-saudi-patients": "dental", "dental-tourism-egypt": "dental", "doctor-in-egypt-for-gulf-visitors": "medical", "egypt-family-holiday-guide-gulf": "normal", "hair-transplant-egypt-cost-guide": "medical", "hair-transplant-egypt-or-turkey": "medical", "holiday-and-treatment-in-egypt": "medical", "how-long-stay-egypt-medical-treatment": "medical", "medical-tourism-egypt-gulf": "medical", "nile-cruise-planning-guide": "nile", "physiotherapy-sessions-egypt": "medical", "pre-travel-consultation": "medical", "questions-before-choosing-clinic-abroad": "medical", "saudi-insurance-treatment-egypt": "medical"};
+  var ar=document.documentElement.lang==="ar"||/^\/ar(\/|$)/.test(location.pathname);
+  var path=location.pathname.replace(/^\/ar(?=\/|$)/,"").replace(/^\/+|\/+$/g,"");
+  var key=P[path]||(path.indexOf("blog/")===0?B[path.slice(5)]:"")||"normal";
+  var src=(ar?"ar-":"")+(path.replace(/\//g,"-")||"home");
+  function url(k){var f=F[k]||F.normal,id=f[ar?1:0],p=f[ar?3:2];
+    return "https://form.jotform.com/"+id+"?isIframeEmbed=1&button="+encodeURIComponent(src)+(p?"&"+p+"="+encodeURIComponent(src):"");}
+  var st=document.createElement("style");st.textContent=".hk-qf{margin:22px 0 26px;border:1px solid #E6DFCF;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 1px 2px rgba(10,46,54,.06),0 8px 24px rgba(10,46,54,.06);scroll-margin-top:80px}.hk-qf-h{padding:16px 18px;background:#0A2E36;color:#fff;display:flex;flex-direction:column;gap:4px}.hk-qf-h strong{font-size:19px;color:#D4A843;line-height:1.3}.hk-qf-h span{font-size:13px;opacity:.88;line-height:1.5}.hk-qf .jf-wrap{border:0!important;border-radius:0!important;margin:0}.hk-wa-num{margin-inline-start:10px;font-size:13px;opacity:.85;white-space:nowrap}.hk-next{margin:28px 0 8px;padding:14px 16px;border:1px solid #E6DFCF;border-radius:12px;background:#FBF8F1;line-height:1.8}.hk-next a{color:#0A2E36;font-weight:600;text-decoration:underline;text-underline-offset:3px}.hk-enq-ov{position:fixed;inset:0;background:rgba(10,46,54,.55);z-index:2147483000;display:none;align-items:center;justify-content:center;padding:16px}.hk-enq-ov.on{display:flex}.hk-enq-bx{background:#fff;border-radius:16px;width:min(640px,100%);height:min(88vh,780px);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}.hk-enq-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;background:#0A2E36;color:#D4A843}.hk-enq-x{background:none;border:0;color:#fff;font-size:28px;cursor:pointer;line-height:1;padding:0 4px}.hk-enq-bx iframe{flex:1;width:100%;border:0;background:#fff}@media (max-width:600px){.hk-enq-ov{padding:0}.hk-enq-bx{width:100%;height:100%;border-radius:0}}";(document.head||document.documentElement).appendChild(st);
+  var ov,fr;
+  function track(){try{if(typeof window.gtag==="function")window.gtag("event","enquiry_open",{page_path:location.pathname})}catch(e){}}
+  function close(){if(ov){ov.classList.remove("on");document.documentElement.style.overflow=""}}
+  function open(u){
+    if(!ov){
+      ov=document.createElement("div");ov.className="hk-enq-ov";ov.setAttribute("role","dialog");ov.setAttribute("aria-modal","true");
+      ov.innerHTML='<div class="hk-enq-bx" dir="'+(ar?"rtl":"ltr")+'"><div class="hk-enq-top"><strong>'+(ar?"احصل على عرض سعر مجاني":"Get your free quote")+
+        '</strong><button type="button" class="hk-enq-x" aria-label="'+(ar?"إغلاق":"Close")+'">×</button></div><iframe title="'+(ar?"نموذج الاستفسار":"Enquiry form")+'" allow=""></iframe></div>';
+      document.body.appendChild(ov);fr=ov.querySelector("iframe");
+      ov.addEventListener("click",function(e){if(e.target===ov||(e.target.classList&&e.target.classList.contains("hk-enq-x")))close()});
+      document.addEventListener("keydown",function(e){if(e.key==="Escape")close()});
+    }
+    if(fr.getAttribute("src")!==u)fr.setAttribute("src",u);
+    ov.classList.add("on");document.documentElement.style.overflow="hidden";track();
+  }
+  function pageForm(){return document.querySelector('.hk-qf iframe,.enquiry-box iframe[src*="form.jotform.com"],iframe[src*="form.jotform.com"],iframe[id^="JotFormIFrame"]')}
+  function go(){
+    var f=pageForm();
+    if(f){var box=(f.closest&&f.closest(".hk-qf,.enquiry-box,.arform,.jf-wrap"))||f;box.scrollIntoView({behavior:"smooth",block:"start"});track();return}
+    open(url(key));
+  }
+  window.addEventListener("click",function(e){
+    var a=e.target&&e.target.closest?e.target.closest("a[href]"):null;if(!a)return;
+    var h=a.getAttribute("href")||"";
+    var wa=/^(https?:)?\/\/(wa\.me|api\.whatsapp\.com)\//i.test(h)||/^whatsapp:/i.test(h);
+    var jf=/^https:\/\/form\.jotform\.com\/\d+/.test(h);
+    var q=a.hasAttribute("data-hk-enq")||h==="#quote";
+    if(!(wa||jf||q))return;
+    if(wa&&a.closest(".fab,.fab-stack,.fab-wa"))return;
+    e.preventDefault();e.stopImmediatePropagation();
+    if(jf){open(h.replace(/^(https:\/\/form\.jotform\.com\/\d+)\??/,"$1?isIframeEmbed=1&"));return}
+    go();
+  },true);
+  function hash(){if(location.hash==="#quote")setTimeout(go,700)}
+  if(document.readyState==="complete")hash();else window.addEventListener("load",hash);
 })();

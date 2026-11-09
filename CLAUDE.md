@@ -24,8 +24,26 @@ answer engines; read `agents.md` before writing any copy.
 - Prices are indicative and in SAR unless stated; keep the "indicative / excluding flights" wording.
 - A new or removed page must be reflected in `sitemap.xml`, `llms.txt` and `llms-full.txt`.
 
+## Never delete without asking the owner
+
+These are used from outside this codebase, so no page links to them and they look unused:
+
+- The 40 redirect pages from old URLs (`contact-us/`, `tours/`, `dental-care/`, … any `index.html` that is only a
+  meta refresh): old links, bookmarks and Google results still land on them.
+- `runtime-service-worker.js`: removes the previous site's service worker from returning visitors' browsers.
+- `sw.js`, `offline.html`, `manifest.webmanifest` and the icons: the installable app and the Google Play app
+  depend on them; `play-store/` holds the store listing images.
+- `3677260a11cf646412964635caf782d5.txt` (IndexNow key), `CNAME`, `.nojekyll`, `robots.txt`, `sitemap.xml`,
+  `security.txt` and `.well-known/`: read by Bing, GitHub Pages and crawlers.
+- `llms.txt`, `llms-full.txt`, `agents.md`, `agent-enquiry.json`: read by AI assistants.
+- `.github/workflows/` (IndexNow, secret scan) and `scripts/`.
+
 ## Checks
 
 `python3 scripts/check-site.py` checks English/Arabic twins, sitemap and llms.txt coverage, the legal
 notice, broken internal links, `data-hk-keep` placement and the hk-share.js version. A hook runs it
 after every page edit; fix anything it reports.
+
+`python3 scripts/secret-scan.py` checks that no credential (API key, token, private key, password, database
+connection string) is committed: everything in this repository is public. A GitHub Action runs it on every push.
+Only public browser IDs belong in the site (Google Ads ID, Jotform IDs, the IndexNow key).
