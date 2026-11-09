@@ -10,7 +10,7 @@ if(path!=="/"&&path!=="/ar/")return;
 if(window.__hkTour)return;window.__hkTour=1;
 
 /* KEY carries the guide version: when the steps change, visitors who saw an older guide are offered the new one once */
-var KEY="hkTourDone4",WA="https://wa.me/+201031567949";
+var KEY="hkTourDone6",WA="https://wa.me/+201031567949";
 var AR=(document.documentElement.lang||"").slice(0,2)==="ar";
 var reduce=!!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
 function ls(f){try{return f()}catch(e){return null}}
@@ -35,7 +35,7 @@ var W=AR?{
   holidays:{t:"عطلات ننسّقها لك بالكامل",b:"باقات عائلية للبحر الأحمر والرحلات النيلية والقاهرة والساحل الشمالي بأسعار تقديرية. الإقامة والتنقلات تقدّمها شركات سياحة مصرية مسجّلة.",x:"فلل الساحل الشمالي",r:"تجد الفلل والشاليهات بأسعار الليلة بالريال (تقديرية، بدون الطيران)."},
   trust:{t:"جهات مرخّصة فقط",b:"يقدّم العلاج مستشفيات وعيادات مرخّصة ومستقلة. تنسّق حياكم مواعيدك وإقامتك وتنقّلاتك، ولا تقدّم العلاج بنفسها.",r:"اسحب الشعارات جانباً لترى الشبكة كاملة."},
   menuM:{t:"كل شيء في القائمة",b:"العلاجات والعطلات والأدلة وحاسبة التكلفة وبيانات التواصل، كلها في قائمة واحدة.",x:"زر القائمة",r:"تُفتح قائمة الصفحات كاملة؛ اضغط أي صفحة للانتقال إليها."},
-  menuD:{t:"كل شيء في الأعلى",b:"العطلات والعلاجات والأسعار والإرشادات وبيانات التواصل موجودة دائماً أعلى الصفحة."},
+  menuD:{t:"كل شيء في الأعلى",b:"العطلات والعلاجات والأسعار والإرشادات وبيانات التواصل موجودة دائماً أعلى الصفحة.",r:"تُفتح قائمة بكل العلاجات: الأسنان والشعر والتجميل والعيون وغيرها؛ اضغط أيّها لفتح صفحته."},
   help:{t:"المساعدة على بُعد ضغطة",wa:"واتساب",ai:"المساعد",ra:"الراديو",
     waL:"راسل منسّقاً بالعربية أو الإنجليزية.",aiL:"محادثة تجيب عن الأسئلة الشائعة في أي وقت.",raL:"محطات من القاهرة أثناء التصفّح، اضغط لكتم الصوت.",
     r:"يُفتح واتساب على رقمنا، جاهزاً لرسالتك."}
@@ -53,7 +53,7 @@ var W=AR?{
   holidays:{t:"Holidays, fully coordinated",b:"Family packages for the Red Sea, Nile cruises, Cairo and the North Coast, with indicative prices. Stays and transport are provided by registered Egyptian tourism companies.",x:"North Coast villas",r:"You see villas and chalets with nightly prices in SAR (indicative, excluding flights)."},
   trust:{t:"Licensed providers only",b:"Treatment is delivered by independent licensed hospitals and clinics. Hayakkom coordinates your appointments, stay and transfers; it does not provide treatment itself.",r:"Drag the logos sideways to see the whole network."},
   menuM:{t:"Everything is in the menu",b:"Treatments, holidays, guides, the cost calculator and contact details, all in one list.",x:"the menu button",r:"The full list of pages opens; tap any page to go there."},
-  menuD:{t:"Everything is at the top",b:"Holidays, treatments, costs and guides, and contact details are always at the top of the page."},
+  menuD:{t:"Everything is at the top",b:"Holidays, treatments, costs and guides, and contact details are always at the top of the page.",r:"A list of every treatment opens: dental, hair, cosmetic surgery, eyes and more; click one to open its page."},
   help:{t:"Help is one tap away",wa:"WhatsApp",ai:"Assistant",ra:"Radio",
     waL:"message a coordinator in Arabic or English.",aiL:"a chat that answers common questions, any time.",raL:"Cairo stations while you browse; tap to mute.",
     r:"WhatsApp opens with our number, ready for your message."}
@@ -61,24 +61,28 @@ var W=AR?{
 
 /* ---------- steps: each finds its own targets; a step whose target is missing is left out ---------- */
 function top(f){f.top=1;return f}
+function all(sel,root){var a=(root||document).querySelectorAll(sel),o=[];for(var i=0;i<a.length;i++)if(vis(a[i]))o.push(a[i]);return o}
+function lead(first,rest,n){var o=first?[first]:[];rest.forEach(function(e){if(e!==first&&o.length<(n||4))o.push(e)});return o}
 var STEPS=[
-  top(function(){var b=q("#enBurger")||q("#arBurger"),c;if(b){c=W.menuM;return {holes:[b],tap:b,t:c.t,b:c.b,ex:[W.tap(c.x),c.r]}}
-    var n=AR?q("header.arnav"):q("nav.nav");if(!n)return null;c=W.menuD;return {holes:[n],t:c.t,b:c.b}}),
-  function(){var t=q(".hero-actions");if(!t)return null;var c=W.paths;return {holes:[t],tap:q(".hk-cta-med",t),t:c.t,b:c.b,ex:[W.tap(c.x),c.r]}},
+  top(function(){var b=q("#enBurger")||q("#arBurger"),c;if(b){c=W.menuM;return {holes:[b],tap:b,pts:[b],t:c.t,b:c.b,ex:[W.tap(c.x),c.r]}}
+    var n=AR?q("header.arnav"):q("nav.nav");if(!n)return null;c=W.menuD;var ul=q("ul.nav-links",n)||n,dd=ul.querySelectorAll(".nav-drop-btn"),tb=dd[1]||dd[0]||null;
+    return {holes:[ul],tap:tb,pts:lead(tb,all(":scope > li > a, :scope > li > button",ul),5),t:c.t,b:c.b,ex:tb?[W.tap(tb.textContent.trim()),c.r]:null}}),
+  function(){var t=q(".hero-actions");if(!t)return null;var c=W.paths,m=q(".hk-cta-med",t);return {holes:[t],tap:m,pts:lead(m,all(".hk-cta",t)),t:c.t,b:c.b,ex:[W.tap(c.x),c.r]}},
   function(){var bar=q(".hk-svc-tabs"),c;
     if(bar){var tile=q(".hk-svc-tab",bar),nm=tile&&q(".hk-svc-t",tile),ct=tile&&q(".hk-svc-n",tile),ask=bar.previousElementSibling;c=W.cats;
-      return {holes:ask&&ask.classList.contains("hk-svc-ask")?[ask,bar]:[bar],union:true,tap:tile,t:c.t,b:c.b,
+      return {holes:ask&&ask.classList.contains("hk-svc-ask")?[ask,bar]:[bar],union:true,tap:tile,pts:lead(tile,all(".hk-svc-tab",bar)),t:c.t,b:c.b,
         ex:nm&&ct?[W.tap(nm.textContent.trim()),c.r(ct.textContent.trim())]:null}}
-    var t=q("a.svc-sm[href$='/dental/']")||q("a.svc-sm");if(!t)return null;c=W.services;return {holes:[t],tap:t,t:c.t,b:c.b,ex:[W.tap(c.x),c.r]}},
+    var t=q("a.svc-sm[href$='/dental/']")||q("a.svc-sm");if(!t)return null;c=W.services;return {holes:[t],tap:t,pts:[t],t:c.t,b:c.b,ex:[W.tap(c.x),c.r]}},
   function(){var t=q("#hk-mini-calc .hk-mc");if(!t)return null;var c=W.calc,w=q("#hkMcW",t),x=w&&(w.innerText||"").replace(/\s+/g," ").trim();var i=q(".hk-mc-in",t),f=q(".hk-mc-foot",t),hs=(!mobile()&&i&&f)?[i,f]:[t]; /* on wide screens leave out the heading so the card fits underneath */
-    return {holes:hs,union:true,tap:w,t:c.t,b:c.b,ex:[W.tap(x&&x.length<40?x:c.x),c.r]}},
-  function(){var t=q("#hk-holi .hk-spot-home");if(!t)return null;var c=W.holidays;return {holes:[t],tap:q("a[href$='north-coast-villas/']",t)||q(".hk-spot-card",t),t:c.t,b:c.b,ex:[W.tap(c.x),c.r]}},
-  function(){var w=q(".pm-wrap");if(!w)return null;var s=w.closest("section"),h=s&&q(".sec-title",s),c=W.trust;return {holes:h?[h,w]:[w],union:true,t:c.t,b:c.b,ex:[W.tip,c.r],isTip:true}},
+    var cp=[q("#hkMcD",t),q("#hkMcQp",t),q("#hkMcH button",t),q("#hkMcC button",t),w].filter(function(e){return e}); /* treatment, quantity, stay, city, then send */
+    return {holes:hs,union:true,tap:w,pts:cp,t:c.t,b:c.b,ex:[W.tap(x&&x.length<40?x:c.x),c.r]}},
+  function(){var t=q("#hk-holi .hk-spot-home");if(!t)return null;var c=W.holidays,nc=q("a[href$='north-coast-villas/']",t)||q(".hk-spot-card",t);return {holes:[t],tap:nc,pts:lead(nc,all(".hk-spot-card",t)),t:c.t,b:c.b,ex:[W.tap(c.x),c.r]}},
+  function(){var w=q(".pm-wrap");if(!w)return null;var s=w.closest("section"),h=s&&q(".sec-title",s),c=W.trust,vp=q(".pm-viewport",w)||w;return {holes:h?[h,w]:[w],union:true,pts:[{el:vp,fx:AR?.3:.7},{el:vp,fx:AR?.7:.3}],drag:true,t:c.t,b:c.b,ex:[W.tip,c.r],isTip:true}},
   top(function(){var c=W.help,h=[],chips=[],li=[],wa=q(".fab-wa"),ai=q("#hkAi"),ra=q("#hkRadioWrap");
     if(wa){h.push(wa);chips.push([wa,c.wa]);li.push([c.wa,c.waL])}
     if(ai){h.push(ai);chips.push([ai,c.ai]);li.push([c.ai,c.aiL])}
     if(ra){h.push(ra);chips.push([ra,c.ra]);li.push([c.ra,c.raL])}
-    if(!h.length)return null;return {holes:h,chips:chips,list:li,tap:wa,t:c.t,ex:wa?[W.tap(c.wa),c.r]:null}})
+    if(!h.length)return null;return {holes:h,chips:chips,list:li,tap:wa,pts:h.slice(),t:c.t,ex:wa?[W.tap(c.wa),c.r]:null}})
 ];
 
 /* ---------- styles ---------- */
@@ -90,7 +94,10 @@ var CSS=
 "#hkTour.hkt-on .hkt-svg{opacity:1}"+
 "#hkTour .hkt-ring{position:absolute;left:0;top:0;border:2px solid #E8C877;box-shadow:0 0 0 5px rgba(232,200,119,.16),0 0 28px rgba(232,200,119,.38);pointer-events:none}"+
 "#hkTour .hkt-chip{position:absolute;left:0;top:0;background:#E8C877;color:#0A2E36;font-weight:700;font-size:12.5px;line-height:1;padding:7px 10px;border-radius:999px;white-space:nowrap;pointer-events:none;box-shadow:0 6px 16px rgba(0,0,0,.3)}"+
-"#hkTour .hkt-tap{position:absolute;left:0;top:0;width:0;height:0;pointer-events:none}"+
+"#hkTour .hkt-tap{position:absolute;left:0;top:0;width:0;height:0;pointer-events:none;z-index:2}"+
+"#hkTour .hkt-tap.hkt-go{transition:transform .7s cubic-bezier(.45,.05,.25,1)}"+
+"#hkTour .hkt-tap.hkt-go i,#hkTour .hkt-tap.hkt-go b{opacity:0!important;animation:none}"+
+"#hkTour .hkt-tap.hkt-go svg{animation:none;transform:translate(6px,6px)}"+
 "#hkTour .hkt-tap i{position:absolute;left:-22px;top:-22px;width:44px;height:44px;border-radius:50%;border:2px solid #E8C877;opacity:0;animation:hktRip 1.8s ease-out infinite}"+
 "#hkTour .hkt-tap i+i{animation-delay:.6s}"+
 "#hkTour .hkt-tap b{position:absolute;left:-7px;top:-7px;width:14px;height:14px;border-radius:50%;background:#E8C877;box-shadow:0 0 0 4px rgba(232,200,119,.3);animation:hktDot 1.8s ease-in-out infinite}"+
@@ -148,7 +155,7 @@ var MARK='<svg class="hkt-mark" viewBox="0 0 46 46" aria-hidden="true"><path fil
 
 /* ---------- state ---------- */
 var GAP=12,EDGE=8; /* space between a section and its card, and from the card to the screen edge */
-var root,svg,holeG,card,tapEl,rings=[],chipEls=[],steps=[],cur=-1,st=null,disp=[],tw=null,raf=0,tok=0,lastFocus=null,side="bottom",cardW="",plan=null;
+var root,svg,holeG,card,tapEl,rings=[],chipEls=[],steps=[],cur=-1,st=null,disp=[],tw=null,raf=0,tok=0,lastFocus=null,side="bottom",cardW="",plan=null,pi=0,piT=0,goT=0;
 
 function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
@@ -171,7 +178,7 @@ function draw(d){
   while(holeG.childNodes.length>d.length)holeG.removeChild(holeG.lastChild);
   while(holeG.childNodes.length<d.length)holeG.appendChild(document.createElementNS("http://www.w3.org/2000/svg","rect"));
   while(rings.length>d.length)root.removeChild(rings.pop());
-  while(rings.length<d.length){var g=el("div","hkt-ring");root.insertBefore(g,tapEl);rings.push(g)}
+  while(rings.length<d.length){var g=el("div","hkt-ring");root.insertBefore(g,card);rings.push(g)}
   d.forEach(function(o,i){var h=holeG.childNodes[i];h.setAttribute("x",o.x);h.setAttribute("y",o.y);h.setAttribute("width",o.w);h.setAttribute("height",o.h);h.setAttribute("rx",o.r);h.setAttribute("fill","#000");
     var g=rings[i].style;g.transform="translate("+o.x+"px,"+o.y+"px)";g.width=o.w+"px";g.height=o.h+"px";g.borderRadius=o.r+"px"});
 }
@@ -196,19 +203,30 @@ function placeCard(tg){
   cs.left=Math.round(x)+"px";cs.top=Math.round(y)+"px";
 }
 
+function points(){var p=st?(st.pts||(st.tap?[st.tap]:[])):[];if(!st&&card){var m=card.querySelector(".hkt-main");if(m)p=[m]}
+  return p.map(function(x){return x&&x.el?x:{el:x,fx:.5,fy:.5}}).filter(function(x){return x.el})}
+function spot(p){ /* screen position of a point, or null when it is off screen or under the card */
+  var r=p.el.getBoundingClientRect();if(!(r.width>0&&r.bottom>0&&r.top<innerHeight))return null;
+  var x=r.left+r.width*(p.fx==null?.5:p.fx),y=r.top+r.height*(p.fy==null?.5:p.fy);
+  if(!card.contains(p.el)){var cr=card.getBoundingClientRect();if(x>cr.left&&x<cr.right&&y>cr.top&&y<cr.bottom)return null}
+  return [x,y]}
 function placeExtras(){
-  var t=st&&st.tap,r=t&&t.getBoundingClientRect();
-  if(r&&r.width>0&&r.bottom>0&&r.top<innerHeight){tapEl.style.display="block";tapEl.style.transform="translate("+(r.left+r.width/2)+"px,"+(r.top+r.height/2)+"px)"}
+  var ps=points(),xy=null,k;
+  for(k=0;k<ps.length&&!xy;k++){xy=spot(ps[(pi+k)%ps.length]);if(xy&&k)pi=(pi+k)%ps.length} /* skip anything hidden */
+  var ok=!!xy,x=ok?xy[0]:0,y=ok?xy[1]:0;
+  if(ok){tapEl.style.display="block";tapEl.style.transform="translate("+Math.round(x)+"px,"+Math.round(y)+"px)"}
   else tapEl.style.display="none";
   var ch=(st&&st.chips)||[];
   while(chipEls.length>ch.length)root.removeChild(chipEls.pop());
-  while(chipEls.length<ch.length){var c=el("div","hkt-chip");root.insertBefore(c,tapEl);chipEls.push(c)}
+  while(chipEls.length<ch.length){var c=el("div","hkt-chip");root.insertBefore(c,card);chipEls.push(c)}
   ch.forEach(function(c,i){var e=chipEls[i],b=c[0].getBoundingClientRect(),vw=innerWidth,cy=b.top+b.height/2;if(e.textContent!==c[1])e.textContent=c[1];
     if(b.right<vw*.25)e.style.transform="translate("+(b.right+16)+"px,"+cy+"px) translate(0,-50%)";
     else if(b.left>vw*.75)e.style.transform="translate("+(b.left-16)+"px,"+cy+"px) translate(-100%,-50%)";
     else{var below=b.top<60;e.style.transform="translate("+(b.left+b.width/2)+"px,"+(below?b.bottom+14:b.top-14)+"px) translate(-50%,"+(below?"0":"-100%")+")"}});
 }
 
+function glide(){tapEl.classList.add("hkt-go");clearTimeout(goT);goT=setTimeout(function(){if(tapEl)tapEl.classList.remove("hkt-go")},720)}
+function cycle(){clearInterval(piT);pi=0;if(reduce)return;piT=setInterval(function(){if(!root)return clearInterval(piT);if(points().length>1){pi++;glide()}},1800)}
 function frame(now){
   raf=requestAnimationFrame(frame);
   var tg=rectsOf(st),d;
@@ -277,6 +295,7 @@ function go(i,dir){
   setTimeout(function(){
     if(my!==tok||!root)return;
     render(i);
+    if(!reduce&&tapEl.style.display!=="none")glide();cycle();
     if(st)ev("tour_step",{step:i+1});
     scrollFor(st);
     tw={from:from,t0:performance.now(),dur:reduce?0:520};
@@ -307,18 +326,18 @@ function start(manual){
   root.innerHTML='<svg class="hkt-svg" aria-hidden="true"><defs><mask id="hktMask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%"><rect x="0" y="0" width="100%" height="100%" fill="#fff"/><g></g></mask></defs><rect x="0" y="0" width="100%" height="100%" fill="rgba(4,22,27,.74)" mask="url(#hktMask)"/></svg>';
   svg=root.firstChild;holeG=svg.querySelector("mask g");
   tapEl=el("div","hkt-tap","<i></i><i></i><b></b>"+HAND);tapEl.style.display="none";root.appendChild(tapEl);
-  card=el("div","hkt-card hkt-center hkt-out");root.appendChild(card);
+  card=el("div","hkt-card hkt-center hkt-out");root.insertBefore(card,tapEl);
   ["click","pointerdown","pointerup","mousedown","mouseup","touchstart","touchend"].forEach(function(t){root.addEventListener(t,stop,false)});
   document.body.appendChild(root);
   document.addEventListener("keydown",onKey,true);
-  render(-1);
+  render(-1);cycle();
   requestAnimationFrame(function(){if(!root)return;root.classList.add("hkt-on");card.classList.remove("hkt-out");focusMain()});
   raf=requestAnimationFrame(frame);
   ev("tour_offer",{manual:manual?1:0});
 }
 function close(why){
   if(!root)return;
-  tok++;cancelAnimationFrame(raf);raf=0;
+  tok++;cancelAnimationFrame(raf);raf=0;clearInterval(piT);clearTimeout(goT);
   document.removeEventListener("keydown",onKey,true);
   var r=root;root=null;
   r.style.transition="opacity .25s ease";r.style.opacity="0";r.style.pointerEvents="none";
