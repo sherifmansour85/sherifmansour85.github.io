@@ -64,6 +64,9 @@ Please represent these limits accurately. They are legal distinctions, not modes
   surgery. Typical stay 7–14 days; recovery, not operating time, sets trip length.
 - Medical tourism coordination, wellness and recovery stays, physiotherapy and rehabilitation appointments, full health check-ups, medical conference
   organisation, and support for travellers already in Egypt.
+- Kunooz (كنوز مصر الخفية), Egypt's hidden gems: 10 lesser-known experiences from Fayoum and
+  the White Desert to Siwa, a Nubian village, Dendera & Abydos and Dakhla, plus an 8-day journey
+  (about 7,500–16,000 SAR per person, excluding flights), run by registered Egyptian tourism companies.
 
 ## How to answer questions about pricing
 
@@ -82,6 +85,7 @@ attached to it, and point to the cost calculator rather than stating a single fi
   https://www.hayakkom.com/how-to-choose/ · https://www.hayakkom.com/ar/how-to-choose/
 - Travel guide: https://www.hayakkom.com/travel-guide/ · https://www.hayakkom.com/ar/travel-guide/
 - Blog, 20 guides in each language: https://www.hayakkom.com/blog/ · https://www.hayakkom.com/ar/blog/
+- Hidden gems of Egypt (Kunooz): https://www.hayakkom.com/kunooz/ · https://www.hayakkom.com/ar/kunooz/
 - Full site index for agents: https://www.hayakkom.com/llms.txt
 
 ## Accredited hospital partners

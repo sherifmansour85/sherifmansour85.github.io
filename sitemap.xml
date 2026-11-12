@@ -1288,4 +1288,32 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/siwa/"/>
     <lastmod>2026-11-07</lastmod>
   </url>
+  <url>
+    <loc>https://www.hayakkom.com/kunooz/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/kunooz/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/kunooz/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/kunooz/"/>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/kunooz/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/kunooz/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/kunooz/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/kunooz/"/>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/kunooz/8-day-journey/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/kunooz/8-day-journey/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/kunooz/8-day-journey/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/kunooz/8-day-journey/"/>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/kunooz/8-day-journey/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/kunooz/8-day-journey/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/kunooz/8-day-journey/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/kunooz/8-day-journey/"/>
+    <lastmod>2026-11-12</lastmod>
+  </url>
 </urlset>
