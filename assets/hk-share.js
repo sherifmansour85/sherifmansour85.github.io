@@ -1131,3 +1131,34 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
     return true;
   };
 })();
+
+/* HK-FX: international visitors (outside the GCC countries and Egypt) see an approximate conversion next to SAR prices,
+   e.g. "380–950 SAR (≈ $100–255)". GCC and Egyptian visitors see the page exactly as before. Only text outside the
+   React app (#root) is touched. Rates are rounded and labelled approximate. */
+(function(){
+  if(window.__hkFx)return;window.__hkFx=1;
+  var tz="";try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||""}catch(e){}
+  if(!tz||/^(Asia\/(Riyadh|Dubai|Kuwait|Qatar|Bahrain|Muscat|Aden)|Africa\/Cairo)$/.test(tz))return;
+  if(/^\/(ru|uk)(\/|$)/.test(location.pathname))return; /* these pages already show USD / GBP */
+  var C=tz==="Europe/London"||tz==="Europe/Belfast"?["£",4.75]:(/^Europe\//.test(tz)&&!/Moscow|Minsk|Istanbul|Kiev|Kyiv|Samara|Volgograd/.test(tz))?["€",4.05]:["$",3.75];
+  var RX=/(\d[\d,]*)(?:\s?[–-]\s?(\d[\d,]*))?\s?(SAR|ريال)/g;
+  function conv(n){var v=parseInt(n.replace(/,/g,""),10)/C[1];var r=v>=1000?Math.round(v/10)*10:Math.round(v/5)*5;return r.toLocaleString("en-US")}
+  function scan(){
+    var root=document.getElementById("root");
+    var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:function(n){
+      var p=n.parentNode;if(!p||/^(SCRIPT|STYLE|TEXTAREA|TITLE|OPTION)$/.test(p.nodeName)||(p.closest&&p.closest(".hk-fx,[contenteditable]"))||(root&&root.contains(n)))return NodeFilter.FILTER_REJECT;
+      RX.lastIndex=0;return RX.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP}});
+    var list=[],n;while((n=w.nextNode()))list.push(n);
+    list.forEach(function(t){
+      var s=t.nodeValue,out=document.createDocumentFragment(),last=0,m;RX.lastIndex=0;
+      while((m=RX.exec(s))){
+        var end=m.index+m[0].length;out.appendChild(document.createTextNode(s.slice(last,end)));
+        var sp=document.createElement("span");sp.className="hk-fx";sp.style.cssText="opacity:.75;font-size:.9em;white-space:nowrap";
+        sp.textContent=" (≈ "+C[0]+conv(m[1])+(m[2]?"–"+conv(m[2]):"")+")";sp.title="Approximate conversion";
+        out.appendChild(sp);last=end;
+      }
+      out.appendChild(document.createTextNode(s.slice(last)));t.parentNode.replaceChild(out,t);
+    });
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",scan);else scan();
+})();
