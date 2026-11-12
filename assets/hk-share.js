@@ -1119,6 +1119,7 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   }
   function msg(i){
     var url=location.origin+location.pathname+(i.id?"#"+i.id:"");
+    if(/^ru/i.test(document.documentElement.lang||""))return "Здравствуйте, Hayakkom 👋\nМеня интересует: "+i.name+(i.price?"\nОриентировочная цена: "+i.price:"")+"\nСтраница: "+url+"\nПришлите, пожалуйста, подробности и письменное предложение.";
     return ar?("مرحباً حياكم 👋\nأرغب في: "+i.name+(i.price?"\nالسعر التقديري: "+i.price:"")+"\nالصفحة: "+url+"\nأرجو إرسال التفاصيل وعرض سعر مكتوب.")
              :("Hello Hayakkom 👋\nI'm interested in: "+i.name+(i.price?"\nIndicative price: "+i.price:"")+"\nPage: "+url+"\nPlease send me the details and a written quote.");
   }

@@ -14,6 +14,8 @@ SKIP_DIRS = {'.git', '.claude', 'graphify-out', 'scripts', 'node_modules'}
 ASSET = re.compile(r'\.(css|js|png|jpe?g|svg|webp|ico|json|txt|xml|webmanifest|pdf|mp4|woff2?)$')
 # Wording the legal notice must keep on every page (see agents.md, "What Hayakkom is not").
 LEGAL = {'en': 'registered Egyptian tourism companies', 'ar': 'شركات سياحة'}
+# Single-language landing pages for other markets: no Arabic twin expected.
+MARKETS = ('/ru/', '/uk/')
 
 
 def load_pages():
@@ -78,9 +80,11 @@ def main():
     for u in real:
         h = pages[u]
         ar = u.startswith('/ar/') or u == '/ar/'
-        # 1. English/Arabic twins
+        # 1. English/Arabic twins (market landing pages such as /ru/ and /uk/ stand alone)
         twin = u[3:] if ar else '/ar' + u
-        if twin not in pages:
+        if u.startswith(MARKETS):
+            pass
+        elif twin not in pages:
             problems.append(f'{u}: no {"English" if ar else "Arabic"} twin page {twin}')
         # 2. Sitemap and llms.txt coverage (pages marked noindex, e.g. the personal /estimate/ page, are exempt)
         noindex = re.search(r'<meta name="robots" content="noindex', h) is not None
