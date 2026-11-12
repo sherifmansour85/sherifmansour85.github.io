@@ -1016,6 +1016,7 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   }
   window.addEventListener("click",function(e){
     var a=e.target&&e.target.closest?e.target.closest("a[href]"):null;if(!a)return;
+    if(window.__hkPkgBtn&&window.__hkPkgBtn(a))return; /* package buttons go to WhatsApp (HK-PKG-WA) */
     var h=a.getAttribute("href")||"";
     var wa=/^(https?:)?\/\/(wa\.me|api\.whatsapp\.com)\//i.test(h)||/^whatsapp:/i.test(h);
     var jf=/^https:\/\/form\.jotform\.com\/\d+/.test(h);
@@ -1091,4 +1092,41 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",later);else later();
   window.addEventListener("load",later);
   try{new MutationObserver(later).observe(document.body||document.documentElement,{childList:true,subtree:true})}catch(e){}
+})();
+
+/* HK-PKG-WA: package buttons ("Ask for this trip", "Enquire now", Kunooz "Ask on WhatsApp") open WhatsApp with a ready
+   message naming the package, its indicative price range and the page, so the coordinator knows exactly what was chosen.
+   The click is a normal wa.me link, so HK-CONVERSIONS still counts it as a WhatsApp conversion. */
+(function(){
+  if(window.__hkPkgWa)return;window.__hkPkgWa=1;
+  var NUM="201031567949";
+  var ar=document.documentElement.lang==="ar"||/^\/ar(\/|$)/.test(location.pathname);
+  var st=document.createElement("style");
+  st.textContent=".pkg-card a.hkp-btn,.pkg-card a.pkg-btn,a.hk-pkg-wa{display:inline-flex;align-items:center;justify-content:center;gap:8px}"+
+    ".pkg-card a.hkp-btn::before,.pkg-card a.pkg-btn::before,a.hk-pkg-wa::before{content:'';width:18px;height:18px;flex:0 0 18px;"+
+    "background:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%2325D366' d='M16 3a13 13 0 0 0-11 19.7L3.5 29l6.5-1.7A13 13 0 1 0 16 3Zm7.6 18.4c-.3.9-1.8 1.7-2.5 1.8-.6.1-1.4.1-2.3-.1a20 20 0 0 1-2.1-.8c-3.7-1.6-6.1-5.3-6.3-5.6-.2-.2-1.5-2-1.5-3.8s.9-2.7 1.3-3.1c.3-.4.7-.5 1-.5h.7c.2 0 .5-.1.8.6l1.1 2.7c.1.2.2.5 0 .8l-.4.7-.6.6c-.2.2-.4.4-.2.8.2.4 1 1.6 2.1 2.6 1.4 1.3 2.6 1.7 3 1.9.4.2.6.2.8-.1l1.2-1.4c.3-.4.5-.3.9-.2l2.6 1.2c.4.2.6.3.7.4.1.2.1 1-.3 1.9Z'/%3E%3C/svg%3E\") center/contain no-repeat}";
+  (document.head||document.documentElement).appendChild(st);
+  function txt(el){return el?(el.textContent||"").replace(/\s+/g," ").trim():""}
+  function info(a){
+    var card=a.closest(".pkg-card,.kz-gem");
+    if(!card){var p=a.parentElement;while(p&&p!==document.body){if(/(^|\s)pkg-/.test(p.className||"")&&p.querySelector(".pkg-price")){card=p;break}p=p.parentElement}}
+    if(!card)return null;
+    var isBtn=a.classList.contains("hkp-btn")||a.classList.contains("pkg-btn")||a.classList.contains("hk-pkg-wa")||(card.classList.contains("kz-gem")&&a.hasAttribute("data-hk-enq"));
+    if(!isBtn)return null;
+    var name=txt(card.querySelector(".pkg-name,.pkg-title,h2,h3")).replace(/^\d+\s*/,"");
+    var price=txt(card.querySelector(".pkg-price,.kz-price"));
+    return {name:name,price:price,id:card.id||""};
+  }
+  function msg(i){
+    var url=location.origin+location.pathname+(i.id?"#"+i.id:"");
+    return ar?("مرحباً حياكم 👋\nأرغب في: "+i.name+(i.price?"\nالسعر التقديري: "+i.price:"")+"\nالصفحة: "+url+"\nأرجو إرسال التفاصيل وعرض سعر مكتوب.")
+             :("Hello Hayakkom 👋\nI'm interested in: "+i.name+(i.price?"\nIndicative price: "+i.price:"")+"\nPage: "+url+"\nPlease send me the details and a written quote.");
+  }
+  window.__hkPkgBtn=function(a){
+    var i=info(a);if(!i||!i.name)return false;
+    a.setAttribute("href","https://wa.me/"+NUM+"?text="+encodeURIComponent(msg(i)));
+    a.setAttribute("target","_blank");a.setAttribute("rel","noopener");
+    try{if(typeof window.gtag==="function")window.gtag("event","package_whatsapp",{package_name:i.name,price_range:i.price,page_path:location.pathname})}catch(e){}
+    return true;
+  };
 })();
