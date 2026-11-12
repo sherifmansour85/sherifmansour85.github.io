@@ -170,8 +170,8 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 
 Every article is published in both languages. English articles are at /blog/, Arabic at /ar/blog/, paired with hreflang.
 
-- [Hayakkom Blog in English](https://www.hayakkom.com/blog/): twenty articles for Gulf families travelling to Egypt, covering Cairo day trips, Nile cruises, treatment costs, preparation, length of stay, insurance and choosing a provider.
-- [مدونة حياكم (Arabic)](https://www.hayakkom.com/ar/blog/): the same twenty articles in Arabic.
+- [Hayakkom Blog in English](https://www.hayakkom.com/blog/): twenty-one articles for Gulf families travelling to Egypt, covering Cairo day trips, Nile cruises, treatment costs, preparation, length of stay, insurance and choosing a provider.
+- [مدونة حياكم (Arabic)](https://www.hayakkom.com/ar/blog/): the same twenty-one articles in Arabic.
 
 ## Verified business profile
 
@@ -184,6 +184,7 @@ Every article is published in both languages. English articles are at /blog/, Ar
 ## New guides (October 2026)
 
 - [Egypt family holiday from Saudi Arabia and the Gulf: the complete 2026 guide](https://www.hayakkom.com/blog/egypt-family-holiday-guide-gulf/): For a first family trip, most Gulf families choose the Red Sea (Sharm el-Sheikh, Hurghada or El Gouna) for 5 nights, or combine 3 nights in Cairo with 4 nights by the sea. The Red Sea is warm year-round, the North Coast is a summer destination (June–September), and Luxor and Aswan are best from October to April. A 5-night Red Sea family stay typically costs 3,500–9,700 SAR per room before flights. Arabic: https://www.hayakkom.com/ar/blog/egypt-family-holiday-guide-gulf/
+- [Is Egypt safe to visit now?](https://www.hayakkom.com/blog/is-egypt-safe-to-visit/): yes for the places Gulf families visit. Gallup: 82% of people in Egypt feel safe walking alone at night (world average 73%; UK 76%, US 71%); a record of nearly 19 million tourists in 2025 (+21%, Ministry of Tourism and Antiquities); UK official advice (current 12 Nov 2026) warns only against remote border areas, and Cairo, Giza, the Red Sea and Sinai coasts, Luxor, Aswan, the North Coast and Siwa are outside them. Dated sources; readers are told to check the latest advice. Arabic: https://www.hayakkom.com/ar/blog/is-egypt-safe-to-visit/
 - [Combining a holiday with medical treatment in Egypt: what Gulf families should know](https://www.hayakkom.com/blog/holiday-and-treatment-in-egypt/): Treatment and holiday work best together when the treatment is planned, not urgent, and the doctor agrees the timing. A common plan is sightseeing first, then treatment in Cairo, then a quiet recovery stay by the Red Sea or in Ain Sokhna. Your doctor decides when you can swim, dive, sunbathe or fly. A recovery stay with transfers typically costs 2,700–5,650 SAR plus the treatment, which the clinic prices after reviewing your case. Arabic: https://www.hayakkom.com/ar/blog/holiday-and-treatment-in-egypt/
 - [Need a doctor in Egypt? A practical guide for Gulf visitors and families](https://www.hayakkom.com/blog/doctor-in-egypt-for-gulf-visitors/): In a medical emergency in Egypt, call 123 for an ambulance. For non-emergencies — fever, stomach upset, heat exhaustion, a child’s infection, toothache — a licensed doctor, nurse or dentist can usually visit your hotel or see you the same day. Pharmacies are widespread and many open late. Keep your travel insurance details and any regular medicines with you. Arabic: https://www.hayakkom.com/ar/blog/doctor-in-egypt-for-gulf-visitors/
 
