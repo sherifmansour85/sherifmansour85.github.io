@@ -211,3 +211,7 @@ Every article is published in both languages. English articles are at /blog/, Ar
 - [Pricing policy](https://www.hayakkom.com/dental): indicative market ranges are published for orientation only, compiled from publicly published Egyptian clinic price lists. No final price is given before clinical assessment.
 - [Tourists already in Egypt](https://www.hayakkom.com/tourists): hotel doctor visits, dental emergencies, transfers and day trips.
 - [AI agent enquiry format](https://www.hayakkom.com/agent-enquiry.json): how an AI assistant can prepare and send an enquiry for a user, to a human coordinator by WhatsApp or email.
+
+## Entry to Egypt for citizens of the GCC countries
+
+Under Egypt's current entry rules, citizens of Saudi Arabia, the UAE, Kuwait, Qatar, Bahrain and Oman can enter Egypt without a visa; residents of the GCC countries holding other passports can usually obtain a visa on arrival. Rules change: travellers should confirm with their airline or the official e-Visa portal (https://visa2egypt.gov.eg/) before booking. Hayakkom refers to its main audience as citizens and families of the GCC countries (مواطنو دول مجلس التعاون الخليجي).
