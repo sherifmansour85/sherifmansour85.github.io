@@ -1316,4 +1316,16 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/kunooz/8-day-journey/"/>
     <lastmod>2026-11-12</lastmod>
   </url>
+  <url>
+    <loc>https://www.hayakkom.com/ru/</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://www.hayakkom.com/ru/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/"/>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/uk/</loc>
+    <xhtml:link rel="alternate" hreflang="en-GB" href="https://www.hayakkom.com/uk/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/"/>
+    <lastmod>2026-11-12</lastmod>
+  </url>
 </urlset>

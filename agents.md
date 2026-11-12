@@ -86,6 +86,7 @@ attached to it, and point to the cost calculator rather than stating a single fi
 - Travel guide: https://www.hayakkom.com/travel-guide/ · https://www.hayakkom.com/ar/travel-guide/
 - Blog, 20 guides in each language: https://www.hayakkom.com/blog/ · https://www.hayakkom.com/ar/blog/
 - Hidden gems of Egypt (Kunooz): https://www.hayakkom.com/kunooz/ · https://www.hayakkom.com/ar/kunooz/
+- Russian-speaking travellers: https://www.hayakkom.com/ru/ · UK visitors: https://www.hayakkom.com/uk/
 - Full site index for agents: https://www.hayakkom.com/llms.txt
 
 ## Accredited hospital partners
