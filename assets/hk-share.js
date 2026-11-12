@@ -1029,3 +1029,66 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   function hash(){if(location.hash==="#quote")setTimeout(go,700)}
   if(document.readyState==="complete")hash();else window.addEventListener("load",hash);
 })();
+
+/* HK-LOC: every place the office address appears opens Hayakkom's official Google Maps listing (Business Profile,
+   cid link), and the Contact-page map gets an "Open in Google Maps" button. Text outside #root is wrapped in a link;
+   inside the React app (#root) the element itself is made clickable, so React's own nodes are never replaced. */
+(function(){
+  if(window.__hkLoc)return;window.__hkLoc=1;
+  var MAP="https://maps.google.com/?cid=7647895636237272778";
+  var RX=/(District 16, Neighbourhood 2, Sheikh Zayed City, Giza(?: 12774)?(?:, Egypt)?|Sheikh Zayed, District 16, Giza|الحي 16، المجاورة الثانية، الشيخ زايد، الجيزة(?: 12774)?(?:، مصر)?|الشيخ زايد، الحي 16، الجيزة)/;
+  var ar=document.documentElement.lang==="ar"||/^\/ar(\/|$)/.test(location.pathname);
+  var st=document.createElement("style");
+  st.textContent="a.hk-loc,.hk-loc-el{color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;cursor:pointer}"+
+    "a.hk-loc:hover,.hk-loc-el:hover{text-decoration-style:solid}"+
+    ".hk-loc-btn{display:inline-flex;align-items:center;gap:8px;margin:12px 0 4px;padding:11px 18px;border-radius:999px;background:#0A2E36;color:#fff!important;font-weight:700;text-decoration:none!important;font-size:15px}"+
+    ".hk-loc-btn:hover{background:#12434e}";
+  (document.head||document.documentElement).appendChild(st);
+  function track(){try{if(typeof window.gtag==="function")window.gtag("event","map_open",{page_path:location.pathname})}catch(e){}}
+  function go(){track();window.open(MAP,"_blank","noopener")}
+  var SKIP={SCRIPT:1,STYLE:1,A:1,TEXTAREA:1,NOSCRIPT:1,TITLE:1,BUTTON:1,IFRAME:1};
+  function scan(){
+    var root=document.getElementById("root");
+    var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:function(n){
+      var p=n.parentNode;if(!p||SKIP[p.nodeName]||(p.closest&&p.closest("a,.hk-loc-el,[contenteditable]")))return NodeFilter.FILTER_REJECT;
+      return RX.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP}});
+    var list=[],n;while((n=w.nextNode()))list.push(n);
+    list.forEach(function(t){
+      var p=t.parentNode;
+      if(root&&root.contains(t)){ /* React-owned: make the element clickable, never replace its nodes */
+        if((p.textContent||"").length>160)return;
+        p.classList.add("hk-loc-el");p.setAttribute("role","link");p.setAttribute("tabindex","0");
+        p.setAttribute("title",ar?"افتح الموقع في خرائط جوجل":"Open our location in Google Maps");
+        return;
+      }
+      var m=t.nodeValue.match(RX);if(!m)return;
+      var after=t.splitText(m.index);after.splitText(m[0].length);
+      var a=document.createElement("a");a.className="hk-loc";a.href=MAP;a.target="_blank";a.rel="noopener";
+      a.title=ar?"افتح الموقع في خرائط جوجل":"Open our location in Google Maps";
+      a.textContent=after.nodeValue;p.replaceChild(a,after);
+    });
+    /* the 📍 Address card on the Contact page */
+    document.querySelectorAll(".contact-card").forEach(function(c){
+      if(c.classList.contains("hk-loc-el")||c.textContent.indexOf("📍")<0)return;
+      c.classList.add("hk-loc-el");c.setAttribute("role","link");c.setAttribute("tabindex","0");c.style.cursor="pointer";
+    });
+    /* a button under every embedded Google map */
+    document.querySelectorAll('iframe[src*="google.com/maps"]').forEach(function(f){
+      var box=f.parentNode;if(!box||!box.parentNode||box.parentNode.querySelector(".hk-loc-btn"))return;
+      var b=document.createElement("a");b.className="hk-loc-btn";b.href=MAP;b.target="_blank";b.rel="noopener";
+      b.innerHTML="📍 "+(ar?"افتح موقعنا في خرائط جوجل":"Open our location in Google Maps");
+      b.addEventListener("click",track);
+      box.parentNode.insertBefore(b,box.nextSibling);
+    });
+  }
+  document.addEventListener("click",function(e){
+    var el=e.target&&e.target.closest?e.target.closest("a.hk-loc,.hk-loc-el"):null;if(!el)return;
+    if(el.tagName==="A"){track();return}
+    e.preventDefault();go();
+  });
+  document.addEventListener("keydown",function(e){if((e.key==="Enter"||e.key===" ")&&e.target&&e.target.classList&&e.target.classList.contains("hk-loc-el")){e.preventDefault();go()}});
+  var t=null;function later(){clearTimeout(t);t=setTimeout(scan,250)}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",later);else later();
+  window.addEventListener("load",later);
+  try{new MutationObserver(later).observe(document.body||document.documentElement,{childList:true,subtree:true})}catch(e){}
+})();
