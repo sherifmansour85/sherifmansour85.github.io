@@ -1328,3 +1328,27 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",add);else add();
 })();
+
+/* HK-CONTRAST: the base page styles (".hkp p", "main.arwrap p/h2" with !important) force dark text on every paragraph
+   and heading, which also hit text inside dark panels. These rules are more specific, so text on dark panels stays light
+   and small gold labels on white stay readable. */
+(function(){
+  if(window.__hkContrast)return;window.__hkContrast=1;
+  var s=document.createElement("style");s.id="hk-contrast";
+  s.textContent=
+    "html body .bm-sub h2,html body .bm-sub h3,html body main .bm-sub h2,html body main .bm-sub h3{color:#fff!important}"+
+    "html body .bm-sub p,html body main .bm-sub p{color:rgba(255,255,255,.88)!important}"+
+    "html body .bm-sub .bm-note,html body main .bm-sub p.bm-note{color:rgba(255,255,255,.72)!important}"+
+    "html body .bm-sub .bm-kicker{color:#E8C877!important}"+
+    "html body .bm-cover h2,html body main .bm-cover h2{color:#fff!important}html body .bm-cover p,html body main .bm-cover p{color:rgba(255,255,255,.9)!important}"+
+    "html body .hk-cta-end p,html body main .hk-cta-end p{color:rgba(255,255,255,.9)!important}html body .hk-cta-end strong{color:#D4A843!important}"+
+    "html body .hk-qf-h strong,html body main .hk-qf-h strong{color:#D4A843!important}html body .hk-qf-h span,html body main .hk-qf-h span{color:rgba(255,255,255,.88)!important}"+
+    "html body .hkg-plan h3{color:#D4A843!important}html body .hkg-plan li,html body .hkg-plan li span,html body .hkg-tot span{color:#fff!important}html body .hkg-tot strong{color:#D4A843!important}html body .hkg-plan small{color:rgba(255,255,255,.75)!important}"+
+    "html body .kz-meta .kz-price{color:#D4A843!important}"+
+    "html body .bm .bm-lab,html body main .bm-lab,html body .bm-row .bm-lab{color:#8A6A1F!important}"+
+    "html body .bm-mast .bm-kicker,html body main .bm-mast .bm-kicker{color:#8A6A1F!important}"+
+    "html body .hkg-wa,html body .hk-cta-end-w,html body .hk-s-m a.w{background:#128C4A!important;color:#fff!important}"+
+    "html body .hk-tb-share{color:#0A2E36!important}"+
+    "html body footer .footer-legal,html body footer .footer-legal a,html body footer .hk-loc{color:rgba(255,255,255,.72)!important}";
+  (document.head||document.documentElement).appendChild(s);
+})();
