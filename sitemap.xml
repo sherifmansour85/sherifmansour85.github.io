@@ -1342,4 +1342,18 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/"/>
     <lastmod>2026-11-12</lastmod>
   </url>
+  <url>
+    <loc>https://www.hayakkom.com/gateway/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/gateway/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/gateway/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/gateway/"/>
+    <lastmod>2026-11-13</lastmod>
+  </url>
+  <url>
+    <loc>https://www.hayakkom.com/ar/gateway/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.hayakkom.com/gateway/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.hayakkom.com/ar/gateway/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hayakkom.com/gateway/"/>
+    <lastmod>2026-11-13</lastmod>
+  </url>
 </urlset>

@@ -13662,3 +13662,15 @@ Yes. Take out travel insurance that covers your itinerary and planned activities
 I am already on holiday in Egypt. Can you help?
 Yes. Tell us your hotel and dates in the form; a coordinator replies within 12 hours and can arrange a doctor at your hotel, a dentist appointment or a day trip.
 Hayakkom is an Egyptian coordination company (Commercial Register 49973), not a travel agency, tour operator or clinic. Trips, transfers and stays are provided by registered Egyptian tourism companies; treatment by licensed medical institutions. Prices are indicative and exclude flights; the final price is confirmed in a written quote before you pay.
+
+# Egypt Gateway: Plan Treatment, Holidays & Hidden Gems in One Place | Hayakkom
+
+URL: https://www.hayakkom.com/gateway/
+
+An interactive planner (also on the home page). The visitor completes one sentence: I want [treatment and a holiday / a holiday / treatment / Egypt's hidden gems / help now in Egypt / business] in [region] for [adults, children], for [nights], staying in a [hotel level]. The planner lists matching treatments (e.g. dental implant 940–2,300 SAR, veneers 340–680 SAR per tooth, hair transplant 4,500–11,300 SAR), stays (3-star 250–450, 4-star 400–800, 5-star 800–2,000 SAR per night), classic trips, the 10 Kunooz, ready-made packages and extras (airport pick-up 150–350 SAR, driver 450–900 SAR per day), adds them into a plan with an indicative total in SAR excluding flights, and sends the plan to a coordinator by WhatsApp or the enquiry form. Prices are indicative; trips by registered Egyptian tourism companies; treatment by licensed medical institutions.
+
+# بوابة مصر | حياكم
+
+URL: https://www.hayakkom.com/ar/gateway/
+
+أداة تخطيط تفاعلية تجمع كل خدمات حياكم — العلاجات والإقامة والرحلات وكنوز مصر الخفية والباقات والخدمات الإضافية — في خطة واحدة بسعر تقديري بالريال دون الطيران، وتُرسل إلى منسّق على واتساب أو عبر نموذج الاستفسار.
