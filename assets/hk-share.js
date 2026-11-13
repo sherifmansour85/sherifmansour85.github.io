@@ -703,12 +703,12 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
       ".hk-svc-n{margin:0;padding:0;background:none;color:#0B6B73;font-size:11.5px;font-weight:700}"+
       ".hk-svc-tab[aria-selected=true] .hk-svc-n{background:none;color:#E8C877}"+
       ".hk-svc-ok{top:-6px;inset-inline-end:-6px;width:19px;height:19px}.hk-svc-ok svg{width:11px;height:11px}}"+
-    /* every 2 s the categories not yet open give a small bounce and gold glow, until the first tap */
-    ".hk-svc-tabs.hk-call .hk-svc-tab:not([aria-selected=true]){animation:hkChip 2s ease-in-out infinite}"+
-    ".hk-svc-tabs.hk-call .hk-svc-tab:nth-child(2){animation-delay:.15s}.hk-svc-tabs.hk-call .hk-svc-tab:nth-child(3){animation-delay:.3s}.hk-svc-tabs.hk-call .hk-svc-tab:nth-child(4){animation-delay:.45s}"+
-    "@keyframes hkChip{0%,45%,100%{transform:translateY(0);box-shadow:0 0 0 0 rgba(201,162,58,0)}"+
-      "9%{transform:translateY(-6px);box-shadow:0 0 0 0 rgba(201,162,58,.6),0 0 18px rgba(201,162,58,.55)}18%{transform:translateY(0)}25%{transform:translateY(-2px)}"+
-      "32%{transform:translateY(0)}40%{box-shadow:0 0 0 10px rgba(201,162,58,0),0 0 0 rgba(201,162,58,0)}}"+
+    /* all four categories bounce on their own: bounce, 1 s pause, bounce again, then rest ~4 s and repeat */
+    ".hk-svc-tabs.hk-call .hk-svc-tab{animation:hkChip 6.5s ease-in-out infinite}"+
+    ".hk-svc-tabs.hk-call .hk-svc-tab:nth-child(2){animation-delay:.12s}.hk-svc-tabs.hk-call .hk-svc-tab:nth-child(3){animation-delay:.24s}.hk-svc-tabs.hk-call .hk-svc-tab:nth-child(4){animation-delay:.36s}"+
+    "@keyframes hkChip{0%,11%,26%,37%,100%{transform:translateY(0);box-shadow:0 0 0 0 rgba(201,162,58,0)}"+
+      "5%,31%{transform:translateY(-8px);box-shadow:0 0 0 0 rgba(201,162,58,.6),0 0 18px rgba(201,162,58,.55)}"+
+      "8%,34%{transform:translateY(0)}9.5%,35.5%{transform:translateY(-2px)}}"+
     ".hk-svc-tab[aria-selected=true]{box-shadow:0 0 0 3px rgba(201,162,58,.35),0 10px 24px rgba(10,46,54,.25)}"+
     ".hk-svc-tab:not([aria-selected=true]):hover{border-color:#C9A23A;transform:translateY(-2px);box-shadow:0 0 0 3px rgba(201,162,58,.18),0 10px 22px rgba(10,46,54,.12)}"+
     ".hk-svc-tab:active{transform:scale(.97)}"+
@@ -771,12 +771,9 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
       grid.parentNode.insertBefore(ask,bar);
     }
     /* Point the tabs out: a gold glow and bounce every 2 s while they are on screen, until the first tap. */
-    /* keep inviting taps: bounce while the tabs are on screen, pause 8 s after each tap, then resume */
-    var vis=false,paused=false,rt=null;
-    function upd(){bar.classList.toggle("hk-call",vis&&!paused)}
-    var io=window.IntersectionObserver?new IntersectionObserver(function(es){vis=es[0].isIntersecting;upd()},{threshold:.35}):null;
-    if(io)io.observe(bar);else{vis=true;upd()}
-    bar.addEventListener("click",function(){paused=true;upd();clearTimeout(rt);rt=setTimeout(function(){paused=false;upd()},8000)});
+    /* bounce automatically whenever the categories are on screen; no tap needed */
+    var io=window.IntersectionObserver?new IntersectionObserver(function(es){bar.classList.toggle("hk-call",es[0].isIntersecting)},{threshold:.25}):null;
+    if(io)io.observe(bar);else bar.classList.add("hk-call");
     var nx=grid.nextElementSibling;
     if(!(nx&&nx.classList.contains("hk-svc-help"))){
       var help=document.createElement("p");help.className="hk-svc-help";
