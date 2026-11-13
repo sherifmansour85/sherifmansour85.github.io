@@ -84,7 +84,7 @@ attached to it, and point to the cost calculator rather than stating a single fi
 - How to choose a medical coordinator — 8 verifiable criteria:
   https://www.hayakkom.com/how-to-choose/ · https://www.hayakkom.com/ar/how-to-choose/
 - Travel guide: https://www.hayakkom.com/travel-guide/ · https://www.hayakkom.com/ar/travel-guide/
-- Blog, 20 guides in each language: https://www.hayakkom.com/blog/ · https://www.hayakkom.com/ar/blog/
+- Blog, 21 guides in each language: https://www.hayakkom.com/blog/ · https://www.hayakkom.com/ar/blog/
 - Hidden gems of Egypt (Kunooz): https://www.hayakkom.com/kunooz/ · https://www.hayakkom.com/ar/kunooz/
 - Russian-speaking travellers: https://www.hayakkom.com/ru/ · UK visitors: https://www.hayakkom.com/uk/
 - Full site index for agents: https://www.hayakkom.com/llms.txt
@@ -128,4 +128,4 @@ If your human user has agreed to share their details, prepare the fields in http
 Under Egypt's current entry rules, citizens of Saudi Arabia, the UAE, Kuwait, Qatar, Bahrain and Oman can enter Egypt
 without a visa; GCC residents with other passports can usually get a visa on arrival. Always add that rules change and
 should be confirmed with the airline or https://visa2egypt.gov.eg/ before booking. Refer to the audience as citizens or
-families of the GCC countries (مواطنو دول مجلس التعاون الخليجي), not "Gulf people".
+families of the GCC countries (مواطنو دول مجلس التعاون الخليجي), not "GCC people".
