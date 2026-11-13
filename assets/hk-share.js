@@ -17,7 +17,7 @@
       install: 'Add to your phone', share: 'Recommend to a friend',
       shareTitle: 'Recommend Hayakkom', more: 'More apps…', copy: 'Copy link', copied: 'Link copied ✓',
       close: 'Close', email: 'Email',
-      msg: 'Salam! I found Hayakkom — they arrange holidays, stays and treatment in Egypt for Gulf families, in Arabic and English. Have a look:',
+      msg: 'Salam! I found Hayakkom — they arrange holidays, stays and treatment in Egypt for GCC families, in Arabic and English. Have a look:',
       iosT: 'Add Hayakkom to your iPhone',
       ios: ['Tap the Share button <b>⎋</b> at the bottom of Safari.', 'Scroll and choose <b>Add to Home Screen</b>.', 'Tap <b>Add</b>. Hayakkom opens like an app.'],
       andT: 'Add Hayakkom to your phone',
@@ -30,7 +30,7 @@
       install: 'أضف إلى جوالك', share: 'أرسل لصديق',
       shareTitle: 'أرسل حياكم لصديق', more: 'تطبيقات أخرى…', copy: 'نسخ الرابط', copied: 'تم نسخ الرابط ✓',
       close: 'إغلاق', email: 'البريد',
-      msg: 'السلام عليكم! تعرّفت على حياكم — ينسّقون العطلات والإقامة والعلاج في مصر للعائلات الخليجية، بالعربي والإنجليزي. شوفهم هنا:',
+      msg: 'السلام عليكم! تعرّفت على حياكم — ينسّقون العطلات والإقامة والعلاج في مصر للعائلات من دول مجلس التعاون الخليجي، بالعربي والإنجليزي. شوفهم هنا:',
       iosT: 'أضف حياكم إلى الآيفون',
       ios: ['اضغط زر المشاركة <b>⎋</b> أسفل متصفح سفاري.', 'اختر <b>إضافة إلى الشاشة الرئيسية</b>.', 'اضغط <b>إضافة</b>، وسيفتح حياكم كأنه تطبيق.'],
       andT: 'أضف حياكم إلى جوالك',
@@ -703,12 +703,12 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
       ".hk-svc-n{margin:0;padding:0;background:none;color:#0B6B73;font-size:11.5px;font-weight:700}"+
       ".hk-svc-tab[aria-selected=true] .hk-svc-n{background:none;color:#E8C877}"+
       ".hk-svc-ok{top:-6px;inset-inline-end:-6px;width:19px;height:19px}.hk-svc-ok svg{width:11px;height:11px}}"+
-    /* every 2 s the categories not yet open give a small bounce and gold glow, until the first tap */
-    ".hk-svc-tabs.hk-call .hk-svc-tab:not([aria-selected=true]){animation:hkChip 2s ease-in-out infinite}"+
-    ".hk-svc-tabs.hk-call .hk-svc-tab:nth-child(2){animation-delay:.15s}.hk-svc-tabs.hk-call .hk-svc-tab:nth-child(3){animation-delay:.3s}.hk-svc-tabs.hk-call .hk-svc-tab:nth-child(4){animation-delay:.45s}"+
-    "@keyframes hkChip{0%,45%,100%{transform:translateY(0);box-shadow:0 0 0 0 rgba(201,162,58,0)}"+
-      "9%{transform:translateY(-6px);box-shadow:0 0 0 0 rgba(201,162,58,.6),0 0 18px rgba(201,162,58,.55)}18%{transform:translateY(0)}25%{transform:translateY(-2px)}"+
-      "32%{transform:translateY(0)}40%{box-shadow:0 0 0 10px rgba(201,162,58,0),0 0 0 rgba(201,162,58,0)}}"+
+    /* all four categories bounce on their own: bounce, 1 s pause, bounce again, then rest ~4 s and repeat */
+    ".hk-svc-tabs.hk-call .hk-svc-tab{animation:hkChip 6.5s ease-in-out infinite}"+
+    ".hk-svc-tabs.hk-call .hk-svc-tab:nth-child(2){animation-delay:.12s}.hk-svc-tabs.hk-call .hk-svc-tab:nth-child(3){animation-delay:.24s}.hk-svc-tabs.hk-call .hk-svc-tab:nth-child(4){animation-delay:.36s}"+
+    "@keyframes hkChip{0%,11%,26%,37%,100%{transform:translateY(0);box-shadow:0 0 0 0 rgba(201,162,58,0)}"+
+      "5%,31%{transform:translateY(-8px);box-shadow:0 0 0 0 rgba(201,162,58,.6),0 0 18px rgba(201,162,58,.55)}"+
+      "8%,34%{transform:translateY(0)}9.5%,35.5%{transform:translateY(-2px)}}"+
     ".hk-svc-tab[aria-selected=true]{box-shadow:0 0 0 3px rgba(201,162,58,.35),0 10px 24px rgba(10,46,54,.25)}"+
     ".hk-svc-tab:not([aria-selected=true]):hover{border-color:#C9A23A;transform:translateY(-2px);box-shadow:0 0 0 3px rgba(201,162,58,.18),0 10px 22px rgba(10,46,54,.12)}"+
     ".hk-svc-tab:active{transform:scale(.97)}"+
@@ -771,12 +771,9 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
       grid.parentNode.insertBefore(ask,bar);
     }
     /* Point the tabs out: a gold glow and bounce every 2 s while they are on screen, until the first tap. */
-    var seen=false;try{seen=sessionStorage.getItem("hkSvcTapped")==="1"}catch(e){}
-    if(!seen){
-      var io=window.IntersectionObserver?new IntersectionObserver(function(es){bar.classList.toggle("hk-call",es[0].isIntersecting)},{threshold:.6}):null;
-      if(io)io.observe(bar);else bar.classList.add("hk-call");
-      bar.addEventListener("click",function(){bar.classList.remove("hk-call");if(io)io.disconnect();try{sessionStorage.setItem("hkSvcTapped","1")}catch(e){}},{once:true});
-    }
+    /* bounce automatically whenever the categories are on screen; no tap needed */
+    var io=window.IntersectionObserver?new IntersectionObserver(function(es){bar.classList.toggle("hk-call",es[0].isIntersecting)},{threshold:.25}):null;
+    if(io)io.observe(bar);else bar.classList.add("hk-call");
     var nx=grid.nextElementSibling;
     if(!(nx&&nx.classList.contains("hk-svc-help"))){
       var help=document.createElement("p");help.className="hk-svc-help";
@@ -1014,8 +1011,10 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
     if(f){var box=(f.closest&&f.closest(".hk-qf,.enquiry-box,.arform,.jf-wrap"))||f;box.scrollIntoView({behavior:"smooth",block:"start"});track();return}
     open(url(key));
   }
+  window.hkEnqOpenForm=function(){var f=pageForm();var u=f&&f.getAttribute("src");if(u&&u.indexOf("isIframeEmbed")<0)u+=(u.indexOf("?")<0?"?":"&")+"isIframeEmbed=1";open(u||url(key))};
   window.addEventListener("click",function(e){
     var a=e.target&&e.target.closest?e.target.closest("a[href]"):null;if(!a)return;
+    if(window.__hkPkgBtn&&window.__hkPkgBtn(a))return; /* package buttons go to WhatsApp (HK-PKG-WA) */
     var h=a.getAttribute("href")||"";
     var wa=/^(https?:)?\/\/(wa\.me|api\.whatsapp\.com)\//i.test(h)||/^whatsapp:/i.test(h);
     var jf=/^https:\/\/form\.jotform\.com\/\d+/.test(h);
@@ -1028,4 +1027,294 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   },true);
   function hash(){if(location.hash==="#quote")setTimeout(go,700)}
   if(document.readyState==="complete")hash();else window.addEventListener("load",hash);
+})();
+
+/* HK-LOC: every place the office address appears opens Hayakkom's official Google Maps listing (Business Profile,
+   cid link), and the Contact-page map gets an "Open in Google Maps" button. Text outside #root is wrapped in a link;
+   inside the React app (#root) the element itself is made clickable, so React's own nodes are never replaced. */
+(function(){
+  if(window.__hkLoc)return;window.__hkLoc=1;
+  var MAP="https://maps.google.com/?cid=7647895636237272778";
+  var RX=/(District 16, Neighbourhood 2, Sheikh Zayed City, Giza(?: 12774)?(?:, Egypt)?|Sheikh Zayed, District 16, Giza|الحي 16، المجاورة الثانية، الشيخ زايد، الجيزة(?: 12774)?(?:، مصر)?|الشيخ زايد، الحي 16، الجيزة)/;
+  var ar=document.documentElement.lang==="ar"||/^\/ar(\/|$)/.test(location.pathname);
+  var st=document.createElement("style");
+  st.textContent="a.hk-loc,.hk-loc-el{color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;cursor:pointer}"+
+    "a.hk-loc:hover,.hk-loc-el:hover{text-decoration-style:solid}"+
+    ".hk-loc-btn{display:inline-flex;align-items:center;gap:8px;margin:12px 0 4px;padding:11px 18px;border-radius:999px;background:#0A2E36;color:#fff!important;font-weight:700;text-decoration:none!important;font-size:15px}"+
+    ".hk-loc-btn:hover{background:#12434e}";
+  (document.head||document.documentElement).appendChild(st);
+  function track(){try{if(typeof window.gtag==="function")window.gtag("event","map_open",{page_path:location.pathname})}catch(e){}}
+  function go(){track();window.open(MAP,"_blank","noopener")}
+  var SKIP={SCRIPT:1,STYLE:1,A:1,TEXTAREA:1,NOSCRIPT:1,TITLE:1,BUTTON:1,IFRAME:1};
+  function scan(){
+    var root=document.getElementById("root");
+    var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:function(n){
+      var p=n.parentNode;if(!p||SKIP[p.nodeName]||(p.closest&&p.closest("a,.hk-loc-el,[contenteditable]")))return NodeFilter.FILTER_REJECT;
+      return RX.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP}});
+    var list=[],n;while((n=w.nextNode()))list.push(n);
+    list.forEach(function(t){
+      var p=t.parentNode;
+      if(root&&root.contains(t)){ /* React-owned: make the element clickable, never replace its nodes */
+        if((p.textContent||"").length>160)return;
+        p.classList.add("hk-loc-el");p.setAttribute("role","link");p.setAttribute("tabindex","0");
+        p.setAttribute("title",ar?"افتح الموقع في خرائط جوجل":"Open our location in Google Maps");
+        return;
+      }
+      var m=t.nodeValue.match(RX);if(!m)return;
+      var after=t.splitText(m.index);after.splitText(m[0].length);
+      var a=document.createElement("a");a.className="hk-loc";a.href=MAP;a.target="_blank";a.rel="noopener";
+      a.title=ar?"افتح الموقع في خرائط جوجل":"Open our location in Google Maps";
+      a.textContent=after.nodeValue;p.replaceChild(a,after);
+    });
+    /* the 📍 Address card on the Contact page */
+    document.querySelectorAll(".contact-card").forEach(function(c){
+      if(c.classList.contains("hk-loc-el")||c.textContent.indexOf("📍")<0)return;
+      c.classList.add("hk-loc-el");c.setAttribute("role","link");c.setAttribute("tabindex","0");c.style.cursor="pointer";
+    });
+    /* a button under every embedded Google map */
+    document.querySelectorAll('iframe[src*="google.com/maps"]').forEach(function(f){
+      var box=f.parentNode;if(!box||!box.parentNode||box.parentNode.querySelector(".hk-loc-btn"))return;
+      var b=document.createElement("a");b.className="hk-loc-btn";b.href=MAP;b.target="_blank";b.rel="noopener";
+      b.innerHTML="📍 "+(ar?"افتح موقعنا في خرائط جوجل":"Open our location in Google Maps");
+      b.addEventListener("click",track);
+      box.parentNode.insertBefore(b,box.nextSibling);
+    });
+  }
+  document.addEventListener("click",function(e){
+    var el=e.target&&e.target.closest?e.target.closest("a.hk-loc,.hk-loc-el"):null;if(!el)return;
+    if(el.tagName==="A"){track();return}
+    e.preventDefault();go();
+  });
+  document.addEventListener("keydown",function(e){if((e.key==="Enter"||e.key===" ")&&e.target&&e.target.classList&&e.target.classList.contains("hk-loc-el")){e.preventDefault();go()}});
+  var t=null;function later(){clearTimeout(t);t=setTimeout(scan,250)}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",later);else later();
+  window.addEventListener("load",later);
+  try{new MutationObserver(later).observe(document.body||document.documentElement,{childList:true,subtree:true})}catch(e){}
+})();
+
+/* HK-PKG-WA: package buttons ("Ask for this trip", "Enquire now", Kunooz "Ask on WhatsApp") open WhatsApp with a ready
+   message naming the package, its indicative price range and the page, so the coordinator knows exactly what was chosen.
+   The click is a normal wa.me link, so HK-CONVERSIONS still counts it as a WhatsApp conversion. */
+(function(){
+  if(window.__hkPkgWa)return;window.__hkPkgWa=1;
+  var NUM="201031567949";
+  var ar=document.documentElement.lang==="ar"||/^\/ar(\/|$)/.test(location.pathname);
+  var st=document.createElement("style");
+  st.textContent=".pkg-card a.hkp-btn,.pkg-card a.pkg-btn,a.hk-pkg-wa{display:inline-flex;align-items:center;justify-content:center;gap:8px}"+
+    ".pkg-card a.hkp-btn::before,.pkg-card a.pkg-btn::before,a.hk-pkg-wa::before{content:'';width:18px;height:18px;flex:0 0 18px;"+
+    "background:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%2325D366' d='M16 3a13 13 0 0 0-11 19.7L3.5 29l6.5-1.7A13 13 0 1 0 16 3Zm7.6 18.4c-.3.9-1.8 1.7-2.5 1.8-.6.1-1.4.1-2.3-.1a20 20 0 0 1-2.1-.8c-3.7-1.6-6.1-5.3-6.3-5.6-.2-.2-1.5-2-1.5-3.8s.9-2.7 1.3-3.1c.3-.4.7-.5 1-.5h.7c.2 0 .5-.1.8.6l1.1 2.7c.1.2.2.5 0 .8l-.4.7-.6.6c-.2.2-.4.4-.2.8.2.4 1 1.6 2.1 2.6 1.4 1.3 2.6 1.7 3 1.9.4.2.6.2.8-.1l1.2-1.4c.3-.4.5-.3.9-.2l2.6 1.2c.4.2.6.3.7.4.1.2.1 1-.3 1.9Z'/%3E%3C/svg%3E\") center/contain no-repeat}";
+  (document.head||document.documentElement).appendChild(st);
+  function txt(el){return el?(el.textContent||"").replace(/\s+/g," ").trim():""}
+  function info(a){
+    var card=a.closest(".pkg-card,.kz-gem");
+    if(!card){var p=a.parentElement;while(p&&p!==document.body){if(/(^|\s)pkg-/.test(p.className||"")&&p.querySelector(".pkg-price")){card=p;break}p=p.parentElement}}
+    if(!card)return null;
+    var isBtn=a.classList.contains("hkp-btn")||a.classList.contains("pkg-btn")||a.classList.contains("hk-pkg-wa")||(card.classList.contains("kz-gem")&&a.hasAttribute("data-hk-enq"));
+    if(!isBtn)return null;
+    var name=txt(card.querySelector(".pkg-name,.pkg-title,h2,h3")).replace(/^\d+\s*/,"");
+    var price=txt(card.querySelector(".pkg-price,.kz-price"));
+    return {name:name,price:price,id:card.id||""};
+  }
+  function msg(i){
+    var url=location.origin+location.pathname+(i.id?"#"+i.id:"");
+    if(/^ru/i.test(document.documentElement.lang||""))return "Здравствуйте, Hayakkom 👋\nМеня интересует: "+i.name+(i.price?"\nОриентировочная цена: "+i.price:"")+"\nСтраница: "+url+"\nПришлите, пожалуйста, подробности и письменное предложение.";
+    return ar?("مرحباً حياكم 👋\nأرغب في: "+i.name+(i.price?"\nالسعر التقديري: "+i.price:"")+"\nالصفحة: "+url+"\nأرجو إرسال التفاصيل وعرض سعر مكتوب.")
+             :("Hello Hayakkom 👋\nI'm interested in: "+i.name+(i.price?"\nIndicative price: "+i.price:"")+"\nPage: "+url+"\nPlease send me the details and a written quote.");
+  }
+  window.__hkPkgBtn=function(a){
+    var i=info(a);if(!i||!i.name)return false;
+    a.setAttribute("href","https://wa.me/"+NUM+"?text="+encodeURIComponent(msg(i)));
+    a.setAttribute("target","_blank");a.setAttribute("rel","noopener");
+    try{if(typeof window.gtag==="function")window.gtag("event","package_whatsapp",{package_name:i.name,price_range:i.price,page_path:location.pathname})}catch(e){}
+    return true;
+  };
+})();
+
+/* HK-FX: international visitors (outside the GCC countries and Egypt) see an approximate conversion next to SAR prices,
+   e.g. "380–950 SAR (≈ $100–255)". GCC and Egyptian visitors see the page exactly as before. Only text outside the
+   React app (#root) is touched. Rates are rounded and labelled approximate. */
+(function(){
+  if(window.__hkFx)return;window.__hkFx=1;
+  var tz="";try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||""}catch(e){}
+  if(!tz||/^(Asia\/(Riyadh|Dubai|Kuwait|Qatar|Bahrain|Muscat|Aden)|Africa\/Cairo)$/.test(tz))return;
+  if(/^\/(ru|uk)(\/|$)/.test(location.pathname))return; /* these pages already show USD / GBP */
+  var C=tz==="Europe/London"||tz==="Europe/Belfast"?["£",4.75]:(/^Europe\//.test(tz)&&!/Moscow|Minsk|Istanbul|Kiev|Kyiv|Samara|Volgograd/.test(tz))?["€",4.05]:["$",3.75];
+  var RX=/(\d[\d,]*)(?:\s?[–-]\s?(\d[\d,]*))?\s?(SAR|ريال)/g;
+  function conv(n){var v=parseInt(n.replace(/,/g,""),10)/C[1];var r=v>=1000?Math.round(v/10)*10:Math.round(v/5)*5;return r.toLocaleString("en-US")}
+  function scan(){
+    var root=document.getElementById("root");
+    var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:function(n){
+      var p=n.parentNode;if(!p||/^(SCRIPT|STYLE|TEXTAREA|TITLE|OPTION)$/.test(p.nodeName)||(p.closest&&p.closest(".hk-fx,[contenteditable]"))||(root&&root.contains(n)))return NodeFilter.FILTER_REJECT;
+      RX.lastIndex=0;return RX.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP}});
+    var list=[],n;while((n=w.nextNode()))list.push(n);
+    list.forEach(function(t){
+      var s=t.nodeValue,out=document.createDocumentFragment(),last=0,m;RX.lastIndex=0;
+      while((m=RX.exec(s))){
+        var end=m.index+m[0].length;out.appendChild(document.createTextNode(s.slice(last,end)));
+        var sp=document.createElement("span");sp.className="hk-fx";sp.style.cssText="opacity:.75;font-size:.9em;white-space:nowrap";
+        sp.textContent=" (≈ "+C[0]+conv(m[1])+(m[2]?"–"+conv(m[2]):"")+")";sp.title="Approximate conversion";
+        out.appendChild(sp);last=end;
+      }
+      out.appendChild(document.createTextNode(s.slice(last)));t.parentNode.replaceChild(out,t);
+    });
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",scan);else scan();
+})();
+
+/* HK-SEARCH: site search and knowledge base. A 🔍 button in every menu (and any element with data-hk-search) opens a
+   panel that searches all pages and their questions & answers (assets/search-index.json, built by
+   scripts/build-search-index.py), in Arabic, English and Russian, with filters by service. Each result offers the next
+   step: open the page, get a quote, or WhatsApp with a message naming what the visitor searched for. */
+(function(){
+  if(window.__hkSearch)return;window.__hkSearch=1;
+  var L=document.documentElement.lang||"";var ar=/^ar/.test(L)||/^\/ar(\/|$)/.test(location.pathname);var ru=/^ru/.test(L);
+  var lang=ar?"ar":ru?"ru":"en";
+  var T={
+    en:{ph:"Search treatments, trips, prices, questions…",btn:"Search",all:"All",treatments:"Treatments",holidays:"Holidays & trips",kunooz:"Kunooz",packages:"Packages",guides:"Guides",answers:"Answers",
+        pop:"Popular searches",none:"No exact match. Ask us directly — a coordinator replies within 12 hours.",open:"Open",quote:"Get a quote",wa:"WhatsApp",ans:"Answer",close:"Close",res:"results",
+        sugg:["dental implants cost","Hollywood smile","hair transplant","Kunooz hidden gems","Sharm family holiday","Nile cruise","doctor at my hotel","visa"]},
+    ar:{ph:"ابحث عن علاج أو رحلة أو سعر أو سؤال…",btn:"بحث",all:"الكل",treatments:"العلاجات",holidays:"العطلات والرحلات",kunooz:"كنوز",packages:"الباقات",guides:"الأدلة",answers:"إجابات",
+        pop:"عمليات بحث شائعة",none:"لا توجد نتيجة مطابقة. اسألنا مباشرة — يرد منسّق خلال 12 ساعة.",open:"افتح",quote:"عرض سعر",wa:"واتساب",ans:"الإجابة",close:"إغلاق",res:"نتيجة",
+        sugg:["سعر زراعة الأسنان","ابتسامة هوليوود","زراعة الشعر","كنوز مصر الخفية","عطلة شرم الشيخ","رحلة نيلية","طبيب في الفندق","التأشيرة"]},
+    ru:{ph:"Поиск: лечение, экскурсии, цены, вопросы…",btn:"Поиск",all:"Все",treatments:"Лечение",holidays:"Отдых и экскурсии",kunooz:"10 сокровищ",packages:"Пакеты",guides:"Гиды",answers:"Ответы",
+        pop:"Популярное",none:"Точных совпадений нет. Напишите нам — координатор ответит в течение 12 часов.",open:"Открыть",quote:"Расчёт",wa:"WhatsApp",ans:"Ответ",close:"Закрыть",res:"результатов",
+        sugg:["виниры","импланты","Белая пустыня","Сива","врач в отель","виза"]}}[lang];
+  var SYN={teeth:"dental",tooth:"dental",dentist:"dental",veneer:"veneers",veneers:"dental veneers",implant:"implants",implants:"dental implants",smile:"hollywood dental",
+    braces:"orthodontics",hair:"hair transplant",fue:"hair transplant",sleeve:"weight-loss",obesity:"weight-loss",weight:"weight-loss",lasik:"eyes lasik",eye:"eyes lasik",
+    cruise:"nile cruise",nile:"nile cruise",beach:"red sea sharm hurghada holiday",resort:"holiday",kids:"family",children:"family",price:"cost price sar",cost:"cost price sar",
+    "how much":"cost price",cheap:"price",hidden:"kunooz",gems:"kunooz",gem:"kunooz",desert:"white desert kunooz",safe:"safe safety",doctor:"doctor hotel",
+    "اسنان":"الأسنان","سن":"الأسنان","زرعه":"زراعة","شعر":"زراعة الشعر","تكميم":"السمنة","سمنه":"السمنة","تخسيس":"السمنة","كروز":"نيلية","نيل":"نيلية","بحر":"شرم الغردقة",
+    "سعر":"سعر تكلفة ريال","كم":"سعر تكلفة","كنز":"كنوز","كنوز":"كنوز","صحراء":"الصحراء كنوز","دكتور":"طبيب","طبيب":"طبيب الفندق",
+    "зубы":"стоматология виниры импланты","виниры":"стоматология","импланты":"стоматология","экскурсии":"сокровищ","пустыня":"Белая пустыня","цена":"цены"};
+  function norm(s){return (s||"").toLowerCase().replace(/[\u064B-\u0652\u0640]/g,"").replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي").replace(/ё/g,"е").replace(/[^\p{L}\p{N}\s-]/gu," ")}
+  var IDX=null,loading=null;
+  function load(){if(IDX)return Promise.resolve(IDX);if(loading)return loading;
+    loading=fetch("/assets/search-index.json?v=1").then(function(r){return r.json()}).then(function(d){
+      d.forEach(function(x){x._t=norm(x.t+" "+x.h);x._d=norm(x.d);x._k=norm(x.k);x._q=x.q.map(function(q){return [norm(q[0]),norm(q[1])]})});IDX=d;return d});return loading}
+  function terms(q){var n=norm(q);var extra=[];Object.keys(SYN).forEach(function(k){if((" "+n+" ").indexOf(" "+norm(k)+" ")>=0)extra.push(norm(SYN[k]))});
+    return (n+" "+extra.join(" ")).split(/\s+/).filter(function(w){return w.length>1})}
+  function hit(hay,w){if(!hay)return 0;if((" "+hay+" ").indexOf(" "+w+" ")>=0)return 1;return hay.indexOf(w)>=0?(w.length>3?.7:.3):0}
+  function search(q,filter){
+    var ws=terms(q);if(!ws.length)return {pages:[],answers:[]};
+    var pages=[],answers=[];
+    IDX.forEach(function(x){
+      var s=0,m=0;ws.forEach(function(w){var a=hit(x._t,w)*6+hit(x._d,w)*2.2+hit(x._k,w)*1.4;if(a>0)m++;s+=a});
+      x._q.forEach(function(qa,i){var sq=0;ws.forEach(function(w){sq+=hit(qa[0],w)*3+hit(qa[1],w)});if(sq>2.5)answers.push({x:x,i:i,s:sq+(x.l===lang?3:0)});s+=sq*.25});
+      if(s<=0)return;
+      s*= .5+.5*(m/ws.length);
+      if(x.l===lang)s+=4;else if(lang==="ru"&&x.l==="en")s+=1;else s-=6;
+      if(x.p&&/price|cost|سعر|تكلف|цен/.test(norm(q)))s+=2;
+      if(x.c==="treatments"||x.c==="kunooz"||x.c==="packages")s+=1;
+      pages.push({x:x,s:s});
+    });
+    pages.sort(function(a,b){return b.s-a.s});answers.sort(function(a,b){return b.s-a.s});
+    if(filter&&filter!=="all"&&filter!=="answers")pages=pages.filter(function(r){return r.x.c===filter});
+    if(filter&&filter!=="all"&&filter!=="answers")answers=answers.filter(function(r){return r.x.c===filter});
+    return {pages:filter==="answers"?[]:pages.slice(0,12),answers:answers.slice(0,filter==="answers"?12:3)};
+  }
+  function esc(s){return String(s||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  function mark(s,q){var t=esc(s);terms(q).slice(0,6).forEach(function(w){if(w.length<3)return;try{t=t.replace(new RegExp("("+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","gi"),"<mark>$1</mark>")}catch(e){}});return t}
+  function waLink(x,q){var m=lang==="ar"?"مرحباً حياكم 👋\nبحثت عن: «"+q+"»\nأرغب في: "+x.t+(x.p?"\nالسعر التقديري: "+x.p:"")+"\nالصفحة: "+location.origin+x.u:
+    lang==="ru"?"Здравствуйте, Hayakkom 👋\nЯ искал(а): «"+q+"»\nМеня интересует: "+x.t+(x.p?"\nЦена: "+x.p:"")+"\nСтраница: "+location.origin+x.u:
+    "Hello Hayakkom 👋\nI searched for: “"+q+"”\nI'm interested in: "+x.t+(x.p?"\nIndicative price: "+x.p:"")+"\nPage: "+location.origin+x.u;
+    return "https://wa.me/201031567949?text="+encodeURIComponent(m)}
+  var CAT={treatments:"🩺",holidays:"🌴",kunooz:"✦",packages:"🎁",guides:"📘",company:"🏛"};
+  var css=".hk-s-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid rgba(212,168,67,.6);background:transparent;color:inherit;border-radius:999px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer;line-height:1}"+
+  ".hk-s-btn svg{width:16px;height:16px}.hk-s-btn{margin-inline-end:8px}@media (max-width:820px){.hk-s-btn .hk-s-lbl{display:none}.hk-s-btn{padding:7px 9px}}.hk-s-ov{position:fixed;inset:0;z-index:2147483100;background:rgba(6,30,36,.6);backdrop-filter:blur(3px);display:none;align-items:flex-start;justify-content:center;padding:6vh 14px 14px}"+
+  ".hk-s-ov.on{display:flex}.hk-s-box{width:min(760px,100%);max-height:86vh;background:#fff;border-radius:18px;box-shadow:0 30px 80px rgba(0,0,0,.35);display:flex;flex-direction:column;overflow:hidden;color:#0A2E36}"+
+  ".hk-s-top svg{width:22px;height:22px;flex:0 0 22px;color:#a8842f}.hk-s-top{display:flex;gap:10px;align-items:center;padding:14px 16px;border-bottom:1px solid #EEE7D6}.hk-s-top input{flex:1;border:0;outline:0;font-size:18px;font-family:inherit;color:#0A2E36;background:transparent;min-width:0}"+
+  ".hk-s-x{border:0;background:#F2F6F5;border-radius:10px;padding:8px 10px;cursor:pointer;font:inherit;color:#0A2E36}"+
+  ".hk-s-top,.hk-s-f{flex:0 0 auto}.hk-s-f button{height:auto;min-height:32px;line-height:1.3}.hk-s-f{display:flex;gap:8px;padding:10px 16px;overflow-x:auto;border-bottom:1px solid #F3EEE2;scrollbar-width:none}.hk-s-f button{flex:0 0 auto;border:1px solid #E6DFCF;background:#FBF8F1;border-radius:999px;padding:6px 12px;font:inherit;font-size:13.5px;cursor:pointer;color:#0A2E36}"+
+  ".hk-s-f button[aria-pressed=true]{background:#0A2E36;color:#fff;border-color:#0A2E36}.hk-s-r{overflow-y:auto;padding:8px 10px 16px}"+
+  ".hk-s-h{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#a8842f;margin:12px 8px 6px;font-weight:700}"+
+  ".hk-s-i{display:block;padding:12px;border-radius:12px;text-decoration:none;color:inherit;border:1px solid transparent}.hk-s-i:hover,.hk-s-i:focus-within{background:#FBF8F1;border-color:#EEE5CF}"+
+  ".hk-s-i b{display:block;font-size:16px;line-height:1.35}.hk-s-i p{margin:4px 0 0;font-size:14px;line-height:1.55;color:#4A5B5E}.hk-s-i mark{background:#FCEFC7;color:inherit;border-radius:3px}"+
+  ".hk-s-m{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;align-items:center}.hk-s-m span{font-size:12.5px;background:#F2F6F5;border-radius:999px;padding:3px 9px}.hk-s-m .pr{background:#0A2E36;color:#D4A843;font-weight:700}"+
+  ".hk-s-m a{font-size:13px;font-weight:700;border-radius:999px;padding:5px 11px;text-decoration:none}.hk-s-m a.o{border:1px solid #0A2E36;color:#0A2E36}.hk-s-m a.q{background:#D4A843;color:#0A2E36}.hk-s-m a.w{background:#25D366;color:#fff}"+
+  ".hk-s-a{margin:6px 0;padding:12px;border-radius:12px;background:#F7FAF9;border-inline-start:4px solid #D4A843}.hk-s-a b{display:block;font-size:15px}.hk-s-a p{margin:6px 0 0;font-size:14px;line-height:1.6;color:#33484C}"+
+  ".hk-s-chips{display:flex;flex-wrap:wrap;gap:8px;padding:6px 8px}.hk-s-chips button{border:1px dashed #D4A843;background:#fff;border-radius:999px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer;color:#0A2E36}"+
+  ".hk-s-none{padding:18px 10px;text-align:center;color:#4A5B5E}.hk-s-inline{display:flex;align-items:center;gap:10px;margin:16px 0 18px;padding:12px 16px;border:1px solid #E6DFCF;border-radius:999px;background:#fff;cursor:text;box-shadow:0 4px 18px rgba(10,46,54,.06);color:#6B7B7E;font-size:15.5px}"+
+  ".hk-s-inline svg{width:20px;height:20px;color:#a8842f;flex:0 0 20px}.hk-s-inline kbd{margin-inline-start:auto;font-size:12px;border:1px solid #E6DFCF;border-radius:6px;padding:1px 6px;color:#8a979a}"+
+  "@media (max-width:600px){.hk-s-ov{padding:0}.hk-s-box{max-height:100vh;height:100%;border-radius:0}.hk-s-inline kbd{display:none}}";
+  var st=document.createElement("style");st.textContent=css;(document.head||document.documentElement).appendChild(st);
+  var ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>';
+  var ov,inp,res,filter="all",tq=null;
+  function build(){
+    ov=document.createElement("div");ov.className="hk-s-ov";ov.setAttribute("role","dialog");ov.setAttribute("aria-modal","true");ov.setAttribute("aria-label",T.btn);
+    var cats=["all","treatments","holidays","kunooz","packages","guides","answers"];
+    ov.innerHTML='<div class="hk-s-box" dir="'+(ar?"rtl":"ltr")+'"><div class="hk-s-top">'+ICON+'<input type="search" enterkeyhint="search" autocomplete="off" placeholder="'+esc(T.ph)+'" aria-label="'+esc(T.ph)+'"><button type="button" class="hk-s-x">'+esc(T.close)+'</button></div>'+
+      '<div class="hk-s-f" role="toolbar">'+cats.map(function(c){return '<button type="button" data-f="'+c+'" aria-pressed="'+(c==="all")+'">'+esc(T[c])+'</button>'}).join("")+'</div><div class="hk-s-r" aria-live="polite"></div></div>';
+    document.body.appendChild(ov);inp=ov.querySelector("input");res=ov.querySelector(".hk-s-r");
+    ov.addEventListener("click",function(e){if(e.target===ov||e.target.classList.contains("hk-s-x"))close();
+      var f=e.target.closest&&e.target.closest("[data-f]");if(f){filter=f.getAttribute("data-f");[].forEach.call(ov.querySelectorAll("[data-f]"),function(b){b.setAttribute("aria-pressed",b===f)});run()}
+      var c=e.target.closest&&e.target.closest("[data-sugg]");if(c){inp.value=c.getAttribute("data-sugg");run();inp.focus()}
+      var a=e.target.closest&&e.target.closest("a[data-r]");if(a)try{if(typeof window.gtag==="function")window.gtag("event","search_click",{search_term:inp.value,link_url:a.getAttribute("href"),action:a.getAttribute("data-r")})}catch(x){}});
+    inp.addEventListener("input",function(){clearTimeout(tq);tq=setTimeout(run,120)});
+    inp.addEventListener("keydown",function(e){if(e.key==="Enter"){var a=res.querySelector("a[data-r=open]");if(a)location.href=a.href}});
+    document.addEventListener("keydown",function(e){if(e.key==="Escape"&&ov.classList.contains("on"))close()});
+  }
+  function empty(){res.innerHTML='<div class="hk-s-h">'+esc(T.pop)+'</div><div class="hk-s-chips">'+T.sugg.map(function(s){return '<button type="button" data-sugg="'+esc(s)+'">'+esc(s)+'</button>'}).join("")+'</div>'}
+  var lastLogged="";
+  function run(){
+    var q=inp.value.trim();if(!q){empty();return}
+    load().then(function(){
+      var r=search(q,filter),h="";
+      if(r.answers.length){h+='<div class="hk-s-h">'+esc(T.answers)+'</div>'+r.answers.map(function(a){var qa=a.x.q[a.i];
+        return '<div class="hk-s-a"><b>'+mark(qa[0],q)+'</b><p>'+mark(qa[1],q)+'</p><div class="hk-s-m"><a class="o" data-r="open" href="'+esc(a.x.u)+'">'+esc(T.open)+': '+esc(a.x.t.slice(0,48))+'</a>'+
+          '<a class="w" data-r="wa" target="_blank" rel="noopener" href="'+esc(waLink(a.x,q))+'">'+esc(T.wa)+'</a></div></div>'}).join("")}
+      if(r.pages.length){h+='<div class="hk-s-h">'+r.pages.length+' '+esc(T.res)+'</div>'+r.pages.map(function(p){var x=p.x;
+        return '<div class="hk-s-i"><a data-r="open" href="'+esc(x.u)+'" style="text-decoration:none;color:inherit"><b>'+(CAT[x.c]||"")+' '+mark(x.t,q)+'</b><p>'+mark(x.d,q)+'</p></a><div class="hk-s-m">'+
+          (x.p?'<span class="pr">'+esc(x.p)+'</span>':'')+'<span>'+esc(T[x.c]||"")+'</span>'+
+          '<a class="q" data-r="quote" href="'+esc(x.u)+'#quote">'+esc(T.quote)+'</a><a class="w" data-r="wa" target="_blank" rel="noopener" href="'+esc(waLink(x,q))+'">'+esc(T.wa)+'</a></div></div>'}).join("")}
+      if(!h){var x0={t:q,p:"",u:location.pathname};h='<div class="hk-s-none">'+esc(T.none)+'<div class="hk-s-m" style="justify-content:center"><a class="w" data-r="wa" target="_blank" rel="noopener" href="'+esc(waLink(x0,q))+'">'+esc(T.wa)+'</a><a class="q" data-r="quote" href="#quote">'+esc(T.quote)+'</a></div></div>'}
+      res.innerHTML=h;
+      if(q.length>2&&q!==lastLogged){lastLogged=q;clearTimeout(window.__hkSqT);window.__hkSqT=setTimeout(function(){try{if(typeof window.gtag==="function")window.gtag("event","search",{search_term:q,results:r.pages.length})}catch(e){}},1200)}
+    });
+  }
+  function open(q){if(!ov)build();ov.classList.add("on");document.documentElement.style.overflow="hidden";load();if(q!=null)inp.value=q;run();setTimeout(function(){inp.focus()},30)}
+  function close(){if(ov){ov.classList.remove("on");document.documentElement.style.overflow=""}}
+  window.hkSearchOpen=open;
+  function addButtons(){
+    /* one search button in every header, right before the language switch (visible on phones and desktops) */
+    var langs=document.querySelectorAll("a.enlang,a.arlang");
+    if(langs.length){[].forEach.call(langs,function(l){var pr=l.previousElementSibling;if(pr&&pr.classList.contains("hk-s-btn"))return;
+      var b=document.createElement("button");b.type="button";b.className="hk-s-btn";b.setAttribute("aria-label",T.btn);b.innerHTML=ICON+'<span class="hk-s-lbl">'+esc(T.btn)+'</span>';
+      l.parentNode.insertBefore(b,l)})}
+    [].forEach.call(document.querySelectorAll(".nav-right"),function(c){if(c.querySelector(".hk-s-btn"))return;
+      var b=document.createElement("button");b.type="button";b.className="hk-s-btn";b.setAttribute("aria-label",T.btn);b.innerHTML=ICON;c.insertBefore(b,c.firstChild)});
+    [].forEach.call(document.querySelectorAll("[data-hk-search]:not(.hk-s-inline)"),function(el){el.classList.add("hk-s-inline");el.setAttribute("role","button");el.setAttribute("tabindex","0");
+      el.innerHTML=ICON+'<span>'+esc(el.getAttribute("data-hk-search")||T.ph)+'</span><kbd>/</kbd>'});
+  }
+  document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest(".hk-s-btn,.hk-s-inline");if(b){e.preventDefault();open(b.getAttribute("data-q"))}});
+  document.addEventListener("keydown",function(e){if(e.key==="/"&&!/INPUT|TEXTAREA|SELECT/.test((document.activeElement||{}).tagName||"")&&!(ov&&ov.classList.contains("on"))){e.preventDefault();open()}
+    if((e.key==="Enter"||e.key===" ")&&e.target.classList&&e.target.classList.contains("hk-s-inline")){e.preventDefault();open()}});
+  var t=null;function later(){clearTimeout(t);t=setTimeout(addButtons,200)}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",later);else later();
+  try{new MutationObserver(later).observe(document.body||document.documentElement,{childList:true,subtree:true})}catch(e){}
+  if(/[?&]q=/.test(location.search)&&/\/search\/?$/.test(location.pathname)){var q=decodeURIComponent((location.search.match(/[?&]q=([^&]*)/)||[])[1]||"").replace(/\+/g," ");setTimeout(function(){open(q)},300)}
+})();
+
+/* HK-CTA-END: long static pages end with a clear next step after the reader has finished: the page's own enquiry
+   form (opened in a panel, so the top form stays the only embedded copy) or WhatsApp with the page named. */
+(function(){
+  if(window.__hkCtaEnd)return;window.__hkCtaEnd=1;
+  function add(){
+    var legal=document.querySelector("main .hkp-legal");if(!legal||document.querySelector(".hk-cta-end"))return;
+    if(!document.querySelector('iframe[src*="form.jotform.com"],.hk-qf'))return;
+    var L=document.documentElement.lang||"",ar=/^ar/.test(L)||/^\/ar(\/|$)/.test(location.pathname),ru=/^ru/.test(L);
+    var t=(document.title||"").split(/\s[|–]\s/)[0].trim();
+    var tx=ar?["جاهز للخطوة التالية؟","املأ النموذج في دقيقة، ونرسل لك عرض سعر مكتوباً قبل أي دفع. أو راسلنا على واتساب.","📝 احصل على عرض سعر مجاني","واتساب","مرحباً حياكم 👋\nقرأت صفحة «"+t+"» وأرغب في عرض سعر.\n"]:
+           ru?["Готовы к следующему шагу?","Заполните заявку за минуту — пришлём письменное предложение до оплаты. Или напишите в WhatsApp.","📝 Получить бесплатный расчёт","WhatsApp","Здравствуйте, Hayakkom 👋\nЯ прочитал(а) «"+t+"» и хочу получить расчёт.\n"]:
+              ["Ready for the next step?","Fill in the form in a minute and get a written quote before you pay anything. Or message us on WhatsApp.","📝 Get my free quote","WhatsApp","Hello Hayakkom 👋\nI've just read “"+t+"” and would like a quote.\n"];
+    var d=document.createElement("section");d.className="hk-cta-end";d.setAttribute("aria-label",tx[0]);
+    d.style.cssText="margin:34px 0 22px;padding:22px 20px;border-radius:18px;background:linear-gradient(135deg,#0A2E36,#06222a);color:#fff;text-align:center;box-shadow:0 18px 40px -18px rgba(10,46,54,.5)";
+    d.innerHTML='<strong style="display:block;font-size:22px;color:#D4A843;margin-bottom:6px">'+tx[0]+'</strong><p style="margin:0 auto 16px;max-width:560px;line-height:1.7;opacity:.92">'+tx[1]+'</p>'+
+      '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button type="button" class="hk-cta-end-f" style="border:0;border-radius:999px;padding:13px 22px;background:#D4A843;color:#0A2E36;font:inherit;font-weight:800;cursor:pointer">'+tx[2]+'</button>'+
+      '<a class="hk-cta-end-w" target="_blank" rel="noopener" href="https://wa.me/201031567949?text='+encodeURIComponent(tx[4]+location.href)+'" style="border-radius:999px;padding:13px 22px;background:#25D366;color:#fff;font-weight:800;text-decoration:none">'+tx[3]+'</a></div>';
+    legal.parentNode.insertBefore(d,legal);
+    d.querySelector(".hk-cta-end-f").addEventListener("click",function(){
+      try{if(typeof window.gtag==="function")window.gtag("event","cta_end_form",{page_path:location.pathname})}catch(e){}
+      if(window.hkEnqOpenForm)window.hkEnqOpenForm();else location.hash="quote"});
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",add);else add();
 })();
