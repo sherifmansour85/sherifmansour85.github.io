@@ -147,7 +147,18 @@
     '.hkg-sent select{appearance:none;-webkit-appearance:none;background-color:#fff;color:#0A2E36;border:1px solid #E2D6B8;border-radius:12px;padding:4px 28px 4px 10px;font:inherit;font-weight:700;margin:0 2px;max-width:100%;cursor:pointer;line-height:1.6;' +
     'background-image:linear-gradient(45deg,transparent 50%,#A8842F 50%),linear-gradient(135deg,#A8842F 50%,transparent 50%);background-position:calc(100% - 14px) 55%,calc(100% - 9px) 55%;background-size:5px 5px;background-repeat:no-repeat}' +
     '[dir=rtl] .hkg-sent select{padding:4px 10px 4px 28px;background-position:14px 55%,19px 55%}' +
-    '.hkg-go{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:13px 24px;border-radius:999px;background:#0A2E36;color:#fff!important;font-weight:800;text-decoration:none}' +
+    '.hkg-go{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;width:100%;min-height:72px;margin-top:16px;padding:12px 18px;border-radius:20px;' +
+    'background:linear-gradient(135deg,#F3D98B 0%,#D4A843 45%,#B8862A 100%);color:#0A2E36!important;text-decoration:none;border:1px solid rgba(255,255,255,.55);' +
+    'box-shadow:0 14px 30px -12px rgba(184,134,42,.75),inset 0 1px 0 rgba(255,255,255,.6);transition:transform .2s,box-shadow .2s;animation:hkgGlow 2.6s ease-in-out infinite}' +
+    '.hkg-go:hover{transform:translateY(-2px);box-shadow:0 20px 36px -12px rgba(184,134,42,.9),inset 0 1px 0 rgba(255,255,255,.6)}.hkg-go:active{transform:translateY(1px)}' +
+    '.hkg-go:focus-visible{outline:3px solid #0A2E36;outline-offset:3px}' +
+    '.hkg-go:after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:45%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:hkgShine 4s ease-in-out infinite}' +
+    '.hkg-go-i{flex:0 0 46px;width:46px;height:46px;border-radius:50%;background:#0A2E36;color:#F3D98B;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 0 0 4px rgba(255,255,255,.35)}' +
+    '.hkg-go-t{flex:1;display:flex;flex-direction:column;line-height:1.25;text-align:start}.hkg-go-t b{font-size:clamp(18px,2.6vw,22px);font-weight:800}.hkg-go-t small{font-size:13px;font-weight:600;opacity:.82;margin-top:3px}' +
+    '.hkg-go-a{flex:0 0 auto;font-size:26px;font-weight:800;animation:hkgNudge 1.6s ease-in-out infinite}[dir=rtl] .hkg-go-a{animation-name:hkgNudgeR}' +
+    '@keyframes hkgShine{0%,55%{left:-60%}100%{left:130%}}@keyframes hkgGlow{0%,100%{box-shadow:0 14px 30px -12px rgba(184,134,42,.75),0 0 0 0 rgba(212,168,67,.45),inset 0 1px 0 rgba(255,255,255,.6)}50%{box-shadow:0 14px 30px -12px rgba(184,134,42,.75),0 0 0 8px rgba(212,168,67,0),inset 0 1px 0 rgba(255,255,255,.6)}}' +
+    '@keyframes hkgNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}@keyframes hkgNudgeR{0%,100%{transform:translateX(0)}50%{transform:translateX(-5px)}}' +
+    '@media (prefers-reduced-motion:reduce){.hkg-go,.hkg-go:after,.hkg-go-a{animation:none}}' +
     '.hkg-ask{display:flex;align-items:center;gap:10px;margin:12px 0 0;padding:11px 16px;border-radius:999px;background:#fff;border:1px solid #EADFC6;color:#6B7B7E;cursor:text;font-size:15px}.hkg-ask svg{width:18px;height:18px;color:#A8842F;flex:0 0 18px}' +
     '.hkg-msg{margin:12px 0 0;padding:12px 14px;border-radius:14px;background:#fff;border:1px solid #EADFC6;line-height:1.7}.hkg-msg a{color:#0A2E36;font-weight:700}' +
     '.hkg-body{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;margin-top:16px}@media(max-width:900px){.hkg-body{grid-template-columns:minmax(0,1fr)}}' +
@@ -186,7 +197,7 @@
     return '<div class="hkg" dir="' + (AR ? 'rtl' : 'ltr') + '"><div class="hkg-e">🧭 ' + esc(T.eyebrow) + '</div><h2>' + esc(AR ? 'خطّط مصر في ثوانٍ' : 'Plan your Egypt in seconds') + '</h2>' +
       '<div class="hkg-sent">' + esc(T.s1) + ' <select data-k="goal" aria-label="' + esc(T.s1) + '">' + opt(GOAL, S.goal) + '</select> ' + esc(T.s2) +
       ' <select data-k="reg" aria-label="' + esc(T.s2) + '">' + opt(REG, S.reg) + '</select></div>' +
-      '<a class="hkg-go" data-go="" href="' + pre + '/gateway/?g=' + S.goal + '&r=' + S.reg + '">' + esc(AR ? 'ابنِ خطتي بالأسعار ←' : 'Build my plan with prices →') + '</a></div>';
+      '<a class="hkg-go" data-go="" href="' + pre + '/gateway/?g=' + S.goal + '&r=' + S.reg + '"><span class="hkg-go-i" aria-hidden="true">🧭</span><span class="hkg-go-t"><b>' + esc(AR ? 'ابنِ خطتي بالأسعار' : 'Build my plan with prices') + '</b><small>' + esc(AR ? 'مجاناً · أسعار تقديرية بالريال' : 'Free · indicative prices in SAR') + '</small></span><span class="hkg-go-a" aria-hidden="true">' + (AR ? '←' : '→') + '</span></a></div>';
   }
   function render() {
     if (TEASER) { root.innerHTML = teaser(); return; }
