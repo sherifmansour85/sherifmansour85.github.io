@@ -771,12 +771,12 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
       grid.parentNode.insertBefore(ask,bar);
     }
     /* Point the tabs out: a gold glow and bounce every 2 s while they are on screen, until the first tap. */
-    var seen=false;try{seen=sessionStorage.getItem("hkSvcTapped")==="1"}catch(e){}
-    if(!seen){
-      var io=window.IntersectionObserver?new IntersectionObserver(function(es){bar.classList.toggle("hk-call",es[0].isIntersecting)},{threshold:.6}):null;
-      if(io)io.observe(bar);else bar.classList.add("hk-call");
-      bar.addEventListener("click",function(){bar.classList.remove("hk-call");if(io)io.disconnect();try{sessionStorage.setItem("hkSvcTapped","1")}catch(e){}},{once:true});
-    }
+    /* keep inviting taps: bounce while the tabs are on screen, pause 8 s after each tap, then resume */
+    var vis=false,paused=false,rt=null;
+    function upd(){bar.classList.toggle("hk-call",vis&&!paused)}
+    var io=window.IntersectionObserver?new IntersectionObserver(function(es){vis=es[0].isIntersecting;upd()},{threshold:.35}):null;
+    if(io)io.observe(bar);else{vis=true;upd()}
+    bar.addEventListener("click",function(){paused=true;upd();clearTimeout(rt);rt=setTimeout(function(){paused=false;upd()},8000)});
     var nx=grid.nextElementSibling;
     if(!(nx&&nx.classList.contains("hk-svc-help"))){
       var help=document.createElement("p");help.className="hk-svc-help";
