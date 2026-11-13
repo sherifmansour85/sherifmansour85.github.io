@@ -226,7 +226,7 @@
     return h + '<small>' + esc(T.note) + '</small><div class="hkg-act">' +
       '<a class="hkg-wa" target="_blank" rel="noopener" href="' + waLink(it, lo, hi) + '">' + esc(T.send) + '</a>' +
       '<a class="hkg-q" data-quote="" href="' + mailLink(it, lo, hi) + '">' + esc(T.quote) + '</a>' +
-      '<div class="hkg-tabs"><button type="button" data-share="">' + esc(T.share) + '</button><button type="button" data-install="" hidden>' + esc(T.install) + '</button><button type="button" data-clear="">' + esc(T.clear) + '</button></div></div>';
+      '<div class="hkg-tabs"><button type="button" data-share="">' + esc(T.share) + '</button><button type="button" data-install=""' + (((window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone) ? ' hidden' : '') + '>' + esc(T.install) + '</button><button type="button" data-clear="">' + esc(T.clear) + '</button></div></div>';
   }
   function planText(it, lo, hi) {
     var g = GOAL.filter(function (x) { return x[0] === S.goal; })[0], r = REG.filter(function (x) { return x[0] === S.reg; })[0];
@@ -248,7 +248,7 @@
   }
   function track(n, p) { try { if (typeof window.gtag === 'function') window.gtag('event', n, p || {}); } catch (e) {} }
   var deferred = null;
-  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; var b = root && root.querySelector('[data-install]'); if (b) b.hidden = false; });
+  window.addEventListener('beforeinstallprompt', function (e) { deferred = e; });
 
   function wire(el) {
     el.addEventListener('change', function (e) {
@@ -267,7 +267,7 @@
       if (e.target.closest('.hkg-wa')) { track('gateway_send', { channel: 'whatsapp', items: Object.keys(S.sel).length }); return; }
       if (e.target.closest('[data-quote]')) { track('gateway_send', { channel: 'email', items: Object.keys(S.sel).length }); return; }
       if (e.target.closest('[data-share]')) { var b = e.target.closest('[data-share]'); try { navigator.clipboard.writeText(shareURL()); b.textContent = T.copied; } catch (x) { window.prompt('', shareURL()); } track('gateway_share'); return; }
-      if (e.target.closest('[data-install]')) { if (deferred) { deferred.prompt(); deferred = null; } return; }
+      if (e.target.closest('[data-install]')) { track('gateway_install'); if (window.hkInstall) window.hkInstall(); else if (deferred) { deferred.prompt(); deferred = null; } return; }
       if (e.target.closest('[data-clear]')) { S = DEF(); save(); render(); }
     });
     el.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target.hasAttribute && e.target.hasAttribute('data-ask')) { e.preventDefault(); if (window.hkSearchOpen) window.hkSearchOpen(); } });
