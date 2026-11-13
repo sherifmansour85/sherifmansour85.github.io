@@ -99,6 +99,15 @@
   var gp = location.search.match(/[?&]g=([a-z]+)/), rp = location.search.match(/[?&]r=([a-z]+)/);
   if (gp) S.goal = gp[1]; if (rp) S.reg = rp[1];
   var MORE = {}, TEASER = false;
+  /* accept only known values from links and saved plans */
+  (function clean() {
+    function ok(list, v, d) { return list.some(function (o) { return o[0] === v; }) ? v : d; }
+    function num(v, a, b, d) { v = parseInt(v, 10); return isNaN(v) ? d : Math.min(b, Math.max(a, v)); }
+    S.goal = ok(GOAL, S.goal, 'both'); S.reg = ok(REG, S.reg, 'any'); S.st = ok(STAY, S.st, 'h4');
+    S.ad = num(S.ad, 1, 12, 2); S.ch = num(S.ch, 0, 8, 0); S.n = num(S.n, 1, 21, 5);
+    var ids = {}; C.forEach(function (c) { ids[c[0]] = 1; }); P.forEach(function (x) { ids[x[0]] = 1; });
+    var sel = {}; Object.keys(S.sel || {}).forEach(function (k) { if (ids[k]) sel[k] = 1; }); S.sel = sel;
+  })();
   function save() { try { localStorage.setItem('hkGateway', JSON.stringify(S)); } catch (e) {} }
 
   function qty(unit) {
