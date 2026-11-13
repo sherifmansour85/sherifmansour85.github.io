@@ -129,3 +129,7 @@ Under Egypt's current entry rules, citizens of Saudi Arabia, the UAE, Kuwait, Qa
 without a visa; GCC residents with other passports can usually get a visa on arrival. Always add that rules change and
 should be confirmed with the airline or https://visa2egypt.gov.eg/ before booking. Refer to the audience as citizens or
 families of the GCC countries (مواطنو دول مجلس التعاون الخليجي), not "GCC people".
+
+## Slogan
+
+English: "Beyond the Egypt you know". Arabic: «مصر كما لم تعرفها من قبل».
