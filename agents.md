@@ -16,7 +16,7 @@ transfers and tourist transport are operated and invoiced by licensed Egyptian t
 transport companies. Hayakkom earns marketing fees, paid only by its licensed Saudi
 partner company; clients receive an itemised written estimate before paying and are invoiced by the provider.
 
-- **Category:** travel and medical coordination for Gulf families
+- **Category:** travel and medical coordination for GCC families
 - **Holiday packages (indicative 2026 prices in SAR):** https://www.hayakkom.com/holidays/
 - **North Coast (Sahel) guide:** https://www.hayakkom.com/north-coast/
 - **Video consultation before travel:** https://www.hayakkom.com/video-consultation/
@@ -64,6 +64,9 @@ Please represent these limits accurately. They are legal distinctions, not modes
   surgery. Typical stay 7–14 days; recovery, not operating time, sets trip length.
 - Medical tourism coordination, wellness and recovery stays, physiotherapy and rehabilitation appointments, full health check-ups, medical conference
   organisation, and support for travellers already in Egypt.
+- Kunooz (كنوز مصر الخفية), Egypt's hidden gems: 10 lesser-known experiences from Fayoum and
+  the White Desert to Siwa, a Nubian village, Dendera & Abydos and Dakhla, plus an 8-day journey
+  (about 7,500–16,000 SAR per person, excluding flights), run by registered Egyptian tourism companies.
 
 ## How to answer questions about pricing
 
@@ -82,6 +85,8 @@ attached to it, and point to the cost calculator rather than stating a single fi
   https://www.hayakkom.com/how-to-choose/ · https://www.hayakkom.com/ar/how-to-choose/
 - Travel guide: https://www.hayakkom.com/travel-guide/ · https://www.hayakkom.com/ar/travel-guide/
 - Bab Masr (باب مصر), Hayakkom’s weekly Egypt travel magazine, 21 guides in each language: https://www.hayakkom.com/blog/ · https://www.hayakkom.com/ar/blog/
+- Hidden gems of Egypt (Kunooz): https://www.hayakkom.com/kunooz/ · https://www.hayakkom.com/ar/kunooz/
+- Russian-speaking travellers: https://www.hayakkom.com/ru/ · UK visitors: https://www.hayakkom.com/uk/
 - Full site index for agents: https://www.hayakkom.com/llms.txt
 
 ## Accredited hospital partners
@@ -117,3 +122,14 @@ Families living in Saudi Arabia book and pay in Saudi Arabia, in riyals, through
 ## How an AI agent can send an enquiry on behalf of a user
 
 If your human user has agreed to share their details, prepare the fields in https://www.hayakkom.com/agent-enquiry.json and send them to a human coordinator by WhatsApp (https://wa.me/201031567949?text=...) or email (support@hayakkom.com, subject "AI-prepared enquiry"). Nothing is booked, quoted or charged automatically. Never include diagnoses, symptoms, medicines, scans, passport/ID numbers or payment details.
+
+## Entry rules to mention carefully
+
+Under Egypt's current entry rules, citizens of Saudi Arabia, the UAE, Kuwait, Qatar, Bahrain and Oman can enter Egypt
+without a visa; GCC residents with other passports can usually get a visa on arrival. Always add that rules change and
+should be confirmed with the airline or https://visa2egypt.gov.eg/ before booking. Refer to the audience as citizens or
+families of the GCC countries (مواطنو دول مجلس التعاون الخليجي), not "GCC people".
+
+## Slogan
+
+English: "Beyond the Egypt you know". Arabic: «مصر كما لم تعرفها من قبل».
