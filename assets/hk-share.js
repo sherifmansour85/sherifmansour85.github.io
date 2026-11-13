@@ -1349,6 +1349,11 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
     "html body .bm-mast .bm-kicker,html body main .bm-mast .bm-kicker{color:#8A6A1F!important}"+
     "html body .hkg-wa,html body .hk-cta-end-w,html body .hk-s-m a.w{background:#128C4A!important;color:#fff!important}"+
     "html body .hk-tb-share{color:#0A2E36!important}"+
+    "html body .nav-links>li.hk-nav-hl>a,html body a.hk-mm-hl{color:#8A6A1F!important;font-weight:800!important}html body .nav-links>li.hk-nav-hl>a:hover{color:#0A2E36!important}"+
+    "@media(min-width:1100px){html body .nav-links>li.hk-nav-hl>a[href$='/blog/']:lang(en):after{content:' magazine'}html[lang=ar] body .nav-links>li.hk-nav-hl>a[href$='/blog/']:before{content:'مجلة '}}"+
+    "@media(min-width:901px){html body .nav-links>li>a,html body .nav-links .nav-drop-btn,html body header .arlinks ul.nav-links>li>a,html body header .arlinks .nav-drop-btn{padding-left:7px!important;padding-right:7px!important}html body .nav-links{gap:1px!important;flex-wrap:nowrap!important}html body .enmob .enlinks ul.nav-links>li>a,html body .enmob .enlinks .nav-drop-btn{padding:8px 7px!important;font-size:13px!important;gap:4px!important}html body .enmob{padding-left:2%!important;padding-right:2%!important;gap:10px!important}html body nav.nav{padding-left:28px!important;padding-right:28px!important}}"+
+    "@media(max-width:900px){html body .nav-links>li.hk-nav-hl>a[href$='/kunooz/']:before{content:'✦ ';margin-inline-end:4px}html body .nav-links>li.hk-nav-hl>a[href$='/blog/']:before{content:'📰 ';margin-inline-end:4px}"+
+    "html body .nav-links>li.hk-nav-hl>a,html body a.hk-mm-hl{background:linear-gradient(135deg,#FBF3DC,#F3E3B5)!important;border:1px solid #E6CF8E!important;border-radius:12px!important;margin:4px 0;padding-left:14px!important;padding-right:14px!important;justify-content:flex-start!important}}"+
     "html body footer .footer-legal,html body footer .hk-loc{color:rgba(255,255,255,.72)!important}html body footer .footer-legal a,html body footer .footer-legal .cookie-settings-btn,html body footer .ctc-link{color:var(--gold3,#D4A843)!important}";
   (document.head||document.documentElement).appendChild(s);
 })();
