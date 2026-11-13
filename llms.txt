@@ -128,7 +128,7 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 - [كيف تختار شركة تنسيق علاجي](https://www.hayakkom.com/ar/how-to-choose/)
 - [دليل السفر للعلاج](https://www.hayakkom.com/ar/travel-guide/)
 - [حاسبة تكلفة الرحلة](https://www.hayakkom.com/ar/calculator/)
-- [المدونة: نصائح السفر والعلاج](https://www.hayakkom.com/ar/blog/)
+- [مجلة باب مصر](https://www.hayakkom.com/ar/blog/)
 - [المؤتمرات الطبية](https://www.hayakkom.com/ar/conferences/)
 - [التسويق الطبي للأطباء والعيادات](https://www.hayakkom.com/ar/medical-marketing/)
 - [الدراسة في مصر للسعوديين والوافدين](https://www.hayakkom.com/ar/educational/): الزيارة التمهيدية والسكن والاستقبال وزيارات الأهل؛ القبول قرار الجامعة عبر منصة الوافدين ولا تضمنه حياكم.
@@ -170,8 +170,8 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 
 Every article is published in both languages. English articles are at /blog/, Arabic at /ar/blog/, paired with hreflang.
 
-- [Hayakkom Blog in English](https://www.hayakkom.com/blog/): twenty-one articles for Gulf families travelling to Egypt, covering Cairo day trips, Nile cruises, treatment costs, preparation, length of stay, insurance and choosing a provider.
-- [مدونة حياكم (Arabic)](https://www.hayakkom.com/ar/blog/): the same twenty-one articles in Arabic.
+- [Bab Masr (باب مصر), Hayakkom’s Egypt travel magazine, in English](https://www.hayakkom.com/blog/): a weekly magazine with twenty-one articles for Gulf families travelling to Egypt, covering Cairo day trips, Nile cruises, treatment costs, preparation, length of stay, insurance and choosing a provider.
+- [باب مصر — مجلة حياكم (Arabic)](https://www.hayakkom.com/ar/blog/): the same twenty-one articles in Arabic.
 
 ## Verified business profile
 
