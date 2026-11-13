@@ -1021,6 +1021,8 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
     var q=a.hasAttribute("data-hk-enq")||h==="#quote";
     if(!(wa||jf||q))return;
     if(wa&&a.closest(".fab,.fab-stack,.fab-wa"))return;
+    /* WhatsApp links that already carry a written message (Gateway plan, search results, end-of-page panel) open WhatsApp directly */
+    if(wa&&(/[?&]text=/.test(h)||a.closest(".hkg,.hk-s-ov,.hk-cta-end,[data-hk-direct]")))return;
     e.preventDefault();e.stopImmediatePropagation();
     if(jf){open(h.replace(/^(https:\/\/form\.jotform\.com\/\d+)\??/,"$1?isIframeEmbed=1&"));return}
     go();
