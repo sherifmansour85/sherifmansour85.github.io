@@ -39,8 +39,11 @@
     }
   };
 
+  /* One shared install event for the whole site: the popup (hk-install.js), the 'Add to your phone' button and the
+     Gateway all call window.hkInstall(), so the browser's one-time install prompt is never used up by another button. */
   var deferred = null;
-  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; });
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; window.__hkBIP = e; });
+  window.addEventListener('appinstalled', function () { deferred = null; window.__hkBIP = null; try { localStorage.setItem('hkInstalled', '1'); } catch (x) {} });
   function standalone() {
     return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
   }
@@ -114,15 +117,20 @@
 
   function openInstall(L, ar) {
     if (standalone()) { toast(L.done); return; }
-    if (deferred) {
-      deferred.prompt();
-      deferred.userChoice.finally(function () { deferred = null; });
-      return;
+    var ev = deferred || window.__hkBIP;
+    if (ev) {
+      deferred = null; window.__hkBIP = null;
+      try { ev.prompt(); if (ev.userChoice) ev.userChoice.then(function (c) { if (c && c.outcome === 'accepted') { try { localStorage.setItem('hkInstalled', '1'); } catch (x) {} } }); return; } catch (x) { /* already used: show the steps */ }
     }
+    var ua = navigator.userAgent || '';
+    var inApp = /Instagram|FBAN|FBAV|FB_IAB|WhatsApp|Line\/|Snapchat|TikTok|musical_ly|Twitter/i.test(ua);
     var ios = isIOS();
+    var note = inApp ? (ar ? '<p><b>أنت تتصفح من داخل تطبيق آخر.</b> اضغط ⋯ أو ⋮ واختر «فتح في المتصفح» (' + (ios ? 'سفاري' : 'كروم') + ')، ثم:</p>'
+                           : '<p><b>You are inside another app.</b> Tap ⋯ or ⋮ and choose “Open in browser” (' + (ios ? 'Safari' : 'Chrome') + '), then:</p>') : '';
     var steps = (ios ? L.ios : L.and).map(function (s) { return '<li>' + s + '</li>'; }).join('');
-    sheet('<h3>' + (ios ? L.iosT : L.andT) + '</h3><ol>' + steps + '</ol><button type="button" class="hk-sheet-close">' + L.close + '</button>', ar ? 'rtl' : 'ltr');
+    sheet('<h3>' + (ios ? L.iosT : L.andT) + '</h3>' + note + '<ol>' + steps + '</ol><button type="button" class="hk-sheet-close">' + L.close + '</button>', ar ? 'rtl' : 'ltr');
   }
+  window.hkInstall = function () { var ar = isAr(); openInstall(ar ? T.ar : T.en, ar); };
 
   function mount() {
     if (document.querySelector('.hk-take')) return;
@@ -318,7 +326,7 @@ function L(){var e=document.createElement("script");e.src="/assets/hk-tour.js?v=
 if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListener("load",function(){setTimeout(L,500)})}})();
 
 /* Install-or-skip app popup: starts as early as possible. */
-(function(){var e=document.createElement("script");e.src="/assets/hk-install.js?v=20261025a";e.async=true;document.head.appendChild(e)})();
+(function(){var e=document.createElement("script");e.src="/assets/hk-install.js?v=20261113i";e.async=true;document.head.appendChild(e)})();
 
 /* HK-QA-MOVE: keep the static "what people search for" block (.hk-qa) above the "Plan your trip" block on app-rendered pages. */
 (function () {
@@ -1319,4 +1327,28 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
       if(window.hkEnqOpenForm)window.hkEnqOpenForm();else location.hash="quote"});
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",add);else add();
+})();
+
+/* HK-CONTRAST: the base page styles (".hkp p", "main.arwrap p/h2" with !important) force dark text on every paragraph
+   and heading, which also hit text inside dark panels. These rules are more specific, so text on dark panels stays light
+   and small gold labels on white stay readable. */
+(function(){
+  if(window.__hkContrast)return;window.__hkContrast=1;
+  var s=document.createElement("style");s.id="hk-contrast";
+  s.textContent=
+    "html body .bm-sub h2,html body .bm-sub h3,html body main .bm-sub h2,html body main .bm-sub h3{color:#fff!important}"+
+    "html body .bm-sub p,html body main .bm-sub p{color:rgba(255,255,255,.88)!important}"+
+    "html body .bm-sub .bm-note,html body main .bm-sub p.bm-note{color:rgba(255,255,255,.72)!important}"+
+    "html body .bm-sub .bm-kicker{color:#E8C877!important}"+
+    "html body .bm-cover h2,html body main .bm-cover h2{color:#fff!important}html body .bm-cover p,html body main .bm-cover p{color:rgba(255,255,255,.9)!important}"+
+    "html body .hk-cta-end p,html body main .hk-cta-end p{color:rgba(255,255,255,.9)!important}html body .hk-cta-end strong{color:#D4A843!important}"+
+    "html body .hk-qf-h strong,html body main .hk-qf-h strong{color:#D4A843!important}html body .hk-qf-h span,html body main .hk-qf-h span{color:rgba(255,255,255,.88)!important}"+
+    "html body .hkg-plan h3{color:#D4A843!important}html body .hkg-plan li,html body .hkg-plan li span,html body .hkg-tot span{color:#fff!important}html body .hkg-tot strong{color:#D4A843!important}html body .hkg-plan small{color:rgba(255,255,255,.75)!important}"+
+    "html body .kz-meta .kz-price{color:#D4A843!important}"+
+    "html body .bm .bm-lab,html body main .bm-lab,html body .bm-row .bm-lab{color:#8A6A1F!important}"+
+    "html body .bm-mast .bm-kicker,html body main .bm-mast .bm-kicker{color:#8A6A1F!important}"+
+    "html body .hkg-wa,html body .hk-cta-end-w,html body .hk-s-m a.w{background:#128C4A!important;color:#fff!important}"+
+    "html body .hk-tb-share{color:#0A2E36!important}"+
+    "html body footer .footer-legal,html body footer .footer-legal a,html body footer .hk-loc{color:rgba(255,255,255,.72)!important}";
+  (document.head||document.documentElement).appendChild(s);
 })();
