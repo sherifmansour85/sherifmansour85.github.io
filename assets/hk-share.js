@@ -1349,6 +1349,6 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
     "html body .bm-mast .bm-kicker,html body main .bm-mast .bm-kicker{color:#8A6A1F!important}"+
     "html body .hkg-wa,html body .hk-cta-end-w,html body .hk-s-m a.w{background:#128C4A!important;color:#fff!important}"+
     "html body .hk-tb-share{color:#0A2E36!important}"+
-    "html body footer .footer-legal,html body footer .footer-legal a,html body footer .hk-loc{color:rgba(255,255,255,.72)!important}";
+    "html body footer .footer-legal,html body footer .hk-loc{color:rgba(255,255,255,.72)!important}html body footer .footer-legal a,html body footer .footer-legal .cookie-settings-btn,html body footer .ctc-link{color:var(--gold3,#D4A843)!important}";
   (document.head||document.documentElement).appendChild(s);
 })();
