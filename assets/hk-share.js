@@ -39,8 +39,11 @@
     }
   };
 
+  /* One shared install event for the whole site: the popup (hk-install.js), the 'Add to your phone' button and the
+     Gateway all call window.hkInstall(), so the browser's one-time install prompt is never used up by another button. */
   var deferred = null;
-  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; });
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; window.__hkBIP = e; });
+  window.addEventListener('appinstalled', function () { deferred = null; window.__hkBIP = null; try { localStorage.setItem('hkInstalled', '1'); } catch (x) {} });
   function standalone() {
     return (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
   }
@@ -114,15 +117,20 @@
 
   function openInstall(L, ar) {
     if (standalone()) { toast(L.done); return; }
-    if (deferred) {
-      deferred.prompt();
-      deferred.userChoice.finally(function () { deferred = null; });
-      return;
+    var ev = deferred || window.__hkBIP;
+    if (ev) {
+      deferred = null; window.__hkBIP = null;
+      try { ev.prompt(); if (ev.userChoice) ev.userChoice.then(function (c) { if (c && c.outcome === 'accepted') { try { localStorage.setItem('hkInstalled', '1'); } catch (x) {} } }); return; } catch (x) { /* already used: show the steps */ }
     }
+    var ua = navigator.userAgent || '';
+    var inApp = /Instagram|FBAN|FBAV|FB_IAB|WhatsApp|Line\/|Snapchat|TikTok|musical_ly|Twitter/i.test(ua);
     var ios = isIOS();
+    var note = inApp ? (ar ? '<p><b>أنت تتصفح من داخل تطبيق آخر.</b> اضغط ⋯ أو ⋮ واختر «فتح في المتصفح» (' + (ios ? 'سفاري' : 'كروم') + ')، ثم:</p>'
+                           : '<p><b>You are inside another app.</b> Tap ⋯ or ⋮ and choose “Open in browser” (' + (ios ? 'Safari' : 'Chrome') + '), then:</p>') : '';
     var steps = (ios ? L.ios : L.and).map(function (s) { return '<li>' + s + '</li>'; }).join('');
-    sheet('<h3>' + (ios ? L.iosT : L.andT) + '</h3><ol>' + steps + '</ol><button type="button" class="hk-sheet-close">' + L.close + '</button>', ar ? 'rtl' : 'ltr');
+    sheet('<h3>' + (ios ? L.iosT : L.andT) + '</h3>' + note + '<ol>' + steps + '</ol><button type="button" class="hk-sheet-close">' + L.close + '</button>', ar ? 'rtl' : 'ltr');
   }
+  window.hkInstall = function () { var ar = isAr(); openInstall(ar ? T.ar : T.en, ar); };
 
   function mount() {
     if (document.querySelector('.hk-take')) return;
@@ -318,7 +326,7 @@ function L(){var e=document.createElement("script");e.src="/assets/hk-tour.js?v=
 if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListener("load",function(){setTimeout(L,500)})}})();
 
 /* Install-or-skip app popup: starts as early as possible. */
-(function(){var e=document.createElement("script");e.src="/assets/hk-install.js?v=20261025a";e.async=true;document.head.appendChild(e)})();
+(function(){var e=document.createElement("script");e.src="/assets/hk-install.js?v=20261113i";e.async=true;document.head.appendChild(e)})();
 
 /* HK-QA-MOVE: keep the static "what people search for" block (.hk-qa) above the "Plan your trip" block on app-rendered pages. */
 (function () {
