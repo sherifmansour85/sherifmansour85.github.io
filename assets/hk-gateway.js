@@ -71,7 +71,7 @@
     s1: 'أريد', s2: 'في', s3: 'لـ', s4: 'لمدة', s5: 'ليالٍ، والإقامة', adults: 'بالغين', kids: 'أطفال', comma: '، ',
     ask: 'أو اسأل أي سؤال… (مثلاً: كم سعر زراعة الأسنان؟)', g: { treat: 'العلاجات', stay: 'الإقامة', trip: 'رحلات كلاسيكية', kunooz: 'كنوز مصر الخفية', extra: 'خدمات إضافية', pack: 'باقات جاهزة' },
     add: 'أضف', added: 'مضاف ✓', more: 'التفاصيل', plan: 'خطتي', empty: 'أضف عناصر لتظهر خطتك وسعرها التقديري هنا.', total: 'الإجمالي التقديري',
-    note: 'أسعار تقديرية بالريال لا تشمل الطيران. الرحلات عبر شركات سياحة مصرية مسجّلة والعلاج لدى مؤسسات طبية مرخّصة.', send: 'أرسل خطتي على واتساب', quote: 'احصل على عرض سعر مكتوب', share: 'انسخ رابط الخطة', copied: 'تم نسخ الرابط ✓', install: 'ثبّت التطبيق', clear: 'ابدأ من جديد',
+    note: 'أسعار تقديرية بالريال لا تشمل الطيران. الرحلات عبر شركات سياحة مصرية مسجّلة والعلاج لدى مؤسسات طبية مرخّصة.', send: 'أرسل خطتي على واتساب', quote: 'أرسل خطتي بالبريد الإلكتروني', share: 'انسخ رابط الخطة', copied: 'تم نسخ الرابط ✓', install: 'ثبّت التطبيق', clear: 'ابدأ من جديد',
     units: { item: '', pp: 'للشخص', night: 'لليلة', day: 'لليوم', trip: 'للتوصيلة', room: 'للغرفة', family: 'للعائلة', couple: 'للزوجين', stay: 'للإقامة' }, sar: 'ريال',
     now: 'نحن معك الآن: طبيب في الفندق أو طبيب أسنان أو رحلة لليوم التالي. يرد منسّق خلال 12 ساعة.',
     biz: 'رحلات الأعمال والدراسة والاستثمار والمؤتمرات الطبية ننسّقها حسب الطلب.', bizL: [['/ar/business/', 'رحلات العقار والأعمال'], ['/ar/educational/', 'الدراسة في مصر'], ['/ar/conferences/', 'المؤتمرات الطبية']]
@@ -80,7 +80,7 @@
     s1: 'I want', s2: 'in', s3: 'for', s4: 'for', s5: 'nights, staying in a', adults: 'adults', kids: 'children', comma: ', ',
     ask: 'Or ask anything… (e.g. how much are dental implants?)', g: { treat: 'Treatments', stay: 'Stays', trip: 'Classic trips', kunooz: 'Kunooz · hidden gems', extra: 'Extras', pack: 'Ready-made packages' },
     add: 'Add', added: 'Added ✓', more: 'Details', plan: 'My plan', empty: 'Add items to see your plan and its indicative total here.', total: 'Indicative total',
-    note: 'Indicative prices in SAR, excluding flights. Trips by registered Egyptian tourism companies; treatment by licensed medical institutions.', send: 'Send my plan on WhatsApp', quote: 'Get a written quote', share: 'Copy plan link', copied: 'Link copied ✓', install: 'Install the app', clear: 'Start again',
+    note: 'Indicative prices in SAR, excluding flights. Trips by registered Egyptian tourism companies; treatment by licensed medical institutions.', send: 'Send my plan on WhatsApp', quote: 'Email my plan for a written quote', share: 'Copy plan link', copied: 'Link copied ✓', install: 'Install the app', clear: 'Start again',
     units: { item: '', pp: 'per person', night: 'per night', day: 'per day', trip: 'per transfer', room: 'per room', family: 'per family', couple: 'per couple', stay: 'per stay' }, sar: 'SAR',
     now: 'We\'re with you now: a doctor at your hotel, a dentist or a trip for tomorrow. A coordinator replies within 12 hours.',
     biz: 'Business, study, investment and medical-conference trips are coordinated on request.', bizL: [['/business/', 'Property & business trips'], ['/educational/', 'Study in Egypt'], ['/conferences/', 'Medical conferences']]
@@ -225,7 +225,7 @@
     }).join('') + '</ul><div class="hkg-tot"><span>' + esc(T.total) + '</span><strong>' + rng(lo, hi) + ' ' + T.sar + '</strong></div>';
     return h + '<small>' + esc(T.note) + '</small><div class="hkg-act">' +
       '<a class="hkg-wa" target="_blank" rel="noopener" href="' + waLink(it, lo, hi) + '">' + esc(T.send) + '</a>' +
-      '<button type="button" class="hkg-q" data-quote="">' + esc(T.quote) + '</button>' +
+      '<a class="hkg-q" data-quote="" href="' + mailLink(it, lo, hi) + '">' + esc(T.quote) + '</a>' +
       '<div class="hkg-tabs"><button type="button" data-share="">' + esc(T.share) + '</button><button type="button" data-install="" hidden>' + esc(T.install) + '</button><button type="button" data-clear="">' + esc(T.clear) + '</button></div></div>';
   }
   function planText(it, lo, hi) {
@@ -235,6 +235,11 @@
     var body = it.map(function (x) { return '• ' + x.name + (x.q > 1 ? ' ×' + x.q : '') + ': ' + fmt(x.lo) + '–' + fmt(x.hi) + ' ' + T.sar; }).join('\n');
     var tail = it.length ? ('\n' + (AR ? 'الإجمالي التقديري: ' : 'Indicative total: ') + fmt(lo) + '–' + fmt(hi) + ' ' + T.sar) : '';
     return head + body + tail + '\n' + (AR ? 'رابط الخطة: ' : 'Plan link: ') + shareURL();
+  }
+  function mailLink(it, lo, hi) {
+    var subj = AR ? 'طلب عرض سعر من بوابة مصر' : 'Quote request from the Egypt Gateway';
+    var body = planText(it, lo, hi) + '\n\n' + (AR ? 'الاسم:\nرقم الهاتف أو واتساب:\nموعد السفر المتوقع:\n' : 'Name:\nPhone or WhatsApp:\nExpected travel dates:\n');
+    return 'mailto:support@hayakkom.com?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(body);
   }
   function waLink(it, lo, hi) { return 'https://wa.me/' + WA + '?text=' + encodeURIComponent(planText(it, lo, hi)); }
   function shareURL() {
@@ -260,11 +265,7 @@
       if (e.target.closest('[data-go]')) { save(); track('gateway_teaser_go', { goal: S.goal, region: S.reg }); return; }
       if (e.target.closest('[data-ask]')) { if (window.hkSearchOpen) window.hkSearchOpen(); return; }
       if (e.target.closest('.hkg-wa')) { track('gateway_send', { channel: 'whatsapp', items: Object.keys(S.sel).length }); return; }
-      if (e.target.closest('[data-quote]')) {
-        track('gateway_send', { channel: 'form', items: Object.keys(S.sel).length });
-        if (window.hkEnqOpenForm) window.hkEnqOpenForm(); else location.href = pre + '/contact/#quote';
-        return;
-      }
+      if (e.target.closest('[data-quote]')) { track('gateway_send', { channel: 'email', items: Object.keys(S.sel).length }); return; }
       if (e.target.closest('[data-share]')) { var b = e.target.closest('[data-share]'); try { navigator.clipboard.writeText(shareURL()); b.textContent = T.copied; } catch (x) { window.prompt('', shareURL()); } track('gateway_share'); return; }
       if (e.target.closest('[data-install]')) { if (deferred) { deferred.prompt(); deferred = null; } return; }
       if (e.target.closest('[data-clear]')) { S = DEF(); save(); render(); }
