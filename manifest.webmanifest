@@ -38,6 +38,17 @@
   ],
   "shortcuts": [
     {
+      "name": "Egypt Gateway — plan my trip",
+      "short_name": "Plan my trip",
+      "url": "/gateway/?source=shortcut",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
       "name": "العربية — الصفحة الرئيسية",
       "short_name": "العربية",
       "url": "/ar/?source=shortcut",
