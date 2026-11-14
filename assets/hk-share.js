@@ -1358,50 +1358,84 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   (document.head||document.documentElement).appendChild(s);
 })();
 
-/* HK-CLIP: a short silent location clip near the top of a destination page. Nothing is downloaded until the visitor
-   taps play (preload="none"), so pages stay fast. Clips and their sources are listed in assets/video/places/CREDITS.md.
-   To add a page: put <name>.mp4 and <name>.webp in assets/video/places/ and add its slug to CLIPS. */
+/* HK-BRANDFILM: the Hayakkom brand film (1:49, with narration and music) on the pages where visitors decide whether to
+   trust us: home, About, What is Hayakkom, Treatment and For Saudi patients. It loads only when the visitor taps play.
+   Beside it sit the two actions the film asks for (written quote, WhatsApp), and the same two appear over the
+   film when it ends. English pages get the English narration, Arabic pages the Arabic one.
+   To add or remove a page, edit PAGES. */
 (function(){
-  var CLIPS={
-    "sharm":{f:"sharm",en:"Sharm el-Sheikh from the air",ar:"شرم الشيخ من الجو"},
-    "luxor":{f:"luxor",en:"Temple of Hatshepsut, Luxor West Bank",ar:"معبد حتشبسوت في البرّ الغربي بالأقصر"},
-    "nile-cruise":{f:"nile",en:"On the Nile: a cruise boat and a felucca",ar:"على النيل: باخرة نيلية وفلوكة"}
-  };
+  var PAGES={"":1,"about":1,"who-we-are":1,"medical":1,"saudi-arabia":1};
   var AR=(document.documentElement.lang||"").slice(0,2)==="ar";
-  function slug(){return location.pathname.replace(/^\/ar\//,"/").replace(/^\/|\/$/g,"");}
-  if(!CLIPS[slug()])return;
+  function slug(){return location.pathname.replace(/^\/ar(\/|$)/,"/").replace(/^\/|\/$/g,"");}
+  if(!(slug() in PAGES))return;
+  var T=AR?{eye:"فيلم حياكم · دقيقة و49 ثانية",t:"مصر كما لم تعرفها من قبل",
+      b:["عرض سعر مكتوب قبل أن تدفع أي شيء","مقيم في السعودية؟ تدفع داخل المملكة وبالريال","العلاج لدى مستشفيات وأطباء مرخّصين، والرحلات مع شركات سياحة مصرية مسجّلة"],
+      q:"اطلب عرض السعر المكتوب",w:"اسأل على واتساب",n:"فيلم توضيحي. الأسعار تقديرية ولا تشمل الطيران.",end:"جاهز لتخطيط رحلتك؟",again:"شاهد مرة أخرى",
+      play:"تشغيل فيلم حياكم (دقيقة و49 ثانية، مع صوت)",wa:"مرحباً حياكم، شاهدت الفيلم وأرغب في عرض سعر مكتوب."}
+    :{eye:"The Hayakkom film · 1 min 49",t:"Beyond the Egypt you know",
+      b:["A written quote before you pay anything","In Saudi Arabia? Pay inside the Kingdom, in riyals","Treatment by licensed hospitals and doctors; trips by registered Egyptian tourism companies"],
+      q:"Get my written quote",w:"Ask on WhatsApp",n:"Illustrative film. Prices are indicative and exclude flights.",end:"Ready to plan yours?",again:"Watch again",
+      play:"Play the Hayakkom film (1 minute 49, with sound)",wa:"Hello Hayakkom, I watched your film and would like a written quote."};
+  var WA="https://wa.me/201031567949?text="+encodeURIComponent(T.wa),SRC="/assets/video/hayakkom-film-"+(AR?"ar":"en")+".mp4?v=1",POSTER="/assets/video/hayakkom-film-poster.webp?v=1";
   var st=document.createElement("style");
-  st.textContent=".hk-clip{max-width:860px;margin:22px auto 26px;padding:0 16px;box-sizing:border-box}"+
-    ".hk-clip-f{position:relative;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#06222a;box-shadow:0 18px 40px -22px rgba(10,46,54,.55),0 0 0 1px rgba(216,180,90,.45)}"+
-    ".hk-clip video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}"+
-    ".hk-clip-b{position:absolute;inset:0;margin:auto;width:74px;height:74px;border-radius:50%;border:0;background:rgba(212,168,67,.96);cursor:pointer;display:grid;place-items:center;box-shadow:0 8px 26px rgba(0,0,0,.4);transition:transform .2s}"+
-    ".hk-clip-b:hover,.hk-clip-b:focus-visible{transform:scale(1.08)}.hk-clip-b:focus-visible{outline:3px solid #fff;outline-offset:3px}.hk-clip-b svg{width:28px;height:28px;margin-left:5px;fill:#0A2E36}"+
-    "html body .hk-clip figcaption{margin-top:8px;font-size:13.5px;line-height:1.5;text-align:center;color:#4B656C!important}";
+  st.textContent="#hk-bf{position:relative;z-index:3;max-width:920px;margin:30px auto;padding:0 16px;box-sizing:border-box}.hk-bf-in{position:relative;z-index:1}#hk-bf *{box-sizing:border-box}"+
+    ".hk-bf-in{display:grid;grid-template-columns:minmax(200px,270px) 1fr;gap:32px;align-items:center;padding:26px;border-radius:26px;background:linear-gradient(135deg,#0A2E36 0%,#06222a 100%);box-shadow:0 18px 40px -18px rgba(10,46,54,.5);text-align:start}"+
+    ".hk-bf-f{position:relative;aspect-ratio:9/16;border-radius:20px;overflow:hidden;background:#000;box-shadow:0 0 0 1px rgba(216,180,90,.45)}"+
+    ".hk-bf-f video,.hk-bf-f img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}"+
+    ".hk-bf-p{position:absolute;inset:0;margin:auto;width:78px;height:78px;border-radius:50%;border:0;background:rgba(212,168,67,.97);cursor:pointer;display:grid;place-items:center;box-shadow:0 8px 26px rgba(0,0,0,.45);transition:transform .2s;animation:hkbfPulse 2.4s ease-in-out infinite}"+
+    ".hk-bf-p:hover,.hk-bf-p:focus-visible{transform:scale(1.08)}.hk-bf-p:focus-visible{outline:3px solid #fff;outline-offset:3px}.hk-bf-p svg{width:30px;height:30px;margin-left:5px;fill:#0A2E36}"+
+    "@keyframes hkbfPulse{0%,100%{box-shadow:0 8px 26px rgba(0,0,0,.45),0 0 0 0 rgba(232,200,119,.6)}50%{box-shadow:0 8px 26px rgba(0,0,0,.45),0 0 0 14px rgba(232,200,119,0)}}"+
+    ".hk-bf-end{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px;background:rgba(6,34,42,.9);text-align:center}.hk-bf-end.on{display:flex}"+
+    "html body #hk-bf .hk-bf-end strong{color:#fff!important;font-size:18px;line-height:1.35;margin-bottom:4px}"+
+    "html body #hk-bf .hk-bf-eye{color:#E8C877!important;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}"+
+    "html body #hk-bf .hk-bf-t{color:#fff!important;font-size:clamp(22px,3.4vw,30px);font-weight:800;line-height:1.25;margin:8px 0 12px}"+
+    "html body #hk-bf ul{list-style:none;margin:0 0 18px;padding:0}html body #hk-bf li{color:rgba(255,255,255,.9)!important;font-size:15.5px;line-height:1.6;margin:0 0 8px;padding-inline-start:26px;position:relative}"+
+    "html body #hk-bf li:before{content:'✓';position:absolute;inset-inline-start:0;top:0;color:#E8C877;font-weight:800}"+
+    ".hk-bf-btns{display:flex;flex-wrap:wrap;gap:10px}"+
+    "html body #hk-bf .hk-bf-q,html body #hk-bf .hk-bf-w{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:12px 22px;border-radius:999px;font-family:inherit;font-weight:800;font-size:15.5px;line-height:1.2;text-decoration:none!important;cursor:pointer;border:0;transition:transform .2s}"+
+    "html body #hk-bf .hk-bf-q{background:linear-gradient(135deg,#F3D98B,#D4A843 50%,#B8862A);color:#0A2E36!important;box-shadow:0 10px 24px -10px rgba(212,168,67,.8)}"+
+    "html body #hk-bf .hk-bf-w{background:#128C4A;color:#fff!important}"+
+    "html body #hk-bf .hk-bf-q:hover,html body #hk-bf .hk-bf-w:hover{transform:translateY(-2px)}html body #hk-bf .hk-bf-q:focus-visible,html body #hk-bf .hk-bf-w:focus-visible,html body #hk-bf .hk-bf-a:focus-visible{outline:3px solid #fff;outline-offset:3px}"+
+    "html body #hk-bf .hk-bf-end .hk-bf-q,html body #hk-bf .hk-bf-end .hk-bf-w{width:100%;min-height:46px;padding:10px 14px;font-size:14.5px}"+
+    "html body #hk-bf .hk-bf-a{background:none;border:0;color:rgba(255,255,255,.85)!important;font-family:inherit;font-weight:600;font-size:13.5px;text-decoration:underline;cursor:pointer;padding:6px}"+
+    "html body #hk-bf .hk-bf-n{color:rgba(255,255,255,.7)!important;font-size:12.5px;line-height:1.5;margin:14px 0 0}"+
+    "@media(max-width:700px){.hk-bf-in{grid-template-columns:1fr;gap:20px;padding:20px 18px;border-radius:22px}.hk-bf-f{max-width:236px;width:100%;margin:0 auto}.hk-bf-btns{flex-direction:column}html body #hk-bf .hk-bf-q,html body #hk-bf .hk-bf-w{width:100%}}"+
+    "@media (prefers-reduced-motion:reduce){.hk-bf-p{animation:none}}";
   document.head.appendChild(st);
-  var fig=null;
-  function build(c){
-    var f=document.createElement("figure");f.className="hk-clip";f.id="hk-clip";f.dir=AR?"rtl":"ltr";
-    var label=AR?c.ar:c.en;
-    f.innerHTML='<div class="hk-clip-f"><video muted loop playsinline preload="none" poster="/assets/video/places/'+c.f+'.webp?v=1" aria-label="'+label+'"><source src="/assets/video/places/'+c.f+'.mp4?v=1" type="video/mp4"></video>'+
-      '<button type="button" class="hk-clip-b" aria-label="'+(AR?"تشغيل الفيديو: ":"Play video: ")+label+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l14 8-14 8z"/></svg></button></div>'+
-      '<figcaption>'+label+' · '+(AR?"لقطات توضيحية":"illustrative footage")+'</figcaption>';
-    var v=f.querySelector("video"),b=f.querySelector("button");
-    b.addEventListener("click",function(){b.style.display="none";v.controls=true;var p=v.play();if(p&&p.catch)p.catch(function(){b.style.display=""});
-      try{if(window.gtag)gtag("event","place_clip_play",{place:c.f})}catch(e){}});
-    return f;
+  function ev(n){try{if(window.gtag)gtag("event",n,{video_title:"Hayakkom brand film",page:slug()||"home",lang:AR?"ar":"en"})}catch(e){}}
+  function quote(where){ev("brand_film_quote_"+where);if(window.hkEnqOpenForm)window.hkEnqOpenForm();else location.href=(AR?"/ar":"")+"/contact/";}
+  var sec=null;
+  function btns(where){return '<button type="button" class="hk-bf-q" data-bf="q-'+where+'">'+T.q+'</button><a class="hk-bf-w" data-hk-direct="" data-bf="w-'+where+'" target="_blank" rel="noopener" href="'+WA+'">'+T.w+'</a>';}
+  function build(){
+    var s=document.createElement("section");s.id="hk-bf";s.dir=AR?"rtl":"ltr";s.setAttribute("aria-label",T.eye);
+    s.innerHTML='<div class="hk-bf-in"><div class="hk-bf-f"><video playsinline preload="none" poster="'+POSTER+'" aria-label="'+T.eye+'"><source src="'+SRC+'" type="video/mp4"></video>'+
+      '<button type="button" class="hk-bf-p" aria-label="'+T.play+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l14 8-14 8z"/></svg></button>'+
+      '<div class="hk-bf-end"><strong>'+T.end+'</strong>'+btns("end")+'<button type="button" class="hk-bf-a">'+T.again+'</button></div></div>'+
+      '<div><div class="hk-bf-eye">'+T.eye+'</div><div class="hk-bf-t">'+T.t+'</div><ul>'+T.b.map(function(x){return "<li>"+x+"</li>"}).join("")+'</ul>'+
+      '<div class="hk-bf-btns">'+btns("side")+'</div><p class="hk-bf-n">'+T.n+'</p></div></div>';
+    var v=s.querySelector("video"),p=s.querySelector(".hk-bf-p"),end=s.querySelector(".hk-bf-end"),half=false;
+    function start(){end.classList.remove("on");p.style.display="none";v.controls=true;var r=v.play();if(r&&r.catch)r.catch(function(){p.style.display=""});}
+    p.addEventListener("click",function(){ev("brand_film_play");start()});
+    s.querySelector(".hk-bf-a").addEventListener("click",function(){v.currentTime=0;start()});
+    v.addEventListener("timeupdate",function(){if(!half&&v.duration&&v.currentTime>v.duration/2){half=true;ev("brand_film_half")}});
+    v.addEventListener("ended",function(){ev("brand_film_complete");v.controls=false;end.classList.add("on")});
+    s.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-bf]");if(!b)return;var k=b.getAttribute("data-bf").split("-");
+      if(k[0]==="q"){e.preventDefault();try{v.pause()}catch(x){}quote(k[1])}else ev("brand_film_whatsapp_"+k[1]);});
+    return s;
   }
   function anchor(){
+    if(slug()===""){var g=document.getElementById("hk-gateway");if(g)return g;}
     var lead=document.querySelector("main.hkp p.lead");if(lead)return lead;
     var h=document.querySelector("main h1, #root h1");if(!h)return null;
     var e=h.closest(".page-hero")||h.closest("[class*=hero]")||h;while(e.parentElement&&/hero/.test(e.parentElement.className||""))e=e.parentElement;return e;
   }
   function place(){
-    var c=CLIPS[slug()],cur=document.getElementById("hk-clip");
-    if(!c){if(cur)cur.remove();return;}
+    var cur=document.getElementById("hk-bf");
+    if(!(slug() in PAGES)){if(cur)cur.remove();return;}
     var a=anchor();if(!a||!a.parentNode)return;
-    if(cur&&cur.previousElementSibling===a)return;
-    if(!fig)fig=build(c);
-    a.parentNode.insertBefore(fig,a.nextSibling);
+    if(cur&&cur.parentNode===a.parentNode)return; /* placed once; never fight other blocks for the same spot */
+    if(!sec)sec=build();
+    a.parentNode.insertBefore(sec,a.nextSibling);
   }
   place();[300,1200,3000].forEach(function(t){setTimeout(place,t)});
   var root=document.getElementById("root");
