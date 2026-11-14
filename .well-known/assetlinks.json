@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.hayakkom.app",
+      "sha256_cert_fingerprints": [
+        "32:BC:C0:B8:33:2F:A7:99:8A:54:70:E1:D1:97:F2:EF:16:FC:62:04:39:4E:45:9F:9F:93:52:2A:9D:F9:F5:77"
+      ]
+    }
+  }
+]

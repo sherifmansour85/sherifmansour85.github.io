@@ -16,40 +16,50 @@ your Google account, your company details and a signing key, so it has to be don
 | Contact details shown on Play | support@hayakkom.com, www.hayakkom.com, +20 100 010 0529 |
 | Privacy policy URL | https://www.hayakkom.com/privacy/ |
 
-## 2. Build the app package (about 10 minutes, no coding)
+## 2. Build the app package — ✅ done (2026-11-14)
 
-1. Open **https://www.pwabuilder.com**, enter `https://www.hayakkom.com` and press **Start**.
-2. Choose **Package for stores → Android → Generate package**, then open **All settings**:
+PWABuilder generated the package with exactly these settings:
 
-   | Setting | Value |
-   |---|---|
-   | Package ID | `com.hayakkom.app` (permanent; it can never change after upload) |
-   | App name / Launcher name | `Hayakkom` |
-   | App version / version code | `1.0.0` / `1` |
-   | Host | `www.hayakkom.com` |
-   | Start URL | `/?source=twa` |
-   | Theme / status bar colour | `#0A2E36` |
-   | Background / splash colour | `#F2F6F5` |
-   | Display mode | Standalone |
-   | Notification delegation | On |
-   | Signing key | **Create new**, using the company name and support@hayakkom.com |
+| Setting | Value |
+|---|---|
+| Package ID | `com.hayakkom.app` (permanent; it can never change after upload) |
+| App name / Launcher name | `Hayakkom` |
+| App version / version code | `1.0.0` / `1` |
+| Host | `www.hayakkom.com` |
+| Start URL | `/?source=twa` |
+| Theme / status bar colour | `#0A2E36` |
+| Background / splash colour | `#F2F6F5` |
+| Display mode | Standalone |
+| Signing key | Created new, using the company name and support@hayakkom.com |
 
-3. Download the zip. It contains `app-release-bundle.aab` (the file for Play), `app-release-signed.apk`
-   (for testing on your own phone), `signing.keystore`, `signing-key-info.txt` and `assetlinks.json`.
-4. **Back up `signing.keystore` and `signing-key-info.txt` in two safe places** (not in this repository,
-   not by email). Every future update must be signed with this key.
+Claude sent you `Hayakkom.aab` (upload this to Play), `Hayakkom.apk` (install this on your own phone to test),
+`signing.keystore` and `signing-key-info.txt` directly as files in the chat — not through this repository or
+email, since the repository is public.
+
+**Back up `signing.keystore` and `signing-key-info.txt` in two safe places now** (e.g. a password manager
+and a USB drive) **and do not lose them.** Every future update to the app must be signed with this exact
+key; if it is lost, Google Play has no way to let you publish an update to the same app — only a brand-new
+listing, which loses all reviews and install history. Re-running PWABuilder would create a *different* key
+and cannot be used instead.
+
+If you ever want to regenerate the package (new icon, name or colours), use the **same** Package ID and
+**upload the same `signing.keystore` file** to PWABuilder's signing step instead of letting it create a new
+one — otherwise Play will reject the update as signed by the wrong key.
 
 ## 3. Link the app to the website (removes the browser bar)
 
 Android only shows the app full-screen when the website confirms it owns the app, through
 `https://www.hayakkom.com/.well-known/assetlinks.json`. This needs two fingerprints:
 
-1. The **upload key** fingerprint: inside PWABuilder's `assetlinks.json`.
-2. The **Play app-signing key** fingerprint: after the first upload, Play Console → your app →
-   **Test and release → App integrity → App signing** → copy *SHA-256 certificate fingerprint*.
-
-Send both fingerprints to Claude (they are public, not secret) and they will be published in
-`.well-known/assetlinks.json`. Until then the app works but shows a thin address bar at the top.
+1. The **upload key** fingerprint — ✅ already published in `.well-known/assetlinks.json`. This is enough
+   for the test APK (`Hayakkom.apk`) installed directly on a phone to open full-screen, with no address bar.
+2. The **Play app-signing key** fingerprint — **still pending.** Play re-signs the app with its own key for
+   everyone who installs it from the Store, which is a *different* certificate from the upload key above.
+   Once you've created the app in Play Console and uploaded `Hayakkom.aab` at least once: go to
+   **your app → Test and release → App integrity → App signing**, copy the *SHA-256 certificate
+   fingerprint* shown there, and send it to Claude (it's public, not secret) to add as a second entry in
+   `.well-known/assetlinks.json`. Until then, Play Store installs will show a thin address bar at the top
+   even though the sideloaded test APK does not.
 
 ## 4. Play Console: create the app and fill in the forms
 
