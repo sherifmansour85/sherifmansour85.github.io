@@ -103,7 +103,12 @@
     ".hk-mc-cta{display:flex;gap:10px;flex-wrap:wrap}"+
     ".hk-mc-cta a{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;padding:11px 18px;border-radius:999px;text-decoration:none!important;transition:transform .2s,box-shadow .2s}"+
     ".hk-mc-cta a:hover{transform:translateY(-2px)}"+
-    ".hk-mc-full{background:linear-gradient(135deg,#E8C877,#C9A23A);color:#0A2E36!important;box-shadow:0 8px 22px rgba(201,162,58,.35)}"+
+    ".hk-mc-full{position:relative;overflow:hidden;background:linear-gradient(135deg,#F3D98B,#D4A843 50%,#B8862A);color:#0A2E36!important;box-shadow:0 8px 22px rgba(201,162,58,.35);animation:hkmcGlow 2.6s ease-in-out infinite}"+
+    ".hk-mc-full:after{content:'';position:absolute;top:0;bottom:0;left:-60%;width:45%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);transform:skewX(-20deg);animation:hkmcShine 3.6s ease-in-out infinite}"+
+    ".hk-mc-ar{display:inline-block;animation:hkmcNudge 1.6s ease-in-out infinite}[dir=rtl] .hk-mc-ar{animation-name:hkmcNudgeR}"+
+    "@keyframes hkmcShine{0%,55%{left:-60%}100%{left:130%}}@keyframes hkmcGlow{0%,100%{box-shadow:0 8px 22px rgba(201,162,58,.35),0 0 0 0 rgba(232,200,119,.55)}50%{box-shadow:0 8px 22px rgba(201,162,58,.35),0 0 0 9px rgba(232,200,119,0)}}"+
+    "@keyframes hkmcNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}@keyframes hkmcNudgeR{0%,100%{transform:translateX(0)}50%{transform:translateX(-4px)}}"+
+    "@media (prefers-reduced-motion:reduce){.hk-mc-full,.hk-mc-full:after,.hk-mc-ar{animation:none}}"+
     ".hk-mc-wa{border:1px solid rgba(255,255,255,.3);color:#fff!important}"+
     "@media(max-width:760px){html body #hk-mini-calc{padding:20px 10px!important}#hk-mini-calc .hk-mc-head{padding:14px 16px 0}.hk-mc{border-radius:22px}"+
       ".hk-mc-in{grid-template-columns:minmax(0,1fr);gap:4px;padding:8px 16px 4px}"+
@@ -173,7 +178,7 @@
         '<div class="hk-mc-mid"><span class="hk-mc-cur" id="hkMcCur"></span><div class="hk-mc-num" id="hkMcN" aria-live="polite"> </div><span class="hk-mc-per">'+T.perTrip+'</span></div></div>'+
         '<div class="hk-mc-side"><div class="hk-mc-meta" id="hkMcM"></div><div class="hk-mc-leg">'+
         T.parts.map(function(p,i){return '<span><i style="background:'+COL[i]+'"></i>'+p+'</span>'}).join("")+'</div></div></div></div>'+
-      '<div class="hk-mc-foot"><div class="hk-mc-cta"><a class="hk-mc-full" href="'+T.fullHref+'">'+T.full+(ar?" ←":" →")+'</a>'+
+      '<div class="hk-mc-foot"><div class="hk-mc-cta"><a class="hk-mc-full" href="'+T.fullHref+'">'+T.full+'<span class="hk-mc-ar" aria-hidden="true">'+(ar?"←":"→")+'</span></a>'+
         '<a class="hk-mc-wa" id="hkMcW" target="_blank" rel="noopener"><span class="hk-mc-w">'+T.wa+'</span><span class="hk-mc-s">'+T.waShort+'</span></a></div></div></div>';
     var $=function(id){return sec.querySelector("#"+id)};
     el={txt:null,cur:sec.querySelector("#hkMcCur"),segs:[].slice.call(sec.querySelectorAll("circle.seg")),num:$("hkMcN"),meta:$("hkMcM"),wa:$("hkMcW"),city:$("hkMcC"),hot:$("hkMcH"),
