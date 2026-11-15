@@ -1502,7 +1502,10 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
     "hair-transplant":{egypt:"4,500–11,300",intl:"30,000–45,000",label:{en:"one hair transplant session",ar:"جلسة زراعة شعر واحدة"}},
     "weight-loss":{egypt:"10,100–16,900",intl:"37,500–94,000",label:{en:"gastric sleeve surgery, full procedure",ar:"جراحة تكميم المعدة كاملة"}},
     "cosmetic-surgery":{egypt:"8,300–13,900",intl:"19,000–37,500",label:{en:"liposuction / VASER, per set of areas",ar:"شفط الدهون / فيزر لمجموعة مناطق"}},
-    "orthopedics":{egypt:"26,250",intl:"112,500–187,500",label:{en:"total knee replacement, one knee",ar:"تغيير مفصل ركبة واحدة"}}
+    "orthopedics":{egypt:"26,250",intl:"112,500–187,500",label:{en:"total knee replacement, one knee",ar:"تغيير مفصل ركبة واحدة"}},
+    "eyes-lasik":{egypt:"2,100–3,900",intl:"16,875–26,250",label:{en:"Femto-LASIK eye surgery, both eyes",ar:"عملية الفيمتو ليزك للعينين"}},
+    "full-checkup":{egypt:"900–1,700",intl:"7,500–22,500",label:{en:"comprehensive health check-up package, per person",ar:"باقة الفحص الشامل للفرد"}},
+    "physiotherapy":{egypt:"25–110",intl:"280–750",label:{en:"physiotherapy, per session",ar:"جلسة علاج طبيعي واحدة"}}
   };
   var AR=(document.documentElement.lang||"").slice(0,2)==="ar";
   function slug(){return location.pathname.replace(/^\/ar(\/|$)/,"/").replace(/^\/|\/$/g,"");}
@@ -1529,7 +1532,7 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
     return box;
   }
   var el=null;
-  function anchor(){return document.querySelector(".price-block")||document.querySelector(".hkp-table");}
+  function anchor(){return document.querySelector(".price-block")||document.querySelector(".hkp-table")||document.getElementById("hk-eeat");}
   function place(){
     var cur=document.getElementById("hk-pc");
     var a=anchor();if(!a||!a.parentNode){return;}
