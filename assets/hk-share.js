@@ -1490,15 +1490,18 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   if(root&&window.MutationObserver)new MutationObserver(function(){place()}).observe(root,{childList:true,subtree:true});
 })();
 
-/* HK-INTLCOMPARE: a short "Egypt vs elsewhere" price comparison on the two treatment pages where this is best
-   sourced (dental implants, hair transplant) — the single clearest differentiator used by every medical-tourism
-   aggregator that currently outranks us for these terms (Bookimed, PlacidWay). Egypt figures match the range
-   already published elsewhere on the same page; international figures are rounded from internationally
-   published 2026 market reports, not a quote, and are labelled as such. */
+/* HK-INTLCOMPARE: a short "Egypt vs elsewhere" price comparison on treatment pages — the single clearest
+   differentiator used by every medical-tourism aggregator that currently outranks us for these terms
+   (Bookimed, PlacidWay). Egypt figures match the range already published elsewhere on the same page;
+   international figures are rounded from internationally published 2026 market reports (US self-pay and
+   UK private averages), not a quote, and are labelled as such. Add a page by sourcing its own Egypt-vs-abroad
+   range the same way before adding it to DATA below — never estimate without a published source. */
 (function(){
   var DATA={
     "dental":{egypt:"940–2,300",intl:"11,000–19,000",label:{en:"one dental implant",ar:"زراعة سن واحدة"}},
-    "hair-transplant":{egypt:"4,500–11,300",intl:"30,000–45,000",label:{en:"one hair transplant session",ar:"جلسة زراعة شعر واحدة"}}
+    "hair-transplant":{egypt:"4,500–11,300",intl:"30,000–45,000",label:{en:"one hair transplant session",ar:"جلسة زراعة شعر واحدة"}},
+    "weight-loss":{egypt:"10,100–16,900",intl:"37,500–94,000",label:{en:"gastric sleeve surgery, full procedure",ar:"جراحة تكميم المعدة كاملة"}},
+    "cosmetic-surgery":{egypt:"8,300–13,900",intl:"19,000–37,500",label:{en:"liposuction / VASER, per set of areas",ar:"شفط الدهون / فيزر لمجموعة مناطق"}}
   };
   var AR=(document.documentElement.lang||"").slice(0,2)==="ar";
   function slug(){return location.pathname.replace(/^\/ar(\/|$)/,"/").replace(/^\/|\/$/g,"");}
