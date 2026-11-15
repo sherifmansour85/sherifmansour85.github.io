@@ -1501,7 +1501,8 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
     "dental":{egypt:"940–2,300",intl:"11,000–19,000",label:{en:"one dental implant",ar:"زراعة سن واحدة"}},
     "hair-transplant":{egypt:"4,500–11,300",intl:"30,000–45,000",label:{en:"one hair transplant session",ar:"جلسة زراعة شعر واحدة"}},
     "weight-loss":{egypt:"10,100–16,900",intl:"37,500–94,000",label:{en:"gastric sleeve surgery, full procedure",ar:"جراحة تكميم المعدة كاملة"}},
-    "cosmetic-surgery":{egypt:"8,300–13,900",intl:"19,000–37,500",label:{en:"liposuction / VASER, per set of areas",ar:"شفط الدهون / فيزر لمجموعة مناطق"}}
+    "cosmetic-surgery":{egypt:"8,300–13,900",intl:"19,000–37,500",label:{en:"liposuction / VASER, per set of areas",ar:"شفط الدهون / فيزر لمجموعة مناطق"}},
+    "orthopedics":{egypt:"26,250",intl:"112,500–187,500",label:{en:"total knee replacement, one knee",ar:"تغيير مفصل ركبة واحدة"}}
   };
   var AR=(document.documentElement.lang||"").slice(0,2)==="ar";
   function slug(){return location.pathname.replace(/^\/ar(\/|$)/,"/").replace(/^\/|\/$/g,"");}
@@ -1528,7 +1529,7 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
     return box;
   }
   var el=null;
-  function anchor(){return document.querySelector(".price-block");}
+  function anchor(){return document.querySelector(".price-block")||document.querySelector(".hkp-table");}
   function place(){
     var cur=document.getElementById("hk-pc");
     var a=anchor();if(!a||!a.parentNode){return;}
