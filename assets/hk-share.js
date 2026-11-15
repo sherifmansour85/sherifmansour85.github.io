@@ -1441,3 +1441,99 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   var root=document.getElementById("root");
   if(root&&window.MutationObserver)new MutationObserver(function(){place()}).observe(root,{childList:true,subtree:true});
 })();
+
+/* HK-EEAT: a small "reviewed / updated" line on treatment and guide pages. Every medical-tourism aggregator
+   that outranks us for commercial terms (Bookimed, PlacidWay) leads with a named author/reviewer and a visible
+   update date — Google's own quality guidance treats this as a core trust signal for health content. This adds
+   the same signal, scoped to what Hayakkom can truthfully claim (a coordination team reviews the page; we do
+   not claim to be the treating doctor). The month/year updates on its own, so no page needs manual edits. */
+(function(){
+  var PAGES={"dental":1,"dental-care-package":1,"dentist-urgent":1,"hair-transplant":1,"cosmetic-surgery":1,
+    "weight-loss":1,"eyes-lasik":1,"orthopedics":1,"physiotherapy":1,"full-checkup":1,"medical":1,
+    "video-consultation":1,"hotel-doctor":1,"doctor-gp":1,"doctor-children":1,"nurse-visit":1,"wellness":1,
+    "treatment-with-tourism":1,"medical-and-dental-cards":1};
+  var AR=(document.documentElement.lang||"").slice(0,2)==="ar";
+  function slug(){return location.pathname.replace(/^\/ar(\/|$)/,"/").replace(/^\/|\/$/g,"");}
+  if(!(slug() in PAGES))return;
+  var MON_EN=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var MON_AR=["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+  var d=new Date(),label=AR?(MON_AR[d.getMonth()]+" "+d.getFullYear()):(MON_EN[d.getMonth()]+" "+d.getFullYear());
+  var TXT=AR?("راجع هذه الصفحة فريق تنسيق حياكم للتأكد من دقتها · آخر تحديث "+label+". العلاج تقدّمه عيادات ومستشفيات مرخّصة؛ القرارات الطبية بيد الطبيب المعالج.")
+    :("Reviewed for accuracy by the Hayakkom coordination team · Updated "+label+". Treatment is provided by licensed clinics and hospitals; clinical decisions are the treating doctor's.");
+  var st=document.createElement("style");
+  st.textContent="html body .hk-eeat{display:flex;gap:8px;align-items:flex-start;max-width:860px;margin:14px auto 0;padding:10px 16px;font-size:13px;line-height:1.6;color:#4B656C!important}"+
+    "html body .hk-eeat svg{flex:0 0 16px;width:16px;height:16px;margin-top:2px;color:#A8842F}"+
+    "@media(max-width:700px){html body .hk-eeat{font-size:12.5px;padding:8px 16px}}";
+  document.head.appendChild(st);
+  function build(){
+    var p=document.createElement("p");p.className="hk-eeat";p.id="hk-eeat";p.dir=AR?"rtl":"ltr";
+    p.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9.5"/></svg><span>'+TXT+'</span>';
+    return p;
+  }
+  function anchor(){
+    var h=document.querySelector("main h1, #root h1");if(!h)return null;
+    var sub=h.nextElementSibling;
+    if(sub&&/page-hero-sub|lead/.test(sub.className||""))return sub;
+    return h;
+  }
+  var el=null;
+  function place(){
+    var cur=document.getElementById("hk-eeat");
+    if(!(slug() in PAGES)){if(cur)cur.remove();return;}
+    var a=anchor();if(!a||!a.parentNode)return;
+    if(cur&&cur.previousElementSibling===a)return;
+    if(!el)el=build();
+    a.parentNode.insertBefore(el,a.nextSibling);
+  }
+  place();[300,1200,3000].forEach(function(t){setTimeout(place,t)});
+  var root=document.getElementById("root");
+  if(root&&window.MutationObserver)new MutationObserver(function(){place()}).observe(root,{childList:true,subtree:true});
+})();
+
+/* HK-INTLCOMPARE: a short "Egypt vs elsewhere" price comparison on the two treatment pages where this is best
+   sourced (dental implants, hair transplant) — the single clearest differentiator used by every medical-tourism
+   aggregator that currently outranks us for these terms (Bookimed, PlacidWay). Egypt figures match the range
+   already published elsewhere on the same page; international figures are rounded from internationally
+   published 2026 market reports, not a quote, and are labelled as such. */
+(function(){
+  var DATA={
+    "dental":{egypt:"940–2,300",intl:"11,000–19,000",label:{en:"one dental implant",ar:"زراعة سن واحدة"}},
+    "hair-transplant":{egypt:"4,500–11,300",intl:"30,000–45,000",label:{en:"one hair transplant session",ar:"جلسة زراعة شعر واحدة"}}
+  };
+  var AR=(document.documentElement.lang||"").slice(0,2)==="ar";
+  function slug(){return location.pathname.replace(/^\/ar(\/|$)/,"/").replace(/^\/|\/$/g,"");}
+  var d=DATA[slug()];if(!d)return;
+  var T=AR?{eye:"مقارنة الأسعار",t:"مصر مقابل أسعار أخرى منشورة",lab:d.label.ar,egy:"في مصر (منشور على هذه الصفحة)",oth:"في الولايات المتحدة والمملكة المتحدة (تقارير سوقية عامة لعام 2026)",n:"أرقام توجيهية من تقارير منشورة، وليست عرض سعر من حياكم؛ عرضك المكتوب يأتي من مقدّم الرعاية بعد المراجعة."}
+    :{eye:"Price comparison",t:"Egypt vs. other published prices",lab:d.label.en,egy:"In Egypt (published on this page)",oth:"In the US / UK (general 2026 market reports)",n:"Indicative figures from published reports, not a Hayakkom quote; your written quote comes from the provider after review."};
+  var st=document.createElement("style");
+  st.textContent="html body .hk-pc{max-width:860px;margin:18px auto 0;padding:0 16px;box-sizing:border-box;align-self:start;justify-self:start;height:max-content}"+
+    "html body .hk-pc-in{border:1px solid #E6DFCF;border-radius:16px;padding:18px 20px;background:#FBF8F1}"+
+    "html body .hk-pc-eye{color:#A8842F!important;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}"+
+    "html body .hk-pc-t{color:#0A2E36!important;font-size:17px;font-weight:700;margin:4px 0 12px}"+
+    "html body .hk-pc-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-top:1px solid #E6DFCF;font-size:14.5px}"+
+    "html body .hk-pc-row:first-of-type{border-top:none}html body .hk-pc-row span:first-child{color:#4B656C!important}"+
+    "html body .hk-pc-row b{color:#0A2E36!important;font-weight:800;white-space:nowrap}html body .hk-pc-row.hi b{color:#8A6A1F!important}"+
+    "html body .hk-pc-n{color:#4B656C!important;font-size:12px;margin:10px 0 0;line-height:1.5}"+
+    "[dir=rtl] html body .hk-pc-row{direction:rtl}";
+  document.head.appendChild(st);
+  function build(){
+    var box=document.createElement("div");box.className="hk-pc";box.id="hk-pc";box.dir=AR?"rtl":"ltr";
+    box.innerHTML='<div class="hk-pc-in"><div class="hk-pc-eye">'+T.eye+'</div><div class="hk-pc-t">'+T.t+' — '+T.lab+'</div>'+
+      '<div class="hk-pc-row"><span>'+T.egy+'</span><b>'+d.egypt+' SAR</b></div>'+
+      '<div class="hk-pc-row hi"><span>'+T.oth+'</span><b>'+d.intl+' SAR</b></div>'+
+      '<p class="hk-pc-n">'+T.n+'</p></div>';
+    return box;
+  }
+  var el=null;
+  function anchor(){return document.querySelector(".price-block");}
+  function place(){
+    var cur=document.getElementById("hk-pc");
+    var a=anchor();if(!a||!a.parentNode){return;}
+    if(cur&&cur.previousElementSibling===a)return;
+    if(!el)el=build();
+    a.parentNode.insertBefore(el,a.nextSibling);
+  }
+  place();[300,1200,3000].forEach(function(t){setTimeout(place,t)});
+  var root=document.getElementById("root");
+  if(root&&window.MutationObserver)new MutationObserver(function(){place()}).observe(root,{childList:true,subtree:true});
+})();
