@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Partners Desk — Hayakkom</title>
+<link rel="icon" href="/favicon.ico">
+<style>
+  :root{
+    --ink:#0A2E36; --sub:#4B656C; --cream:#F7F3EA; --panel:#ffffff; --line:#E3DFD3;
+    --gold:#B8922A; --gold-dark:#8F701D; --teal:#0E7C86;
+    --ok-bg:#E4F3E8; --ok-fg:#1a7a3c; --warn-bg:#FBEBD6; --warn-fg:#a05a00;
+    --crit-bg:#FBE4E1; --crit-fg:#b3261e; --neu-bg:#EFEAE0; --neu-fg:#6f6655;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:Calibri,"Segoe UI",Arial,sans-serif;}
+  .wrap{max-width:1180px;margin:0 auto;padding:26px 5% 60px}
+  header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+  header.top h1{font-family:Georgia,serif;font-size:24px;margin:0;color:var(--ink)}
+  header.top .badge{font-size:11.5px;background:var(--ink);color:#fff;border-radius:999px;padding:4px 12px;white-space:nowrap}
+  .lede{font-size:13px;color:var(--sub);margin:4px 0 22px;max-width:70ch}
+
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .kpi .num{font-family:Georgia,serif;font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
+  .kpi .lbl{font-size:11px;color:var(--sub);margin-top:2px}
+
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
+  .toolbar input[type=search]{flex:1 1 220px;min-width:160px;padding:9px 12px;border-radius:8px;border:1px solid var(--line);font-size:13px}
+  .toolbar select{padding:9px 10px;border-radius:8px;border:1px solid var(--line);font-size:13px;background:#fff;color:var(--ink)}
+  .toolbar label.chk{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--sub);padding:0 4px}
+
+  .count-line{font-size:12px;color:var(--sub);margin:0 0 10px}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px;transition:box-shadow .15s}
+  .card:hover{box-shadow:0 4px 18px rgba(10,46,54,.08)}
+  .card.done{opacity:.55}
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+  .card-top h3{font-family:Georgia,serif;font-size:17px;margin:0;color:var(--ink)}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+  .pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+  .pill.ok{background:var(--ok-bg);color:var(--ok-fg)}
+  .pill.warn{background:var(--warn-bg);color:var(--warn-fg)}
+  .pill.crit{background:var(--crit-bg);color:var(--crit-fg)}
+  .pill.neu{background:var(--neu-bg);color:var(--neu-fg)}
+  .meta-line{font-size:12.5px;color:var(--sub);margin-top:8px}
+  .summary{font-size:13px;color:var(--ink);margin-top:8px;line-height:1.5}
+  .next-action{font-size:12.5px;color:var(--gold-dark);margin-top:6px;font-weight:600}
+  .card-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+  .btn{font-size:12.5px;font-weight:600;border-radius:999px;padding:7px 14px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+  .btn:hover{border-color:var(--gold)}
+  .btn.gold{background:linear-gradient(135deg,#C9A43D,#8F701D);color:#fff;border:none}
+  label.done-toggle{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--sub);cursor:pointer}
+  textarea.notes{width:100%;margin-top:10px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12.5px;font-family:inherit;resize:vertical;min-height:38px;color:var(--ink)}
+  .empty{text-align:center;padding:40px 10px;color:var(--sub);font-size:13px}
+  .reminder-box{margin-top:12px;padding:12px 14px;background:var(--cream);border:1px solid var(--line);border-radius:10px}
+  .reminder-box label{display:block;font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.03em;margin-bottom:5px}
+  .reminder-box input[type=email]{width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--line);font-size:12.5px;margin-bottom:10px}
+  .remind-row{display:flex;align-items:center;gap:8px;font-size:12.5px;margin:6px 0;flex-wrap:wrap}
+  .remind-row label{all:unset;display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--ink)}
+  .remind-cal-link{display:none;font-size:11.5px;font-weight:600;color:var(--teal);text-decoration:none;margin-left:auto}
+  .remind-row.checked .remind-cal-link{display:inline-block}
+
+  .modal-backdrop{position:fixed;inset:0;background:rgba(10,46,54,.5);display:none;align-items:flex-start;justify-content:center;padding:4vh 16px;overflow-y:auto;z-index:50}
+  .modal-backdrop.open{display:flex}
+  .modal{background:#fff;border-radius:16px;max-width:560px;width:100%;padding:22px 24px 24px;margin-top:0;position:relative}
+  .modal h2{font-family:Georgia,serif;font-size:19px;margin:0 0 4px;color:var(--ink)}
+  .modal .sub{font-size:12.5px;color:var(--sub);margin:0 0 16px}
+  .field{margin-bottom:12px}
+  .field label{display:block;font-size:11.5px;font-weight:600;color:var(--sub);margin-bottom:4px;text-transform:uppercase;letter-spacing:.03em}
+  .field input,.field textarea,.field select{width:100%;padding:9px 11px;border-radius:8px;border:1px solid var(--line);font-size:13px;font-family:inherit;color:var(--ink)}
+  .field textarea{min-height:110px;resize:vertical}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .sig-preview{border:1px dashed var(--line);border-radius:10px;padding:12px 14px;background:var(--cream);font-size:12.5px;margin-top:4px}
+  .sig-preview img{height:22px;vertical-align:middle;margin-bottom:6px}
+  .modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .modal-actions .btn{flex:1;text-align:center}
+  .close-x{position:absolute;top:14px;right:16px;background:none;border:none;font-size:20px;color:var(--sub);cursor:pointer}
+  .copy-flash{font-size:12px;color:var(--ok-fg);margin-top:8px;display:none}
+
+  .hk-legal-foot{font-size:11px;color:var(--sub);max-width:70ch;margin:40px auto 0;border-top:1px solid var(--line);padding-top:14px}
+  @media (max-width:640px){ .row2{grid-template-columns:1fr} }
+
+  #pw-gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--cream)}
+  #pw-gate .box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:32px 30px;max-width:360px;width:100%;text-align:center;box-shadow:0 10px 32px rgba(10,46,54,.08)}
+  #pw-gate .box img{height:30px;margin-bottom:18px}
+  #pw-gate h1{font-family:Georgia,serif;font-size:19px;margin:0 0 6px;color:var(--ink)}
+  #pw-gate p.hint{font-size:12.5px;color:var(--sub);margin:0 0 18px}
+  #pw-gate input{width:100%;padding:11px 13px;border-radius:9px;border:1px solid var(--line);font-size:14px;text-align:center;margin-bottom:10px}
+  #pw-gate .err{font-size:12px;color:var(--crit-fg);min-height:16px;margin-bottom:6px}
+  #pw-gate button{width:100%;padding:11px;border-radius:999px;border:none;background:linear-gradient(135deg,#C9A43D,#8F701D);color:#fff;font-weight:600;font-size:13.5px;cursor:pointer}
+</style>
+</head>
+<body>
+<div id="pw-gate">
+  <div class="box">
+    <img src="https://www.hayakkom.com/assets/logo.png" alt="Hayakkom">
+    <h1>Partners Desk</h1>
+    <p class="hint">Enter the password Sherif gave you to continue.</p>
+    <input type="password" id="pw-input" placeholder="Password" autofocus>
+    <p class="err" id="pw-err"></p>
+    <button id="pw-submit">Unlock</button>
+  </div>
+</div>
+<div id="app-content" style="display:none">
+<div class="wrap">
+  <header class="top">
+    <h1>Partners Desk</h1>
+    <span class="badge">Internal — not for public sharing</span>
+  </header>
+  <p class="lede">Every hospital, clinic, agency and tourism company that has contacted Hayakkom, in one searchable place — built for Reham to track, reply to and keep moving.</p>
+
+  <div class="kpis">
+    <div class="kpi"><div class="num" id="kpi-total">—</div><div class="lbl">Total contacts</div></div>
+    <div class="kpi"><div class="num" id="kpi-live">—</div><div class="lbl">Live partners</div></div>
+    <div class="kpi"><div class="num" id="kpi-open">—</div><div class="lbl">Open / not done</div></div>
+    <div class="kpi"><div class="num" id="kpi-shown">—</div><div class="lbl">Matching filters</div></div>
+  </div>
+
+  <div class="toolbar">
+    <input type="search" id="f-search" placeholder="Search by name, hospital, clinic or tourism company…">
+    <select id="f-category"><option value="">All specialities</option></select>
+    <select id="f-country"><option value="">All countries</option></select>
+    <select id="f-status"><option value="">All statuses</option></select>
+    <select id="f-priority"><option value="">All priorities</option></select>
+    <label class="chk"><input type="checkbox" id="f-hide-done"> Hide done</label>
+  </div>
+
+  <p class="count-line" id="count-line"></p>
+  <div id="list"></div>
+
+  <p class="hk-legal-foot">Important: accommodation, hotel bookings, villa and chalet rentals, trips, tours and all transport are provided by registered Egyptian tourism companies. All medical treatment and operations are performed by registered, licensed medical institutions. This applies to every package and offer on this site; Hayakkom coordinates these services and does not provide them itself.</p>
+</div>
+</div>
+
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <button class="close-x" id="modal-close" aria-label="Close">×</button>
+    <h2 id="modal-title">Reply</h2>
+    <p class="sub" id="modal-sub"></p>
+
+    <div class="field"><label>To</label><input type="text" id="m-to"></div>
+    <div class="field"><label>Subject</label><input type="text" id="m-subject"></div>
+    <div class="field"><label>Message</label><textarea id="m-body"></textarea></div>
+
+    <div class="row2">
+      <div class="field"><label>Sign as</label>
+        <select id="m-signer">
+          <option value="reham">Reham Mobasher</option>
+          <option value="sherif">Sherif Mansour</option>
+        </select>
+      </div>
+      <div class="field"><label>Title</label>
+        <select id="m-title"></select>
+      </div>
+    </div>
+
+    <div class="sig-preview" id="sig-preview"></div>
+
+    <div class="modal-actions">
+      <button class="btn gold" id="m-outlook">Open in Outlook</button>
+      <button class="btn" id="m-copy">Copy formatted email</button>
+    </div>
+    <p class="copy-flash" id="copy-flash">Copied — paste into a new Outlook message.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ---- password gate: client-side only. Keeps out casual/accidental visitors and
+  // search engines; a determined person with developer tools could still get past
+  // it, since this is a public static site with no server to check a password
+  // against. Only the SHA-256 hash is stored here, never the plain password. ----
+  var PW_HASH = "33d91e5a8d734267bc816f32c8bebd4e0ef7cf76d6fc7e49edd6b898a061a669";
+  var GATE_KEY = "hk_pd_gate_ok";
+  async function sha256(text){
+    var buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,"0");}).join("");
+  }
+  function unlock(){
+    document.getElementById("pw-gate").style.display = "none";
+    document.getElementById("app-content").style.display = "block";
+  }
+  if(sessionStorage.getItem(GATE_KEY) === "1"){
+    unlock();
+  } else {
+    document.getElementById("pw-submit").addEventListener("click", tryUnlock);
+    document.getElementById("pw-input").addEventListener("keydown", function(e){ if(e.key==="Enter") tryUnlock(); });
+    function tryUnlock(){
+      var val = document.getElementById("pw-input").value;
+      sha256(val).then(function(hash){
+        if(hash === PW_HASH){
+          try{ sessionStorage.setItem(GATE_KEY, "1"); }catch(e){}
+          unlock();
+        } else {
+          document.getElementById("pw-err").textContent = "Incorrect password.";
+        }
+      });
+    }
+  }
+
+  var LOGO = "https://www.hayakkom.com/assets/logo.png";
+  var SITE = "https://www.hayakkom.com";
+  var TITLES = { reham: ["Partnerships Manager","Business Development Manager","Marketing Manager"], sherif: ["Founder"] };
+  var NAMES = { reham: "Reham Mobasher", sherif: "Sherif Mansour" };
+  var STORE_KEY = "hk_partners_desk_v1";
+
+  function loadState(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY)||"{}"); }catch(e){ return {}; } }
+  function saveState(s){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }catch(e){} }
+  var state = loadState();
+
+  function pillClass(kind, val){
+    if(kind==="status") return val==="Live Partner" ? "ok" : val==="Documents Received" ? "warn" : val==="Low Priority" ? "neu" : "crit";
+    return val==="High" ? "crit" : val==="Medium" ? "warn" : val==="Active" ? "ok" : "neu";
+  }
+  function esc(s){ return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
+
+  var REMIND_OPTIONS = [
+    { key:"tomorrow", label:"Follow up tomorrow", days:1 },
+    { key:"3days", label:"Follow up in 3 days", days:3 },
+    { key:"1week", label:"Follow up in 1 week", days:7 },
+    { key:"2weeks", label:"Check documents in 2 weeks", days:14 }
+  ];
+  function ymd(d){ return d.getFullYear() + String(d.getMonth()+1).padStart(2,"0") + String(d.getDate()).padStart(2,"0"); }
+  function calendarLink(row, opt, email){
+    var start = new Date(); start.setDate(start.getDate() + opt.days);
+    var end = new Date(start); end.setDate(end.getDate()+1);
+    var text = "Hayakkom: " + opt.label + " — " + row.name;
+    var details = "Reminder from the Hayakkom Partners Desk.\n\nPartner: " + row.name + "\nCategory: " + row.category + "\nNext action: " + row.next_action;
+    var url = "https://calendar.google.com/calendar/render?action=TEMPLATE"
+      + "&text=" + encodeURIComponent(text)
+      + "&dates=" + ymd(start) + "/" + ymd(end)
+      + "&details=" + encodeURIComponent(details)
+      + (email ? "&add=" + encodeURIComponent(email) : "");
+    return url;
+  }
+  function renderReminderOptions(id){
+    var st = (state[id] && state[id].reminders) || {};
+    return REMIND_OPTIONS.map(function(opt){
+      var checked = !!st[opt.key];
+      return (
+        '<div class="remind-row'+(checked?' checked':'')+'" data-key="'+opt.key+'">'+
+          '<label><input type="checkbox" class="remind-check" '+(checked?'checked':'')+'> '+opt.label+'</label>'+
+          '<a href="#" class="remind-cal-link" target="_blank" rel="noopener">Add to calendar →</a>'+
+        '</div>'
+      );
+    }).join("");
+  }
+
+  var ALL = [];
+  fetch("data.json").then(function(r){ return r.json(); }).then(function(rows){
+    ALL = rows;
+    buildFilterOptions();
+    render();
+  }).catch(function(){
+    document.getElementById("list").innerHTML = '<p class="empty">Could not load data.json. Check it was deployed alongside this page.</p>';
+  });
+
+  function buildFilterOptions(){
+    function fill(id, values){
+      var sel = document.getElementById(id);
+      values.forEach(function(v){ var o=document.createElement("option"); o.value=v; o.textContent=v; sel.appendChild(o); });
+    }
+    fill("f-category", unique(ALL.map(function(r){return r.category})).sort());
+    fill("f-country", unique(ALL.map(function(r){return r.country})).sort());
+    fill("f-status", unique(ALL.map(function(r){return r.status})));
+    fill("f-priority", ["High","Medium","Low","Active"]);
+  }
+  function unique(arr){ var s={}; arr.forEach(function(v){ if(v) s[v]=1; }); return Object.keys(s); }
+
+  ["f-search","f-category","f-country","f-status","f-priority","f-hide-done"].forEach(function(id){
+    document.getElementById(id).addEventListener("input", render);
+    document.getElementById(id).addEventListener("change", render);
+  });
+
+  function render(){
+    var q = document.getElementById("f-search").value.trim().toLowerCase();
+    var cat = document.getElementById("f-category").value;
+    var country = document.getElementById("f-country").value;
+    var status = document.getElementById("f-status").value;
+    var prio = document.getElementById("f-priority").value;
+    var hideDone = document.getElementById("f-hide-done").checked;
+
+    var rows = ALL.filter(function(r){
+      var done = !!(state[r.id] && state[r.id].done);
+      if(hideDone && done) return false;
+      if(cat && r.category!==cat) return false;
+      if(country && r.country!==country) return false;
+      if(status && r.status!==status) return false;
+      if(prio && r.priority!==prio) return false;
+      if(q){
+        var hay = (r.name+" "+r.category+" "+r.country+" "+r.contact+" "+r.email+" "+r.summary).toLowerCase();
+        if(hay.indexOf(q)===-1) return false;
+      }
+      return true;
+    });
+
+    document.getElementById("kpi-total").textContent = ALL.length;
+    document.getElementById("kpi-live").textContent = ALL.filter(function(r){return r.status==="Live Partner"}).length;
+    document.getElementById("kpi-open").textContent = ALL.filter(function(r){return !(state[r.id]&&state[r.id].done)}).length;
+    document.getElementById("kpi-shown").textContent = rows.length;
+    document.getElementById("count-line").textContent = "Showing " + rows.length + " of " + ALL.length + " contacts";
+
+    var list = document.getElementById("list");
+    if(!rows.length){ list.innerHTML = '<p class="empty">No contacts match these filters.</p>'; return; }
+
+    list.innerHTML = rows.map(function(r){
+      var st = state[r.id] || {};
+      var done = !!st.done;
+      var notes = st.notes || "";
+      return (
+        '<div class="card'+(done?' done':'')+'" data-id="'+esc(r.id)+'">'+
+          '<div class="card-top">'+
+            '<div><h3>'+esc(r.name)+'</h3>'+
+            '<div class="tags">'+
+              '<span class="pill '+pillClass("status",r.status)+'">'+esc(r.status)+'</span>'+
+              '<span class="pill '+pillClass("priority",r.priority)+'">'+esc(r.priority)+'</span>'+
+              '<span class="pill neu">'+esc(r.category)+'</span>'+
+              '<span class="pill neu">'+esc(r.country)+'</span>'+
+            '</div></div>'+
+            '<label class="done-toggle"><input type="checkbox" class="done-check" '+(done?'checked':'')+'> Done</label>'+
+          '</div>'+
+          '<p class="summary">'+esc(r.summary)+'</p>'+
+          '<p class="meta-line">'+(r.contact?esc(r.contact)+' · ':'')+(r.email?('<a href="mailto:'+esc(r.email)+'">'+esc(r.email)+'</a>'):'<span>no email on file</span>')+(r.date?(' · '+esc(r.date)):'')+'</p>'+
+          '<p class="next-action">→ '+esc(r.next_action)+'</p>'+
+          '<textarea class="notes" placeholder="Add a note…">'+esc(notes)+'</textarea>'+
+          '<div class="card-actions">'+
+            (r.email ? '<button class="btn gold reply-btn">Reply</button>' : '')+
+            '<button class="btn remind-toggle">Set a reminder</button>'+
+          '</div>'+
+          '<div class="reminder-box" style="display:none">'+
+            '<label>Email for the reminder</label>'+
+            '<input type="email" class="remind-email" placeholder="you@hayakkom.com" value="'+esc(st.remindEmail||"")+'">'+
+            renderReminderOptions(r.id)+
+          '</div>'+
+        '</div>'
+      );
+    }).join("");
+
+    list.querySelectorAll(".card").forEach(function(card){
+      var id = card.getAttribute("data-id");
+      var row = ALL.filter(function(r){return r.id===id})[0];
+      card.querySelector(".done-check").addEventListener("change", function(e){
+        state[id] = state[id] || {};
+        state[id].done = e.target.checked;
+        saveState(state);
+        render();
+      });
+      card.querySelector(".notes").addEventListener("change", function(e){
+        state[id] = state[id] || {};
+        state[id].notes = e.target.value;
+        saveState(state);
+      });
+      var replyBtn = card.querySelector(".reply-btn");
+      if(replyBtn) replyBtn.addEventListener("click", function(){ openModal(row); });
+
+      var remindToggle = card.querySelector(".remind-toggle");
+      var remindBox = card.querySelector(".reminder-box");
+      remindToggle.addEventListener("click", function(){
+        remindBox.style.display = remindBox.style.display==="none" ? "block" : "none";
+      });
+      var emailInput = card.querySelector(".remind-email");
+      function currentEmail(){ return emailInput.value.trim(); }
+      emailInput.addEventListener("change", function(){
+        state[id] = state[id] || {};
+        state[id].remindEmail = currentEmail();
+        saveState(state);
+        refreshLinks();
+      });
+      function refreshLinks(){
+        card.querySelectorAll(".remind-row").forEach(function(rowEl){
+          var key = rowEl.getAttribute("data-key");
+          var opt = REMIND_OPTIONS.filter(function(o){return o.key===key})[0];
+          rowEl.querySelector(".remind-cal-link").href = calendarLink(row, opt, currentEmail());
+        });
+      }
+      refreshLinks();
+      card.querySelectorAll(".remind-check").forEach(function(cb){
+        cb.addEventListener("change", function(){
+          var rowEl = cb.closest(".remind-row");
+          var key = rowEl.getAttribute("data-key");
+          state[id] = state[id] || {};
+          state[id].reminders = state[id].reminders || {};
+          state[id].reminders[key] = cb.checked;
+          saveState(state);
+          rowEl.classList.toggle("checked", cb.checked);
+          refreshLinks();
+        });
+      });
+    });
+  }
+
+  // ---- reply modal ----
+  var modal = document.getElementById("modal");
+  var current = null;
+  function openModal(row){
+    current = row;
+    document.getElementById("modal-title").textContent = "Reply to " + row.name;
+    document.getElementById("modal-sub").textContent = row.category + " · " + row.country;
+    document.getElementById("m-to").value = row.email || "";
+    document.getElementById("m-subject").value = "Re: Partnership with Hayakkom — " + row.name;
+    document.getElementById("m-body").value = "Hi,\n\nThank you for reaching out about " + row.name + ". ";
+    fillTitles();
+    updateSigPreview();
+    modal.classList.add("open");
+  }
+  document.getElementById("modal-close").addEventListener("click", function(){ modal.classList.remove("open"); });
+  modal.addEventListener("click", function(e){ if(e.target===modal) modal.classList.remove("open"); });
+
+  function fillTitles(){
+    var signer = document.getElementById("m-signer").value;
+    var sel = document.getElementById("m-title");
+    sel.innerHTML = "";
+    TITLES[signer].forEach(function(t){ var o=document.createElement("option"); o.value=t; o.textContent=t; sel.appendChild(o); });
+  }
+  document.getElementById("m-signer").addEventListener("change", function(){ fillTitles(); updateSigPreview(); });
+  document.getElementById("m-title").addEventListener("change", updateSigPreview);
+
+  function sigHtml(){
+    var signer = document.getElementById("m-signer").value;
+    var name = NAMES[signer];
+    var title = document.getElementById("m-title").value;
+    return (
+      '<table cellpadding="0" cellspacing="0" style="font-family:Calibri,Arial,sans-serif;font-size:13px;color:#0A2E36">'+
+        '<tr><td><img src="'+LOGO+'" alt="Hayakkom" style="height:26px;display:block;margin-bottom:8px"></td></tr>'+
+        '<tr><td style="font-weight:700;font-size:14px">'+esc(name)+'</td></tr>'+
+        '<tr><td style="color:#8F701D;font-weight:600;font-size:12.5px">'+esc(title)+' — Hayakkom</td></tr>'+
+        '<tr><td style="color:#4B656C;font-size:12px;padding-top:4px">support@hayakkom.com &nbsp;|&nbsp; <a href="'+SITE+'" style="color:#0E7C86;text-decoration:none">www.hayakkom.com</a></td></tr>'+
+      '</table>'
+    );
+  }
+  function sigPlain(){
+    var signer = document.getElementById("m-signer").value;
+    var name = NAMES[signer];
+    var title = document.getElementById("m-title").value;
+    return "—\n"+name+"\n"+title+" — Hayakkom\nsupport@hayakkom.com | www.hayakkom.com";
+  }
+  function updateSigPreview(){
+    document.getElementById("sig-preview").innerHTML = sigHtml();
+  }
+
+  document.getElementById("m-outlook").addEventListener("click", function(){
+    var to = document.getElementById("m-to").value;
+    var subject = document.getElementById("m-subject").value;
+    var body = document.getElementById("m-body").value + "\n\n" + sigPlain();
+    var url = "mailto:"+encodeURIComponent(to)+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
+    window.location.href = url;
+  });
+
+  document.getElementById("m-copy").addEventListener("click", function(){
+    var bodyText = document.getElementById("m-body").value;
+    var html = '<div style="font-family:Calibri,Arial,sans-serif;font-size:14px;color:#0A2E36;white-space:pre-wrap">'+esc(bodyText)+'</div><br>'+sigHtml();
+    var plain = bodyText + "\n\n" + sigPlain();
+    function fallback(){
+      var ta = document.createElement("textarea"); ta.value = plain; document.body.appendChild(ta); ta.select();
+      try{ document.execCommand("copy"); }catch(e){}
+      document.body.removeChild(ta);
+      flash();
+    }
+    if(navigator.clipboard && window.ClipboardItem){
+      try{
+        var item = new ClipboardItem({
+          "text/html": new Blob([html], {type:"text/html"}),
+          "text/plain": new Blob([plain], {type:"text/plain"})
+        });
+        navigator.clipboard.write([item]).then(flash, fallback);
+      }catch(e){ fallback(); }
+    } else { fallback(); }
+  });
+  function flash(){
+    var f = document.getElementById("copy-flash");
+    f.style.display = "block";
+    setTimeout(function(){ f.style.display = "none"; }, 3500);
+  }
+})();
+</script>
+</body>
+</html>
