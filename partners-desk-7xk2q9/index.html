@@ -48,7 +48,7 @@
   .summary{font-size:13px;color:var(--ink);margin-top:8px;line-height:1.5}
   .next-action{font-size:12.5px;color:var(--gold-dark);margin-top:6px;font-weight:600}
   .card-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
-  .btn{font-size:12.5px;font-weight:600;border-radius:999px;padding:7px 14px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+  .btn{display:inline-block;text-decoration:none;font-size:12.5px;font-weight:600;border-radius:999px;padding:7px 14px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
   .btn:hover{border-color:var(--gold)}
   .btn.gold{background:linear-gradient(135deg,#C9A43D,#8F701D);color:#fff;border:none}
   label.done-toggle{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--sub);cursor:pointer}
@@ -304,6 +304,13 @@
       return true;
     });
 
+    rows = rows.map(function(r,i){ return {r:r, i:i}; }).sort(function(a,b){
+      var da = !!(state[a.r.id] && state[a.r.id].done);
+      var db = !!(state[b.r.id] && state[b.r.id].done);
+      if(da!==db) return da ? -1 : 1;
+      return a.i - b.i;
+    }).map(function(x){ return x.r; });
+
     document.getElementById("kpi-total").textContent = ALL.length;
     document.getElementById("kpi-live").textContent = ALL.filter(function(r){return r.status==="Live Partner"}).length;
     document.getElementById("kpi-open").textContent = ALL.filter(function(r){return !(state[r.id]&&state[r.id].done)}).length;
@@ -335,6 +342,7 @@
           '<textarea class="notes" placeholder="Add a note…">'+esc(notes)+'</textarea>'+
           '<div class="card-actions">'+
             (r.email ? '<button class="btn gold reply-btn">Reply</button>' : '')+
+            (r.email_link ? '<a class="btn" target="_blank" rel="noopener" href="'+esc(r.email_link)+'">View full email</a>' : '')+
             '<button class="btn remind-toggle">Set a reminder</button>'+
             '<button class="btn book-toggle">Book a meeting</button>'+
           '</div>'+
