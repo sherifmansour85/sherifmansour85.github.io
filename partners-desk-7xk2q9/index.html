@@ -54,9 +54,10 @@
   label.done-toggle{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--sub);cursor:pointer}
   textarea.notes{width:100%;margin-top:10px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12.5px;font-family:inherit;resize:vertical;min-height:38px;color:var(--ink)}
   .empty{text-align:center;padding:40px 10px;color:var(--sub);font-size:13px}
-  .reminder-box{margin-top:12px;padding:12px 14px;background:var(--cream);border:1px solid var(--line);border-radius:10px}
-  .reminder-box label{display:block;font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.03em;margin-bottom:5px}
-  .reminder-box input[type=email]{width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--line);font-size:12.5px;margin-bottom:10px}
+  .reminder-box,.booking-box{margin-top:12px;padding:12px 14px;background:var(--cream);border:1px solid var(--line);border-radius:10px}
+  .reminder-box label,.booking-box label{display:block;font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.03em;margin-bottom:5px;margin-top:8px}
+  .reminder-box input[type=email],.booking-box input{width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--line);font-size:12.5px;margin-bottom:4px}
+  .booking-box .row2{margin-top:4px}
   .remind-row{display:flex;align-items:center;gap:8px;font-size:12.5px;margin:6px 0;flex-wrap:wrap}
   .remind-row label{all:unset;display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--ink)}
   .remind-cal-link{display:none;font-size:11.5px;font-weight:600;color:var(--teal);text-decoration:none;margin-left:auto}
@@ -168,36 +169,43 @@
 
 <script>
 (function(){
-  // ---- password gate: client-side only. Keeps out casual/accidental visitors and
-  // search engines; a determined person with developer tools could still get past
-  // it, since this is a public static site with no server to check a password
-  // against. Only the SHA-256 hash is stored here, never the plain password. ----
-  var PW_HASH = "33d91e5a8d734267bc816f32c8bebd4e0ef7cf76d6fc7e49edd6b898a061a669";
-  var GATE_KEY = "hk_pd_gate_ok";
-  async function sha256(text){
-    var buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
-    return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,"0");}).join("");
+  // ---- password gate: the data itself is encrypted (AES-GCM, key derived from the
+  // password via PBKDF2). Without the right password there is no decryption key, so
+  // an attacker who finds this page and downloads data.enc.json gets ciphertext, not
+  // a list of contacts — stronger than a boolean "password matches" check on its own.
+  // Still client-side (a public static site has no server to hold the key instead),
+  // so it deters casual/accidental access and offline brute-forcing is the residual
+  // risk, not "view page source and read the data." ----
+  var b64 = function(s){ return Uint8Array.from(atob(s), function(c){return c.charCodeAt(0);}); };
+  async function deriveKey(password, saltB64){
+    var baseKey = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveKey"]);
+    return crypto.subtle.deriveKey(
+      { name:"PBKDF2", salt:b64(saltB64), iterations:200000, hash:"SHA-256" },
+      baseKey, { name:"AES-GCM", length:256 }, false, ["decrypt"]
+    );
   }
   function unlock(){
     document.getElementById("pw-gate").style.display = "none";
     document.getElementById("app-content").style.display = "block";
   }
-  if(sessionStorage.getItem(GATE_KEY) === "1"){
-    unlock();
-  } else {
-    document.getElementById("pw-submit").addEventListener("click", tryUnlock);
-    document.getElementById("pw-input").addEventListener("keydown", function(e){ if(e.key==="Enter") tryUnlock(); });
-    function tryUnlock(){
-      var val = document.getElementById("pw-input").value;
-      sha256(val).then(function(hash){
-        if(hash === PW_HASH){
-          try{ sessionStorage.setItem(GATE_KEY, "1"); }catch(e){}
-          unlock();
-        } else {
-          document.getElementById("pw-err").textContent = "Incorrect password.";
-        }
-      });
-    }
+  var ENCRYPTED = null;
+  fetch("data.enc.json").then(function(r){return r.json();}).then(function(j){ ENCRYPTED = j; });
+  document.getElementById("pw-submit").addEventListener("click", tryUnlock);
+  document.getElementById("pw-input").addEventListener("keydown", function(e){ if(e.key==="Enter") tryUnlock(); });
+  function tryUnlock(){
+    var val = document.getElementById("pw-input").value;
+    if(!ENCRYPTED){ document.getElementById("pw-err").textContent = "Still loading, try again in a second."; return; }
+    deriveKey(val, ENCRYPTED.salt).then(function(key){
+      return crypto.subtle.decrypt({ name:"AES-GCM", iv:b64(ENCRYPTED.iv) }, key, b64(ENCRYPTED.data));
+    }).then(function(plainBuf){
+      var text = new TextDecoder().decode(plainBuf);
+      ALL = JSON.parse(text);
+      buildFilterOptions();
+      render();
+      unlock();
+    }).catch(function(){
+      document.getElementById("pw-err").textContent = "Incorrect password.";
+    });
   }
 
   var LOGO = "https://www.hayakkom.com/assets/logo.png";
@@ -223,16 +231,23 @@
     { key:"2weeks", label:"Check documents in 2 weeks", days:14 }
   ];
   function ymd(d){ return d.getFullYear() + String(d.getMonth()+1).padStart(2,"0") + String(d.getDate()).padStart(2,"0"); }
+  function isoLocal(d){
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0")
+      + "T" + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0") + ":00";
+  }
+  // Outlook Web compose deeplink: lands on *your* Outlook calendar, which is the same
+  // calendar Microsoft Teams shows — this is why it has to be Outlook, not Google Calendar.
   function calendarLink(row, opt, email){
-    var start = new Date(); start.setDate(start.getDate() + opt.days);
-    var end = new Date(start); end.setDate(end.getDate()+1);
-    var text = "Hayakkom: " + opt.label + " — " + row.name;
-    var details = "Reminder from the Hayakkom Partners Desk.\n\nPartner: " + row.name + "\nCategory: " + row.category + "\nNext action: " + row.next_action;
-    var url = "https://calendar.google.com/calendar/render?action=TEMPLATE"
-      + "&text=" + encodeURIComponent(text)
-      + "&dates=" + ymd(start) + "/" + ymd(end)
-      + "&details=" + encodeURIComponent(details)
-      + (email ? "&add=" + encodeURIComponent(email) : "");
+    var start = new Date(); start.setDate(start.getDate() + opt.days); start.setHours(10,0,0,0);
+    var end = new Date(start); end.setHours(end.getHours()+1);
+    var subject = "Hayakkom: " + opt.label + " — " + row.name;
+    var body = "Reminder from the Hayakkom Partners Desk.\n\nPartner: " + row.name + "\nCategory: " + row.category + "\nNext action: " + row.next_action;
+    var url = "https://outlook.office.com/calendar/0/deeplink/compose?path=/calendar/action/compose&rru=addevent"
+      + "&subject=" + encodeURIComponent(subject)
+      + "&startdt=" + encodeURIComponent(isoLocal(start))
+      + "&enddt=" + encodeURIComponent(isoLocal(end))
+      + "&body=" + encodeURIComponent(body)
+      + (email ? "&to=" + encodeURIComponent(email) : "");
     return url;
   }
   function renderReminderOptions(id){
@@ -249,13 +264,6 @@
   }
 
   var ALL = [];
-  fetch("data.json").then(function(r){ return r.json(); }).then(function(rows){
-    ALL = rows;
-    buildFilterOptions();
-    render();
-  }).catch(function(){
-    document.getElementById("list").innerHTML = '<p class="empty">Could not load data.json. Check it was deployed alongside this page.</p>';
-  });
 
   function buildFilterOptions(){
     function fill(id, values){
@@ -328,11 +336,28 @@
           '<div class="card-actions">'+
             (r.email ? '<button class="btn gold reply-btn">Reply</button>' : '')+
             '<button class="btn remind-toggle">Set a reminder</button>'+
+            '<button class="btn book-toggle">Book a meeting</button>'+
           '</div>'+
           '<div class="reminder-box" style="display:none">'+
             '<label>Email for the reminder</label>'+
             '<input type="email" class="remind-email" placeholder="you@hayakkom.com" value="'+esc(st.remindEmail||"")+'">'+
             renderReminderOptions(r.id)+
+          '</div>'+
+          '<div class="booking-box" style="display:none">'+
+            '<label>Who’s joining (comma-separated emails)</label>'+
+            '<input type="text" class="book-emails" placeholder="'+esc(r.email||"partner@example.com")+', reham@hayakkom.com" value="'+esc(st.bookEmails|| (r.email||""))+'">'+
+            '<div class="row2">'+
+              '<div><label>Date</label><input type="date" class="book-date"></div>'+
+              '<div><label>Time</label><input type="time" class="book-time" value="10:00"></div>'+
+            '</div>'+
+            '<label>Subject</label>'+
+            '<input type="text" class="book-subject" value="Call with Hayakkom — '+esc(r.name)+'">'+
+            '<div class="modal-actions" style="margin-top:10px">'+
+              '<button class="btn gold book-open">Open in Outlook</button>'+
+              '<button class="btn book-copy">Copy details to share</button>'+
+            '</div>'+
+            '<p class="note" style="margin-top:8px">Opens a prefilled Outlook invite on your own calendar — Teams shows the same calendar, so it appears there automatically. Toggle “Teams meeting” in Outlook before sending to get a real join link, then use “Copy details” to share it with the partner or customer.</p>'+
+            '<p class="copy-flash book-flash" style="display:none">Copied — paste into WhatsApp or email.</p>'+
           '</div>'+
         '</div>'
       );
@@ -387,6 +412,64 @@
           rowEl.classList.toggle("checked", cb.checked);
           refreshLinks();
         });
+      });
+
+      // ---- booking panel ----
+      var bookToggle = card.querySelector(".book-toggle");
+      var bookBox = card.querySelector(".booking-box");
+      bookToggle.addEventListener("click", function(){
+        bookBox.style.display = bookBox.style.display==="none" ? "block" : "none";
+        var dateInput = card.querySelector(".book-date");
+        if(!dateInput.value){
+          var d = new Date(); d.setDate(d.getDate()+1);
+          dateInput.value = d.toISOString().slice(0,10);
+        }
+      });
+      var bookEmailsInput = card.querySelector(".book-emails");
+      bookEmailsInput.addEventListener("change", function(){
+        state[id] = state[id] || {};
+        state[id].bookEmails = bookEmailsInput.value.trim();
+        saveState(state);
+      });
+      function bookingDetails(){
+        var dateVal = card.querySelector(".book-date").value;
+        var timeVal = card.querySelector(".book-time").value || "10:00";
+        var subject = card.querySelector(".book-subject").value;
+        var emails = bookEmailsInput.value.split(",").map(function(s){return s.trim();}).filter(Boolean);
+        var start = new Date(dateVal + "T" + timeVal + ":00");
+        var end = new Date(start); end.setHours(end.getHours()+1);
+        return { start:start, end:end, subject:subject, emails:emails };
+      }
+      card.querySelector(".book-open").addEventListener("click", function(){
+        var d = bookingDetails();
+        var body = "Booked from the Hayakkom Partners Desk.\n\nPartner: " + row.name + "\nCategory: " + row.category;
+        var url = "https://outlook.office.com/calendar/0/deeplink/compose?path=/calendar/action/compose&rru=addevent"
+          + "&subject=" + encodeURIComponent(d.subject)
+          + "&startdt=" + encodeURIComponent(isoLocal(d.start))
+          + "&enddt=" + encodeURIComponent(isoLocal(d.end))
+          + "&body=" + encodeURIComponent(body)
+          + "&to=" + encodeURIComponent(d.emails.join(";"));
+        window.open(url, "_blank", "noopener");
+      });
+      card.querySelector(".book-copy").addEventListener("click", function(){
+        var d = bookingDetails();
+        var dateStr = d.start.toLocaleDateString(undefined,{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+        var timeStr = d.start.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"});
+        var text = d.subject + "\n" + dateStr + " at " + timeStr + "\nParticipants: " + d.emails.join(", ") +
+          "\n\n(Join link will be added once the Outlook invite with Teams meeting is sent.)";
+        function flashBook(){
+          var f = card.querySelector(".book-flash");
+          f.style.display = "block";
+          setTimeout(function(){ f.style.display = "none"; }, 3500);
+        }
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(text).then(flashBook, flashBook);
+        } else {
+          var ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select();
+          try{ document.execCommand("copy"); }catch(e){}
+          document.body.removeChild(ta);
+          flashBook();
+        }
       });
     });
   }
