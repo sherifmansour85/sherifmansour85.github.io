@@ -15,7 +15,9 @@ ASSET = re.compile(r'\.(css|js|png|jpe?g|svg|webp|ico|json|txt|xml|webmanifest|p
 # Wording the legal notice must keep on every page (see agents.md, "What Hayakkom is not").
 LEGAL = {'en': 'registered Egyptian tourism companies', 'ar': 'شركات سياحة'}
 # Single-language landing pages for other markets: no Arabic twin expected.
-MARKETS = ('/ru/', '/uk/')
+# /partners-desk-7xk2q9/ is an unlisted internal staff tool (noindex, no nav link, no sitemap/llms
+# entry) — English-only by design, so it is exempt from the Arabic-twin rule for the same reason.
+MARKETS = ('/ru/', '/uk/', '/partners-desk-7xk2q9/')
 
 
 def load_pages():
