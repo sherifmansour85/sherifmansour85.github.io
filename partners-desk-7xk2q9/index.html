@@ -57,10 +57,14 @@
   label.done-toggle{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--sub);cursor:pointer}
   textarea.notes{width:100%;margin-top:10px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12.5px;font-family:inherit;resize:vertical;min-height:38px;color:var(--ink)}
   .empty{text-align:center;padding:40px 10px;color:var(--sub);font-size:13px}
-  .reminder-box,.booking-box{margin-top:12px;padding:12px 14px;background:var(--cream);border:1px solid var(--line);border-radius:10px}
-  .reminder-box label,.booking-box label{display:block;font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.03em;margin-bottom:5px;margin-top:8px}
-  .reminder-box input[type=email],.booking-box input{width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--line);font-size:12.5px;margin-bottom:4px}
-  .booking-box .row2{margin-top:4px}
+  .reminder-box,.booking-box,.contact-box{margin-top:12px;padding:12px 14px;background:var(--cream);border:1px solid var(--line);border-radius:10px}
+  .reminder-box label,.booking-box label,.contact-box label{display:block;font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.03em;margin-bottom:5px;margin-top:8px}
+  .reminder-box input[type=email],.booking-box input,.contact-box input{width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--line);font-size:12.5px;margin-bottom:4px}
+  .booking-box .row2,.contact-box .row2{margin-top:4px}
+  .extra-contacts{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+  .contact-chip{display:inline-flex;align-items:center;gap:6px;background:var(--cream);border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-size:12px;color:var(--ink)}
+  .chip-remove{border:none;background:none;cursor:pointer;color:var(--sub);font-size:14px;line-height:1;padding:0 2px}
+  .chip-remove:hover{color:#A33}
   .remind-row{display:flex;align-items:center;gap:8px;font-size:12.5px;margin:6px 0;flex-wrap:wrap}
   .remind-row label{all:unset;display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--ink)}
   .remind-cal-link{display:none;font-size:11.5px;font-weight:600;color:var(--teal);text-decoration:none;margin-left:auto}
@@ -354,7 +358,9 @@
       if(status && r.status!==status) return false;
       if(prio && r.priority!==prio) return false;
       if(q){
-        var hay = (r.name+" "+r.category+" "+r.country+" "+r.contact+" "+r.email+" "+r.summary).toLowerCase();
+        var extra = (state[r.id] && state[r.id].extraContacts) || [];
+        var extraText = extra.map(function(c){ return (c.name||"")+" "+(c.email||"")+" "+(c.phone||""); }).join(" ");
+        var hay = (r.name+" "+r.category+" "+r.country+" "+r.contact+" "+r.email+" "+r.summary+" "+extraText).toLowerCase();
         if(hay.indexOf(q)===-1) return false;
       }
       return true;
@@ -383,6 +389,7 @@
       var deleted = !!st.deleted;
       var notes = st.notes || "";
       var atts = r.attachments || [];
+      var extraContacts = st.extraContacts || [];
       return (
         '<div class="card'+(done?' done':'')+(deleted?' deleted':'')+'" data-id="'+esc(r.id)+'">'+
           '<div class="card-top">'+
@@ -400,13 +407,32 @@
           '<p class="meta-line">'+(r.contact?esc(r.contact)+' · ':'')+(r.email?('<a href="mailto:'+esc(r.email)+'">'+esc(r.email)+'</a>'):'<span>no email on file</span>')+(r.date?(' · '+esc(r.date)):'')+'</p>'+
           '<p class="next-action">→ '+esc(r.next_action)+'</p>'+
           (atts.length ? '<p class="meta-line">📎 '+atts.length+' attachment'+(atts.length>1?'s':'')+': '+atts.map(esc).join(", ")+(r.email_link ? ' — open "View full email" below to download the originals' : '')+'</p>' : '')+
+          (extraContacts.length ? '<div class="extra-contacts">'+extraContacts.map(function(c,i){
+            return '<span class="contact-chip" data-i="'+i+'">'+esc(c.name||"(no name)")+
+              (c.role? ' — '+esc(c.role):'')+
+              (c.email? ' · <a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a>':'')+
+              (c.phone? ' · '+esc(c.phone):'')+
+              ' <button type="button" class="chip-remove" data-i="'+i+'" aria-label="Remove contact">×</button></span>';
+          }).join("")+'</div>' : '')+
           '<textarea class="notes" placeholder="Add a note…">'+esc(notes)+'</textarea>'+
           '<div class="card-actions">'+
             (r.email ? '<button class="btn gold reply-btn">Reply</button>' : '')+
             (r.email_link ? '<a class="btn" target="_blank" rel="noopener" href="'+esc(r.email_link)+'">View full email</a>' : '')+
             '<button class="btn remind-toggle">Set a reminder</button>'+
             '<button class="btn book-toggle">Book a meeting</button>'+
+            '<button class="btn contact-toggle">+ Add contact</button>'+
             (deleted ? '<button class="btn restore-btn">Restore</button>' : '<button class="btn delete-btn">Delete</button>')+
+          '</div>'+
+          '<div class="contact-box" style="display:none">'+
+            '<div class="row2">'+
+              '<div><label>Name</label><input type="text" class="c-name"></div>'+
+              '<div><label>Role (optional)</label><input type="text" class="c-role" placeholder="e.g. new sales rep"></div>'+
+            '</div>'+
+            '<div class="row2">'+
+              '<div><label>Email</label><input type="email" class="c-email"></div>'+
+              '<div><label>Phone</label><input type="text" class="c-phone"></div>'+
+            '</div>'+
+            '<div class="modal-actions" style="margin-top:10px"><button class="btn gold contact-save">Add contact</button></div>'+
           '</div>'+
           '<div class="reminder-box" style="display:none">'+
             '<label>Email for the reminder</label>'+
@@ -556,6 +582,35 @@
           document.body.removeChild(ta);
           flashBook();
         }
+      });
+
+      // ---- extra contacts ----
+      var contactToggle = card.querySelector(".contact-toggle");
+      var contactBox = card.querySelector(".contact-box");
+      contactToggle.addEventListener("click", function(){
+        contactBox.style.display = contactBox.style.display==="none" ? "block" : "none";
+      });
+      card.querySelector(".contact-save").addEventListener("click", function(){
+        var name = card.querySelector(".c-name").value.trim();
+        if(!name){ card.querySelector(".c-name").focus(); return; }
+        state[id] = state[id] || {};
+        state[id].extraContacts = state[id].extraContacts || [];
+        state[id].extraContacts.push({
+          name: name,
+          role: card.querySelector(".c-role").value.trim(),
+          email: card.querySelector(".c-email").value.trim(),
+          phone: card.querySelector(".c-phone").value.trim()
+        });
+        saveState(state);
+        render();
+      });
+      card.querySelectorAll(".chip-remove").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var i = parseInt(btn.getAttribute("data-i"), 10);
+          state[id].extraContacts.splice(i, 1);
+          saveState(state);
+          render();
+        });
       });
     });
   }
