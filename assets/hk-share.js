@@ -1587,31 +1587,95 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   if(root&&window.MutationObserver)new MutationObserver(function(){place()}).observe(root,{childList:true,subtree:true});
 })();
 
-/* HK-KUNOOZ-BADGE: a floating "treasures" badge on every page, linking to the Kunooz journey.
-   Appended to document.body (outside #root), so it survives React re-rendering on English pages
-   untouched, like the existing floating AI/WhatsApp buttons it sits apart from. */
+/* HK-KUNOOZ-BADGE: a floating "treasures" badge, linking to the Kunooz journey. Behaviour, not just
+   placement: hidden until the visitor shows intent (scrolled, or stayed a while); once shown it settles
+   to a small dot and only pulses open now and then, instead of sitting in full all the time; and it
+   checks its own position against forms and primary buttons, shrinking to nothing and returning once
+   clear, so it can never sit on top of something the visitor needs to tap. Lives outside #root, so
+   React's re-render on English pages never wipes it. */
 (function(){
   if(document.getElementById("hk-kunooz-badge"))return;
   var AR=(document.documentElement.lang||"").slice(0,2)==="ar";
   function slug(){return location.pathname.replace(/^\/ar(\/|$)/,"/").replace(/^\/|\/$/g,"");}
   if(slug()==="kunooz")return;
-  var side=AR?"left":"right",radius=AR?"0 16px 16px 0":"16px 0 0 16px";
+  var side=AR?"left":"right",radius=AR?"0 999px 999px 0":"999px 0 0 999px";
   var css=document.createElement("style");
   css.textContent=
-    "#hk-kunooz-badge{position:fixed;top:44%;"+side+":0;transform:translateY(-50%);z-index:900;"+
-    "display:flex;align-items:center;gap:7px;background:linear-gradient(135deg,#C9A43D,#8F701D);color:#fff;"+
-    "text-decoration:none!important;padding:10px 14px;border-radius:"+radius+";"+
-    "box-shadow:0 6px 18px rgba(10,46,54,.3);font:600 13.5px/1.2 Georgia,serif;white-space:nowrap;transition:padding .2s}"+
-    "#hk-kunooz-badge:hover{padding-"+side+":18px}"+
-    "#hk-kunooz-badge span.hk-kz-ic{font-size:19px;display:inline-block;animation:hkKzJump 2.8s ease-in-out infinite}"+
-    "@keyframes hkKzJump{0%,55%,100%{transform:translateY(0) rotate(0)}8%{transform:translateY(-7px) rotate(-10deg)}16%{transform:translateY(0) rotate(8deg)}24%{transform:translateY(-3px) rotate(-5deg)}32%{transform:translateY(0) rotate(0)}}"+
-    "@media (max-width:600px){#hk-kunooz-badge{padding:8px 11px;font-size:12px}#hk-kunooz-badge span.hk-kz-ic{font-size:16px}}"+
-    "@media (prefers-reduced-motion:reduce){#hk-kunooz-badge span.hk-kz-ic{animation:none}}";
+    "#hk-kunooz-badge{position:fixed;top:44%;"+side+":0;transform:translateY(-50%) scale(.001);transform-origin:center "+side+";z-index:900;"+
+    "display:flex;align-items:center;gap:0;overflow:hidden;background:linear-gradient(135deg,#C9A43D,#8F701D);color:#fff;"+
+    "text-decoration:none!important;width:40px;height:40px;padding:0;border-radius:50%;justify-content:center;"+
+    "box-shadow:0 6px 18px rgba(10,46,54,.3);font:600 13.5px/1.2 Georgia,serif;white-space:nowrap;opacity:0;pointer-events:none;"+
+    "transition:transform .45s cubic-bezier(.34,1.56,.64,1),opacity .35s,width .35s,padding .35s,border-radius .35s}"+
+    "#hk-kunooz-badge.hk-kz-on{opacity:1;pointer-events:auto;transform:translateY(-50%) scale(1)}"+
+    "#hk-kunooz-badge.hk-kz-wide{width:auto;padding:10px 16px;border-radius:"+radius+"}"+
+    "#hk-kunooz-badge.hk-kz-hide{opacity:0!important;pointer-events:none!important;transform:translateY(-50%) scale(.001)!important}"+
+    "#hk-kunooz-badge span.hk-kz-ic{font-size:18px;display:inline-block;flex:none}"+
+    "#hk-kunooz-badge.hk-kz-wide span.hk-kz-ic{animation:hkKzJump 2.8s ease-in-out infinite}"+
+    "#hk-kunooz-badge span.hk-kz-txt{max-width:0;opacity:0;overflow:hidden;transition:max-width .35s,opacity .25s}"+
+    "#hk-kunooz-badge.hk-kz-wide span.hk-kz-txt{max-width:80px;opacity:1;margin-"+(AR?"right":"left")+":7px}"+
+    "@keyframes hkKzJump{0%,55%,100%{transform:translateY(0) rotate(0)}8%{transform:translateY(-6px) rotate(-10deg)}16%{transform:translateY(0) rotate(8deg)}24%{transform:translateY(-3px) rotate(-5deg)}32%{transform:translateY(0) rotate(0)}}"+
+    "@media (max-width:600px){#hk-kunooz-badge{width:36px;height:36px}#hk-kunooz-badge.hk-kz-wide{padding:8px 13px}}"+
+    "@media (prefers-reduced-motion:reduce){#hk-kunooz-badge,#hk-kunooz-badge *{transition-duration:.01s!important;animation:none!important}}";
   document.head.appendChild(css);
+
   var a=document.createElement("a");
   a.id="hk-kunooz-badge";
   a.href=AR?"/ar/kunooz/":"/kunooz/";
-  a.innerHTML='<span class="hk-kz-ic" aria-hidden="true">💎</span><span>'+(AR?"كنوز":"Kunooz")+"</span>";
-  function add(){if(document.body&&!document.getElementById("hk-kunooz-badge"))document.body.appendChild(a);}
-  add();[300,1500].forEach(function(t){setTimeout(add,t)});
+  a.tabIndex=-1;a.setAttribute("aria-hidden","true");
+  a.innerHTML='<span class="hk-kz-ic" aria-hidden="true">💎</span><span class="hk-kz-txt">'+(AR?"كنوز":"Kunooz")+"</span>";
+  function mount(){if(document.body&&!document.getElementById("hk-kunooz-badge"))document.body.appendChild(a);}
+  mount();[300,1500].forEach(function(t){setTimeout(mount,t)});
+
+  var revealed=false,colliding=false,wide=false,hoverLock=false,pulseTimer=null;
+  function setClasses(){
+    var on=revealed&&!colliding;
+    a.classList.toggle("hk-kz-on",on);
+    a.classList.toggle("hk-kz-wide",wide&&!colliding);
+    a.classList.toggle("hk-kz-hide",colliding);
+    a.tabIndex=on?0:-1;
+    if(on)a.removeAttribute("aria-hidden");else a.setAttribute("aria-hidden","true");
+  }
+  function pulse(ms){
+    if(colliding)return;
+    wide=true;setClasses();
+    clearTimeout(pulseTimer);
+    pulseTimer=setTimeout(function(){if(!hoverLock){wide=false;setClasses()}},ms||4200);
+  }
+  function reveal(){if(revealed)return;revealed=true;setClasses();pulse()}
+  a.addEventListener("mouseenter",function(){hoverLock=true;wide=true;setClasses()});
+  a.addEventListener("mouseleave",function(){hoverLock=false;pulse(2200)});
+
+  /* Behavioural trigger: only once the visitor has scrolled a screen's worth, or stayed 9s —
+     a genuine engagement signal, not an interruption on arrival. */
+  setTimeout(reveal,9000);
+  function onScroll(){
+    if((window.scrollY||document.documentElement.scrollTop||0)>480){reveal();window.removeEventListener("scroll",onScroll)}
+  }
+  window.addEventListener("scroll",onScroll,{passive:true});
+  /* A gentle, occasional reminder — not a constant presence. */
+  setInterval(function(){if(revealed&&!wide&&!colliding)pulse(4200)},42000);
+
+  /* Collision guard: never sit over a form, an enquiry box, or a primary button. */
+  var PROTECT='.jf-wrap,iframe[src*="jotform"],iframe[src*="jotfor.ms"],form,.enquiry-box,.btn-gold,.btn-outline,.pkg-btn,.fab,.hkr,.to-top,#hk-mini-calc,.hk-partner-btn,#hk-pm-cta';
+  function overlap(r1,r2){return !(r2.left>r1.right||r2.right<r1.left||r2.top>r1.bottom||r2.bottom<r1.top)}
+  function checkCollision(){
+    if(!revealed)return;
+    var r=a.getBoundingClientRect();if(!r.width){if(colliding){colliding=false;setClasses()}return}
+    var vh=window.innerHeight||document.documentElement.clientHeight,els=document.querySelectorAll(PROTECT),hit=false,i,er;
+    for(i=0;i<els.length;i++){
+      er=els[i].getBoundingClientRect();
+      if(er.bottom<0||er.top>vh)continue;
+      if(overlap(r,er)){hit=true;break}
+    }
+    if(hit!==colliding){colliding=hit;setClasses()}
+  }
+  var raf=null;
+  function queueCheck(){if(raf)return;raf=requestAnimationFrame(function(){raf=null;checkCollision()})}
+  window.addEventListener("scroll",queueCheck,{passive:true});
+  window.addEventListener("resize",queueCheck);
+  if(window.MutationObserver){
+    var root=document.getElementById("root");
+    if(root)new MutationObserver(queueCheck).observe(root,{childList:true,subtree:true,attributes:true});
+  }
+  setInterval(queueCheck,1500);
 })();
