@@ -1544,3 +1544,45 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   var root=document.getElementById("root");
   if(root&&window.MutationObserver)new MutationObserver(function(){place()}).observe(root,{childList:true,subtree:true});
 })();
+
+/* HK-PARTNERS-CTA: an elegant "Visit our Partners page" link after the partner-logo
+   marquee, on every page that shows it (home, Saudi Arabia hub + its 3 city pages).
+   Skipped on /partners/ itself, where it would be circular. The marquee sits inside
+   #root on English pages (wiped on every React re-render) but is static markup on
+   Arabic pages (no React bundle there) — a JS injector that re-places itself on every
+   mutation is the one approach that works correctly on both. */
+(function(){
+  var AR=(document.documentElement.lang||"").slice(0,2)==="ar";
+  function slug(){return location.pathname.replace(/^\/ar(\/|$)/,"/").replace(/^\/|\/$/g,"");}
+  if(slug()==="partners")return;
+  function build(){
+    var a=document.createElement("a");
+    a.id="hk-pm-cta";a.className="btn-outline";
+    a.href=AR?"/ar/partners/":"/partners/";
+    a.style.cssText="display:inline-flex;align-items:center;gap:9px;border-radius:999px;margin:0 auto;width:max-content";
+    var span=document.createElement("span");
+    span.setAttribute("aria-hidden","true");
+    span.style.transition="transform .2s";
+    span.textContent=AR?"←":"→";
+    a.textContent=(AR?"زيارة صفحة شركائنا":"Visit our Partners page")+" ";
+    a.appendChild(span);
+    a.addEventListener("mouseenter",function(){span.style.transform=AR?"translateX(-4px)":"translateX(4px)"});
+    a.addEventListener("mouseleave",function(){span.style.transform=""});
+    var wrap=document.createElement("div");
+    wrap.style.cssText="text-align:center;margin-top:22px";
+    wrap.appendChild(a);
+    return wrap;
+  }
+  var el=null;
+  function place(){
+    var note=document.querySelector(".pm-note");
+    if(!note||!note.parentNode)return;
+    var cur=document.getElementById("hk-pm-cta");
+    if(cur&&cur.parentNode&&cur.parentNode.previousElementSibling===note)return;
+    if(!el)el=build();
+    note.parentNode.insertBefore(el,note.nextSibling);
+  }
+  place();[300,1200,3000].forEach(function(t){setTimeout(place,t)});
+  var root=document.getElementById("root");
+  if(root&&window.MutationObserver)new MutationObserver(function(){place()}).observe(root,{childList:true,subtree:true});
+})();
