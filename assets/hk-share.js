@@ -1586,3 +1586,32 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   var root=document.getElementById("root");
   if(root&&window.MutationObserver)new MutationObserver(function(){place()}).observe(root,{childList:true,subtree:true});
 })();
+
+/* HK-KUNOOZ-BADGE: a floating "treasures" badge on every page, linking to the Kunooz journey.
+   Appended to document.body (outside #root), so it survives React re-rendering on English pages
+   untouched, like the existing floating AI/WhatsApp buttons it sits apart from. */
+(function(){
+  if(document.getElementById("hk-kunooz-badge"))return;
+  var AR=(document.documentElement.lang||"").slice(0,2)==="ar";
+  function slug(){return location.pathname.replace(/^\/ar(\/|$)/,"/").replace(/^\/|\/$/g,"");}
+  if(slug()==="kunooz")return;
+  var side=AR?"left":"right",radius=AR?"0 16px 16px 0":"16px 0 0 16px";
+  var css=document.createElement("style");
+  css.textContent=
+    "#hk-kunooz-badge{position:fixed;top:44%;"+side+":0;transform:translateY(-50%);z-index:900;"+
+    "display:flex;align-items:center;gap:7px;background:linear-gradient(135deg,#C9A43D,#8F701D);color:#fff;"+
+    "text-decoration:none!important;padding:10px 14px;border-radius:"+radius+";"+
+    "box-shadow:0 6px 18px rgba(10,46,54,.3);font:600 13.5px/1.2 Georgia,serif;white-space:nowrap;transition:padding .2s}"+
+    "#hk-kunooz-badge:hover{padding-"+side+":18px}"+
+    "#hk-kunooz-badge span.hk-kz-ic{font-size:19px;display:inline-block;animation:hkKzJump 2.8s ease-in-out infinite}"+
+    "@keyframes hkKzJump{0%,55%,100%{transform:translateY(0) rotate(0)}8%{transform:translateY(-7px) rotate(-10deg)}16%{transform:translateY(0) rotate(8deg)}24%{transform:translateY(-3px) rotate(-5deg)}32%{transform:translateY(0) rotate(0)}}"+
+    "@media (max-width:600px){#hk-kunooz-badge{padding:8px 11px;font-size:12px}#hk-kunooz-badge span.hk-kz-ic{font-size:16px}}"+
+    "@media (prefers-reduced-motion:reduce){#hk-kunooz-badge span.hk-kz-ic{animation:none}}";
+  document.head.appendChild(css);
+  var a=document.createElement("a");
+  a.id="hk-kunooz-badge";
+  a.href=AR?"/ar/kunooz/":"/kunooz/";
+  a.innerHTML='<span class="hk-kz-ic" aria-hidden="true">💎</span><span>'+(AR?"كنوز":"Kunooz")+"</span>";
+  function add(){if(document.body&&!document.getElementById("hk-kunooz-badge"))document.body.appendChild(a);}
+  add();[300,1500].forEach(function(t){setTimeout(add,t)});
+})();
