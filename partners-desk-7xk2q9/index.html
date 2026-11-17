@@ -1797,7 +1797,7 @@
     document.getElementById("info-title").textContent = row.name;
     var extra = row.extraContacts || [];
     var rows = [];
-    if(kind==="partner" && row.contact) rows.push(["Contact person", row.contact]);
+    if(kind==="partner" && row.contact) rows.push(["Contact person", esc(row.contact)]);
     if(row.email) rows.push(["Email", '<a href="mailto:'+esc(row.email)+'">'+esc(row.email)+'</a>']);
     if(row.phone) rows.push(["Phone / WhatsApp", esc(row.phone)]);
     if(kind==="partner"){
