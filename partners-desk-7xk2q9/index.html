@@ -53,7 +53,17 @@
   .flag-opt:hover{background:var(--cream)}
   .archive-btn{color:#A33;border-color:#E9C3C3}
   .archive-btn:hover{border-color:#A33}
-  .view-toggle{display:flex;gap:8px;margin-bottom:18px}
+  .view-toggle{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+  .recip-row{display:flex;align-items:center;gap:10px;padding:9px 4px;border-top:1px solid var(--line);font-size:13px}
+  .recip-row:first-child{border-top:none}
+  .recip-row .r-email{color:var(--sub);font-size:12px}
+  .out-item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:8px;font-size:13px}
+  .out-item.sent{opacity:.5}
+  .form-group{margin-bottom:22px}
+  .form-group h3{font-family:Georgia,serif;font-size:16px;margin:0 0 8px;color:var(--ink)}
+  .form-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:8px}
+  .form-row .f-name{font-weight:600;font-size:13px;flex:1 1 220px}
+  .copy-btn{font-size:12px}
   .upcoming-panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:18px}
   .upcoming-head{display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:14px;margin-bottom:8px}
   .upcoming-toggle{font-size:11.5px;border:none;background:none;color:var(--sub);cursor:pointer;text-decoration:underline}
@@ -164,6 +174,8 @@
   <div class="view-toggle">
     <button class="view-btn active" id="view-btn-partners" type="button">🤝 Partners</button>
     <button class="view-btn" id="view-btn-customers" type="button">🧳 Customers</button>
+    <button class="view-btn" id="view-btn-announce" type="button">📢 Announce</button>
+    <button class="view-btn" id="view-btn-forms" type="button">📄 Forms</button>
     <button class="btn gold" id="new-email-btn" type="button" style="margin-inline-start:auto">✉️ New email</button>
   </div>
 
@@ -214,6 +226,48 @@
 
   <p class="count-line" id="count-line-cust"></p>
   <div id="list-customers"></div>
+  </div>
+
+  <div id="view-announce" style="display:none">
+    <p class="lede" style="margin-top:0">Send an announcement to past customers. Pick a template or write your own, choose who gets it, then open the email(s) in Outlook — nothing sends automatically.</p>
+    <div class="toolbar" style="flex-direction:column;align-items:stretch">
+      <div class="row2">
+        <div class="field" style="margin-bottom:0"><label>Template</label>
+          <select id="an-template">
+            <option value="custom">— Write my own —</option>
+            <option value="intro_en">Introduction / Welcome back (English)</option>
+            <option value="intro_ar">تعارف / أهلاً بعودتكم (Arabic)</option>
+            <option value="followup_en">Follow-up / New offer (English)</option>
+            <option value="followup_ar">تواصل / عرض جديد (Arabic)</option>
+          </select>
+        </div>
+        <div class="field" style="margin-bottom:0"><label>Send as</label>
+          <select id="an-mode">
+            <option value="individual">Separate email to each person (personalized)</option>
+            <option value="bcc">One email to everyone at once (BCC — they won't see each other)</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>Subject</label><input type="text" id="an-subject"></div>
+      <div class="field"><label>Message — use <code>{{name}}</code> where you want their name inserted</label><textarea id="an-body" style="min-height:140px"></textarea></div>
+    </div>
+
+    <div class="toolbar">
+      <input type="search" id="an-search" placeholder="Search recipients by name or email…">
+      <label class="chk"><input type="checkbox" id="an-select-all"> Select all shown</label>
+      <span class="count-line" id="an-count" style="margin:0 0 0 auto"></span>
+    </div>
+    <div id="an-recipients" style="margin-bottom:14px"></div>
+
+    <div class="modal-actions" style="margin:0 0 16px">
+      <button class="btn gold" id="an-generate" type="button">Generate email(s)</button>
+    </div>
+    <div id="an-output"></div>
+  </div>
+
+  <div id="view-forms" style="display:none">
+    <p class="lede" style="margin-top:0">Every live Hayakkom enquiry form, Arabic and English — copy a link and send it straight to a customer.</p>
+    <div id="forms-list"></div>
   </div>
 
   <p class="hk-legal-foot">Important: accommodation, hotel bookings, villa and chalet rentals, trips, tours and all transport are provided by registered Egyptian tourism companies. All medical treatment and operations are performed by registered, licensed medical institutions. This applies to every package and offer on this site; Hayakkom coordinates these services and does not provide them itself.</p>
@@ -423,6 +477,140 @@
   ];
   document.addEventListener("click", function(){ document.querySelectorAll(".flag-picker.open").forEach(function(p){ p.classList.remove("open"); }); });
 
+  // ---- bulk announcement ----
+  var announceRendered = false;
+  var ANNOUNCE_TEMPLATES = {
+    intro_en: {
+      subject: "Hello from Hayakkom — here for your next trip to Egypt",
+      body: "Hi {{name}},\n\nThank you for reaching out to Hayakkom before. I wanted to personally check in and let you know we're still here whenever you're planning a trip, treatment or stay in Egypt.\n\nIf anything has changed on your side — a new date in mind, a different treatment, or just questions — just reply to this email or message us on WhatsApp and we'll put together an updated, no-obligation quote for you.\n\nLooking forward to hearing from you."
+    },
+    intro_ar: {
+      subject: "تحية من حياكم — جاهزون لرحلتكم القادمة إلى مصر",
+      body: "أهلاً {{name}},\n\nشكراً لتواصلكم مع حياكم سابقاً. أحببت أن أتواصل معكم شخصياً وأؤكد أننا هنا دائماً عند التخطيط لرحلة أو علاج أو إقامة في مصر.\n\nإذا تغيّر أي شيء من جانبكم — موعد جديد، علاج مختلف، أو أي استفسار — فقط ردوا على هذا البريد أو تواصلوا معنا على واتساب وسنجهز لكم عرض سعر محدّث بلا أي التزام.\n\nفي انتظار تواصلكم."
+    },
+    followup_en: {
+      subject: "A quick update from Hayakkom",
+      body: "Hi {{name}},\n\nIt's been a little while since we last spoke, and I wanted to share a quick update in case your plans have moved forward.\n\nWe've recently added new packages and seasonal offers that might fit what you were originally asking about. If you'd like a fresh, written quote — no obligation — just reply here or message us on WhatsApp and we'll take it from there.\n\nWarm regards."
+    },
+    followup_ar: {
+      subject: "آخر التحديثات من حياكم",
+      body: "أهلاً {{name}},\n\nمرّ بعض الوقت منذ تواصلنا الأخير، وأحببت مشاركتكم بتحديث سريع في حال تقدّمت خططكم.\n\nأضفنا مؤخراً باقات وعروضاً موسمية جديدة قد تناسب ما كنتم تسألون عنه. إذا أردتم عرض سعر محدّث وكتابي بلا أي التزام، فقط ردّوا على هذا البريد أو تواصلوا معنا على واتساب وسنكمل من هناك.\n\nمع أطيب التحيات."
+    }
+  };
+  document.getElementById("an-template").addEventListener("change", function(){
+    var t = ANNOUNCE_TEMPLATES[this.value];
+    document.getElementById("an-subject").value = t ? t.subject : "";
+    document.getElementById("an-body").value = t ? t.body : "";
+  });
+
+  function custRecipients(){
+    return ALL_CUST.filter(function(r){
+      var st = state[r.id] || {};
+      var archived = (st.deleted!=null) ? st.deleted : !!r.archived_default;
+      if(archived) return false;
+      var email = (st.email!=null ? st.email : r.email);
+      return !!email;
+    }).map(function(r){
+      var st = state[r.id] || {};
+      return { id: r.id, name: st.name||r.name, email: (st.email!=null?st.email:r.email) };
+    });
+  }
+
+  function renderAnnounceRecipients(){
+    var q = document.getElementById("an-search").value.trim().toLowerCase();
+    var recips = custRecipients().filter(function(r){
+      if(!q) return true;
+      return (r.name+" "+r.email).toLowerCase().indexOf(q)!==-1;
+    });
+    document.getElementById("an-count").textContent = recips.length + " with an email on file";
+    var box = document.getElementById("an-recipients");
+    if(!recips.length){ box.innerHTML = '<p class="empty">No customers with an email match this search.</p>'; return; }
+    box.innerHTML = recips.map(function(r){
+      return '<label class="recip-row"><input type="checkbox" class="an-check" value="'+esc(r.id)+'"> '+esc(r.name)+' <span class="r-email">'+esc(r.email)+'</span></label>';
+    }).join("");
+  }
+  document.getElementById("an-search").addEventListener("input", renderAnnounceRecipients);
+  document.getElementById("an-select-all").addEventListener("change", function(){
+    var checked = this.checked;
+    document.querySelectorAll(".an-check").forEach(function(c){ c.checked = checked; });
+  });
+
+  document.getElementById("an-generate").addEventListener("click", function(){
+    var ids = Array.prototype.slice.call(document.querySelectorAll(".an-check:checked")).map(function(c){ return c.value; });
+    var out = document.getElementById("an-output");
+    if(!ids.length){ out.innerHTML = '<p class="empty">Select at least one recipient above.</p>'; return; }
+    var recipMap = {}; custRecipients().forEach(function(r){ recipMap[r.id] = r; });
+    var subject = document.getElementById("an-subject").value || "";
+    var body = document.getElementById("an-body").value || "";
+    var mode = document.getElementById("an-mode").value;
+    if(mode==="bcc"){
+      var emails = ids.map(function(id){ return recipMap[id] && recipMap[id].email; }).filter(Boolean);
+      var genericBody = body.replace(/\{\{name\}\}/g, "there") + "\n\n" + sigPlain();
+      var url = "mailto:?bcc="+encodeURIComponent(emails.join(","))+"&subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(genericBody);
+      out.innerHTML = '<div class="out-item"><span>One email, BCC to '+emails.length+' people (they will not see each other)</span><a class="btn gold" target="_blank" href="'+esc(url)+'">Open in Outlook</a></div>';
+    } else {
+      out.innerHTML = ids.map(function(id, i){
+        var r = recipMap[id];
+        if(!r) return "";
+        var personalBody = body.replace(/\{\{name\}\}/g, r.name) + "\n\n" + sigPlain();
+        var url = "mailto:"+encodeURIComponent(r.email)+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(personalBody);
+        return '<div class="out-item"><span>'+(i+1)+'. '+esc(r.name)+' — '+esc(r.email)+'</span><a class="btn gold" target="_blank" href="'+esc(url)+'">Open in Outlook</a></div>';
+      }).join("");
+    }
+  });
+
+  // ---- forms list ----
+  var FORM_LINKS = [
+    { group: "Treatments", items: [
+      { name: "Medical Treatment", en: SITE+"/medical/", ar: SITE+"/ar/medical/" },
+      { name: "Dental & Hollywood Smile", en: SITE+"/dental/", ar: SITE+"/ar/dental/" }
+    ]},
+    { group: "Planner & Collections", items: [
+      { name: "Egypt Gateway (all-in-one trip planner)", en: SITE+"/gateway/", ar: SITE+"/ar/gateway/" },
+      { name: "Kunooz: Egypt's Hidden Gems", en: SITE+"/kunooz/", ar: SITE+"/ar/kunooz/" },
+      { name: "VIP Luxury Trips", en: SITE+"/vip-trip/", ar: SITE+"/ar/vip-trip/" },
+      { name: "Holiday packages (general)", en: SITE+"/holidays/", ar: SITE+"/ar/holidays/" }
+    ]},
+    { group: "Destinations", items: [
+      { name: "Cairo & Giza", en: SITE+"/cairo/", ar: SITE+"/ar/cairo/" },
+      { name: "Luxor", en: SITE+"/luxor/", ar: SITE+"/ar/luxor/" },
+      { name: "Aswan", en: SITE+"/aswan/", ar: SITE+"/ar/aswan/" },
+      { name: "Sharm el-Sheikh", en: SITE+"/sharm-5-star-hotels/", ar: SITE+"/ar/sharm-5-star-hotels/" },
+      { name: "Dahab", en: SITE+"/dahab/", ar: SITE+"/ar/dahab/" },
+      { name: "Hurghada & El Gouna", en: SITE+"/hurghada/", ar: SITE+"/ar/hurghada/" },
+      { name: "Alexandria", en: SITE+"/alexandria/", ar: SITE+"/ar/alexandria/" },
+      { name: "North Coast (Sahel)", en: SITE+"/north-coast/", ar: SITE+"/ar/north-coast/" },
+      { name: "Siwa, Fayoum & Oases", en: SITE+"/siwa/", ar: SITE+"/ar/siwa/" },
+      { name: "Safaga, Soma Bay & Marsa Alam", en: SITE+"/marsa-alam/", ar: SITE+"/ar/marsa-alam/" },
+      { name: "Nile Cruise & Private Events", en: SITE+"/nile-cruise-events/", ar: SITE+"/ar/nile-cruise-events/" }
+    ]},
+    { group: "Business & Study", items: [
+      { name: "Study in Egypt", en: SITE+"/educational/", ar: SITE+"/ar/educational/" },
+      { name: "Investment Tourism", en: SITE+"/business/", ar: SITE+"/ar/business/" }
+    ]}
+  ];
+  function copyLink(url, btn){
+    function done(){ var old = btn.textContent; btn.textContent = "Copied!"; setTimeout(function(){ btn.textContent = old; }, 1500); }
+    if(navigator.clipboard){ navigator.clipboard.writeText(url).then(done, done); }
+    else { done(); }
+  }
+  function renderFormsList(){
+    document.getElementById("forms-list").innerHTML = FORM_LINKS.map(function(g){
+      return '<div class="form-group"><h3>'+esc(g.group)+'</h3>'+
+        g.items.map(function(it){
+          return '<div class="form-row"><span class="f-name">'+esc(it.name)+'</span>'+
+            '<button type="button" class="btn copy-btn" data-url="'+esc(it.en)+'">Copy English link</button>'+
+            '<button type="button" class="btn copy-btn" data-url="'+esc(it.ar)+'">Copy Arabic link</button>'+
+          '</div>';
+        }).join("") +
+      '</div>';
+    }).join("");
+    document.querySelectorAll("#forms-list .copy-btn").forEach(function(btn){
+      btn.addEventListener("click", function(){ copyLink(btn.getAttribute("data-url"), btn); });
+    });
+  }
+  renderFormsList();
+
   var TYPE_TO_CATEGORY = {
     "Dental": ["Dental Clinic"],
     "Medical": ["Hospital","Clinic (Other)"],
@@ -461,19 +649,16 @@
     return null;
   }
 
-  // ---- view toggle ----
-  document.getElementById("view-btn-partners").addEventListener("click", function(){
-    document.getElementById("view-partners").style.display = "block";
-    document.getElementById("view-customers").style.display = "none";
-    document.getElementById("view-btn-partners").classList.add("active");
-    document.getElementById("view-btn-customers").classList.remove("active");
-  });
-  document.getElementById("view-btn-customers").addEventListener("click", function(){
-    document.getElementById("view-partners").style.display = "none";
-    document.getElementById("view-customers").style.display = "block";
-    document.getElementById("view-btn-customers").classList.add("active");
-    document.getElementById("view-btn-partners").classList.remove("active");
-  });
+  // ---- view toggle (4 tabs: partners / customers / announce / forms) ----
+  var VIEWS = ["partners","customers","announce","forms"];
+  function showView(name){
+    VIEWS.forEach(function(v){
+      document.getElementById("view-"+v).style.display = (v===name) ? "block" : "none";
+      document.getElementById("view-btn-"+v).classList[v===name ? "add" : "remove"]("active");
+    });
+    if(name==="announce" && !announceRendered){ renderAnnounceRecipients(); announceRendered = true; }
+  }
+  VIEWS.forEach(function(v){ document.getElementById("view-btn-"+v).addEventListener("click", function(){ showView(v); }); });
 
   function pillClass(kind, val){
     if(kind==="status") return val==="Live Partner" ? "ok" : val==="Documents Received" ? "warn" : val==="Low Priority" ? "neu" : "crit";
@@ -1008,6 +1193,11 @@
     document.getElementById(id).addEventListener("change", renderCustomers);
   });
 
+  function isCustArchived(r){
+    var st = state[r.id];
+    return (st && st.deleted!=null) ? !!st.deleted : !!r.archived_default;
+  }
+
   function renderCustomers(){
     var q = document.getElementById("fc-search").value.trim().toLowerCase();
     var type = document.getElementById("fc-type").value;
@@ -1017,7 +1207,7 @@
 
     var rows = ALL_CUST.filter(function(r){
       var done = !!(state[r.id] && state[r.id].done);
-      var deleted = !!(state[r.id] && state[r.id].deleted);
+      var deleted = isCustArchived(r);
       if(deleted && !showDeleted) return false;
       if(!deleted && showDeleted) return false;
       if(hideDone && done) return false;
@@ -1046,7 +1236,7 @@
       return a.i - b.i;
     }).map(function(x){ return x.r; });
 
-    var active = ALL_CUST.filter(function(r){ return !(state[r.id]&&state[r.id].deleted); });
+    var active = ALL_CUST.filter(function(r){ return !isCustArchived(r); });
     document.getElementById("kpi-cust-total").textContent = active.length;
     document.getElementById("kpi-cust-new").textContent = active.filter(function(r){ return ((state[r.id]&&state[r.id].flag)||"new")==="new"; }).length;
     document.getElementById("kpi-cust-open").textContent = active.filter(function(r){return !(state[r.id]&&state[r.id].done)}).length;
@@ -1059,7 +1249,7 @@
     list.innerHTML = rows.map(function(r){
       var st = state[r.id] || {};
       var done = !!st.done;
-      var deleted = !!st.deleted;
+      var deleted = isCustArchived(r);
       var flag = st.flag || "new";
       var flagOpt = FLAG_OPTIONS.filter(function(f){return f.key===flag;})[0] || FLAG_OPTIONS[0];
       var notes = st.notes || "";
