@@ -213,6 +213,9 @@
       <div class="field"><label>Contact person</label><input type="text" id="a-contact"></div>
       <div class="field"><label>Email</label><input type="email" id="a-email"></div>
     </div>
+    <div class="row2">
+      <div class="field"><label>Phone</label><input type="text" id="a-phone"></div>
+    </div>
     <div class="field"><label>Notes / summary</label><textarea id="a-summary" placeholder="What is this contact about?"></textarea></div>
     <div class="field"><label>Next action</label><input type="text" id="a-next-action" placeholder="e.g. Reply, request licence"></div>
 
@@ -381,7 +384,7 @@
       if(q){
         var extra = (state[r.id] && state[r.id].extraContacts) || [];
         var extraText = extra.map(function(c){ return (c.name||"")+" "+(c.email||"")+" "+(c.phone||""); }).join(" ");
-        var hay = (r.name+" "+r.category+" "+r.country+" "+r.contact+" "+r.email+" "+r.summary+" "+extraText).toLowerCase();
+        var hay = (r.name+" "+r.category+" "+r.country+" "+r.contact+" "+r.email+" "+(r.phone||"")+" "+r.summary+" "+extraText).toLowerCase();
         if(hay.indexOf(q)===-1) return false;
       }
       return true;
@@ -427,7 +430,7 @@
             '<label class="done-toggle"><input type="checkbox" class="done-check" '+(done?'checked':'')+'> Done</label>'+
           '</div>'+
           '<p class="summary">'+esc(r.summary)+'</p>'+
-          '<p class="meta-line">'+(r.contact?esc(r.contact)+' · ':'')+(r.email?('<a href="mailto:'+esc(r.email)+'">'+esc(r.email)+'</a>'):'<span>no email on file</span>')+(r.date?(' · '+esc(r.date)):'')+'</p>'+
+          '<p class="meta-line">'+(r.contact?esc(r.contact)+' · ':'')+(r.email?('<a href="mailto:'+esc(r.email)+'">'+esc(r.email)+'</a>'):'<span>no email on file</span>')+(r.phone?(' · 📞 '+esc(r.phone)):'')+(r.date?(' · '+esc(r.date)):'')+'</p>'+
           '<p class="next-action">→ '+esc(r.next_action)+'</p>'+
           (atts.length ? '<p class="meta-line">📎 '+atts.length+' attachment'+(atts.length>1?'s':'')+': '+atts.map(esc).join(", ")+(r.email_link ? ' — open "View full email" below to download the originals' : '')+'</p>' : '')+
           (extraContacts.length ? '<div class="extra-contacts">'+extraContacts.map(function(c,i){
@@ -706,7 +709,7 @@
   // ---- add-partner modal ----
   var addModal = document.getElementById("add-modal");
   document.getElementById("add-partner-btn").addEventListener("click", function(){
-    ["a-name","a-country","a-contact","a-email","a-summary","a-next-action"].forEach(function(id){ document.getElementById(id).value = ""; });
+    ["a-name","a-country","a-contact","a-email","a-phone","a-summary","a-next-action"].forEach(function(id){ document.getElementById(id).value = ""; });
     document.getElementById("a-category").value = "Clinic (Other)";
     document.getElementById("a-status").value = "New Inquiry";
     document.getElementById("a-priority").value = "Medium";
@@ -726,6 +729,7 @@
       status: document.getElementById("a-status").value,
       priority: document.getElementById("a-priority").value,
       contact: document.getElementById("a-contact").value.trim(),
+      phone: document.getElementById("a-phone").value.trim(),
       email: document.getElementById("a-email").value.trim(),
       date: new Date().toISOString().slice(0,10),
       summary: document.getElementById("a-summary").value.trim(),
