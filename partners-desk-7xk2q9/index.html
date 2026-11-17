@@ -84,6 +84,95 @@
   .an-table tr.arch td{color:var(--sub)}
   .an-table .tag{font-size:10.5px;background:var(--neu-bg);color:var(--neu-fg);border-radius:999px;padding:1px 7px;margin-inline-start:6px;white-space:nowrap}
   .an-table .sub2{display:block;font-size:11.5px;color:var(--sub)}
+  .tab-actions{margin-inline-start:auto;display:flex;gap:8px;flex-wrap:wrap}
+
+  /* Brief: where things stand */
+  .brief{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-bottom:18px}
+  .brief-tile{display:flex;gap:12px;align-items:flex-start;text-align:start;background:var(--panel);border:1px solid var(--line);border-inline-start:5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;font:inherit;color:var(--ink)}
+  .brief-tile:hover{box-shadow:0 4px 16px rgba(10,46,54,.10)}
+  .brief-tile .b-ico{font-size:20px;line-height:1}
+  .brief-tile .b-num{font-family:Georgia,serif;font-size:22px;font-weight:700;line-height:1.1}
+  .brief-tile .b-lbl{font-size:12.5px;color:var(--sub);margin-top:2px}
+  .brief-tile .b-go{font-size:11.5px;font-weight:700;color:var(--teal);margin-top:6px}
+  .brief-tile.crit{border-inline-start-color:#d03b3b}
+  .brief-tile.warn{border-inline-start-color:#fab219}
+  .brief-tile.serious{border-inline-start-color:#ec835a}
+  .brief-tile.good{border-inline-start-color:#0ca30c}
+  .brief-tile.info{border-inline-start-color:#2a78d6}
+  .brief-tile.zero .b-num{color:var(--sub)}
+  .brief-allclear{grid-column:1/-1;background:var(--ok-bg);color:var(--ok-fg);border-radius:12px;padding:12px 16px;font-weight:600;font-size:13.5px}
+
+  /* Dashboard */
+  .dash-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px}
+  .dash-title{font-family:Georgia,serif;font-size:20px;margin:0;color:var(--ink)}
+  .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .stat .s-num{font-family:Georgia,serif;font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .stat .s-lbl{font-size:11.5px;color:var(--sub);margin-top:2px}
+  .stat .s-sub{font-size:11.5px;color:var(--sub);margin-top:6px}
+  .dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px}
+  .chart-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+  .chart-card.wide{grid-column:1/-1}
+  .chart-card h3{font-family:Georgia,serif;font-size:15px;margin:0 0 2px;color:var(--ink)}
+  .chart-card .c-sub{font-size:12px;color:var(--sub);margin:0 0 12px}
+  .hb{display:grid;grid-template-columns:minmax(90px,38%) 1fr auto;align-items:center;gap:8px;margin:5px 0;font-size:12.5px}
+  .hb .hb-lbl{color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .hb .hb-track{height:14px;position:relative}
+  .hb .hb-bar{height:14px;border-radius:0 4px 4px 0;background:#2a78d6;min-width:2px}
+  .hb .hb-val{font-variant-numeric:tabular-nums;color:var(--sub);font-size:12px;min-width:26px;text-align:end}
+  .hb .hb-stack{display:flex;gap:2px;height:14px}
+  .hb .hb-stack span{height:14px;min-width:2px}
+  .hb .hb-stack span:last-child{border-radius:0 4px 4px 0}
+  .cols{display:flex;align-items:flex-end;gap:2px;height:150px;border-bottom:1px solid var(--line);padding-top:6px}
+  .cols .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;cursor:default}
+  .cols .col i{display:block;background:#2a78d6;border-radius:4px 4px 0 0;min-height:2px}
+  .cols .col:hover i{background:#1c5cab}
+  .cols-x{display:flex;gap:2px;font-size:10.5px;color:var(--sub);margin-top:4px}
+  .cols-x span{flex:1;text-align:center;white-space:nowrap;overflow:hidden}
+  .legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--sub);margin-top:10px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:5px;vertical-align:-1px}
+  .feed-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:13px}
+  .feed-row:first-child{border-top:none}
+  .feed-row .f-when{color:var(--sub);font-size:12px;white-space:nowrap}
+  .viz-tip{position:fixed;z-index:80;pointer-events:none;background:#0A2E36;color:#fff;font-size:12px;padding:6px 9px;border-radius:7px;box-shadow:0 6px 18px rgba(0,0,0,.2);display:none;max-width:260px}
+
+  /* Calendar */
+  .cal-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+  .cal-bar h2{font-family:Georgia,serif;font-size:19px;margin:0 6px;min-width:150px;text-align:center;color:var(--ink)}
+  .cal-legend{display:flex;flex-wrap:wrap;gap:12px;font-size:11.5px;color:var(--sub);margin-inline-start:8px}
+  .cal-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:5px;vertical-align:-1px}
+  .k-meeting{background:#2a78d6}.k-call{background:#1baf7a}.k-reminder{background:#eda100}.k-overdue{background:#d03b3b}
+  .cal-layout{display:grid;grid-template-columns:1fr 290px;gap:14px;align-items:start}
+  @media (max-width:900px){ .cal-layout{grid-template-columns:1fr} }
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .cal-dow{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.04em;padding:8px;background:var(--cream);border-bottom:1px solid var(--line)}
+  .cal-day{min-height:96px;padding:6px;border-top:1px solid var(--line);border-inline-start:1px solid var(--line);font-size:12px;overflow:hidden}
+  .cal-day:nth-child(7n+1){border-inline-start:none}
+  .cal-day.out{background:#FAF8F3;color:#B7B1A4}
+  .cal-day.today{background:#FFFBEF}
+  .cal-day .d-num{font-weight:700;font-size:12px;margin-bottom:4px;display:inline-block;min-width:22px;text-align:center;border-radius:999px;padding:1px 0}
+  .cal-day.today .d-num{background:var(--ink);color:#fff}
+  .ev{display:block;width:100%;text-align:start;border:none;border-inline-start:3px solid #2a78d6;background:#EEF4FC;color:var(--ink);font:inherit;font-size:11px;padding:3px 5px;border-radius:4px;margin-bottom:3px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ev.call{border-inline-start-color:#1baf7a;background:#E7F6EF}
+  .ev.reminder{border-inline-start-color:#eda100;background:#FDF4E0}
+  .ev.overdue{border-inline-start-color:#d03b3b;background:#FBE4E1}
+  .ev-more{font-size:11px;color:var(--teal);font-weight:600;background:none;border:none;padding:0;cursor:pointer}
+  .cal-agenda{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  .cal-agenda h3{font-family:Georgia,serif;font-size:15px;margin:0 0 8px}
+  .ag-day{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.04em;margin:12px 0 4px}
+  .ag-day:first-child{margin-top:0}
+
+  /* Guided tour */
+  .tour-shade{position:fixed;inset:0;z-index:90;background:transparent}
+  .tour-spot{position:fixed;z-index:91;border-radius:12px;box-shadow:0 0 0 9999px rgba(10,46,54,.62);transition:all .25s ease;pointer-events:none;outline:3px solid #C9A43D}
+  .tour-pop{position:fixed;z-index:92;width:min(360px,calc(100vw - 32px));background:#fff;border-radius:14px;padding:18px 18px 14px;box-shadow:0 18px 50px rgba(0,0,0,.28);border-top:5px solid #B8922A}
+  .tour-pop h4{font-family:Georgia,serif;font-size:17px;margin:0 0 6px;color:var(--ink)}
+  .tour-pop p{font-size:13.5px;line-height:1.55;margin:0 0 12px;color:var(--ink)}
+  .tour-pop .t-foot{display:flex;align-items:center;gap:8px}
+  .tour-pop .t-step{font-size:11.5px;color:var(--sub);margin-inline-end:auto}
+  .tour-dots{display:flex;gap:3px;margin-bottom:10px}
+  .tour-dots i{height:4px;flex:1;border-radius:2px;background:var(--line)}
+  .tour-dots i.on{background:#B8922A}
   .upcoming-panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:18px}
   .upcoming-head{display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:14px;margin-bottom:8px}
   .upcoming-toggle{font-size:11.5px;border:none;background:none;color:var(--sub);cursor:pointer;text-decoration:underline}
@@ -196,12 +285,17 @@
   <p class="lede">Every partner and every customer who has contacted Hayakkom, in one searchable place — built for Reham to track, reply to and keep moving.</p>
 
   <div class="view-toggle">
-    <button class="view-btn active" id="view-btn-partners" type="button">🤝 Partners</button>
+    <button class="view-btn active" id="view-btn-dashboard" type="button">📊 Dashboard</button>
+    <button class="view-btn" id="view-btn-partners" type="button">🤝 Partners</button>
     <button class="view-btn" id="view-btn-customers" type="button">🧳 Customers</button>
     <button class="view-btn" id="view-btn-helpers" type="button">🧰 Helpers</button>
+    <button class="view-btn" id="view-btn-calendar" type="button">📅 Calendar</button>
     <button class="view-btn" id="view-btn-announce" type="button">📢 Announce</button>
     <button class="view-btn" id="view-btn-forms" type="button">📄 Forms</button>
-    <button class="btn gold" id="new-email-btn" type="button" style="margin-inline-start:auto">✉️ New email</button>
+    <span class="tab-actions">
+      <button class="btn" id="tour-btn" type="button">🎓 Tour</button>
+      <button class="btn gold" id="new-email-btn" type="button">✉️ New email</button>
+    </span>
   </div>
 
   <div class="upcoming-panel" id="upcoming-panel" style="display:none">
@@ -209,7 +303,42 @@
     <div id="upcoming-list"></div>
   </div>
 
-  <div id="view-partners">
+  <div id="view-dashboard">
+    <div class="dash-head">
+      <div><h2 class="dash-title">Where things stand</h2><p class="lede" id="dash-asof" style="margin:2px 0 0"></p></div>
+    </div>
+    <div class="brief" id="dash-brief"></div>
+    <div class="stat-row" id="dash-stats"></div>
+    <div class="dash-grid" id="dash-charts"></div>
+  </div>
+
+  <div id="view-calendar" style="display:none">
+    <div class="cal-bar">
+      <button class="btn" id="cal-prev" type="button" aria-label="Previous month">‹</button>
+      <h2 id="cal-title"></h2>
+      <button class="btn" id="cal-next" type="button" aria-label="Next month">›</button>
+      <button class="btn" id="cal-today" type="button">Today</button>
+      <span class="cal-legend">
+        <span><i class="k-meeting"></i>Outlook meeting</span>
+        <span><i class="k-call"></i>Call booked from the Hub</span>
+        <span><i class="k-reminder"></i>Follow-up reminder</span>
+        <span><i class="k-overdue"></i>⏰ Reply overdue</span>
+      </span>
+      <span class="tab-actions">
+        <a class="btn" target="_blank" rel="noopener" href="https://outlook.office.com/calendar/deeplink/compose">+ New event</a>
+        <a class="btn gold" target="_blank" rel="noopener" href="https://outlook.office.com/calendar/view/month">Open Outlook calendar ↗</a>
+      </span>
+    </div>
+    <p class="count-line" id="cal-sync"></p>
+    <div class="cal-layout">
+      <div class="cal-grid" id="cal-grid"></div>
+      <aside class="cal-agenda"><h3>Next up</h3><div id="cal-agenda"></div></aside>
+    </div>
+  </div>
+
+
+
+  <div id="view-partners" style="display:none">
   <div class="kpis">
     <div class="kpi"><div class="num" id="kpi-total">—</div><div class="lbl">Total contacts</div></div>
     <div class="kpi"><div class="num" id="kpi-live">—</div><div class="lbl">Live partners</div></div>
@@ -296,6 +425,7 @@
   </div>
 
   <div id="view-announce" style="display:none">
+    <div class="brief" id="an-brief"></div>
     <p class="lede" style="margin-top:0">Send an announcement to customers (including the old-form archive), helpers or partners. Pick a template or write your own, tick who gets it, then open each email in Outlook — or WhatsApp for people with only a phone number. Nothing sends automatically.</p>
     <div class="toolbar" style="flex-direction:column;align-items:stretch">
       <div class="row2">
@@ -562,6 +692,7 @@
   var ENCRYPTED = null;
   var ENCRYPTED_CUST = null;
   var HELP_P = fetch("helpers.enc.json", {cache: "no-store"}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; });
+  var CAL_P = fetch("calendar.enc.json", {cache: "no-store"}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; });
   fetch("data.enc.json", {cache: "no-store"}).then(function(r){return r.json();}).then(function(j){ ENCRYPTED = j; });
   fetch("customers.enc.json", {cache: "no-store"}).then(function(r){return r.json();}).then(function(j){ ENCRYPTED_CUST = j; }).catch(function(){ ENCRYPTED_CUST = null; });
   document.getElementById("pw-submit").addEventListener("click", tryUnlock);
@@ -599,7 +730,13 @@
         ALL_HELP = h || [];
         buildHelpFilterOptions();
         renderHelpers();
-      }, function(){ ALL_HELP = []; renderHelpers(); });
+      }, function(){ ALL_HELP = []; renderHelpers(); }).then(function(){
+        return CAL_P.then(function(enc){ return enc ? decryptWith(val, enc) : null; }).then(function(c){ if(c) CAL = c; }, function(){});
+      }).then(function(){
+        renderUpcoming();
+        showView(currentView);
+        maybeStartTour();
+      });
     }).catch(function(){
       document.getElementById("pw-err").textContent = "Incorrect password.";
     });
@@ -893,6 +1030,10 @@
   function rerenderAll(){
     render(); renderCustomers(); renderHelpers();
     if(announceRendered) renderAnnounceRecipients();
+    if(currentView==="announce") renderBrief("an-brief", "announce");
+    if(currentView==="dashboard") renderDashboard();
+    if(currentView==="calendar") renderCalendar();
+    renderUpcoming();
   }
 
   // ---- announce: audience pool, sortable table, email + WhatsApp output ----
@@ -1166,6 +1307,435 @@
     renderAnnounceRecipients();
   });
 
+  // ---- calendar data + shared navigation ----
+  var CAL = { events: [], synced_at: "" };
+  function ymdStr(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+  function todayStr(){ return ymdStr(new Date()); }
+  function nowHM(){ var d = new Date(); return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); }
+  function nameOfRec(r){ return (state[r.id]&&state[r.id].name) || r.name || ""; }
+  function prettyDate(s){
+    if(!s) return "";
+    var d = new Date(s + "T12:00:00");
+    return d.toLocaleDateString(undefined, { weekday:"short", day:"numeric", month:"short" });
+  }
+  // Everything with a date: synced Outlook events, Hub reminders and booked calls, and today's overdue replies.
+  function calItems(){
+    var items = [];
+    (CAL.events||[]).forEach(function(e){
+      items.push({ date: (e.start||"").slice(0,10), time: e.all_day ? "" : (e.start||"").slice(11,16), end: e.all_day ? "" : (e.end||"").slice(11,16),
+        title: e.subject || "(no title)", kind: /^call with hayakkom/i.test(e.subject||"") ? "call" : "meeting",
+        link: e.web_link || "", detail: e.summary || "", src: "Outlook" });
+    });
+    function collect(list, view, label){
+      list.forEach(function(r){
+        var s = state[r.id] || {};
+        if(s.deleted || s.done) return;
+        var nm = nameOfRec(r);
+        Object.keys(s.reminderDates||{}).forEach(function(key){
+          var opt = REMIND_OPTIONS.filter(function(o){ return o.key===key; })[0];
+          items.push({ date: ymdStr(new Date(s.reminderDates[key])), time: "", title: nm + " — " + (opt ? opt.label : "follow up"), kind: "reminder", view: view, name: nm, src: label });
+        });
+        if(s.bookDate){
+          var dup = items.some(function(it){ return it.kind==="call" && it.date===s.bookDate && it.title.toLowerCase().indexOf(nm.toLowerCase())!==-1; });
+          if(!dup) items.push({ date: s.bookDate, time: s.bookTime || "", title: "Call — " + nm, kind: "call", view: view, name: nm, src: label });
+        }
+      });
+    }
+    collect(ALL, "partners", "Partner");
+    collect(ALL_CUST, "customers", "Customer");
+    collect(ALL_HELP, "helpers", "Helper");
+    var t = todayStr();
+    ALL_CUST.forEach(function(r){
+      if(custOverdue(r)) items.push({ date: t, time: "", title: "Reply overdue: " + nameOfRec(r), kind: "overdue", view: "customers", name: nameOfRec(r), src: "Customer" });
+    });
+    items.sort(function(a,b){ return (a.date + (a.time||"00:00")).localeCompare(b.date + (b.time||"00:00")); });
+    return items;
+  }
+  function nextUp(){
+    var now = todayStr() + nowHM();
+    return calItems().filter(function(it){ return it.kind!=="overdue" && (it.date + (it.time||"23:59")) >= now; });
+  }
+  var SEARCH_OF = { partners: "f-search", customers: "fc-search", helpers: "fh-search" };
+  var RESETTABLE = {
+    partners: ["f-search","f-category","f-country","f-status","f-priority","f-view","f-hide-done","f-show-deleted"],
+    customers: ["fc-search","fc-view","fc-type","fc-status","fc-country","fc-hide-done","fc-show-deleted"],
+    helpers: ["fh-search","fh-prof","fh-prio","fh-view","fh-hide-done","fh-show-deleted"]
+  };
+  // Jump to a tab with only the given filters applied (used by the brief tiles, calendar and dashboard).
+  function jumpTo(view, presets){
+    (RESETTABLE[view]||[]).forEach(function(id){
+      var el = document.getElementById(id);
+      if(el.type==="checkbox") el.checked = false; else el.value = "";
+    });
+    if(view==="announce" && presets && presets["an-audience"] && presets["an-audience"]!==document.getElementById("an-audience").value) anSelected = {};
+    Object.keys(presets||{}).forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el) return;
+      if(el.type==="checkbox") el.checked = !!presets[id]; else el.value = presets[id];
+    });
+    showView(view);
+    if(view==="partners") render();
+    else if(view==="customers") renderCustomers();
+    else if(view==="helpers") renderHelpers();
+    else if(view==="announce") renderAnnounceRecipients();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  function openCalItem(it){
+    if(it.link){ window.open(it.link, "_blank", "noopener"); return; }
+    if(it.view){ var p = {}; p[SEARCH_OF[it.view]] = it.name; jumpTo(it.view, p); }
+  }
+
+  // ---- brief: where things stand ----
+  function briefTiles(context){
+    var activeC = ALL_CUST.filter(function(r){ return !isCustArchived(r); });
+    function open(r){ var s = state[r.id]||{}; return !s.deleted && !s.done; }
+    var overdue = activeC.filter(custOverdue).length;
+    var attn = activeC.filter(custNeedsAttention).length;
+    var awaiting = ALL.filter(function(r){ return open(r) && awaitingReply(r); }).length;
+    var urgentP = ALL.filter(function(r){ return open(r) && partnerFlagKey(r)==="urgent"; }).length;
+    var reviewP = ALL.filter(function(r){ return open(r) && partnerFlagKey(r)==="review"; }).length;
+    var helpHigh = ALL_HELP.filter(function(r){ return open(r) && !lastContacted(r) && ((state[r.id]&&state[r.id].priority) || r.priority)==="High"; }).length;
+    var legacyNever = ALL_CUST.filter(function(r){ return /legacy/i.test(r.source||"") && !lastContacted(r); }).length;
+    var nx = nextUp()[0];
+    var tiles = [
+      { cls: overdue ? "crit" : "good", ico: "⏰", num: overdue, lbl: "customers past the 12-hour reply promise", go: "Reply now →", act: ["customers", {"fc-view":"overdue"}] },
+      { cls: attn ? "serious" : "good", ico: "🔥", num: attn, lbl: "customers need attention", go: "Open list →", act: ["customers", {"fc-view":"attention"}] },
+      { cls: awaiting ? "warn" : "good", ico: "✉️", num: awaiting, lbl: "partners waiting for our reply", go: "Open list →", act: ["partners", {"f-view":"awaiting"}] },
+      { cls: urgentP ? "crit" : "good", ico: "🚩", num: urgentP, lbl: "partners flagged urgent", go: "Open list →", act: ["partners", {"f-view":"urgent"}] },
+      { cls: reviewP ? "warn" : "good", ico: "🟣", num: reviewP, lbl: "new partner cards to review (possible duplicates)", go: "Review →", act: ["partners", {"f-view":"review"}] },
+      { cls: helpHigh ? "info" : "good", ico: "🧰", num: helpHigh, lbl: "high-value job applicants not contacted yet", go: "Open list →", act: ["helpers", {"fh-prio":"High","fh-view":"notcontacted"}] }
+    ];
+    if(context==="announce") tiles.push({ cls: "info", ico: "📣", num: legacyNever, lbl: "old-form customers we never contacted", go: "Show them first ↓", act: ["announce", {"an-audience":"customers","an-archived":true,"an-sort":"lastcontact","an-reach":""}] });
+    tiles.push({ cls: "info", ico: "📅", small: true, num: nx ? prettyDate(nx.date) + (nx.time ? " · " + nx.time : "") : "Nothing booked", lbl: nx ? nx.title : "No meetings or reminders coming up", go: "Open calendar →", act: ["calendar", {}] });
+    var clear = !overdue && !attn && !awaiting && !urgentP && !reviewP;
+    return { tiles: tiles, clear: clear };
+  }
+  function renderBrief(elId, context){
+    var el = document.getElementById(elId);
+    var b = briefTiles(context);
+    el.innerHTML = (b.clear ? '<div class="brief-allclear">✅ All caught up — nothing overdue or waiting on a reply.</div>' : '') +
+      b.tiles.map(function(t, i){
+        var zero = t.num===0;
+        return '<button type="button" class="brief-tile '+t.cls+(zero?' zero':'')+'" data-i="'+i+'">'+
+          '<span class="b-ico">'+(zero ? '✓' : t.ico)+'</span><span>'+
+          '<span class="b-num"'+(t.small?' style="font-size:15px"':'')+'>'+esc(t.num)+'</span>'+
+          '<span class="b-lbl" style="display:block">'+esc(t.lbl)+'</span>'+
+          (zero ? '' : '<span class="b-go" style="display:block">'+esc(t.go)+'</span>')+
+        '</span></button>';
+      }).join("");
+    el.querySelectorAll(".brief-tile").forEach(function(btn){
+      btn.addEventListener("click", function(){ var t = b.tiles[+btn.getAttribute("data-i")]; jumpTo(t.act[0], t.act[1]); });
+    });
+  }
+
+  // ---- hover tooltip for charts and calendar ----
+  var tipEl = document.createElement("div");
+  tipEl.className = "viz-tip";
+  document.body.appendChild(tipEl);
+  document.addEventListener("mouseover", function(e){
+    var t = e.target.closest && e.target.closest("[data-tip]");
+    if(!t){ tipEl.style.display = "none"; return; }
+    tipEl.textContent = t.getAttribute("data-tip");
+    tipEl.style.display = "block";
+  });
+  document.addEventListener("mousemove", function(e){
+    if(tipEl.style.display!=="block") return;
+    tipEl.style.left = Math.min(e.clientX + 14, window.innerWidth - 280) + "px";
+    tipEl.style.top = (e.clientY + 16) + "px";
+  });
+
+  // ---- dashboard ----
+  var BLUE = "#2a78d6";
+  var ORDINAL = ["#86b6ef", "#5598e7", "#2a78d6", "#1c5cab"];
+  function countBy(list, fn){ var m = {}; list.forEach(function(r){ var k = fn(r) || "Not stated"; m[k] = (m[k]||0) + 1; }); return m; }
+  function topRows(map, n){
+    var rows = Object.keys(map).map(function(k){ return { label: k, value: map[k] }; }).sort(function(a,b){ return b.value - a.value || a.label.localeCompare(b.label); });
+    if(rows.length > n){
+      var rest = rows.slice(n - 1).reduce(function(s, r){ return s + r.value; }, 0);
+      rows = rows.slice(0, n - 1).concat([{ label: "Other", value: rest }]);
+    }
+    return rows;
+  }
+  function hbars(rows, unit){
+    var max = Math.max.apply(null, rows.map(function(r){ return r.value; }).concat([1]));
+    return rows.map(function(r){
+      return '<div class="hb" data-tip="'+esc(r.label+": "+r.value+" "+(unit||""))+'">'+
+        '<span class="hb-lbl">'+esc(r.icon ? r.icon+" "+r.label : r.label)+'</span>'+
+        '<span class="hb-track"><span class="hb-bar" style="display:block;width:'+(r.value/max*100).toFixed(1)+'%;background:'+(r.color||BLUE)+'"></span></span>'+
+        '<span class="hb-val">'+r.value+'</span></div>';
+    }).join("");
+  }
+  function card(title, sub, body, wide){
+    return '<section class="chart-card'+(wide?' wide':'')+'"><h3>'+esc(title)+'</h3>'+(sub?'<p class="c-sub">'+esc(sub)+'</p>':'')+body+'</section>';
+  }
+  function custStage(r){
+    var s = state[r.id]||{}, st = s.status || r.status;
+    if(st==="Lost") return "Lost";
+    if(st==="Booked") return "Booked";
+    if(st==="Quoted") return "Quoted";
+    if(st==="Contacted" || lastContacted(r)) return "Contacted";
+    return "New enquiry";
+  }
+  function renderDashboard(){
+    renderBrief("dash-brief", "dashboard");
+    var activeP = ALL.filter(function(r){ return !(state[r.id]&&state[r.id].deleted); });
+    var activeC = ALL_CUST.filter(function(r){ return !isCustArchived(r); });
+    var legacy = ALL_CUST.filter(function(r){ return /legacy/i.test(r.source||""); });
+    var activeH = ALL_HELP.filter(function(r){ return !(state[r.id]&&state[r.id].deleted); });
+    var everyone = activeP.concat(ALL_CUST, activeH);
+    var contacted = everyone.filter(function(r){ return lastContacted(r); }).length;
+    var live = activeP.filter(function(r){ return ((state[r.id]&&state[r.id].status)||r.status)==="Live Partner"; }).length;
+    var booked = ALL_CUST.filter(function(r){ return custStage(r)==="Booked"; });
+    var commission = booked.reduce(function(s, r){
+      var st = state[r.id]||{}; var v = +(st.dealValue || r.deal_value || 0); var pct = st.commissionPct!=null ? +st.commissionPct : (r.commission_pct || 15);
+      return s + v * pct / 100;
+    }, 0);
+    var nx = nextUp()[0];
+    var stats = [
+      { n: activeP.length, l: "Partners", s: live + " live partner" + (live===1?"":"s") },
+      { n: activeC.length, l: "Open customer enquiries", s: "+" + legacy.length + " in the old-form archive" },
+      { n: activeH.length, l: "Job applicants", s: activeH.filter(function(r){ return ((state[r.id]&&state[r.id].priority)||r.priority)==="High"; }).length + " high-value" },
+      { n: everyone.length ? Math.round(contacted / everyone.length * 100) + "%" : "—", l: "Contacted at least once", s: contacted + " of " + everyone.length + " people" },
+      { n: booked.length, l: "Bookings", s: Math.round(commission).toLocaleString() + " SAR est. commission" },
+      { n: nx ? prettyDate(nx.date) : "—", l: "Next on the calendar", s: nx ? (nx.time ? nx.time + " · " : "") + nx.title : "Nothing booked" }
+    ];
+    document.getElementById("dash-stats").innerHTML = stats.map(function(s){
+      return '<div class="stat"><div class="s-num"'+(String(s.n).length>8?' style="font-size:18px"':'')+'>'+esc(s.n)+'</div><div class="s-lbl">'+esc(s.l)+'</div><div class="s-sub">'+esc(s.s)+'</div></div>';
+    }).join("");
+    var synced = CAL.synced_at ? new Date(CAL.synced_at).toLocaleString(undefined, { day:"numeric", month:"short", hour:"2-digit", minute:"2-digit" }) : "";
+    document.getElementById("dash-asof").textContent = "Live from the Hub's data — the inbox is checked every hour" + (synced ? " · calendar synced " + synced : "") + ".";
+
+    // Enquiries per month, last 24 months (current forms + old-form archive)
+    var months = [], now = new Date();
+    for(var i = 23; i >= 0; i--){ var d = new Date(now.getFullYear(), now.getMonth() - i, 1); months.push({ key: d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"), d: d, n: 0 }); }
+    ALL_CUST.forEach(function(r){ var k = recDate(r).slice(0,7); months.forEach(function(m){ if(m.key===k) m.n++; }); });
+    var mmax = Math.max.apply(null, months.map(function(m){ return m.n; }).concat([1]));
+    var colsHtml = '<div class="cols">' + months.map(function(m){
+      var lbl = m.d.toLocaleDateString(undefined, { month:"short", year:"numeric" });
+      return '<span class="col" data-tip="'+esc(lbl+": "+m.n+" enquir"+(m.n===1?"y":"ies"))+'"><i style="height:'+(m.n/mmax*100).toFixed(1)+'%"></i></span>';
+    }).join("") + '</div><div class="cols-x">' + months.map(function(m, i){
+      return '<span>'+(i%3===0 ? esc(m.d.toLocaleDateString(undefined, { month:"short" })+" "+String(m.d.getFullYear()).slice(2)) : '')+'</span>';
+    }).join("") + '</div>';
+
+    var stageOrder = ["New enquiry","Contacted","Quoted","Booked"];
+    var stages = countBy(ALL_CUST, custStage);
+    var funnel = hbars(stageOrder.map(function(s, i){ return { label: s, value: stages[s]||0, color: ORDINAL[i] }; }), "customers") +
+      ((stages.Lost||0) ? '<p class="c-sub" style="margin:8px 0 0">' + stages.Lost + ' marked lost</p>' : '');
+
+    var healthRows = [
+      { label: "Reply overdue (>12h)", icon: "⏰", value: activeC.filter(custOverdue).length, color: "#d03b3b" },
+      { label: "New, within 12h", icon: "🕒", value: activeC.filter(function(r){ var h = custHoursOld(r); return !(state[r.id]||{}).done && !lastContacted(r) && !custOverdue(r) && h!=null && h<=12; }).length, color: "#fab219" },
+      { label: "Contacted", icon: "✓", value: activeC.filter(function(r){ return !(state[r.id]||{}).done && lastContacted(r); }).length, color: "#0ca30c" },
+      { label: "Done", icon: "✔", value: activeC.filter(function(r){ return (state[r.id]||{}).done; }).length, color: "#9a9a95" }
+    ];
+    var pHealth = [
+      { label: "Awaiting our reply", icon: "✉️", value: activeP.filter(function(r){ return !(state[r.id]||{}).done && awaitingReply(r); }).length, color: "#fab219" },
+      { label: "Needs review", icon: "🟣", value: activeP.filter(function(r){ return !(state[r.id]||{}).done && partnerFlagKey(r)==="review"; }).length, color: "#ec835a" },
+      { label: "Replied / in contact", icon: "✓", value: activeP.filter(function(r){ return !(state[r.id]||{}).done && !awaitingReply(r) && lastContacted(r); }).length, color: "#0ca30c" },
+      { label: "Done", icon: "✔", value: activeP.filter(function(r){ return (state[r.id]||{}).done; }).length, color: "#9a9a95" }
+    ];
+
+    var profMap = {};
+    activeH.forEach(function(r){
+      var p = (state[r.id]&&state[r.id].priority) || r.priority || "Low";
+      var k = r.profession || "Other";
+      profMap[k] = profMap[k] || { High:0, Medium:0, Low:0 };
+      profMap[k][p] = (profMap[k][p]||0) + 1;
+    });
+    var PCOL = { High: "#1c5cab", Medium: "#3987e5", Low: "#86b6ef" };
+    var profRows = Object.keys(profMap).map(function(k){ var m = profMap[k]; return { k: k, m: m, t: m.High + m.Medium + m.Low }; }).sort(function(a,b){ return b.t - a.t; });
+    var pmax = Math.max.apply(null, profRows.map(function(r){ return r.t; }).concat([1]));
+    var helpHtml = profRows.map(function(r){
+      return '<div class="hb"><span class="hb-lbl">'+esc(r.k)+'</span><span class="hb-track"><span class="hb-stack" style="width:'+(r.t/pmax*100).toFixed(1)+'%">'+
+        ["High","Medium","Low"].filter(function(p){ return r.m[p]; }).map(function(p){
+          return '<span style="flex:'+r.m[p]+';background:'+PCOL[p]+'" data-tip="'+esc(r.k+" — "+p+" value: "+r.m[p])+'"></span>';
+        }).join("")+'</span></span><span class="hb-val">'+r.t+'</span></div>';
+    }).join("") + '<div class="legend">' + ["High","Medium","Low"].map(function(p){ return '<span><i style="background:'+PCOL[p]+'"></i>'+p+' value</span>'; }).join("") + '</div>';
+
+    var feed = activeP.map(function(r){ return { d: recDate(r), t: "🤝 " + nameOfRec(r), s: (state[r.id]&&state[r.id].category) || r.category, v: "partners", n: nameOfRec(r) }; })
+      .concat(ALL_CUST.filter(function(r){ return !/legacy/i.test(r.source||""); }).map(function(r){ return { d: recDate(r), t: "🧳 " + nameOfRec(r), s: ((state[r.id]&&state[r.id].enquiry_type) || r.enquiry_type) + " enquiry", v: "customers", n: nameOfRec(r) }; }))
+      .concat(activeH.map(function(r){ return { d: recDate(r), t: "🧰 " + r.name, s: r.profession, v: "helpers", n: r.name }; }))
+      .filter(function(x){ return x.d; }).sort(function(a,b){ return b.d.localeCompare(a.d); }).slice(0, 8);
+    var feedHtml = feed.map(function(x, i){
+      return '<div class="feed-row"><a href="#" class="feed-link" data-i="'+i+'">'+esc(x.t)+'</a><span class="f-when">'+esc(x.s||"")+' · '+esc(prettyDate(x.d.slice(0,10)))+'</span></div>';
+    }).join("");
+
+    document.getElementById("dash-charts").innerHTML =
+      card("Customer enquiries per month", "Last 24 months, website forms plus the old-form archive. Hover a column for the count.", colsHtml, true) +
+      card("Customer pipeline", "Every customer, by the furthest stage reached.", funnel) +
+      card("Open customer enquiries — response health", "Our promise is a reply within 12 hours.", hbars(healthRows, "customers")) +
+      card("Partners — response health", "Based on the latest email in each conversation.", hbars(pHealth, "partners")) +
+      card("Customers by enquiry type", "All " + ALL_CUST.length + " customers.", hbars(topRows(countBy(ALL_CUST, function(r){ return (state[r.id]&&state[r.id].enquiry_type) || r.enquiry_type; }), 8), "customers")) +
+      card("Customers by country", "From their answer, or their phone's country code.", hbars(topRows(countBy(ALL_CUST, custCountry), 8), "customers")) +
+      card("Partners by status", "", hbars(topRows(countBy(activeP, function(r){ return (state[r.id]&&state[r.id].status) || r.status; }), 8), "partners")) +
+      card("Partners by category", "", hbars(topRows(countBy(activeP, function(r){ return (state[r.id]&&state[r.id].category) || r.category; }), 8), "partners")) +
+      card("Partners by country", "", hbars(topRows(countBy(activeP, function(r){ return normCountry((state[r.id]&&state[r.id].country) || r.country); }), 8), "partners")) +
+      card("Job applicants by profession", "Darker = more valuable to the business right now.", helpHtml) +
+      card("Latest activity", "Newest partners, enquiries and applicants. Click to open the card.", feedHtml || '<p class="empty">Nothing yet.</p>');
+    document.querySelectorAll("#dash-charts .feed-link").forEach(function(a){
+      a.addEventListener("click", function(e){ e.preventDefault(); var x = feed[+a.getAttribute("data-i")]; var p = {}; p[SEARCH_OF[x.v]] = x.n; jumpTo(x.v, p); });
+    });
+  }
+
+  // ---- calendar view ----
+  var calMonth = null, calDayFocus = "";
+  function chipHtml(it, idx){
+    var tip = (it.time ? it.time + (it.end ? "–" + it.end : "") + " · " : "") + it.title + (it.src ? " (" + it.src + ")" : "") + (it.detail ? " — " + it.detail : "");
+    return '<button type="button" class="ev '+it.kind+'" data-k="'+idx+'" data-tip="'+esc(tip)+'">'+(it.kind==="overdue"?"⏰ ":"")+(it.time ? esc(it.time)+" " : "")+esc(it.title)+'</button>';
+  }
+  function renderCalendar(){
+    if(!calMonth){ var n = new Date(); calMonth = new Date(n.getFullYear(), n.getMonth(), 1); }
+    var items = calItems();
+    var byDate = {};
+    items.forEach(function(it, i){ (byDate[it.date] = byDate[it.date] || []).push(i); });
+    document.getElementById("cal-title").textContent = calMonth.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+    var start = new Date(calMonth); start.setDate(1 - calMonth.getDay());
+    var t = todayStr();
+    var html = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(function(d){ return '<div class="cal-dow">'+d+'</div>'; }).join("");
+    var weeks = (new Date(calMonth.getFullYear(), calMonth.getMonth()+1, 0).getDate() + calMonth.getDay()) > 35 ? 6 : 5;
+    for(var i = 0; i < weeks*7; i++){
+      var d = new Date(start); d.setDate(start.getDate() + i);
+      var key = ymdStr(d), list = byDate[key] || [];
+      html += '<div class="cal-day'+(d.getMonth()!==calMonth.getMonth()?' out':'')+(key===t?' today':'')+'"><span class="d-num">'+d.getDate()+'</span>'+
+        list.slice(0, 3).map(function(idx){ return chipHtml(items[idx], idx); }).join("")+
+        (list.length > 3 ? '<button type="button" class="ev-more" data-day="'+key+'">+'+(list.length-3)+' more</button>' : '')+
+      '</div>';
+    }
+    var grid = document.getElementById("cal-grid");
+    grid.innerHTML = html;
+    var upcoming = calDayFocus ? items.filter(function(it){ return it.date===calDayFocus; })
+      : items.filter(function(it){ return it.date >= t && it.date <= ymdStr(new Date(Date.now() + 21*86400000)); });
+    var lastDay = "";
+    var ag = document.getElementById("cal-agenda");
+    ag.innerHTML = (calDayFocus ? '<button type="button" class="ev-more" id="cal-back">← Back to next 3 weeks</button>' : '') +
+      (upcoming.length ? upcoming.map(function(it){
+        var idx = items.indexOf(it);
+        var head = it.date!==lastDay ? '<div class="ag-day">'+esc(it.date===t ? "Today" : prettyDate(it.date))+'</div>' : '';
+        lastDay = it.date;
+        return head + chipHtml(it, idx);
+      }).join("") : '<p class="empty" style="padding:16px 0">Nothing in the next 3 weeks.</p>');
+    [grid, ag].forEach(function(box){
+      box.querySelectorAll(".ev").forEach(function(b){ b.addEventListener("click", function(){ openCalItem(items[+b.getAttribute("data-k")]); }); });
+    });
+    grid.querySelectorAll(".ev-more").forEach(function(b){ b.addEventListener("click", function(){ calDayFocus = b.getAttribute("data-day"); renderCalendar(); }); });
+    var back = document.getElementById("cal-back");
+    if(back) back.addEventListener("click", function(){ calDayFocus = ""; renderCalendar(); });
+    var synced = CAL.synced_at ? new Date(CAL.synced_at).toLocaleString(undefined, { day:"numeric", month:"short", hour:"2-digit", minute:"2-digit" }) : "not yet";
+    document.getElementById("cal-sync").textContent = "Outlook meetings synced every hour (last: " + synced + ", Egypt time). Reminders, Hub-booked calls and overdue replies update instantly. Click any item to open it.";
+  }
+  document.getElementById("cal-prev").addEventListener("click", function(){ calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth()-1, 1); calDayFocus = ""; renderCalendar(); });
+  document.getElementById("cal-next").addEventListener("click", function(){ calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth()+1, 1); calDayFocus = ""; renderCalendar(); });
+  document.getElementById("cal-today").addEventListener("click", function(){ calMonth = null; calDayFocus = ""; renderCalendar(); });
+
+  // ---- guided training tour ----
+  var TOUR = [
+    { title: "Welcome to the Hayakkom Hub 👋", text: "A two-minute tour of everything the Hub does. Use Next and Back (or the → ← keys). You can replay it any time with the 🎓 Tour button at the top." },
+    { view: "dashboard", sel: "#view-btn-dashboard", title: "📊 Dashboard — your home screen", text: "Open the Hub and you land here: one page that shows where every partner, customer and job applicant stands." },
+    { view: "dashboard", sel: "#dash-brief", title: "Where things stand", text: "These tiles are your to-do list. Red means act now (customers past the 12-hour reply promise), amber means someone is waiting on us. Click any tile to jump straight to those cards." },
+    { view: "dashboard", sel: "#dash-stats", title: "The headline numbers", text: "Partners, open enquiries, job applicants, how many people we have contacted at least once, bookings with estimated commission, and what's next on the calendar." },
+    { view: "dashboard", sel: "#dash-charts", title: "Charts", text: "Hover any bar or column for the exact number: enquiries per month, the customer pipeline, response health, countries, partner categories and applicants. In 'Latest activity', click a name to open that card." },
+    { view: "partners", sel: "#view-btn-partners", title: "🤝 Partners", text: "Every hospital, clinic and tourism company that contacted us. Urgent ones and anyone waiting for our reply sit at the top automatically." },
+    { view: "partners", sel: "#f-view", title: "Show filter", text: "'Needs attention' = urgent, to review, or waiting for our reply. 'Sent us an email — awaiting our reply' is your partner inbox to-do list." },
+    { view: "partners", sel: "#f-sort", title: "Sorting", text: "Urgent first by default. Switch to newest, oldest, longest since contact, name or country whenever you need a different view." },
+    { view: "partners", sel: "#list .card", title: "A partner card", text: "Flag, status and priority at the top, then the summary, contact details and the next action. A red-tinted card is urgent." },
+    { view: "partners", sel: "#list .card .info-toggle", title: "Contact popup", text: "Click the email address to see every contact detail in one box and why they are in the system." },
+    { view: "partners", sel: "#list .card .mark-contacted", title: "Mark contacted", text: "Replied by WhatsApp or phone? Click this and enter the date. The card stops showing as 'awaiting our reply'. Replies sent through the Hub are recorded for you." },
+    { view: "partners", sel: "#list .card .card-actions", title: "Card buttons", text: "Reply (opens Outlook with your signature) · View email chain · Set a reminder · Book a meeting (adds it to the Outlook/Teams calendar) · Add contact · Edit · colour flag · Archive." },
+    { view: "partners", sel: "#list .card .flag-btn", title: "Colour flags", text: "Gold = New, red = Urgent, blue = Waiting on partner, green = Live/active, purple = Needs review (a new card the system wasn't sure about — check it isn't a duplicate)." },
+    { view: "customers", sel: "#view-btn-customers", title: "🧳 Customers", text: "Every enquiry from the website forms, added automatically every hour. Our promise is a reply within 12 hours — past that, the card turns red and jumps to the top." },
+    { view: "customers", sel: "#fc-view", title: "Customer filters", text: "Needs attention, over 12 hours, new in the last 12 hours, contacted, waiting, ready to book, phone-only, and 'From old forms' — the 80 people from our previous forms." },
+    { view: "customers", sel: "#fc-country", title: "Country", text: "Filter by country — taken from their answer, or from the country code of their phone number." },
+    { view: "helpers", sel: "#view-btn-helpers", title: "🧰 Helpers", text: "Job applicants: coordinators, tour guides, drivers, interpreters and more, ranked by how useful the role is to Hayakkom. Filter by profession, reply, WhatsApp or shortlist them." },
+    { view: "calendar", sel: "#view-btn-calendar", title: "📅 Calendar", text: "Your Outlook meetings (synced every hour), calls booked from the Hub, your follow-up reminders and today's overdue replies — together in one month view. Click any item to open it." },
+    { view: "calendar", sel: "#cal-agenda", title: "Next up", text: "The next three weeks at a glance. 'Open Outlook calendar' opens the full Outlook calendar in a new tab." },
+    { view: "announce", sel: "#an-brief", title: "📢 Announce — start here", text: "The same 'where you stand' summary, so you know who needs a message before you write one." },
+    { view: "announce", sel: "#an-audience", title: "Choose who", text: "Customers (including the old-form archive), helpers or partners. Filter by country or type, sort by who we haven't contacted the longest, then tick people one by one or all at once." },
+    { view: "announce", sel: "#an-generate", title: "Generate — nothing sends on its own", text: "You get one Outlook draft per person (or one BCC email), plus a WhatsApp link for anyone without email. You check each one and press Send yourself." },
+    { view: "forms", sel: "#view-btn-forms", title: "📄 Forms", text: "Copy the right English or Arabic form link for a customer, or the partner onboarding form for a hospital, clinic or tourism company." },
+    { sel: "#new-email-btn", title: "✉️ New email", text: "Write a fresh email from support@hayakkom.com with your signature already added." },
+    { sel: "#tour-btn", title: "You're ready 🎉", text: "Your daily routine: open the Dashboard, clear the red tiles first, reply to everyone waiting, and mark people contacted. Replay this tour any time from here." }
+  ];
+  var tourIdx = -1, tourEls = null;
+  function startTour(){
+    tourIdx = 0;
+    if(!tourEls){
+      tourEls = { shade: document.createElement("div"), spot: document.createElement("div"), pop: document.createElement("div") };
+      tourEls.shade.className = "tour-shade";
+      tourEls.spot.className = "tour-spot";
+      tourEls.pop.className = "tour-pop";
+      tourEls.pop.setAttribute("role", "dialog");
+      tourEls.pop.setAttribute("aria-live", "polite");
+      document.body.appendChild(tourEls.shade);
+      document.body.appendChild(tourEls.spot);
+      document.body.appendChild(tourEls.pop);
+      tourEls.pop.addEventListener("click", function(e){
+        var a = e.target.getAttribute && e.target.getAttribute("data-t");
+        if(a==="next") tourGo(1); else if(a==="back") tourGo(-1); else if(a==="skip") endTour();
+      });
+    }
+    showTourStep();
+  }
+  function tourGo(d){
+    tourIdx += d;
+    if(tourIdx >= TOUR.length) return endTour();
+    if(tourIdx < 0) tourIdx = 0;
+    showTourStep();
+  }
+  function endTour(){
+    if(tourEls){ ["shade","spot","pop"].forEach(function(k){ tourEls[k].remove(); }); }
+    tourEls = null; tourIdx = -1;
+    try{ localStorage.setItem("hk_tour_done", "1"); }catch(e){}
+    showView("dashboard");
+    window.scrollTo({ top: 0 });
+  }
+  function showTourStep(){
+    var st = TOUR[tourIdx];
+    if(st.view && st.view!==currentView) showView(st.view);
+    var target = st.sel ? document.querySelector(st.sel) : null;
+    if(target) target.scrollIntoView({ block: "center" });
+    setTimeout(function(){ placeTour(target, st); }, 90);
+  }
+  function placeTour(target, st){
+    if(!tourEls) return;
+    var pop = tourEls.pop, spot = tourEls.spot, last = tourIdx===TOUR.length-1;
+    pop.innerHTML = '<div class="tour-dots">'+TOUR.map(function(_, i){ return '<i'+(i<=tourIdx?' class="on"':'')+'></i>'; }).join("")+'</div>'+
+      '<h4>'+esc(st.title)+'</h4><p>'+esc(st.text)+'</p>'+
+      '<div class="t-foot"><span class="t-step">'+(tourIdx+1)+' of '+TOUR.length+'</span>'+
+      (last ? '' : '<button type="button" class="btn" data-t="skip">Skip</button>')+
+      (tourIdx>0 ? '<button type="button" class="btn" data-t="back">Back</button>' : '')+
+      '<button type="button" class="btn gold" data-t="next">'+(last ? 'Finish' : 'Next')+'</button></div>';
+    var pw = pop.offsetWidth, ph = pop.offsetHeight, vw = window.innerWidth, vh = window.innerHeight;
+    if(target){
+      var r = target.getBoundingClientRect(), pad = 6;
+      var h = Math.min(r.height + pad*2, vh - 24);
+      spot.style.cssText = "left:"+(r.left-pad)+"px;top:"+(r.top-pad)+"px;width:"+(r.width+pad*2)+"px;height:"+h+"px";
+      var top = r.top - pad + h + 12;
+      if(top + ph > vh - 8) top = r.top - pad - ph - 12;
+      if(top < 8) top = Math.max(8, vh - ph - 16);
+      pop.style.top = top + "px";
+      pop.style.left = Math.min(Math.max(8, r.left), vw - pw - 8) + "px";
+    } else {
+      spot.style.cssText = "left:"+(vw/2)+"px;top:"+(vh/2)+"px;width:0;height:0;outline:none";
+      pop.style.top = Math.max(16, (vh - ph)/2) + "px";
+      pop.style.left = Math.max(8, (vw - pw)/2) + "px";
+    }
+    var nextBtn = pop.querySelector('[data-t="next"]');
+    if(nextBtn) nextBtn.focus();
+  }
+  document.addEventListener("keydown", function(e){
+    if(!tourEls) return;
+    if(e.key==="ArrowRight" || e.key==="Enter"){ e.preventDefault(); tourGo(1); }
+    else if(e.key==="ArrowLeft"){ e.preventDefault(); tourGo(-1); }
+    else if(e.key==="Escape") endTour();
+  });
+  window.addEventListener("resize", function(){ if(tourEls) showTourStep(); });
+  function maybeStartTour(){
+    var done = false;
+    try{ done = !!localStorage.getItem("hk_tour_done"); }catch(e){}
+    if(!done) setTimeout(startTour, 700);
+  }
+  document.getElementById("tour-btn").addEventListener("click", startTour);
+
   // ---- forms list ----
   var FORM_LINKS = [
     { group: "Partners", desc: "For hospitals, clinics and tourism companies — not customers.", items: [
@@ -1266,13 +1836,18 @@
   }
 
   // ---- view toggle ----
-  var VIEWS = ["partners","customers","helpers","announce","forms"];
+  var VIEWS = ["dashboard","partners","customers","helpers","calendar","announce","forms"];
+  var currentView = "dashboard";
   function showView(name){
+    currentView = name;
     VIEWS.forEach(function(v){
       document.getElementById("view-"+v).style.display = (v===name) ? "block" : "none";
       document.getElementById("view-btn-"+v).classList[v===name ? "add" : "remove"]("active");
     });
-    if(name==="announce" && !announceRendered){ renderAnnounceRecipients(); announceRendered = true; }
+    if(name==="announce"){ renderBrief("an-brief", "announce"); if(!announceRendered){ renderAnnounceRecipients(); announceRendered = true; } }
+    if(name==="dashboard") renderDashboard();
+    if(name==="calendar") renderCalendar();
+    renderUpcoming();
   }
   VIEWS.forEach(function(v){ document.getElementById("view-btn-"+v).addEventListener("click", function(){ showView(v); }); });
 
@@ -1347,39 +1922,23 @@
     document.getElementById(id).addEventListener("change", render);
   });
 
+  // "Coming up" strip above every tab: the next few calendar items, plus anything overdue today.
   function renderUpcoming(){
     var panel = document.getElementById("upcoming-panel");
-    if(panel.dataset.hidden==="1"){ panel.style.display="none"; return; }
-    var items = [];
-    function collect(list, kind){
-      list.forEach(function(r){
-        var s = state[r.id] || {};
-        if(s.deleted) return;
-        var nm = s.name || r.name;
-        if(s.reminderDates){
-          Object.keys(s.reminderDates).forEach(function(key){
-            var opt = REMIND_OPTIONS.filter(function(o){return o.key===key;})[0];
-            items.push({ when: new Date(s.reminderDates[key]), what: (kind==="p"?"🤝 ":"🧳 ")+nm+" — "+(opt?opt.label:key) });
-          });
-        }
-        if(s.bookDate){
-          var t = s.bookTime || "10:00";
-          items.push({ when: new Date(s.bookDate+"T"+t+":00"), what: (kind==="p"?"🤝 ":"🧳 ")+nm+" — call "+t });
-        }
-      });
-    }
-    collect(ALL, "p");
-    collect(ALL_CUST, "c");
-    items.sort(function(a,b){ return a.when - b.when; });
-    var now = new Date();
+    if(panel.dataset.hidden==="1" || currentView==="dashboard" || currentView==="calendar"){ panel.style.display="none"; return; }
+    var t = todayStr();
+    var items = calItems().filter(function(it){ return it.date >= t; });
+    var overdue = items.filter(function(it){ return it.kind==="overdue"; });
+    var rest = items.filter(function(it){ return it.kind!=="overdue"; }).slice(0, 5);
     var list = document.getElementById("upcoming-list");
-    if(!items.length){ panel.style.display="none"; return; }
+    if(!overdue.length && !rest.length){ panel.style.display="none"; return; }
     panel.style.display = "block";
-    list.innerHTML = items.slice(0,8).map(function(it){
-      var overdue = it.when < now;
-      var dateStr = it.when.toLocaleDateString(undefined,{month:"short",day:"numeric"}) + " " + it.when.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"});
-      return '<div class="upcoming-row"><span class="u-what">'+esc(it.what)+'</span><span class="u-when'+(overdue?' overdue':'')+'">'+(overdue?'Overdue — ':'')+esc(dateStr)+'</span></div>';
-    }).join("");
+    var rows = rest.map(function(it){
+      return '<div class="upcoming-row"><span class="u-what">'+(it.kind==="call"?"📞 ":it.kind==="reminder"?"🔔 ":"📅 ")+esc(it.title)+'</span><span class="u-when">'+esc((it.date===t?"Today":prettyDate(it.date))+(it.time?" · "+it.time:""))+'</span></div>';
+    });
+    if(overdue.length) rows.unshift('<div class="upcoming-row"><span class="u-what">⏰ '+overdue.length+' customer repl'+(overdue.length===1?'y is':'ies are')+' past the 12-hour promise</span><span class="u-when overdue">Today</span></div>');
+    list.innerHTML = rows.join("") + '<div style="margin-top:8px"><button type="button" class="btn" id="upcoming-open">Open full calendar →</button></div>';
+    document.getElementById("upcoming-open").addEventListener("click", function(){ showView("calendar"); });
   }
   document.getElementById("upcoming-toggle").addEventListener("click", function(){
     var panel = document.getElementById("upcoming-panel");
