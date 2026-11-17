@@ -134,6 +134,7 @@
   <div class="view-toggle">
     <button class="view-btn active" id="view-btn-partners" type="button">🤝 Partners</button>
     <button class="view-btn" id="view-btn-customers" type="button">🧳 Customers</button>
+    <button class="btn gold" id="new-email-btn" type="button" style="margin-inline-start:auto">✉️ New email</button>
   </div>
 
   <div id="view-partners">
@@ -1264,17 +1265,26 @@
   var current = null;
   function openModal(row){
     current = row;
-    document.getElementById("modal-title").textContent = "Reply to " + row.name;
-    document.getElementById("modal-sub").textContent = row.category + " · " + row.country;
-    document.getElementById("m-to").value = row.email || "";
-    document.getElementById("m-subject").value = "Re: Partnership with Hayakkom — " + row.name;
-    document.getElementById("m-body").value = "Hi,\n\nThank you for reaching out about " + row.name + ". ";
+    if(row && row.blank){
+      document.getElementById("modal-title").textContent = "New email";
+      document.getElementById("modal-sub").textContent = "Sent from support@hayakkom.com";
+      document.getElementById("m-to").value = "";
+      document.getElementById("m-subject").value = "";
+      document.getElementById("m-body").value = "";
+    } else {
+      document.getElementById("modal-title").textContent = "Reply to " + row.name;
+      document.getElementById("modal-sub").textContent = row.category + " · " + row.country;
+      document.getElementById("m-to").value = row.email || "";
+      document.getElementById("m-subject").value = "Re: Partnership with Hayakkom — " + row.name;
+      document.getElementById("m-body").value = "Hi,\n\nThank you for reaching out about " + row.name + ". ";
+    }
     fillTitles();
     updateSigPreview();
     modal.classList.add("open");
   }
   document.getElementById("modal-close").addEventListener("click", function(){ modal.classList.remove("open"); });
   modal.addEventListener("click", function(e){ if(e.target===modal) modal.classList.remove("open"); });
+  document.getElementById("new-email-btn").addEventListener("click", function(){ openModal({ blank: true }); });
 
   // ---- email chain modal ----
   var chainModal = document.getElementById("chain-modal");

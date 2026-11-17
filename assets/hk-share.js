@@ -1626,17 +1626,18 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
   function mount(){if(document.body&&!document.getElementById("hk-kunooz-badge"))document.body.appendChild(a);}
   mount();[300,1500].forEach(function(t){setTimeout(mount,t)});
 
-  var revealed=false,colliding=false,wide=false,hoverLock=false,pulseTimer=null;
+  var revealed=false,colliding=false,formActive=false,wide=false,hoverLock=false,pulseTimer=null,autoPulses=0;
   function setClasses(){
-    var on=revealed&&!colliding;
+    var hidden=colliding||formActive;
+    var on=revealed&&!hidden;
     a.classList.toggle("hk-kz-on",on);
-    a.classList.toggle("hk-kz-wide",wide&&!colliding);
-    a.classList.toggle("hk-kz-hide",colliding);
+    a.classList.toggle("hk-kz-wide",wide&&!hidden);
+    a.classList.toggle("hk-kz-hide",hidden);
     a.tabIndex=on?0:-1;
     if(on)a.removeAttribute("aria-hidden");else a.setAttribute("aria-hidden","true");
   }
   function pulse(ms){
-    if(colliding)return;
+    if(colliding||formActive)return;
     wide=true;setClasses();
     clearTimeout(pulseTimer);
     pulseTimer=setTimeout(function(){if(!hoverLock){wide=false;setClasses()}},ms||4200);
@@ -1652,11 +1653,30 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
     if((window.scrollY||document.documentElement.scrollTop||0)>480){reveal();window.removeEventListener("scroll",onScroll)}
   }
   window.addEventListener("scroll",onScroll,{passive:true});
-  /* A gentle, occasional reminder — not a constant presence. */
-  setInterval(function(){if(revealed&&!wide&&!colliding)pulse(4200)},42000);
+  /* A gentle, occasional reminder — not a constant presence, and it stops nagging after a
+     couple of reminders rather than pulsing forever. */
+  setInterval(function(){
+    if(revealed&&!wide&&!colliding&&!formActive&&autoPulses<2){autoPulses++;pulse(4200)}
+  },110000);
 
-  /* Collision guard: never sit over a form, an enquiry box, or a primary button. */
-  var PROTECT='.jf-wrap,iframe[src*="jotform"],iframe[src*="jotfor.ms"],form,.enquiry-box,.btn-gold,.btn-outline,.pkg-btn,.fab,.hkr,.to-top,#hk-mini-calc,.hk-partner-btn,#hk-pm-cta';
+  /* Intent guard: the moment someone is actually using a form (typing, a jotform iframe,
+     the enquiry box), the badge disappears outright and stays gone — no flicker from
+     re-checking pixel overlap while the page reflows under them (validation messages,
+     dropdowns opening, etc). It only comes back once they've genuinely stepped away. */
+  var FORM_SEL='.jf-wrap,iframe[src*="jotform"],iframe[src*="jotfor.ms"],form,.enquiry-box,#hk-mini-calc';
+  var formActiveTimer=null;
+  function setFormActive(){
+    formActive=true;setClasses();
+    clearTimeout(formActiveTimer);
+    formActiveTimer=setTimeout(function(){formActive=false;checkCollision()},2500);
+  }
+  document.addEventListener("focusin",function(e){ if(e.target&&e.target.closest&&e.target.closest(FORM_SEL))setFormActive(); });
+  document.addEventListener("pointerdown",function(e){ if(e.target&&e.target.closest&&e.target.closest(FORM_SEL))setFormActive(); },{passive:true});
+  document.addEventListener("pointerover",function(e){ if(e.target&&e.target.closest&&e.target.closest('iframe[src*="jotform"],iframe[src*="jotfor.ms"]'))setFormActive(); },{passive:true});
+
+  /* Collision guard: never sit over a button or nav element the form-intent check above
+     doesn't already cover. */
+  var PROTECT='.btn-gold,.btn-outline,.pkg-btn,.fab,.hkr,.to-top,.hk-partner-btn,#hk-pm-cta';
   function overlap(r1,r2){return !(r2.left>r1.right||r2.right<r1.left||r2.top>r1.bottom||r2.bottom<r1.top)}
   function checkCollision(){
     if(!revealed)return;
