@@ -57,9 +57,9 @@
   label.done-toggle{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--sub);cursor:pointer}
   textarea.notes{width:100%;margin-top:10px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12.5px;font-family:inherit;resize:vertical;min-height:38px;color:var(--ink)}
   .empty{text-align:center;padding:40px 10px;color:var(--sub);font-size:13px}
-  .reminder-box,.booking-box,.contact-box{margin-top:12px;padding:12px 14px;background:var(--cream);border:1px solid var(--line);border-radius:10px}
-  .reminder-box label,.booking-box label,.contact-box label{display:block;font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.03em;margin-bottom:5px;margin-top:8px}
-  .reminder-box input[type=email],.booking-box input,.contact-box input{width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--line);font-size:12.5px;margin-bottom:4px}
+  .reminder-box,.booking-box,.contact-box,.edit-box{margin-top:12px;padding:12px 14px;background:var(--cream);border:1px solid var(--line);border-radius:10px}
+  .reminder-box label,.booking-box label,.contact-box label,.edit-box label{display:block;font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.03em;margin-bottom:5px;margin-top:8px}
+  .reminder-box input[type=email],.booking-box input,.contact-box input,.edit-box select{width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--line);font-size:12.5px;margin-bottom:4px;background:#fff}
   .booking-box .row2,.contact-box .row2{margin-top:4px}
   .extra-contacts{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
   .contact-chip{display:inline-flex;align-items:center;gap:6px;background:var(--cream);border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-size:12px;color:var(--ink)}
@@ -295,6 +295,8 @@
   }
   function esc(s){ return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
 
+  var STATUS_OPTIONS = ["New Inquiry","Documents Received","Live Partner","Low Priority"];
+
   var REMIND_OPTIONS = [
     { key:"tomorrow", label:"Follow up tomorrow", days:1 },
     { key:"3days", label:"Follow up in 3 days", days:3 },
@@ -373,7 +375,8 @@
       if(hideDone && done) return false;
       if(cat && r.category!==cat) return false;
       if(country && r.country!==country) return false;
-      if(status && r.status!==status) return false;
+      var effStatus = (state[r.id] && state[r.id].status) || r.status;
+      if(status && effStatus!==status) return false;
       if(prio && r.priority!==prio) return false;
       if(q){
         var extra = (state[r.id] && state[r.id].extraContacts) || [];
@@ -393,7 +396,7 @@
 
     var active = ALL.filter(function(r){ return !(state[r.id]&&state[r.id].deleted); });
     document.getElementById("kpi-total").textContent = active.length;
-    document.getElementById("kpi-live").textContent = active.filter(function(r){return r.status==="Live Partner"}).length;
+    document.getElementById("kpi-live").textContent = active.filter(function(r){return ((state[r.id]&&state[r.id].status)||r.status)==="Live Partner"}).length;
     document.getElementById("kpi-open").textContent = active.filter(function(r){return !(state[r.id]&&state[r.id].done)}).length;
     document.getElementById("kpi-shown").textContent = rows.length;
     document.getElementById("count-line").textContent = "Showing " + rows.length + " of " + active.length + " contacts" + (showDeleted ? " (deleted)" : "");
@@ -408,12 +411,14 @@
       var notes = st.notes || "";
       var atts = r.attachments || [];
       var extraContacts = st.extraContacts || [];
+      var effStatus = st.status || r.status;
       return (
         '<div class="card'+(done?' done':'')+(deleted?' deleted':'')+'" data-id="'+esc(r.id)+'">'+
           '<div class="card-top">'+
             '<div><h3>'+esc(r.name)+'</h3>'+
             '<div class="tags">'+
-              '<span class="pill '+pillClass("status",r.status)+'">'+esc(r.status)+'</span>'+
+              '<span class="pill '+pillClass("status",effStatus)+'">'+esc(effStatus)+'</span>'+
+              (st.status ? '<span class="pill neu">edited</span>' : '')+
               '<span class="pill '+pillClass("priority",r.priority)+'">'+esc(r.priority)+'</span>'+
               '<span class="pill neu">'+esc(r.category)+'</span>'+
               '<span class="pill neu">'+esc(r.country)+'</span>'+
@@ -440,7 +445,15 @@
             '<button class="btn remind-toggle">Set a reminder</button>'+
             '<button class="btn book-toggle">Book a meeting</button>'+
             '<button class="btn contact-toggle">+ Add contact</button>'+
+            '<button class="btn edit-toggle">Edit status</button>'+
             (deleted ? '<button class="btn restore-btn">Restore</button>' : '<button class="btn delete-btn">Delete</button>')+
+          '</div>'+
+          '<div class="edit-box" style="display:none">'+
+            '<label>Status</label>'+
+            '<select class="e-status">'+
+              STATUS_OPTIONS.map(function(s){ return '<option value="'+esc(s)+'"'+(s===effStatus?' selected':'')+'>'+esc(s)+'</option>'; }).join("")+
+            '</select>'+
+            '<div class="modal-actions" style="margin-top:10px"><button class="btn gold edit-save">Save status</button></div>'+
           '</div>'+
           '<div class="contact-box" style="display:none">'+
             '<div class="row2">'+
@@ -604,6 +617,19 @@
           document.body.removeChild(ta);
           flashBook();
         }
+      });
+
+      // ---- edit status ----
+      var editToggle = card.querySelector(".edit-toggle");
+      var editBox = card.querySelector(".edit-box");
+      editToggle.addEventListener("click", function(){
+        editBox.style.display = editBox.style.display==="none" ? "block" : "none";
+      });
+      card.querySelector(".edit-save").addEventListener("click", function(){
+        state[id] = state[id] || {};
+        state[id].status = card.querySelector(".e-status").value;
+        saveState(state);
+        render();
       });
 
       // ---- extra contacts ----
