@@ -51,8 +51,8 @@
   .flag-picker.open{display:block}
   .flag-opt{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:7px;font-size:12.5px;cursor:pointer;white-space:nowrap}
   .flag-opt:hover{background:var(--cream)}
-  .delete-btn{color:#A33;border-color:#E9C3C3}
-  .delete-btn:hover{border-color:#A33}
+  .archive-btn{color:#A33;border-color:#E9C3C3}
+  .archive-btn:hover{border-color:#A33}
   .view-toggle{display:flex;gap:8px;margin-bottom:18px}
   .upcoming-panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:18px}
   .upcoming-head{display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:14px;margin-bottom:8px}
@@ -187,7 +187,7 @@
     <select id="f-status"><option value="">All statuses</option></select>
     <select id="f-priority"><option value="">All priorities</option></select>
     <label class="chk"><input type="checkbox" id="f-hide-done"> Hide done</label>
-    <label class="chk"><input type="checkbox" id="f-show-deleted"> Show deleted</label>
+    <label class="chk"><input type="checkbox" id="f-show-deleted"> Show archived</label>
     <button class="btn gold" id="add-partner-btn" type="button">+ Add partner</button>
   </div>
 
@@ -208,7 +208,7 @@
     <select id="fc-type"><option value="">All enquiry types</option></select>
     <select id="fc-status"><option value="">All statuses</option></select>
     <label class="chk"><input type="checkbox" id="fc-hide-done"> Hide done</label>
-    <label class="chk"><input type="checkbox" id="fc-show-deleted"> Show deleted</label>
+    <label class="chk"><input type="checkbox" id="fc-show-deleted"> Show archived</label>
     <button class="btn gold" id="add-customer-btn" type="button">+ Add customer</button>
   </div>
 
@@ -636,7 +636,7 @@
     document.getElementById("kpi-live").textContent = active.filter(function(r){return ((state[r.id]&&state[r.id].status)||r.status)==="Live Partner"}).length;
     document.getElementById("kpi-open").textContent = active.filter(function(r){return !(state[r.id]&&state[r.id].done)}).length;
     document.getElementById("kpi-shown").textContent = rows.length;
-    document.getElementById("count-line").textContent = "Showing " + rows.length + " of " + active.length + " contacts" + (showDeleted ? " (deleted)" : "");
+    document.getElementById("count-line").textContent = "Showing " + rows.length + " of " + active.length + " contacts" + (showDeleted ? " (archived)" : "");
 
     var list = document.getElementById("list");
     if(!rows.length){ list.innerHTML = '<p class="empty">No contacts match these filters.</p>'; return; }
@@ -693,7 +693,7 @@
             '<button class="btn book-toggle">Book a meeting</button>'+
             '<button class="btn contact-toggle">+ Add contact</button>'+
             '<button class="btn edit-toggle">Edit</button>'+
-            (deleted ? '<button class="btn restore-btn">Restore</button>' : '<button class="btn delete-btn">Delete</button>')+
+            (deleted ? '<button class="btn restore-btn">Restore</button>' : '<button class="btn archive-btn">Archive</button>')+
           '</div>'+
           '<div class="edit-box" style="display:none">'+
             '<div class="row2">'+
@@ -797,9 +797,9 @@
       var chainBtn = card.querySelector(".chain-toggle");
       if(chainBtn) chainBtn.addEventListener("click", function(){ openChainModal(effRow); });
 
-      var deleteBtn = card.querySelector(".delete-btn");
-      if(deleteBtn) deleteBtn.addEventListener("click", function(){
-        if(!confirm("Remove \""+effRow.name+"\" from the list? You can bring it back with \"Show deleted\".")) return;
+      var archiveBtn = card.querySelector(".archive-btn");
+      if(archiveBtn) archiveBtn.addEventListener("click", function(){
+        if(!confirm("Archive \""+effRow.name+"\"? You can bring it back with \"Show archived\".")) return;
         state[id] = state[id] || {};
         state[id].deleted = true;
         saveState(state);
@@ -1051,7 +1051,7 @@
     document.getElementById("kpi-cust-new").textContent = active.filter(function(r){ return ((state[r.id]&&state[r.id].flag)||"new")==="new"; }).length;
     document.getElementById("kpi-cust-open").textContent = active.filter(function(r){return !(state[r.id]&&state[r.id].done)}).length;
     document.getElementById("kpi-cust-shown").textContent = rows.length;
-    document.getElementById("count-line-cust").textContent = "Showing " + rows.length + " of " + active.length + " enquiries" + (showDeleted ? " (deleted)" : "");
+    document.getElementById("count-line-cust").textContent = "Showing " + rows.length + " of " + active.length + " enquiries" + (showDeleted ? " (archived)" : "");
 
     var list = document.getElementById("list-customers");
     if(!rows.length){ list.innerHTML = '<p class="empty">No customers match these filters.</p>'; return; }
@@ -1126,7 +1126,7 @@
                 }).join("")+
               '</div>'+
             '</div>'+
-            (deleted ? '<button class="btn restore-btn">Restore</button>' : '<button class="btn delete-btn">Delete</button>')+
+            (deleted ? '<button class="btn restore-btn">Restore</button>' : '<button class="btn archive-btn">Archive</button>')+
           '</div>'+
           '<div class="edit-box" style="display:none">'+
             '<div class="row2">'+
@@ -1240,9 +1240,9 @@
       var chainBtn = card.querySelector(".chain-toggle");
       if(chainBtn) chainBtn.addEventListener("click", function(){ openChainModal(Object.assign({}, effRow, {thread: row.thread, email_link: row.email_link, attachments: row.attachments})); });
 
-      var deleteBtn = card.querySelector(".delete-btn");
-      if(deleteBtn) deleteBtn.addEventListener("click", function(){
-        if(!confirm("Remove \""+effRow.name+"\" from the list? You can bring it back with \"Show deleted\".")) return;
+      var archiveBtn = card.querySelector(".archive-btn");
+      if(archiveBtn) archiveBtn.addEventListener("click", function(){
+        if(!confirm("Archive \""+effRow.name+"\"? You can bring it back with \"Show archived\".")) return;
         state[id] = state[id] || {};
         state[id].deleted = true;
         saveState(state);
