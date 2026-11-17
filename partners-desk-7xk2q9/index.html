@@ -41,12 +41,14 @@
   .card.flag-urgent{border:2px solid #C0392B;box-shadow:0 0 0 3px rgba(192,57,43,.15)}
   .card.flag-waiting{border:2px solid #2E6DA4;box-shadow:0 0 0 3px rgba(46,109,164,.15)}
   .card.flag-ready{border:2px solid #2E8B57;box-shadow:0 0 0 3px rgba(46,139,87,.15)}
+  .card.flag-review{border:2px solid #6B4FA3;box-shadow:0 0 0 3px rgba(107,79,163,.15)}
   .flag-btn{position:relative;display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer}
   .flag-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
   .flag-dot.flag-new{border:none;background:#B8922A;box-shadow:none}
   .flag-dot.flag-urgent{border:none;background:#C0392B;box-shadow:none}
   .flag-dot.flag-waiting{border:none;background:#2E6DA4;box-shadow:none}
   .flag-dot.flag-ready{border:none;background:#2E8B57;box-shadow:none}
+  .flag-dot.flag-review{border:none;background:#6B4FA3;box-shadow:none}
   .flag-picker{display:none;position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px;box-shadow:0 8px 24px rgba(10,46,54,.15);z-index:20;min-width:190px}
   .flag-picker.open{display:block}
   .flag-opt{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:7px;font-size:12.5px;cursor:pointer;white-space:nowrap}
@@ -84,6 +86,10 @@
   .pill.flag-urgent{background:var(--crit-bg);color:var(--crit-fg)}
   .pill.flag-waiting{background:#DCEBF7;color:#2E6DA4}
   .pill.flag-ready{background:var(--ok-bg);color:var(--ok-fg)}
+  .pill.flag-review{background:#EBE4F5;color:#6B4FA3}
+  .atts-modal-list{margin-top:10px}
+  .atts-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:13px}
+  .atts-row:first-child{border-top:none}
   .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
   .card-top h3{font-family:Georgia,serif;font-size:17px;margin:0;color:var(--ink)}
   .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
@@ -389,6 +395,15 @@
   </div>
 </div>
 
+<div class="modal-backdrop" id="atts-modal">
+  <div class="modal">
+    <button class="close-x" id="atts-modal-close" aria-label="Close">×</button>
+    <h2 id="atts-title">Attachments</h2>
+    <p class="sub" id="atts-sub"></p>
+    <div class="atts-modal-list" id="atts-body"></div>
+  </div>
+</div>
+
 <script>
 (function(){
   // ---- password gate: the data itself is encrypted (AES-GCM, key derived from the
@@ -473,7 +488,15 @@
     { key: "new", label: "New" },
     { key: "urgent", label: "Urgent" },
     { key: "waiting", label: "Waiting on customer" },
-    { key: "ready", label: "Ready to book" }
+    { key: "ready", label: "Ready to book" },
+    { key: "review", label: "Needs review" }
+  ];
+  var PARTNER_FLAG_OPTIONS = [
+    { key: "new", label: "New" },
+    { key: "urgent", label: "Urgent" },
+    { key: "waiting", label: "Waiting on partner" },
+    { key: "ready", label: "Live / active" },
+    { key: "review", label: "Needs review" }
   ];
   document.addEventListener("click", function(){ document.querySelectorAll(".flag-picker.open").forEach(function(p){ p.classList.remove("open"); }); });
 
@@ -832,6 +855,8 @@
       var deleted = !!st.deleted;
       var notes = st.notes || "";
       var atts = r.attachments || [];
+      var flag = st.flag || "new";
+      var flagOpt = PARTNER_FLAG_OPTIONS.filter(function(f){return f.key===flag;})[0] || PARTNER_FLAG_OPTIONS[0];
       var extraContacts = st.extraContacts || [];
       var effStatus = st.status || r.status;
       var effName = st.name || r.name;
@@ -845,10 +870,11 @@
       var effSummary = (st.summary!=null ? st.summary : r.summary);
       var edited = !!(st.status||st.name||st.category||st.country||st.priority||st.contact!=null||st.email!=null||st.phone!=null||st.next_action||st.summary!=null);
       return (
-        '<div class="card'+(done?' done':'')+(deleted?' deleted':'')+'" data-id="'+esc(r.id)+'">'+
+        '<div class="card'+(done?' done':'')+(deleted?' deleted':'')+' flag-'+flag+'" data-id="'+esc(r.id)+'">'+
           '<div class="card-top">'+
             '<div><h3>'+esc(effName)+'</h3>'+
             '<div class="tags">'+
+              '<span class="pill flag-'+flag+'">'+esc(flagOpt.label)+'</span>'+
               '<span class="pill '+pillClass("status",effStatus)+'">'+esc(effStatus)+'</span>'+
               (edited ? '<span class="pill neu">edited</span>' : '')+
               '<span class="pill '+pillClass("priority",effPriority)+'">'+esc(effPriority)+'</span>'+
@@ -861,7 +887,7 @@
           '<p class="summary">'+esc(effSummary)+'</p>'+
           '<p class="meta-line">'+(effContact?esc(effContact)+' · ':'')+(effEmail?('<a href="mailto:'+esc(effEmail)+'">'+esc(effEmail)+'</a>'):'<span>no email on file</span>')+(effPhone?(' · 📞 '+esc(effPhone)):'')+(r.date?(' · '+esc(r.date)):'')+'</p>'+
           '<p class="next-action">→ '+esc(effNextAction)+'</p>'+
-          (atts.length ? '<p class="meta-line">📎 '+atts.length+' attachment'+(atts.length>1?'s':'')+': '+atts.map(esc).join(", ")+(r.email_link ? ' — open "View full email" below to download the originals' : '')+'</p>' : '')+
+          (atts.length ? '<p class="meta-line">📎 '+atts.length+' attachment'+(atts.length>1?'s':'')+' — see "Attachments" below</p>' : '')+
           (extraContacts.length ? '<div class="extra-contacts">'+extraContacts.map(function(c,i){
             return '<span class="contact-chip" data-i="'+i+'">'+esc(c.name||"(no name)")+
               (c.role? ' — '+esc(c.role):'')+
@@ -878,6 +904,15 @@
             '<button class="btn book-toggle">Book a meeting</button>'+
             '<button class="btn contact-toggle">+ Add contact</button>'+
             '<button class="btn edit-toggle">Edit</button>'+
+            (atts.length ? '<button class="btn atts-toggle">📎 Attachments ('+atts.length+')</button>' : '')+
+            '<div class="flag-wrap" style="position:relative;display:inline-block">'+
+              '<button class="flag-btn" type="button"><span class="flag-dot flag-'+flag+'"></span>'+esc(flagOpt.label)+'</button>'+
+              '<div class="flag-picker">'+
+                PARTNER_FLAG_OPTIONS.map(function(f){
+                  return '<div class="flag-opt" data-flag="'+f.key+'"><span class="flag-dot flag-'+f.key+'"></span>'+esc(f.label)+'</div>';
+                }).join("")+
+              '</div>'+
+            '</div>'+
             (deleted ? '<button class="btn restore-btn">Restore</button>' : '<button class="btn archive-btn">Archive</button>')+
           '</div>'+
           '<div class="edit-box" style="display:none">'+
@@ -981,6 +1016,26 @@
 
       var chainBtn = card.querySelector(".chain-toggle");
       if(chainBtn) chainBtn.addEventListener("click", function(){ openChainModal(effRow); });
+
+      var attsBtn = card.querySelector(".atts-toggle");
+      if(attsBtn) attsBtn.addEventListener("click", function(){ openAttsModal(effRow); });
+
+      var flagBtnP = card.querySelector(".flag-btn");
+      var flagPickerP = card.querySelector(".flag-picker");
+      flagBtnP.addEventListener("click", function(e){
+        e.stopPropagation();
+        document.querySelectorAll(".flag-picker.open").forEach(function(p){ if(p!==flagPickerP) p.classList.remove("open"); });
+        flagPickerP.classList.toggle("open");
+      });
+      flagPickerP.querySelectorAll(".flag-opt").forEach(function(opt){
+        opt.addEventListener("click", function(e){
+          e.stopPropagation();
+          state[id] = state[id] || {};
+          state[id].flag = opt.getAttribute("data-flag");
+          saveState(state);
+          render();
+        });
+      });
 
       var archiveBtn = card.querySelector(".archive-btn");
       if(archiveBtn) archiveBtn.addEventListener("click", function(){
@@ -1264,6 +1319,7 @@
       var edited = !!(st.name||st.enquiry_type||st.status||st.email!=null||st.phone!=null||st.summary!=null||st.next_action);
       var dup = findDuplicate(effEmail, effPhone, r.id);
       var matches = matchingPartners(effType);
+      var atts = r.attachments || [];
       var slaHtml = "";
       if(r.received_at){
         var hoursLeft = 12 - (Date.now() - new Date(r.received_at).getTime())/3600000;
@@ -1289,6 +1345,7 @@
           '<p class="summary">'+esc(effSummary)+'</p>'+
           '<p class="meta-line">'+(effEmail?('<a href="mailto:'+esc(effEmail)+'">'+esc(effEmail)+'</a>'):'<span>no email on file</span>')+(effPhone?(' · 📞 '+esc(effPhone)):'')+(r.date?(' · '+esc(r.date)):'')+'</p>'+
           (r.source ? '<p class="meta-line">📍 Source: '+(r.source_url?('<a href="'+esc(r.source_url)+'" target="_blank" rel="noopener">'+esc(r.source)+'</a>'):esc(r.source))+'</p>' : '')+
+          (atts.length ? '<p class="meta-line">📎 '+atts.length+' attachment'+(atts.length>1?'s':'')+' — see "Attachments" below</p>' : '')+
           (matches.length ? '<p class="match-line">🤝 Suggested partner'+(matches.length>1?'s':'')+' for this enquiry: '+matches.map(esc).join(", ")+'</p>' : '')+
           (effStatus==="Booked" && (st.dealValue||r.deal_value) ? '<p class="match-line">💰 Est. commission: '+esc((((st.dealValue||r.deal_value||0)*((st.commissionPct!=null?st.commissionPct:(r.commission_pct||15))/100)).toFixed(0)))+' SAR (on '+esc(st.dealValue||r.deal_value)+' SAR at '+esc(st.commissionPct!=null?st.commissionPct:(r.commission_pct||15))+'%)</p>' : '')+
           '<p class="next-action">→ '+esc(effNextAction)+'</p>'+
@@ -1308,6 +1365,7 @@
             '<button class="btn book-toggle">Book a call</button>'+
             '<button class="btn contact-toggle">+ Add contact</button>'+
             '<button class="btn edit-toggle">Edit</button>'+
+            (atts.length ? '<button class="btn atts-toggle">📎 Attachments ('+atts.length+')</button>' : '')+
             '<div class="flag-wrap" style="position:relative;display:inline-block">'+
               '<button class="flag-btn" type="button"><span class="flag-dot flag-'+flag+'"></span>'+esc(flagOpt.label)+'</button>'+
               '<div class="flag-picker">'+
@@ -1429,6 +1487,9 @@
       if(replyBtn) replyBtn.addEventListener("click", function(){ openModal(effRow); });
       var chainBtn = card.querySelector(".chain-toggle");
       if(chainBtn) chainBtn.addEventListener("click", function(){ openChainModal(Object.assign({}, effRow, {thread: row.thread, email_link: row.email_link, attachments: row.attachments})); });
+
+      var attsBtnC = card.querySelector(".atts-toggle");
+      if(attsBtnC) attsBtnC.addEventListener("click", function(){ openAttsModal(Object.assign({}, effRow, {attachments: row.attachments})); });
 
       var archiveBtn = card.querySelector(".archive-btn");
       if(archiveBtn) archiveBtn.addEventListener("click", function(){
@@ -1675,6 +1736,27 @@
 
   // ---- email chain modal ----
   var chainModal = document.getElementById("chain-modal");
+  // Attachments can be either a plain filename (string, from an email with no
+  // directly-downloadable link) or {name,url} (from a Jotform file-upload field,
+  // hosted on Jotform's own server — only the link is stored here, never the file).
+  function attName(a){ return (a && typeof a === "object") ? (a.name||"(file)") : (a||"(file)"); }
+  function attUrl(a){ return (a && typeof a === "object") ? (a.url||null) : null; }
+
+  var attsModal = document.getElementById("atts-modal");
+  function openAttsModal(row){
+    document.getElementById("atts-title").textContent = "Attachments — " + row.name;
+    document.getElementById("atts-sub").textContent = (row.attachments||[]).length + " file" + ((row.attachments||[]).length>1?"s":"");
+    document.getElementById("atts-body").innerHTML = (row.attachments||[]).map(function(a){
+      var url = attUrl(a);
+      return '<div class="atts-row"><span>📎 '+esc(attName(a))+'</span>'+
+        (url ? '<a class="btn gold" target="_blank" rel="noopener" href="'+esc(url)+'">Open / download</a>' : '<span style="color:var(--sub);font-size:11.5px">no direct link — see "View full email"</span>')+
+      '</div>';
+    }).join("");
+    attsModal.classList.add("open");
+  }
+  document.getElementById("atts-modal-close").addEventListener("click", function(){ attsModal.classList.remove("open"); });
+  attsModal.addEventListener("click", function(e){ if(e.target===attsModal) attsModal.classList.remove("open"); });
+
   function openChainModal(row){
     document.getElementById("chain-title").textContent = "Email chain — " + row.name;
     document.getElementById("chain-sub").textContent = row.thread.length + " message" + (row.thread.length>1?"s":"") + " · " + row.category + " · " + row.country;
@@ -1687,7 +1769,7 @@
         '<div class="chain-msg">'+
           '<div class="chain-msg-head"><b>'+esc(m.from)+'</b> · '+esc(m.date)+'<br>'+esc(m.subject)+'</div>'+
           '<div class="chain-msg-text">'+esc(m.text)+'</div>'+
-          (atts ? '<div class="chain-atts">📎 '+atts.map(esc).join(", ")+' — download the originals via "Open in Outlook" below</div>' : '')+
+          (atts ? '<div class="chain-atts">📎 '+atts.map(attName).map(esc).join(", ")+' — see "Attachments" on the card, or "Open in Outlook" below</div>' : '')+
         '</div>'
       );
     }).join("");
