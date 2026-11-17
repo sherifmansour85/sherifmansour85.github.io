@@ -857,6 +857,7 @@
       var atts = r.attachments || [];
       var flag = st.flag || r.flag_default || "new";
       var flagOpt = PARTNER_FLAG_OPTIONS.filter(function(f){return f.key===flag;})[0] || PARTNER_FLAG_OPTIONS[0];
+      flag = flagOpt.key;
       var extraContacts = st.extraContacts || [];
       var effStatus = st.status || r.status;
       var effName = st.name || r.name;
@@ -1307,6 +1308,7 @@
       var deleted = isCustArchived(r);
       var flag = st.flag || r.flag_default || "new";
       var flagOpt = FLAG_OPTIONS.filter(function(f){return f.key===flag;})[0] || FLAG_OPTIONS[0];
+      flag = flagOpt.key;
       var notes = st.notes || "";
       var extraContacts = st.extraContacts || [];
       var effName = st.name || r.name;
