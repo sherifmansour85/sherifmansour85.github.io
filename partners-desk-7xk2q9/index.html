@@ -59,7 +59,8 @@
   .empty{text-align:center;padding:40px 10px;color:var(--sub);font-size:13px}
   .reminder-box,.booking-box,.contact-box,.edit-box{margin-top:12px;padding:12px 14px;background:var(--cream);border:1px solid var(--line);border-radius:10px}
   .reminder-box label,.booking-box label,.contact-box label,.edit-box label{display:block;font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.03em;margin-bottom:5px;margin-top:8px}
-  .reminder-box input[type=email],.booking-box input,.contact-box input,.edit-box select{width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--line);font-size:12.5px;margin-bottom:4px;background:#fff}
+  .reminder-box input[type=email],.booking-box input,.contact-box input,.edit-box select,.edit-box input,.edit-box textarea{width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--line);font-size:12.5px;margin-bottom:4px;background:#fff}
+  .edit-box textarea{min-height:60px;font-family:inherit}
   .booking-box .row2,.contact-box .row2{margin-top:4px}
   .extra-contacts{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
   .contact-chip{display:inline-flex;align-items:center;gap:6px;background:var(--cream);border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-size:12px;color:var(--ink)}
@@ -299,6 +300,7 @@
   function esc(s){ return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
 
   var STATUS_OPTIONS = ["New Inquiry","Documents Received","Live Partner","Low Priority"];
+  var CATEGORY_OPTIONS = ["Hospital","Dental Clinic","Clinic (Other)","Wellness/Resort","Referral Agency","Tourism & Hospitality","Vendor/Low Priority"];
 
   var REMIND_OPTIONS = [
     { key:"tomorrow", label:"Follow up tomorrow", days:1 },
@@ -349,9 +351,10 @@
       sel.appendChild(keep);
       values.forEach(function(v){ var o=document.createElement("option"); o.value=v; o.textContent=v; sel.appendChild(o); });
     }
-    fill("f-category", unique(ALL.map(function(r){return r.category})).sort());
-    fill("f-country", unique(ALL.map(function(r){return r.country})).sort());
-    fill("f-status", unique(ALL.map(function(r){return r.status})));
+    var overrides = ALL.map(function(r){ return state[r.id] || {}; });
+    fill("f-category", unique(ALL.map(function(r){return r.category}).concat(overrides.map(function(s){return s.category;}))).sort());
+    fill("f-country", unique(ALL.map(function(r){return r.country}).concat(overrides.map(function(s){return s.country;}))).sort());
+    fill("f-status", unique(ALL.map(function(r){return r.status}).concat(overrides.map(function(s){return s.status;}))));
     fill("f-priority", ["High","Medium","Low","Active"]);
   }
   function unique(arr){ var s={}; arr.forEach(function(v){ if(v) s[v]=1; }); return Object.keys(s); }
@@ -376,15 +379,24 @@
       if(deleted && !showDeleted) return false;
       if(!deleted && showDeleted) return false;
       if(hideDone && done) return false;
-      if(cat && r.category!==cat) return false;
-      if(country && r.country!==country) return false;
-      var effStatus = (state[r.id] && state[r.id].status) || r.status;
+      var s = state[r.id] || {};
+      var effCategory = s.category || r.category;
+      var effCountry = s.country || r.country;
+      var effStatus = s.status || r.status;
+      var effPriority = s.priority || r.priority;
+      if(cat && effCategory!==cat) return false;
+      if(country && effCountry!==country) return false;
       if(status && effStatus!==status) return false;
-      if(prio && r.priority!==prio) return false;
+      if(prio && effPriority!==prio) return false;
       if(q){
-        var extra = (state[r.id] && state[r.id].extraContacts) || [];
-        var extraText = extra.map(function(c){ return (c.name||"")+" "+(c.email||"")+" "+(c.phone||""); }).join(" ");
-        var hay = (r.name+" "+r.category+" "+r.country+" "+r.contact+" "+r.email+" "+(r.phone||"")+" "+r.summary+" "+extraText).toLowerCase();
+        var extra = s.extraContacts || [];
+        var extraText = extra.map(function(c){ return (c.name||"")+" "+(c.role||"")+" "+(c.email||"")+" "+(c.phone||""); }).join(" ");
+        var effName = s.name || r.name;
+        var effContact = (s.contact!=null ? s.contact : r.contact);
+        var effEmail = (s.email!=null ? s.email : r.email);
+        var effPhone = (s.phone!=null ? s.phone : r.phone) || "";
+        var effSummary = (s.summary!=null ? s.summary : r.summary);
+        var hay = (effName+" "+effCategory+" "+effCountry+" "+effContact+" "+effEmail+" "+effPhone+" "+effSummary+" "+extraText).toLowerCase();
         if(hay.indexOf(q)===-1) return false;
       }
       return true;
@@ -415,23 +427,33 @@
       var atts = r.attachments || [];
       var extraContacts = st.extraContacts || [];
       var effStatus = st.status || r.status;
+      var effName = st.name || r.name;
+      var effCategory = st.category || r.category;
+      var effCountry = st.country || r.country;
+      var effPriority = st.priority || r.priority;
+      var effContact = (st.contact!=null ? st.contact : r.contact);
+      var effEmail = (st.email!=null ? st.email : r.email);
+      var effPhone = (st.phone!=null ? st.phone : r.phone);
+      var effNextAction = st.next_action || r.next_action;
+      var effSummary = (st.summary!=null ? st.summary : r.summary);
+      var edited = !!(st.status||st.name||st.category||st.country||st.priority||st.contact!=null||st.email!=null||st.phone!=null||st.next_action||st.summary!=null);
       return (
         '<div class="card'+(done?' done':'')+(deleted?' deleted':'')+'" data-id="'+esc(r.id)+'">'+
           '<div class="card-top">'+
-            '<div><h3>'+esc(r.name)+'</h3>'+
+            '<div><h3>'+esc(effName)+'</h3>'+
             '<div class="tags">'+
               '<span class="pill '+pillClass("status",effStatus)+'">'+esc(effStatus)+'</span>'+
-              (st.status ? '<span class="pill neu">edited</span>' : '')+
-              '<span class="pill '+pillClass("priority",r.priority)+'">'+esc(r.priority)+'</span>'+
-              '<span class="pill neu">'+esc(r.category)+'</span>'+
-              '<span class="pill neu">'+esc(r.country)+'</span>'+
+              (edited ? '<span class="pill neu">edited</span>' : '')+
+              '<span class="pill '+pillClass("priority",effPriority)+'">'+esc(effPriority)+'</span>'+
+              '<span class="pill neu">'+esc(effCategory)+'</span>'+
+              '<span class="pill neu">'+esc(effCountry)+'</span>'+
               (r.custom ? '<span class="pill neu">Added manually</span>' : '')+
             '</div></div>'+
             '<label class="done-toggle"><input type="checkbox" class="done-check" '+(done?'checked':'')+'> Done</label>'+
           '</div>'+
-          '<p class="summary">'+esc(r.summary)+'</p>'+
-          '<p class="meta-line">'+(r.contact?esc(r.contact)+' · ':'')+(r.email?('<a href="mailto:'+esc(r.email)+'">'+esc(r.email)+'</a>'):'<span>no email on file</span>')+(r.phone?(' · 📞 '+esc(r.phone)):'')+(r.date?(' · '+esc(r.date)):'')+'</p>'+
-          '<p class="next-action">→ '+esc(r.next_action)+'</p>'+
+          '<p class="summary">'+esc(effSummary)+'</p>'+
+          '<p class="meta-line">'+(effContact?esc(effContact)+' · ':'')+(effEmail?('<a href="mailto:'+esc(effEmail)+'">'+esc(effEmail)+'</a>'):'<span>no email on file</span>')+(effPhone?(' · 📞 '+esc(effPhone)):'')+(r.date?(' · '+esc(r.date)):'')+'</p>'+
+          '<p class="next-action">→ '+esc(effNextAction)+'</p>'+
           (atts.length ? '<p class="meta-line">📎 '+atts.length+' attachment'+(atts.length>1?'s':'')+': '+atts.map(esc).join(", ")+(r.email_link ? ' — open "View full email" below to download the originals' : '')+'</p>' : '')+
           (extraContacts.length ? '<div class="extra-contacts">'+extraContacts.map(function(c,i){
             return '<span class="contact-chip" data-i="'+i+'">'+esc(c.name||"(no name)")+
@@ -442,26 +464,52 @@
           }).join("")+'</div>' : '')+
           '<textarea class="notes" placeholder="Add a note…">'+esc(notes)+'</textarea>'+
           '<div class="card-actions">'+
-            (r.email ? '<button class="btn gold reply-btn">Reply</button>' : '')+
+            (effEmail ? '<button class="btn gold reply-btn">Reply</button>' : '')+
             (r.thread && r.thread.length ? '<button class="btn chain-toggle">View email chain</button>' : '')+
             (r.email_link ? '<a class="btn" target="_blank" rel="noopener" href="'+esc(r.email_link)+'">View full email</a>' : '')+
             '<button class="btn remind-toggle">Set a reminder</button>'+
             '<button class="btn book-toggle">Book a meeting</button>'+
             '<button class="btn contact-toggle">+ Add contact</button>'+
-            '<button class="btn edit-toggle">Edit status</button>'+
+            '<button class="btn edit-toggle">Edit</button>'+
             (deleted ? '<button class="btn restore-btn">Restore</button>' : '<button class="btn delete-btn">Delete</button>')+
           '</div>'+
           '<div class="edit-box" style="display:none">'+
-            '<label>Status</label>'+
-            '<select class="e-status">'+
-              STATUS_OPTIONS.map(function(s){ return '<option value="'+esc(s)+'"'+(s===effStatus?' selected':'')+'>'+esc(s)+'</option>'; }).join("")+
-            '</select>'+
-            '<div class="modal-actions" style="margin-top:10px"><button class="btn gold edit-save">Save status</button></div>'+
+            '<div class="row2">'+
+              '<div><label>Name</label><input type="text" class="e-name" value="'+esc(effName)+'"></div>'+
+              '<div><label>Category</label>'+
+                '<select class="e-category">'+
+                  CATEGORY_OPTIONS.map(function(c){ return '<option value="'+esc(c)+'"'+(c===effCategory?' selected':'')+'>'+esc(c)+'</option>'; }).join("")+
+                '</select>'+
+              '</div>'+
+            '</div>'+
+            '<div class="row2">'+
+              '<div><label>Country</label><input type="text" class="e-country" value="'+esc(effCountry)+'"></div>'+
+              '<div><label>Status</label>'+
+                '<select class="e-status">'+
+                  STATUS_OPTIONS.map(function(s){ return '<option value="'+esc(s)+'"'+(s===effStatus?' selected':'')+'>'+esc(s)+'</option>'; }).join("")+
+                '</select>'+
+              '</div>'+
+            '</div>'+
+            '<div class="row2">'+
+              '<div><label>Priority</label>'+
+                '<select class="e-priority">'+
+                  ["High","Medium","Low","Active"].map(function(p){ return '<option value="'+esc(p)+'"'+(p===effPriority?' selected':'')+'>'+esc(p)+'</option>'; }).join("")+
+                '</select>'+
+              '</div>'+
+              '<div><label>Contact person</label><input type="text" class="e-contact" value="'+esc(effContact)+'"></div>'+
+            '</div>'+
+            '<div class="row2">'+
+              '<div><label>Email</label><input type="email" class="e-email" value="'+esc(effEmail)+'"></div>'+
+              '<div><label>Phone</label><input type="text" class="e-phone" value="'+esc(effPhone)+'"></div>'+
+            '</div>'+
+            '<label>Summary / notes</label><textarea class="e-summary">'+esc(effSummary)+'</textarea>'+
+            '<label>Next action</label><input type="text" class="e-next-action" value="'+esc(effNextAction)+'">'+
+            '<div class="modal-actions" style="margin-top:10px"><button class="btn gold edit-save">Save changes</button></div>'+
           '</div>'+
           '<div class="contact-box" style="display:none">'+
             '<div class="row2">'+
               '<div><label>Name</label><input type="text" class="c-name"></div>'+
-              '<div><label>Role (optional)</label><input type="text" class="c-role" placeholder="e.g. new sales rep"></div>'+
+              '<div><label>Position</label><input type="text" class="c-role" placeholder="e.g. Medical Tourism Manager"></div>'+
             '</div>'+
             '<div class="row2">'+
               '<div><label>Email</label><input type="email" class="c-email"></div>'+
@@ -476,13 +524,13 @@
           '</div>'+
           '<div class="booking-box" style="display:none">'+
             '<label>Who’s joining (comma-separated emails)</label>'+
-            '<input type="text" class="book-emails" placeholder="'+esc(r.email||"partner@example.com")+', reham@hayakkom.com" value="'+esc(st.bookEmails|| (r.email||""))+'">'+
+            '<input type="text" class="book-emails" placeholder="'+esc(effEmail||"partner@example.com")+', reham@hayakkom.com" value="'+esc(st.bookEmails|| (effEmail||""))+'">'+
             '<div class="row2">'+
               '<div><label>Date</label><input type="date" class="book-date"></div>'+
               '<div><label>Time</label><input type="time" class="book-time" value="10:00"></div>'+
             '</div>'+
             '<label>Subject</label>'+
-            '<input type="text" class="book-subject" value="Call with Hayakkom — '+esc(r.name)+'">'+
+            '<input type="text" class="book-subject" value="Call with Hayakkom — '+esc(effName)+'">'+
             '<div class="modal-actions" style="margin-top:10px">'+
               '<button class="btn gold book-open">Open in Outlook</button>'+
               '<button class="btn book-copy">Copy details to share</button>'+
@@ -497,6 +545,19 @@
     list.querySelectorAll(".card").forEach(function(card){
       var id = card.getAttribute("data-id");
       var row = ALL.filter(function(r){return r.id===id})[0];
+      var _s = state[id] || {};
+      var effRow = Object.assign({}, row, {
+        name: _s.name || row.name,
+        category: _s.category || row.category,
+        country: _s.country || row.country,
+        priority: _s.priority || row.priority,
+        contact: (_s.contact!=null ? _s.contact : row.contact),
+        email: (_s.email!=null ? _s.email : row.email),
+        phone: (_s.phone!=null ? _s.phone : row.phone),
+        summary: (_s.summary!=null ? _s.summary : row.summary),
+        next_action: _s.next_action || row.next_action,
+        status: _s.status || row.status
+      });
       card.querySelector(".done-check").addEventListener("change", function(e){
         state[id] = state[id] || {};
         state[id].done = e.target.checked;
@@ -509,14 +570,14 @@
         saveState(state);
       });
       var replyBtn = card.querySelector(".reply-btn");
-      if(replyBtn) replyBtn.addEventListener("click", function(){ openModal(row); });
+      if(replyBtn) replyBtn.addEventListener("click", function(){ openModal(effRow); });
 
       var chainBtn = card.querySelector(".chain-toggle");
-      if(chainBtn) chainBtn.addEventListener("click", function(){ openChainModal(row); });
+      if(chainBtn) chainBtn.addEventListener("click", function(){ openChainModal(effRow); });
 
       var deleteBtn = card.querySelector(".delete-btn");
       if(deleteBtn) deleteBtn.addEventListener("click", function(){
-        if(!confirm("Remove \""+row.name+"\" from the list? You can bring it back with \"Show deleted\".")) return;
+        if(!confirm("Remove \""+effRow.name+"\" from the list? You can bring it back with \"Show deleted\".")) return;
         state[id] = state[id] || {};
         state[id].deleted = true;
         saveState(state);
@@ -547,7 +608,7 @@
         card.querySelectorAll(".remind-row").forEach(function(rowEl){
           var key = rowEl.getAttribute("data-key");
           var opt = REMIND_OPTIONS.filter(function(o){return o.key===key})[0];
-          rowEl.querySelector(".remind-cal-link").href = calendarLink(row, opt, currentEmail());
+          rowEl.querySelector(".remind-cal-link").href = calendarLink(effRow, opt, currentEmail());
         });
       }
       refreshLinks();
@@ -592,7 +653,7 @@
       }
       card.querySelector(".book-open").addEventListener("click", function(){
         var d = bookingDetails();
-        var body = "Booked from the Hayakkom Partners Desk.\n\nPartner: " + row.name + "\nCategory: " + row.category;
+        var body = "Booked from the Hayakkom Partners Desk.\n\nPartner: " + effRow.name + "\nCategory: " + effRow.category;
         var url = "https://outlook.office.com/calendar/0/deeplink/compose?path=/calendar/action/compose&rru=addevent"
           + "&subject=" + encodeURIComponent(d.subject)
           + "&startdt=" + encodeURIComponent(isoLocal(d.start))
@@ -622,7 +683,7 @@
         }
       });
 
-      // ---- edit status ----
+      // ---- edit everything ----
       var editToggle = card.querySelector(".edit-toggle");
       var editBox = card.querySelector(".edit-box");
       editToggle.addEventListener("click", function(){
@@ -630,8 +691,27 @@
       });
       card.querySelector(".edit-save").addEventListener("click", function(){
         state[id] = state[id] || {};
+        var name = card.querySelector(".e-name").value.trim();
+        if(name && name!==row.name) state[id].name = name;
+        var category = card.querySelector(".e-category").value;
+        if(category!==row.category) state[id].category = category;
+        var country = card.querySelector(".e-country").value.trim();
+        if(country && country!==row.country) state[id].country = country;
         state[id].status = card.querySelector(".e-status").value;
+        var priority = card.querySelector(".e-priority").value;
+        if(priority!==row.priority) state[id].priority = priority;
+        var contact = card.querySelector(".e-contact").value.trim();
+        if(contact!==(row.contact||"")) state[id].contact = contact;
+        var email = card.querySelector(".e-email").value.trim();
+        if(email!==(row.email||"")) state[id].email = email;
+        var phone = card.querySelector(".e-phone").value.trim();
+        if(phone!==(row.phone||"")) state[id].phone = phone;
+        var summary = card.querySelector(".e-summary").value.trim();
+        if(summary!==(row.summary||"")) state[id].summary = summary;
+        var nextAction = card.querySelector(".e-next-action").value.trim();
+        if(nextAction && nextAction!==row.next_action) state[id].next_action = nextAction;
         saveState(state);
+        buildFilterOptions();
         render();
       });
 
