@@ -440,8 +440,8 @@
   }
   var ENCRYPTED = null;
   var ENCRYPTED_CUST = null;
-  fetch("data.enc.json").then(function(r){return r.json();}).then(function(j){ ENCRYPTED = j; });
-  fetch("customers.enc.json").then(function(r){return r.json();}).then(function(j){ ENCRYPTED_CUST = j; }).catch(function(){ ENCRYPTED_CUST = null; });
+  fetch("data.enc.json", {cache: "no-store"}).then(function(r){return r.json();}).then(function(j){ ENCRYPTED = j; });
+  fetch("customers.enc.json", {cache: "no-store"}).then(function(r){return r.json();}).then(function(j){ ENCRYPTED_CUST = j; }).catch(function(){ ENCRYPTED_CUST = null; });
   document.getElementById("pw-submit").addEventListener("click", tryUnlock);
   document.getElementById("pw-input").addEventListener("keydown", function(e){ if(e.key==="Enter") tryUnlock(); });
   function decryptWith(password, enc){
