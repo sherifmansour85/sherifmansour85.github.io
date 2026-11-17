@@ -54,6 +54,20 @@
   .delete-btn{color:#A33;border-color:#E9C3C3}
   .delete-btn:hover{border-color:#A33}
   .view-toggle{display:flex;gap:8px;margin-bottom:18px}
+  .upcoming-panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:18px}
+  .upcoming-head{display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:14px;margin-bottom:8px}
+  .upcoming-toggle{font-size:11.5px;border:none;background:none;color:var(--sub);cursor:pointer;text-decoration:underline}
+  .upcoming-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:13px}
+  .upcoming-row:first-child{border-top:none}
+  .upcoming-row .u-what{color:var(--sub)}
+  .upcoming-row .u-when{font-weight:600;white-space:nowrap}
+  .upcoming-row .u-when.overdue{color:var(--crit-fg)}
+  .sla-badge{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px}
+  .sla-badge.ok{background:var(--ok-bg);color:var(--ok-fg)}
+  .sla-badge.warn{background:var(--warn-bg);color:var(--warn-fg)}
+  .sla-badge.crit{background:var(--crit-bg);color:var(--crit-fg)}
+  .match-line{font-size:12px;color:var(--sub);margin-top:6px}
+  .dup-flag{font-size:11.5px;background:#FBEBD6;color:#a05a00;border-radius:999px;padding:3px 9px;font-weight:600}
   .view-btn{font-size:13.5px;font-weight:600;padding:9px 18px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--sub);cursor:pointer}
   .view-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
   .pill.flag-new{background:#F6ECD2;color:#8F701D}
@@ -151,6 +165,11 @@
     <button class="view-btn active" id="view-btn-partners" type="button">🤝 Partners</button>
     <button class="view-btn" id="view-btn-customers" type="button">🧳 Customers</button>
     <button class="btn gold" id="new-email-btn" type="button" style="margin-inline-start:auto">✉️ New email</button>
+  </div>
+
+  <div class="upcoming-panel" id="upcoming-panel" style="display:none">
+    <div class="upcoming-head">📅 Coming up <button class="upcoming-toggle" id="upcoming-toggle" type="button">Hide</button></div>
+    <div id="upcoming-list"></div>
   </div>
 
   <div id="view-partners">
@@ -404,6 +423,44 @@
   ];
   document.addEventListener("click", function(){ document.querySelectorAll(".flag-picker.open").forEach(function(p){ p.classList.remove("open"); }); });
 
+  var TYPE_TO_CATEGORY = {
+    "Dental": ["Dental Clinic"],
+    "Medical": ["Hospital","Clinic (Other)"],
+    "VIP": ["Hospital","Wellness/Resort"],
+    "Trip": ["Tourism & Hospitality"]
+  };
+  function matchingPartners(type){
+    var cats = TYPE_TO_CATEGORY[type];
+    if(!cats) return [];
+    return ALL.filter(function(p){
+      var s = state[p.id]||{};
+      if(s.deleted) return false;
+      var cat = s.category || p.category;
+      return cats.indexOf(cat)!==-1;
+    }).map(function(p){ return (state[p.id]&&state[p.id].name)||p.name; }).slice(0,3);
+  }
+  function norm(v){ return (v||"").toString().trim().toLowerCase().replace(/[^a-z0-9@.]/g,""); }
+  function findDuplicate(email, phone, myId){
+    var e = norm(email), p = norm(phone);
+    if(!e && !p) return null;
+    var hit = ALL.filter(function(r){
+      var s = state[r.id]||{};
+      if(s.deleted) return false;
+      var re = norm(s.email!=null?s.email:r.email), rp = norm(s.phone!=null?s.phone:r.phone);
+      return (e && re===e) || (p && rp===p);
+    })[0];
+    if(hit) return { name: (state[hit.id]&&state[hit.id].name)||hit.name, kind: "partner" };
+    hit = ALL_CUST.filter(function(r){
+      if(r.id===myId) return false;
+      var s = state[r.id]||{};
+      if(s.deleted) return false;
+      var re = norm(s.email!=null?s.email:r.email), rp = norm(s.phone!=null?s.phone:r.phone);
+      return (e && re===e) || (p && rp===p);
+    })[0];
+    if(hit) return { name: (state[hit.id]&&state[hit.id].name)||hit.name, kind: "customer" };
+    return null;
+  }
+
   // ---- view toggle ----
   document.getElementById("view-btn-partners").addEventListener("click", function(){
     document.getElementById("view-partners").style.display = "block";
@@ -487,6 +544,46 @@
   ["f-search","f-category","f-country","f-status","f-priority","f-hide-done","f-show-deleted"].forEach(function(id){
     document.getElementById(id).addEventListener("input", render);
     document.getElementById(id).addEventListener("change", render);
+  });
+
+  function renderUpcoming(){
+    var panel = document.getElementById("upcoming-panel");
+    if(panel.dataset.hidden==="1"){ panel.style.display="none"; return; }
+    var items = [];
+    function collect(list, kind){
+      list.forEach(function(r){
+        var s = state[r.id] || {};
+        if(s.deleted) return;
+        var nm = s.name || r.name;
+        if(s.reminderDates){
+          Object.keys(s.reminderDates).forEach(function(key){
+            var opt = REMIND_OPTIONS.filter(function(o){return o.key===key;})[0];
+            items.push({ when: new Date(s.reminderDates[key]), what: (kind==="p"?"🤝 ":"🧳 ")+nm+" — "+(opt?opt.label:key) });
+          });
+        }
+        if(s.bookDate){
+          var t = s.bookTime || "10:00";
+          items.push({ when: new Date(s.bookDate+"T"+t+":00"), what: (kind==="p"?"🤝 ":"🧳 ")+nm+" — call "+t });
+        }
+      });
+    }
+    collect(ALL, "p");
+    collect(ALL_CUST, "c");
+    items.sort(function(a,b){ return a.when - b.when; });
+    var now = new Date();
+    var list = document.getElementById("upcoming-list");
+    if(!items.length){ panel.style.display="none"; return; }
+    panel.style.display = "block";
+    list.innerHTML = items.slice(0,8).map(function(it){
+      var overdue = it.when < now;
+      var dateStr = it.when.toLocaleDateString(undefined,{month:"short",day:"numeric"}) + " " + it.when.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"});
+      return '<div class="upcoming-row"><span class="u-what">'+esc(it.what)+'</span><span class="u-when'+(overdue?' overdue':'')+'">'+(overdue?'Overdue — ':'')+esc(dateStr)+'</span></div>';
+    }).join("");
+  }
+  document.getElementById("upcoming-toggle").addEventListener("click", function(){
+    var panel = document.getElementById("upcoming-panel");
+    panel.dataset.hidden = panel.dataset.hidden==="1" ? "0" : "1";
+    renderUpcoming();
   });
 
   function render(){
@@ -651,11 +748,11 @@
             '<label>Who’s joining (comma-separated emails)</label>'+
             '<input type="text" class="book-emails" placeholder="'+esc(effEmail||"partner@example.com")+', reham@hayakkom.com" value="'+esc(st.bookEmails|| (effEmail||""))+'">'+
             '<div class="row2">'+
-              '<div><label>Date</label><input type="date" class="book-date"></div>'+
-              '<div><label>Time</label><input type="time" class="book-time" value="10:00"></div>'+
+              '<div><label>Date</label><input type="date" class="book-date" value="'+esc(st.bookDate||"")+'"></div>'+
+              '<div><label>Time</label><input type="time" class="book-time" value="'+esc(st.bookTime||"10:00")+'"></div>'+
             '</div>'+
             '<label>Subject</label>'+
-            '<input type="text" class="book-subject" value="Call with Hayakkom — '+esc(effName)+'">'+
+            '<input type="text" class="book-subject" value="'+esc(st.bookSubject||("Call with Hayakkom — "+effName))+'">'+
             '<div class="modal-actions" style="margin-top:10px">'+
               '<button class="btn gold book-open">Open in Outlook</button>'+
               '<button class="btn book-copy">Copy details to share</button>'+
@@ -744,9 +841,18 @@
           state[id] = state[id] || {};
           state[id].reminders = state[id].reminders || {};
           state[id].reminders[key] = cb.checked;
+          state[id].reminderDates = state[id].reminderDates || {};
+          if(cb.checked){
+            var opt = REMIND_OPTIONS.filter(function(o){return o.key===key;})[0];
+            var due = new Date(); due.setDate(due.getDate() + (opt?opt.days:1));
+            state[id].reminderDates[key] = due.toISOString();
+          } else {
+            delete state[id].reminderDates[key];
+          }
           saveState(state);
           rowEl.classList.toggle("checked", cb.checked);
           refreshLinks();
+          renderUpcoming();
         });
       });
 
@@ -766,6 +872,14 @@
         state[id] = state[id] || {};
         state[id].bookEmails = bookEmailsInput.value.trim();
         saveState(state);
+      });
+      ["book-date","book-time","book-subject"].forEach(function(cls){
+        card.querySelector("."+cls).addEventListener("change", function(e){
+          state[id] = state[id] || {};
+          state[id][cls==="book-date"?"bookDate":cls==="book-time"?"bookTime":"bookSubject"] = e.target.value;
+          saveState(state);
+          renderUpcoming();
+        });
       });
       function bookingDetails(){
         var dateVal = card.querySelector(".book-date").value;
@@ -869,6 +983,7 @@
         });
       });
     });
+    renderUpcoming();
   }
 
   // ==== CUSTOMERS ====
@@ -957,6 +1072,15 @@
       var effSummary = (st.summary!=null ? st.summary : r.summary);
       var effNextAction = st.next_action || r.next_action || "Follow up";
       var edited = !!(st.name||st.enquiry_type||st.status||st.email!=null||st.phone!=null||st.summary!=null||st.next_action);
+      var dup = findDuplicate(effEmail, effPhone, r.id);
+      var matches = matchingPartners(effType);
+      var slaHtml = "";
+      if(r.received_at){
+        var hoursLeft = 12 - (Date.now() - new Date(r.received_at).getTime())/3600000;
+        var slaCls = hoursLeft<=0 ? "crit" : hoursLeft<=4 ? "warn" : "ok";
+        var slaTxt = hoursLeft<=0 ? "Overdue by "+Math.ceil(-hoursLeft)+"h (12h promise)" : Math.ceil(hoursLeft)+"h left of 12h promise";
+        slaHtml = '<span class="sla-badge '+slaCls+'">'+esc(slaTxt)+'</span>';
+      }
       return (
         '<div class="card'+(done?' done':'')+(deleted?' deleted':'')+' flag-'+flag+'" data-id="'+esc(r.id)+'">'+
           '<div class="card-top">'+
@@ -964,6 +1088,8 @@
             '<div class="tags">'+
               '<span class="pill flag-'+flag+'">'+esc(flagOpt.label)+'</span>'+
               '<span class="pill '+custPillClass("status",effStatus)+'">'+esc(effStatus)+'</span>'+
+              slaHtml+
+              (dup ? '<span class="dup-flag">⚠ Also a '+dup.kind+': '+esc(dup.name)+'</span>' : '')+
               (edited ? '<span class="pill neu">edited</span>' : '')+
               '<span class="pill neu">'+esc(effType)+'</span>'+
               (r.custom ? '<span class="pill neu">Added manually</span>' : '')+
@@ -973,6 +1099,8 @@
           '<p class="summary">'+esc(effSummary)+'</p>'+
           '<p class="meta-line">'+(effEmail?('<a href="mailto:'+esc(effEmail)+'">'+esc(effEmail)+'</a>'):'<span>no email on file</span>')+(effPhone?(' · 📞 '+esc(effPhone)):'')+(r.date?(' · '+esc(r.date)):'')+'</p>'+
           (r.source ? '<p class="meta-line">📍 Source: '+(r.source_url?('<a href="'+esc(r.source_url)+'" target="_blank" rel="noopener">'+esc(r.source)+'</a>'):esc(r.source))+'</p>' : '')+
+          (matches.length ? '<p class="match-line">🤝 Suggested partner'+(matches.length>1?'s':'')+' for this enquiry: '+matches.map(esc).join(", ")+'</p>' : '')+
+          (effStatus==="Booked" && (st.dealValue||r.deal_value) ? '<p class="match-line">💰 Est. commission: '+esc((((st.dealValue||r.deal_value||0)*((st.commissionPct!=null?st.commissionPct:(r.commission_pct||15))/100)).toFixed(0)))+' SAR (on '+esc(st.dealValue||r.deal_value)+' SAR at '+esc(st.commissionPct!=null?st.commissionPct:(r.commission_pct||15))+'%)</p>' : '')+
           '<p class="next-action">→ '+esc(effNextAction)+'</p>'+
           (extraContacts.length ? '<div class="extra-contacts">'+extraContacts.map(function(c,i){
             return '<span class="contact-chip" data-i="'+i+'">'+esc(c.name||"(no name)")+
@@ -1022,6 +1150,10 @@
               '<div><label>Next action</label><input type="text" class="e-next-action" value="'+esc(effNextAction)+'"></div>'+
             '</div>'+
             '<label>Summary</label><textarea class="e-summary">'+esc(effSummary)+'</textarea>'+
+            '<div class="row2">'+
+              '<div><label>Deal value (SAR, once booked)</label><input type="number" class="e-deal-value" value="'+esc(st.dealValue||r.deal_value||"")+'"></div>'+
+              '<div><label>Commission %</label><input type="number" class="e-commission-pct" value="'+esc(st.commissionPct!=null?st.commissionPct:(r.commission_pct!=null?r.commission_pct:15))+'"></div>'+
+            '</div>'+
             '<div class="modal-actions" style="margin-top:10px"><button class="btn gold edit-save">Save changes</button></div>'+
           '</div>'+
           '<div class="contact-box" style="display:none">'+
@@ -1044,11 +1176,11 @@
             '<label>Who’s joining (comma-separated emails)</label>'+
             '<input type="text" class="book-emails" placeholder="'+esc(effEmail||"customer@example.com")+', reham@hayakkom.com" value="'+esc(st.bookEmails|| (effEmail||""))+'">'+
             '<div class="row2">'+
-              '<div><label>Date</label><input type="date" class="book-date"></div>'+
-              '<div><label>Time</label><input type="time" class="book-time" value="10:00"></div>'+
+              '<div><label>Date</label><input type="date" class="book-date" value="'+esc(st.bookDate||"")+'"></div>'+
+              '<div><label>Time</label><input type="time" class="book-time" value="'+esc(st.bookTime||"10:00")+'"></div>'+
             '</div>'+
             '<label>Subject</label>'+
-            '<input type="text" class="book-subject" value="Call with Hayakkom — '+esc(effName)+'">'+
+            '<input type="text" class="book-subject" value="'+esc(st.bookSubject||("Call with Hayakkom — "+effName))+'">'+
             '<div class="modal-actions" style="margin-top:10px">'+
               '<button class="btn gold book-open">Open in Outlook</button>'+
               '<button class="btn book-copy">Copy details to share</button>'+
@@ -1144,6 +1276,10 @@
         if(summary!==(row.summary||"")) state[id].summary = summary;
         var nextAction = card.querySelector(".e-next-action").value.trim();
         if(nextAction && nextAction!==row.next_action) state[id].next_action = nextAction;
+        var dealValue = card.querySelector(".e-deal-value").value;
+        state[id].dealValue = dealValue ? Number(dealValue) : null;
+        var commissionPct = card.querySelector(".e-commission-pct").value;
+        state[id].commissionPct = commissionPct!=="" ? Number(commissionPct) : null;
         saveState(state);
         buildCustFilterOptions();
         renderCustomers();
@@ -1205,9 +1341,18 @@
           state[id] = state[id] || {};
           state[id].reminders = state[id].reminders || {};
           state[id].reminders[key] = cb.checked;
+          state[id].reminderDates = state[id].reminderDates || {};
+          if(cb.checked){
+            var opt = REMIND_OPTIONS.filter(function(o){return o.key===key;})[0];
+            var due = new Date(); due.setDate(due.getDate() + (opt?opt.days:1));
+            state[id].reminderDates[key] = due.toISOString();
+          } else {
+            delete state[id].reminderDates[key];
+          }
           saveState(state);
           rowEl.classList.toggle("checked", cb.checked);
           refreshLinks();
+          renderUpcoming();
         });
       });
 
@@ -1226,6 +1371,14 @@
         state[id] = state[id] || {};
         state[id].bookEmails = bookEmailsInput.value.trim();
         saveState(state);
+      });
+      ["book-date","book-time","book-subject"].forEach(function(cls){
+        card.querySelector("."+cls).addEventListener("change", function(e){
+          state[id] = state[id] || {};
+          state[id][cls==="book-date"?"bookDate":cls==="book-time"?"bookTime":"bookSubject"] = e.target.value;
+          saveState(state);
+          renderUpcoming();
+        });
       });
       function bookingDetails(){
         var dateVal = card.querySelector(".book-date").value;
@@ -1268,6 +1421,7 @@
         }
       });
     });
+    renderUpcoming();
   }
 
   document.getElementById("add-customer-btn").addEventListener("click", function(){
