@@ -71,6 +71,19 @@
   #list-customers .card.flag-new{border-color:#C0392B;box-shadow:0 0 0 3px rgba(192,57,43,.15)}
   #list-customers .flag-dot.flag-new{background:#C0392B}
   #list-customers .pill.flag-new{background:var(--crit-bg);color:var(--crit-fg)}
+  /* Urgent = flagged urgent, or a customer past the 12h reply promise. Same look on every list. */
+  .card.is-urgent{background:#FFF4F2;border:2px solid #C0392B;box-shadow:0 0 0 3px rgba(192,57,43,.18)}
+  .pill.urgent-pill{background:#C0392B;color:#fff}
+  .lastc{font-size:12px;color:var(--sub);margin-top:6px}
+  .lastc.never{color:var(--crit-fg);font-weight:600}
+  .lastc button{font-size:11.5px;margin-inline-start:8px;padding:3px 10px}
+  .an-table-wrap{overflow:auto;max-height:520px;background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:14px}
+  .an-table{width:100%;border-collapse:collapse;font-size:13px}
+  .an-table th{position:sticky;top:0;z-index:1;background:var(--cream);text-align:start;font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--sub);padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+  .an-table td{padding:8px 10px;border-top:1px solid var(--line);vertical-align:middle}
+  .an-table tr.arch td{color:var(--sub)}
+  .an-table .tag{font-size:10.5px;background:var(--neu-bg);color:var(--neu-fg);border-radius:999px;padding:1px 7px;margin-inline-start:6px;white-space:nowrap}
+  .an-table .sub2{display:block;font-size:11.5px;color:var(--sub)}
   .upcoming-panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:18px}
   .upcoming-head{display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:14px;margin-bottom:8px}
   .upcoming-toggle{font-size:11.5px;border:none;background:none;color:var(--sub);cursor:pointer;text-decoration:underline}
@@ -185,6 +198,7 @@
   <div class="view-toggle">
     <button class="view-btn active" id="view-btn-partners" type="button">🤝 Partners</button>
     <button class="view-btn" id="view-btn-customers" type="button">🧳 Customers</button>
+    <button class="view-btn" id="view-btn-helpers" type="button">🧰 Helpers</button>
     <button class="view-btn" id="view-btn-announce" type="button">📢 Announce</button>
     <button class="view-btn" id="view-btn-forms" type="button">📄 Forms</button>
     <button class="btn gold" id="new-email-btn" type="button" style="margin-inline-start:auto">✉️ New email</button>
@@ -199,12 +213,30 @@
   <div class="kpis">
     <div class="kpi"><div class="num" id="kpi-total">—</div><div class="lbl">Total contacts</div></div>
     <div class="kpi"><div class="num" id="kpi-live">—</div><div class="lbl">Live partners</div></div>
-    <div class="kpi"><div class="num" id="kpi-open">—</div><div class="lbl">Open / not done</div></div>
+    <div class="kpi"><div class="num" id="kpi-open">—</div><div class="lbl">🔥 Needs attention</div></div>
     <div class="kpi"><div class="num" id="kpi-shown">—</div><div class="lbl">Matching filters</div></div>
   </div>
 
   <div class="toolbar">
     <input type="search" id="f-search" placeholder="Search by name, hospital, clinic or tourism company…">
+    <select id="f-view">
+      <option value="">Show: everything</option>
+      <option value="attention">🔥 Needs attention</option>
+      <option value="awaiting">✉️ Sent us an email — awaiting our reply</option>
+      <option value="emailed">✉️ Sent us an email (any)</option>
+      <option value="urgent">Urgent</option>
+      <option value="review">Needs review</option>
+      <option value="notcontacted">Not contacted yet</option>
+      <option value="contacted">Contacted</option>
+    </select>
+    <select id="f-sort">
+      <option value="priority">Sort: urgent first</option>
+      <option value="newest">Sort: newest</option>
+      <option value="oldest">Sort: oldest</option>
+      <option value="lastcontact">Sort: longest since contact</option>
+      <option value="name">Sort: name A–Z</option>
+      <option value="country">Sort: country</option>
+    </select>
     <select id="f-category"><option value="">All specialities</option></select>
     <select id="f-country"><option value="">All countries</option></select>
     <select id="f-status"><option value="">All statuses</option></select>
@@ -221,15 +253,39 @@
   <div id="view-customers" style="display:none">
   <div class="kpis">
     <div class="kpi"><div class="num" id="kpi-cust-total">—</div><div class="lbl">Total enquiries</div></div>
-    <div class="kpi"><div class="num" id="kpi-cust-new">—</div><div class="lbl">Flagged "New"</div></div>
-    <div class="kpi"><div class="num" id="kpi-cust-open">—</div><div class="lbl">Open / not done</div></div>
+    <div class="kpi"><div class="num" id="kpi-cust-new">—</div><div class="lbl">🔥 Needs attention</div></div>
+    <div class="kpi"><div class="num" id="kpi-cust-open">—</div><div class="lbl">⏰ Over 12h, no reply</div></div>
     <div class="kpi"><div class="num" id="kpi-cust-shown">—</div><div class="lbl">Matching filters</div></div>
   </div>
 
   <div class="toolbar">
-    <input type="search" id="fc-search" placeholder="Search by name, email, phone or enquiry…">
+    <input type="search" id="fc-search" placeholder="Search by name, email, phone, country or enquiry…">
+    <select id="fc-view">
+      <option value="">Show: everything</option>
+      <option value="attention">🔥 Needs attention</option>
+      <option value="urgent">Urgent (flagged)</option>
+      <option value="overdue">⏰ Over 12h, no reply yet</option>
+      <option value="new12">New — last 12 hours</option>
+      <option value="notcontacted">Not contacted yet</option>
+      <option value="contacted">Contacted</option>
+      <option value="waiting">Waiting on customer</option>
+      <option value="ready">Ready to book</option>
+      <option value="review">Needs review</option>
+      <option value="hasemail">Has email</option>
+      <option value="phoneonly">Phone / WhatsApp only</option>
+      <option value="legacy">From old (legacy) forms</option>
+    </select>
     <select id="fc-type"><option value="">All enquiry types</option></select>
     <select id="fc-status"><option value="">All statuses</option></select>
+    <select id="fc-country"><option value="">All countries</option></select>
+    <select id="fc-sort">
+      <option value="priority">Sort: urgent first</option>
+      <option value="newest">Sort: newest</option>
+      <option value="oldest">Sort: oldest</option>
+      <option value="lastcontact">Sort: longest since contact</option>
+      <option value="name">Sort: name A–Z</option>
+      <option value="country">Sort: country</option>
+    </select>
     <label class="chk"><input type="checkbox" id="fc-hide-done"> Hide done</label>
     <label class="chk"><input type="checkbox" id="fc-show-deleted"> Show archived</label>
     <button class="btn gold" id="add-customer-btn" type="button">+ Add customer</button>
@@ -240,7 +296,7 @@
   </div>
 
   <div id="view-announce" style="display:none">
-    <p class="lede" style="margin-top:0">Send an announcement to past customers. Pick a template or write your own, choose who gets it, then open the email(s) in Outlook — nothing sends automatically.</p>
+    <p class="lede" style="margin-top:0">Send an announcement to customers (including the old-form archive), helpers or partners. Pick a template or write your own, tick who gets it, then open each email in Outlook — or WhatsApp for people with only a phone number. Nothing sends automatically.</p>
     <div class="toolbar" style="flex-direction:column;align-items:stretch">
       <div class="row2">
         <div class="field" style="margin-bottom:0"><label>Template</label>
@@ -250,6 +306,8 @@
             <option value="intro_ar">تعارف / أهلاً بعودتكم (Arabic)</option>
             <option value="followup_en">Follow-up / New offer (English)</option>
             <option value="followup_ar">تواصل / عرض جديد (Arabic)</option>
+            <option value="helper_thanks_en">Helpers: thanks for applying (English)</option>
+            <option value="partner_profile_en">Partners: please update your profile (English)</option>
           </select>
         </div>
         <div class="field" style="margin-bottom:0"><label>Send as</label>
@@ -264,16 +322,79 @@
     </div>
 
     <div class="toolbar">
-      <input type="search" id="an-search" placeholder="Search recipients by name or email…">
+      <select id="an-audience">
+        <option value="customers">Audience: customers</option>
+        <option value="helpers">Audience: helpers / job applicants</option>
+        <option value="partners">Audience: partners</option>
+      </select>
+      <input type="search" id="an-search" placeholder="Search by name, email, phone, country or type…">
+      <select id="an-country"><option value="">All countries</option></select>
+      <select id="an-type"><option value="">All types</option></select>
+      <select id="an-reach">
+        <option value="">Email or WhatsApp</option>
+        <option value="email">Has email</option>
+        <option value="phone">WhatsApp only (no email)</option>
+      </select>
+      <select id="an-sort">
+        <option value="lastcontact">Sort: longest since contact</option>
+        <option value="recent">Sort: most recently contacted</option>
+        <option value="newest">Sort: newest enquiry</option>
+        <option value="oldest">Sort: oldest enquiry</option>
+        <option value="name">Sort: name A–Z</option>
+        <option value="country">Sort: country</option>
+      </select>
+      <label class="chk"><input type="checkbox" id="an-archived" checked> Include archived / old forms</label>
+    </div>
+    <div class="toolbar" style="padding:8px 12px">
       <label class="chk"><input type="checkbox" id="an-select-all"> Select all shown</label>
+      <button class="btn" id="an-clear" type="button">Clear selection</button>
       <span class="count-line" id="an-count" style="margin:0 0 0 auto"></span>
     </div>
-    <div id="an-recipients" style="margin-bottom:14px"></div>
+    <div class="an-table-wrap"><table class="an-table">
+      <thead><tr><th></th><th>Name</th><th>Reach</th><th>Country</th><th>Type</th><th>Last contacted</th></tr></thead>
+      <tbody id="an-recipients"></tbody>
+    </table></div>
 
     <div class="modal-actions" style="margin:0 0 16px">
       <button class="btn gold" id="an-generate" type="button">Generate email(s)</button>
     </div>
     <div id="an-output"></div>
+  </div>
+
+  <div id="view-helpers" style="display:none">
+  <p class="lede" style="margin-top:0">Everyone who emailed asking to work with Hayakkom — drivers, coordinators, interpreters, guides and more — ranked by how useful their role is to the business right now.</p>
+  <div class="kpis">
+    <div class="kpi"><div class="num" id="kpi-h-total">—</div><div class="lbl">Applicants</div></div>
+    <div class="kpi"><div class="num" id="kpi-h-high">—</div><div class="lbl">High-value roles</div></div>
+    <div class="kpi"><div class="num" id="kpi-h-attn">—</div><div class="lbl">🔥 Not contacted yet</div></div>
+    <div class="kpi"><div class="num" id="kpi-h-shown">—</div><div class="lbl">Matching filters</div></div>
+  </div>
+  <div class="toolbar">
+    <input type="search" id="fh-search" placeholder="Search by name, profession, skill, language or city…">
+    <select id="fh-prof"><option value="">All professions</option></select>
+    <select id="fh-prio"><option value="">All priorities</option><option>High</option><option>Medium</option><option>Low</option></select>
+    <select id="fh-view">
+      <option value="">Show: everything</option>
+      <option value="attention">🔥 Needs attention</option>
+      <option value="notcontacted">Not contacted yet</option>
+      <option value="contacted">Contacted</option>
+      <option value="ready">Shortlisted</option>
+      <option value="urgent">Urgent</option>
+      <option value="hascv">Sent a CV / attachment</option>
+    </select>
+    <select id="fh-sort">
+      <option value="priority">Sort: most valuable first</option>
+      <option value="newest">Sort: newest</option>
+      <option value="oldest">Sort: oldest</option>
+      <option value="name">Sort: name A–Z</option>
+      <option value="profession">Sort: profession</option>
+    </select>
+    <label class="chk"><input type="checkbox" id="fh-hide-done"> Hide done</label>
+    <label class="chk"><input type="checkbox" id="fh-show-deleted"> Show archived</label>
+    <button class="btn gold" id="fh-email" type="button">✉️ Email helpers</button>
+  </div>
+  <p class="count-line" id="count-line-h"></p>
+  <div id="list-helpers"></div>
   </div>
 
   <div id="view-forms" style="display:none">
@@ -440,6 +561,7 @@
   }
   var ENCRYPTED = null;
   var ENCRYPTED_CUST = null;
+  var HELP_P = fetch("helpers.enc.json", {cache: "no-store"}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; });
   fetch("data.enc.json", {cache: "no-store"}).then(function(r){return r.json();}).then(function(j){ ENCRYPTED = j; });
   fetch("customers.enc.json", {cache: "no-store"}).then(function(r){return r.json();}).then(function(j){ ENCRYPTED_CUST = j; }).catch(function(){ ENCRYPTED_CUST = null; });
   document.getElementById("pw-submit").addEventListener("click", tryUnlock);
@@ -471,7 +593,13 @@
       });
       buildCustFilterOptions();
       renderCustomers();
+      render();
       unlock();
+      return HELP_P.then(function(enc){ return enc ? decryptWith(val, enc) : []; }).then(function(h){
+        ALL_HELP = h || [];
+        buildHelpFilterOptions();
+        renderHelpers();
+      }, function(){ ALL_HELP = []; renderHelpers(); });
     }).catch(function(){
       document.getElementById("pw-err").textContent = "Incorrect password.";
     });
@@ -539,67 +667,500 @@
     document.getElementById("an-body").value = t ? t.body : "";
   });
 
-  function custRecipients(){
-    return ALL_CUST.filter(function(r){
-      var st = state[r.id] || {};
-      var archived = (st.deleted!=null) ? st.deleted : !!r.archived_default;
-      if(archived) return false;
-      var email = (st.email!=null ? st.email : r.email);
-      return !!email;
-    }).map(function(r){
-      var st = state[r.id] || {};
-      return { id: r.id, name: st.name||r.name, email: (st.email!=null?st.email:r.email) };
-    });
+  ANNOUNCE_TEMPLATES.helper_thanks_en = {
+    subject: "Your application to Hayakkom",
+    body: "Hi {{name}},\n\nThank you for your interest in working with Hayakkom. We've received your details and kept them on file.\n\nWe'd like to learn a little more: could you reply with your availability, the areas of Egypt you can cover, the languages you speak, and (if you haven't already) your CV?\n\nWe'll be in touch as soon as a suitable opportunity comes up.\n\nKind regards."
+  };
+  ANNOUNCE_TEMPLATES.partner_profile_en = {
+    subject: "Please update your Hayakkom partner profile",
+    body: "Dear {{name}} team,\n\nTo route Gulf families to you faster and quote them accurately the first time, we're updating our partner directory.\n\nCould you take about 5 minutes to complete your profile here:\nhttps://form.jotform.com/263202563928055\n\nIt covers your contacts, accreditation, facility photos, logo and social links. Thank you for working with us.\n\nKind regards."
+  };
+
+  // ---- shared helpers: country, WhatsApp, last-contacted, urgency, sorting ----
+  var HELPER_FLAG_OPTIONS = [
+    { key: "new", label: "New" },
+    { key: "urgent", label: "Urgent" },
+    { key: "waiting", label: "Waiting on applicant" },
+    { key: "ready", label: "Shortlisted" },
+    { key: "review", label: "Needs review" }
+  ];
+  var ALL_HELP = [];
+  var CC_PREFIXES = [["966","Saudi Arabia"],["971","UAE"],["965","Kuwait"],["974","Qatar"],["973","Bahrain"],["968","Oman"],["962","Jordan"],["964","Iraq"],["961","Lebanon"],["963","Syria"],["967","Yemen"],["970","Palestine"],["212","Morocco"],["213","Algeria"],["216","Tunisia"],["218","Libya"],["249","Sudan"],["234","Nigeria"],["254","Kenya"],["255","Tanzania"],["256","Uganda"],["380","Ukraine"],["20","Egypt"],["44","UK"],["49","Germany"],["33","France"],["39","Italy"],["34","Spain"],["90","Turkey"],["91","India"],["92","Pakistan"],["86","China"],["52","Mexico"],["55","Brazil"],["7","Russia"],["1","USA / Canada"]];
+  // Returns the number in international digits (no +), or "" when it can't be read safely.
+  function phoneDigitsIntl(p){
+    if(!p) return "";
+    var s = String(p).trim();
+    var intl = /^(\+|00)/.test(s);
+    var d = s.replace(/[^\d]/g, "");
+    if(/^00/.test(s)) d = d.replace(/^00/, "");
+    if(intl) return d;
+    if(/^01[0125]\d{8}$/.test(d)) return "20" + d.slice(1);
+    if(/^05\d{8}$/.test(d)) return "966" + d.slice(1);
+    if(/^(966|971|965|974|973|968|20)\d{8,10}$/.test(d)) return d;
+    return "";
+  }
+  function countryFromPhone(p){
+    var d = phoneDigitsIntl(p);
+    if(!d) return "";
+    for(var i=0;i<CC_PREFIXES.length;i++){ if(d.indexOf(CC_PREFIXES[i][0])===0) return CC_PREFIXES[i][1]; }
+    return "";
+  }
+  function waLink(p, text){
+    var d = phoneDigitsIntl(p);
+    if(!d || d.length < 9) return "";
+    return "https://wa.me/" + d + (text ? "?text=" + encodeURIComponent(text) : "");
+  }
+  function answerLookup(r, re){
+    var a = (r.answers||[]).filter(function(x){ return re.test(x.question||""); })[0];
+    var v = a ? String(a.answer||"").trim() : "";
+    return (v && v!=="{}") ? v : "";
+  }
+  // Old forms stored country as free text ("egypt", "Egyptian", "سعوديه", "uae"…) — fold them into one name each.
+  var COUNTRY_ALIASES = [
+    [/^(ksa|saudi|saudi arabia|kingdom of saudi arabia|سعودي|سعوديه|سعودية|السعودية|السعوديه|المملكة العربية السعودية|المملكه العربيه السعوديه)$/i, "Saudi Arabia"],
+    [/^(egypt|egyptian|مصر|مصري|مصريه|مصرية|مصرس)$/i, "Egypt"],
+    [/^(uae|u\.a\.e|united arab emirates|emirates|emirati|الامارات|الإمارات|اماراتي|إماراتي)$/i, "UAE"],
+    [/^(kuwait|kuwaiti|الكويت|كويتي)$/i, "Kuwait"],
+    [/^(qatar|qatari|قطر|قطري)$/i, "Qatar"],
+    [/^(bahrain|bahraini|البحرين|بحريني)$/i, "Bahrain"],
+    [/^(oman|omani|عمان|عماني)$/i, "Oman"],
+    [/^(jordan|jordanian|الاردن|الأردن|اردني|أردني)$/i, "Jordan"],
+    [/^(yemen|yemeni|اليمن|يمني)$/i, "Yemen"],
+    [/^(sudan|sudanese|sudanees|السودان|سوداني)$/i, "Sudan"],
+    [/^(iraq|iraqi|العراق|عراقي)$/i, "Iraq"],
+    [/^(syria|syrian|سوريا|سوري)$/i, "Syria"],
+    [/^(lebanon|lebanese|لبنان|لبناني)$/i, "Lebanon"],
+    [/^(libya|libyan|ليبيا|ليبي)$/i, "Libya"],
+    [/^(palestine|palestinian|فلسطين|فلسطيني)$/i, "Palestine"],
+    [/^(morocco|moroccan|المغرب|مغربي)$/i, "Morocco"],
+    [/^(india|indian)$/i, "India"], [/^(pakistan|pakistani)$/i, "Pakistan"], [/^(nigeria|nigerian)$/i, "Nigeria"],
+    [/^(uganda|ugandan)$/i, "Uganda"], [/^(greece|greek)$/i, "Greece"], [/^(canada|canadian)$/i, "Canada"],
+    [/^(uk|united kingdom|british|england)$/i, "UK"], [/^(usa|united states|american)$/i, "USA"],
+    [/^(mali|malian)$/i, "Mali"], [/^(china|chinese)$/i, "China"], [/^(mexico|mexican)$/i, "Mexico"]
+  ];
+  function normCountry(s){
+    var t = String(s||"").trim().replace(/[.!،,]+$/, "").replace(/\s+/g, " ");
+    if(!t || /^(other|none|n\/a|na|-|—|\{\})$/i.test(t)) return "";
+    for(var i=0;i<COUNTRY_ALIASES.length;i++){ if(COUNTRY_ALIASES[i][0].test(t)) return COUNTRY_ALIASES[i][1]; }
+    return t.charAt(0).toUpperCase() + t.slice(1);
+  }
+  function custCountry(r){
+    var st = state[r.id] || {};
+    var c = normCountry(st.country) || normCountry(r.country);
+    if(c) return c;
+    var a = answerLookup(r, /countr|nationalit|الدولة|الجنسية|بلد الإقامة/i);
+    if(a && a.length < 40){ c = normCountry(a); if(c) return c; }
+    return countryFromPhone(st.phone!=null ? st.phone : r.phone);
+  }
+  function helperCountry(r){
+    var parts = String(r.location||"").split(",");
+    var last = parts[parts.length-1].trim();
+    if(COUNTRY_ALIASES.some(function(x){ return x[0].test(last); })) return normCountry(last);
+    if(/cairo|giza|alex|sharm|hurghada|luxor|aswan|القاهرة|الجيزة|الإسكندرية/i.test(r.location||"")) return "Egypt";
+    return countryFromPhone(r.phone) || "";
+  }
+  function cmpEmptyLast(a, b){
+    if(!a && !b) return 0;
+    if(!a) return 1;
+    if(!b) return -1;
+    return a.localeCompare(b);
+  }
+  function isOurs(from){ return /hayakkom|hayakom/i.test(from||""); }
+  function lastContacted(r){
+    var st = state[r.id] || {};
+    var best = st.lastContacted ? String(st.lastContacted).slice(0,10) : "";
+    if(r.last_replied && r.last_replied > best) best = r.last_replied;
+    (r.thread||[]).forEach(function(m){ if(isOurs(m.from) && (m.date||"") > best) best = m.date||""; });
+    return best;
+  }
+  function lastInbound(r){
+    var d = "";
+    (r.thread||[]).forEach(function(m){ if(!isOurs(m.from) && (m.date||"") > d) d = m.date||""; });
+    return d;
+  }
+  function awaitingReply(r){
+    var li = lastInbound(r);
+    if(!li) return false;
+    var lc = lastContacted(r);
+    return !lc || lc < li;
+  }
+  function markContacted(id){
+    if(!id) return;
+    state[id] = state[id] || {};
+    state[id].lastContacted = new Date().toISOString();
+    saveState(state);
+  }
+  function lastcHtml(r){
+    var lc = lastContacted(r);
+    return '<p class="lastc'+(lc?'':' never')+'">📨 '+(lc ? 'Last contacted: '+esc(lc) : 'Not contacted yet')+
+      '<button type="button" class="btn mark-contacted">✓ Mark contacted today</button></p>';
+  }
+  function validFlag(opts, f){ return opts.some(function(o){ return o.key===f; }) ? f : "new"; }
+
+  function custFlagKey(r){ var st = state[r.id]||{}; return validFlag(FLAG_OPTIONS, st.flag || r.flag_default || "new"); }
+  function custHoursOld(r){
+    var d = r.received_at || (r.date ? r.date + "T12:00:00Z" : "");
+    return d ? (Date.now() - new Date(d).getTime()) / 3600000 : null;
+  }
+  // Past the 12-hour reply promise: still flagged New, open, not archived and nobody has contacted them.
+  function custOverdue(r){
+    var st = state[r.id]||{};
+    if(st.done || isCustArchived(r) || lastContacted(r)) return false;
+    if(custFlagKey(r) !== "new") return false;
+    var h = custHoursOld(r);
+    return h!=null && h > 12;
+  }
+  function custUrgent(r){ return custFlagKey(r)==="urgent" || custOverdue(r); }
+  function custNeedsAttention(r){
+    var st = state[r.id]||{};
+    if(st.done || isCustArchived(r)) return false;
+    var f = custFlagKey(r);
+    return f==="urgent" || f==="review" || custOverdue(r) || (f==="new" && !lastContacted(r));
+  }
+  function custRank(r){
+    var st = state[r.id]||{};
+    if(st.done) return 9;
+    var f = custFlagKey(r);
+    if(f==="urgent") return 0;
+    if(custOverdue(r)) return 1;
+    if(f==="new" && !lastContacted(r)) return 2;
+    if(f==="review") return 3;
+    if(f==="ready") return 4;
+    if(f==="waiting") return 5;
+    return 6;
   }
 
-  function renderAnnounceRecipients(){
-    var q = document.getElementById("an-search").value.trim().toLowerCase();
-    var recips = custRecipients().filter(function(r){
-      if(!q) return true;
-      return (r.name+" "+r.email).toLowerCase().indexOf(q)!==-1;
+  function partnerFlagKey(r){ var st = state[r.id]||{}; return validFlag(PARTNER_FLAG_OPTIONS, st.flag || r.flag_default || "new"); }
+  function partnerNeedsAttention(r){
+    var st = state[r.id]||{};
+    if(st.done || st.deleted) return false;
+    var f = partnerFlagKey(r);
+    return f==="urgent" || f==="review" || awaitingReply(r) || ((st.status||r.status)==="New Inquiry" && !lastContacted(r));
+  }
+  function partnerRank(r){
+    var st = state[r.id]||{};
+    if(st.done) return 9;
+    var f = partnerFlagKey(r), status = st.status||r.status, prio = st.priority||r.priority;
+    if(f==="urgent") return 0;
+    if(f==="review") return 1;
+    if(awaitingReply(r)) return prio==="High" ? 2 : 3;
+    if(status==="New Inquiry" && !lastContacted(r)) return 4;
+    if(status==="Low Priority" || prio==="Low" || (st.category||r.category)==="Vendor/Low Priority") return 7;
+    return 5;
+  }
+
+  var HPRIO = { High: 0, Medium: 1, Low: 2 };
+  function helperFlagKey(r){ var st = state[r.id]||{}; return validFlag(HELPER_FLAG_OPTIONS, st.flag || r.flag_default || "new"); }
+  function helperRank(r){
+    var st = state[r.id]||{};
+    if(st.done) return 9;
+    if(helperFlagKey(r)==="urgent") return 0;
+    var p = HPRIO[st.priority || r.priority]; if(p==null) p = 2;
+    return 1 + p*2 + (lastContacted(r) ? 1 : 0);
+  }
+
+  function recDate(r){ return r.received_at || r.date || ""; }
+  // Done items always sink; "priority" puts urgent/overdue first, then newest.
+  function sortRows(rows, mode, rankFn, nameOf, countryOf){
+    return rows.map(function(r,i){ return {r:r, i:i}; }).sort(function(a,b){
+      var x = a.r, y = b.r;
+      if(mode==="priority" || !mode){
+        var rx = rankFn(x), ry = rankFn(y);
+        if(rx!==ry) return rx - ry;
+        return recDate(y).localeCompare(recDate(x)) || a.i - b.i;
+      }
+      var dx = !!(state[x.id]&&state[x.id].done), dy = !!(state[y.id]&&state[y.id].done);
+      if(dx!==dy) return dx ? 1 : -1;
+      if(mode==="newest") return recDate(y).localeCompare(recDate(x)) || a.i - b.i;
+      if(mode==="oldest") return recDate(x).localeCompare(recDate(y)) || a.i - b.i;
+      if(mode==="name") return nameOf(x).localeCompare(nameOf(y));
+      if(mode==="country") return cmpEmptyLast(countryOf(x), countryOf(y)) || nameOf(x).localeCompare(nameOf(y));
+      if(mode==="lastcontact") return (lastContacted(x)||"").localeCompare(lastContacted(y)||"") || a.i - b.i;
+      if(mode==="profession") return cmpEmptyLast(x.profession, y.profession) || nameOf(x).localeCompare(nameOf(y));
+      return a.i - b.i;
+    }).map(function(o){ return o.r; });
+  }
+  function rerenderAll(){
+    render(); renderCustomers(); renderHelpers();
+    if(announceRendered) renderAnnounceRecipients();
+  }
+
+  // ---- announce: audience pool, sortable table, email + WhatsApp output ----
+  var anSelected = {};
+  function announcePool(){
+    var aud = document.getElementById("an-audience").value;
+    var incArch = document.getElementById("an-archived").checked;
+    var list = aud==="helpers" ? ALL_HELP : aud==="partners" ? ALL : ALL_CUST;
+    var unreachable = 0;
+    var pool = list.map(function(r){
+      var st = state[r.id] || {};
+      var email = (st.email!=null ? st.email : r.email) || "";
+      var phone = (st.phone!=null ? st.phone : r.phone) || "";
+      var archived = aud==="customers" ? isCustArchived(r) : !!st.deleted;
+      var country = aud==="customers" ? custCountry(r)
+        : aud==="partners" ? (normCountry(st.country || r.country) || countryFromPhone(phone))
+        : helperCountry(r);
+      var type = aud==="customers" ? (st.enquiry_type || r.enquiry_type)
+        : aud==="partners" ? (st.category || r.category) : r.profession;
+      return { id: r.id, name: st.name || r.name || "(no name)", email: email, phone: phone, wa: waLink(phone),
+        country: country || "", type: type || "", archived: archived, legacy: /legacy/i.test(r.source||""),
+        last: lastContacted(r), date: recDate(r).slice(0,10) };
+    }).filter(function(x){
+      if(x.archived && !incArch) return false;
+      if(!x.email && !x.wa){ unreachable++; return false; }
+      return true;
     });
-    document.getElementById("an-count").textContent = recips.length + " with an email on file";
-    var box = document.getElementById("an-recipients");
-    if(!recips.length){ box.innerHTML = '<p class="empty">No customers with an email match this search.</p>'; return; }
-    box.innerHTML = recips.map(function(r){
-      return '<label class="recip-row"><input type="checkbox" class="an-check" value="'+esc(r.id)+'"> '+esc(r.name)+' <span class="r-email">'+esc(r.email)+'</span></label>';
+    pool.unreachable = unreachable;
+    return pool;
+  }
+  function fillSelect(id, values, firstLabel){
+    var sel = document.getElementById(id), keep = sel.value;
+    sel.innerHTML = '<option value="">'+esc(firstLabel)+'</option>' + values.map(function(v){ return '<option value="'+esc(v)+'">'+esc(v)+'</option>'; }).join("");
+    if(values.indexOf(keep)!==-1) sel.value = keep;
+  }
+  function renderAnnounceRecipients(){
+    var pool = announcePool();
+    fillSelect("an-country", unique(pool.map(function(x){ return x.country; })).sort(), "All countries");
+    fillSelect("an-type", unique(pool.map(function(x){ return x.type; })).sort(), "All types");
+    var q = document.getElementById("an-search").value.trim().toLowerCase();
+    var country = document.getElementById("an-country").value;
+    var type = document.getElementById("an-type").value;
+    var reach = document.getElementById("an-reach").value;
+    var sort = document.getElementById("an-sort").value;
+    var rows = pool.filter(function(x){
+      if(country && x.country!==country) return false;
+      if(type && x.type!==type) return false;
+      if(reach==="email" && !x.email) return false;
+      if(reach==="phone" && x.email) return false;
+      if(q && (x.name+" "+x.email+" "+x.phone+" "+x.country+" "+x.type).toLowerCase().indexOf(q)===-1) return false;
+      return true;
+    });
+    rows.sort(function(a,b){
+      if(sort==="name") return a.name.localeCompare(b.name);
+      if(sort==="country") return cmpEmptyLast(a.country, b.country) || a.name.localeCompare(b.name);
+      if(sort==="newest") return b.date.localeCompare(a.date);
+      if(sort==="oldest") return a.date.localeCompare(b.date);
+      if(sort==="recent") return (b.last||"").localeCompare(a.last||"");
+      return (a.last||"").localeCompare(b.last||"") || a.date.localeCompare(b.date);
+    });
+    var selCount = pool.filter(function(x){ return anSelected[x.id]; }).length;
+    document.getElementById("an-count").textContent = rows.length + " shown · " + selCount + " selected" +
+      (pool.unreachable ? " · " + pool.unreachable + " hidden (no email or usable phone)" : "");
+    var body = document.getElementById("an-recipients");
+    if(!rows.length){ body.innerHTML = '<tr><td colspan="6" class="empty">Nobody matches these filters.</td></tr>'; return; }
+    body.innerHTML = rows.map(function(x){
+      return '<tr'+(x.archived?' class="arch"':'')+'>'+
+        '<td><input type="checkbox" class="an-check" value="'+esc(x.id)+'"'+(anSelected[x.id]?' checked':'')+'></td>'+
+        '<td>'+esc(x.name)+(x.legacy?'<span class="tag">old form</span>':(x.archived?'<span class="tag">archived</span>':''))+'</td>'+
+        '<td>'+(x.email ? esc(x.email) : '<span class="sub2">WhatsApp '+esc(x.phone)+'</span>')+'</td>'+
+        '<td>'+esc(x.country||"—")+'</td>'+
+        '<td>'+esc(x.type||"—")+'</td>'+
+        '<td>'+(x.last ? esc(x.last) : '<span style="color:var(--crit-fg);font-weight:600">Never</span><span class="sub2">enquired '+esc(x.date||"—")+'</span>')+'</td>'+
+      '</tr>';
     }).join("");
   }
-  document.getElementById("an-search").addEventListener("input", renderAnnounceRecipients);
+  ["an-search","an-country","an-type","an-reach","an-sort","an-archived"].forEach(function(id){
+    document.getElementById(id).addEventListener("input", renderAnnounceRecipients);
+    document.getElementById(id).addEventListener("change", renderAnnounceRecipients);
+  });
+  document.getElementById("an-audience").addEventListener("change", function(){
+    anSelected = {};
+    document.getElementById("an-country").value = "";
+    document.getElementById("an-type").value = "";
+    document.getElementById("an-output").innerHTML = "";
+    renderAnnounceRecipients();
+  });
+  document.getElementById("an-recipients").addEventListener("change", function(e){
+    if(e.target.classList.contains("an-check")){ anSelected[e.target.value] = e.target.checked; renderAnnounceRecipients(); }
+  });
   document.getElementById("an-select-all").addEventListener("change", function(){
     var checked = this.checked;
-    document.querySelectorAll(".an-check").forEach(function(c){ c.checked = checked; });
+    document.querySelectorAll("#an-recipients .an-check").forEach(function(c){ anSelected[c.value] = checked; });
+    renderAnnounceRecipients();
+  });
+  document.getElementById("an-clear").addEventListener("click", function(){
+    anSelected = {};
+    document.getElementById("an-select-all").checked = false;
+    renderAnnounceRecipients();
   });
 
   document.getElementById("an-generate").addEventListener("click", function(){
-    var ids = Array.prototype.slice.call(document.querySelectorAll(".an-check:checked")).map(function(c){ return c.value; });
     var out = document.getElementById("an-output");
-    if(!ids.length){ out.innerHTML = '<p class="empty">Select at least one recipient above.</p>'; return; }
-    var recipMap = {}; custRecipients().forEach(function(r){ recipMap[r.id] = r; });
+    var chosen = announcePool().filter(function(x){ return anSelected[x.id]; });
+    if(!chosen.length){ out.innerHTML = '<p class="empty">Tick at least one person in the table above.</p>'; return; }
     var subject = document.getElementById("an-subject").value || "";
     var body = document.getElementById("an-body").value || "";
     var mode = document.getElementById("an-mode").value;
-    if(mode==="bcc"){
-      var emails = ids.map(function(id){ return recipMap[id] && recipMap[id].email; }).filter(Boolean);
+    var byEmail = chosen.filter(function(x){ return x.email; });
+    var byWa = chosen.filter(function(x){ return !x.email && x.wa; });
+    function personal(x){ return body.replace(/\{\{name\}\}/g, x.name); }
+    var html = "";
+    if(byEmail.length && mode==="bcc"){
       var genericBody = body.replace(/\{\{name\}\}/g, "there") + "\n\n" + sigPlain();
-      var url = "mailto:?bcc="+encodeURIComponent(emails.join(","))+"&subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(genericBody);
-      out.innerHTML = '<div class="out-item"><span>One email, BCC to '+emails.length+' people (they will not see each other)</span><a class="btn gold" target="_blank" href="'+esc(url)+'">Open in Outlook</a></div>';
+      var url = "mailto:?bcc="+encodeURIComponent(byEmail.map(function(x){return x.email;}).join(","))+"&subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(genericBody);
+      html += '<div class="out-item"><span>One email, BCC to '+byEmail.length+' people (they will not see each other)</span><a class="btn gold an-send" target="_blank" data-ids="'+esc(byEmail.map(function(x){return x.id;}).join(","))+'" href="'+esc(url)+'">Open in Outlook</a></div>';
     } else {
-      out.innerHTML = ids.map(function(id, i){
-        var r = recipMap[id];
-        if(!r) return "";
-        var personalBody = body.replace(/\{\{name\}\}/g, r.name) + "\n\n" + sigPlain();
-        var url = "mailto:"+encodeURIComponent(r.email)+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(personalBody);
-        return '<div class="out-item"><span>'+(i+1)+'. '+esc(r.name)+' — '+esc(r.email)+'</span><a class="btn gold" target="_blank" href="'+esc(url)+'">Open in Outlook</a></div>';
+      html += byEmail.map(function(x, i){
+        var url = "mailto:"+encodeURIComponent(x.email)+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(personal(x) + "\n\n" + sigPlain());
+        return '<div class="out-item"><span>'+(i+1)+'. '+esc(x.name)+' — '+esc(x.email)+'</span><a class="btn gold an-send" target="_blank" data-ids="'+esc(x.id)+'" href="'+esc(url)+'">Open in Outlook</a></div>';
       }).join("");
     }
+    if(byWa.length){
+      html += '<p class="count-line" style="margin:14px 0 8px">No email on file — send these on WhatsApp instead (one chat each):</p>' +
+        byWa.map(function(x, i){
+          var text = (subject ? subject + "\n\n" : "") + personal(x) + "\n\n" + sigPlain();
+          return '<div class="out-item"><span>'+(i+1)+'. '+esc(x.name)+' — '+esc(x.phone)+'</span><a class="btn an-send" target="_blank" rel="noopener" data-ids="'+esc(x.id)+'" href="'+esc(waLink(x.phone, text))+'">Open WhatsApp</a></div>';
+        }).join("");
+    }
+    out.innerHTML = html;
+  });
+  document.getElementById("an-output").addEventListener("click", function(e){
+    var a = e.target.closest(".an-send");
+    if(!a) return;
+    (a.getAttribute("data-ids")||"").split(",").forEach(markContacted);
+    a.closest(".out-item").classList.add("sent");
+    rerenderAll();
+  });
+
+  // ---- helpers (job applicants) ----
+  function buildHelpFilterOptions(){
+    fillSelect("fh-prof", unique(ALL_HELP.map(function(r){ return r.profession; })).sort(), "All professions");
+  }
+  function renderHelpers(){
+    var list = document.getElementById("list-helpers");
+    var q = document.getElementById("fh-search").value.trim().toLowerCase();
+    var prof = document.getElementById("fh-prof").value;
+    var prio = document.getElementById("fh-prio").value;
+    var view = document.getElementById("fh-view").value;
+    var sortMode = document.getElementById("fh-sort").value;
+    var hideDone = document.getElementById("fh-hide-done").checked;
+    var showDeleted = document.getElementById("fh-show-deleted").checked;
+    function prioOf(r){ return (state[r.id]&&state[r.id].priority) || r.priority || "Low"; }
+    var rows = ALL_HELP.filter(function(r){
+      var st = state[r.id] || {};
+      var done = !!st.done, deleted = !!st.deleted, f = helperFlagKey(r), p = prioOf(r);
+      if(deleted && !showDeleted) return false;
+      if(!deleted && showDeleted) return false;
+      if(hideDone && done) return false;
+      if(prof && r.profession!==prof) return false;
+      if(prio && p!==prio) return false;
+      if(view==="attention" && (done || !(f==="urgent" || f==="review" || (!lastContacted(r) && p!=="Low")))) return false;
+      if(view==="notcontacted" && lastContacted(r)) return false;
+      if(view==="contacted" && !lastContacted(r)) return false;
+      if(view==="ready" && f!=="ready") return false;
+      if(view==="urgent" && f!=="urgent") return false;
+      if(view==="hascv" && !(r.attachments||[]).length) return false;
+      if(q){
+        var hay = [r.name, r.email, r.phone, r.profession, r.role_detail, r.location, r.languages, r.experience, r.summary, st.notes].join(" ").toLowerCase();
+        if(hay.indexOf(q)===-1) return false;
+      }
+      return true;
+    });
+    rows = sortRows(rows, sortMode, helperRank, function(r){ return r.name||""; }, function(r){ return r.location||""; });
+
+    var active = ALL_HELP.filter(function(r){ return !(state[r.id]&&state[r.id].deleted); });
+    document.getElementById("kpi-h-total").textContent = active.length;
+    document.getElementById("kpi-h-high").textContent = active.filter(function(r){ return prioOf(r)==="High"; }).length;
+    document.getElementById("kpi-h-attn").textContent = active.filter(function(r){ return !(state[r.id]&&state[r.id].done) && !lastContacted(r); }).length;
+    document.getElementById("kpi-h-shown").textContent = rows.length;
+    document.getElementById("count-line-h").textContent = "Showing " + rows.length + " of " + active.length + " applicants" + (showDeleted ? " (archived)" : "");
+    if(!rows.length){ list.innerHTML = '<p class="empty">'+(ALL_HELP.length ? 'No applicants match these filters.' : 'No applicants loaded yet.')+'</p>'; return; }
+
+    list.innerHTML = rows.map(function(r){
+      var st = state[r.id] || {};
+      var done = !!st.done, deleted = !!st.deleted;
+      var flag = helperFlagKey(r);
+      var flagOpt = HELPER_FLAG_OPTIONS.filter(function(f){ return f.key===flag; })[0];
+      var p = prioOf(r);
+      var atts = r.attachments || [];
+      var wa = waLink(r.phone);
+      var details = [r.role_detail ? '💼 '+esc(r.role_detail) : '', r.languages ? '🗣 '+esc(r.languages) : '', r.experience ? esc(r.experience) : ''].filter(Boolean).join(' · ');
+      return (
+        '<div class="card'+(done?' done':'')+(deleted?' deleted':'')+' flag-'+flag+(flag==="urgent"&&!done?' is-urgent':'')+'" data-id="'+esc(r.id)+'">'+
+          '<div class="card-top">'+
+            '<div><h3>'+esc(r.name)+'</h3>'+
+            '<div class="tags">'+
+              '<span class="pill flag-'+flag+'">'+esc(flagOpt.label)+'</span>'+
+              '<span class="pill '+pillClass("priority",p)+'">'+esc(p)+' value</span>'+
+              '<span class="pill neu">'+esc(r.profession||"Other")+'</span>'+
+              (r.location ? '<span class="pill neu">📍 '+esc(r.location)+'</span>' : '')+
+            '</div></div>'+
+            '<label class="done-toggle"><input type="checkbox" class="done-check" '+(done?'checked':'')+'> Done</label>'+
+          '</div>'+
+          '<p class="summary">'+esc(r.summary)+'</p>'+
+          (details ? '<p class="meta-line">'+details+'</p>' : '')+
+          '<p class="meta-line">'+(r.email ? '<button type="button" class="info-toggle" style="background:none;border:none;padding:0;color:var(--teal);text-decoration:underline;cursor:pointer;font-size:inherit">'+esc(r.email)+'</button>' : '<span>no email on file</span>')+(r.phone ? ' · 📞 '+esc(r.phone) : '')+(r.date ? ' · applied '+esc(r.date) : '')+'</p>'+
+          (r.priority_reason ? '<p class="match-line">Why '+esc(r.priority||p)+': '+esc(r.priority_reason)+'</p>' : '')+
+          lastcHtml(r)+
+          '<textarea class="notes" placeholder="Add a note…">'+esc(st.notes||"")+'</textarea>'+
+          '<div class="card-actions">'+
+            (r.email ? '<button class="btn gold reply-btn">Reply</button>' : '')+
+            (wa ? '<a class="btn wa-btn" target="_blank" rel="noopener" href="'+esc(wa)+'">WhatsApp</a>' : '')+
+            (r.email_link ? '<a class="btn" target="_blank" rel="noopener" href="'+esc(r.email_link)+'">View full email</a>' : '')+
+            (atts.length ? '<button class="btn atts-toggle">📎 CV / attachments ('+atts.length+')</button>' : '')+
+            '<select class="h-prio btn" aria-label="Priority">'+["High","Medium","Low"].map(function(x){ return '<option'+(x===p?' selected':'')+'>'+x+'</option>'; }).join("")+'</select>'+
+            '<div class="flag-wrap" style="position:relative;display:inline-block">'+
+              '<button class="flag-btn" type="button"><span class="flag-dot flag-'+flag+'"></span>'+esc(flagOpt.label)+'</button>'+
+              '<div class="flag-picker">'+HELPER_FLAG_OPTIONS.map(function(f){
+                return '<div class="flag-opt" data-flag="'+f.key+'"><span class="flag-dot flag-'+f.key+'"></span>'+esc(f.label)+'</div>';
+              }).join("")+'</div>'+
+            '</div>'+
+            (deleted ? '<button class="btn restore-btn">Restore</button>' : '<button class="btn archive-btn">Archive</button>')+
+          '</div>'+
+        '</div>'
+      );
+    }).join("");
+
+    list.querySelectorAll(".card").forEach(function(card){
+      var id = card.getAttribute("data-id");
+      var row = ALL_HELP.filter(function(r){ return r.id===id; })[0];
+      var effRow = Object.assign({}, row, { kind: "helper", category: row.profession, country: row.location });
+      function set(k, v){ state[id] = state[id] || {}; state[id][k] = v; saveState(state); }
+      card.querySelector(".done-check").addEventListener("change", function(e){ set("done", e.target.checked); renderHelpers(); });
+      card.querySelector(".notes").addEventListener("change", function(e){ set("notes", e.target.value); });
+      card.querySelector(".h-prio").addEventListener("change", function(e){ set("priority", e.target.value); renderHelpers(); });
+      var rb = card.querySelector(".reply-btn"); if(rb) rb.addEventListener("click", function(){ openModal(effRow); });
+      var ib = card.querySelector(".info-toggle"); if(ib) ib.addEventListener("click", function(){ openInfoModal(effRow, "helper"); });
+      var ab = card.querySelector(".atts-toggle"); if(ab) ab.addEventListener("click", function(){ openAttsModal(effRow); });
+      var wb = card.querySelector(".wa-btn"); if(wb) wb.addEventListener("click", function(){ markContacted(id); setTimeout(rerenderAll, 400); });
+      card.querySelector(".mark-contacted").addEventListener("click", function(){ markContacted(id); rerenderAll(); });
+      var fb = card.querySelector(".flag-btn"), fp = card.querySelector(".flag-picker");
+      fb.addEventListener("click", function(e){
+        e.stopPropagation();
+        document.querySelectorAll(".flag-picker.open").forEach(function(x){ if(x!==fp) x.classList.remove("open"); });
+        fp.classList.toggle("open");
+      });
+      fp.querySelectorAll(".flag-opt").forEach(function(opt){
+        opt.addEventListener("click", function(e){ e.stopPropagation(); set("flag", opt.getAttribute("data-flag")); renderHelpers(); });
+      });
+      var arch = card.querySelector(".archive-btn");
+      if(arch) arch.addEventListener("click", function(){
+        if(!confirm("Archive \""+row.name+"\"? You can bring it back with \"Show archived\".")) return;
+        set("deleted", true); renderHelpers();
+      });
+      var rest = card.querySelector(".restore-btn");
+      if(rest) rest.addEventListener("click", function(){ set("deleted", false); renderHelpers(); });
+    });
+  }
+  ["fh-search","fh-prof","fh-prio","fh-view","fh-sort","fh-hide-done","fh-show-deleted"].forEach(function(id){
+    document.getElementById(id).addEventListener("input", renderHelpers);
+    document.getElementById(id).addEventListener("change", renderHelpers);
+  });
+  document.getElementById("fh-email").addEventListener("click", function(){
+    document.getElementById("an-audience").value = "helpers";
+    document.getElementById("an-template").value = "helper_thanks_en";
+    document.getElementById("an-template").dispatchEvent(new Event("change"));
+    anSelected = {};
+    announceRendered = true;
+    showView("announce");
+    renderAnnounceRecipients();
   });
 
   // ---- forms list ----
   var FORM_LINKS = [
     { group: "Partners", desc: "For hospitals, clinics and tourism companies — not customers.", items: [
       { name: "Partner Onboarding & Profile Update", single: "https://form.jotform.com/263202563928055",
-        desc: "Send this one link to any partner (new or existing). It has a language dropdown so they pick English or Arabic themselves. Collects company info, contacts/coordinators, accreditation, services, price list and photos — the Hub checks it hourly and updates or creates that partner's card automatically." }
+        desc: "Send this one link to any partner (new or existing). English only. Collects company info, main + primary + escalation contacts, accreditation documents, facility photos, logo, and Instagram / Facebook / TikTok — the Hub checks it hourly and updates or creates that partner's card automatically." }
     ]},
     { group: "Treatments", items: [
       { name: "Medical Treatment", en: SITE+"/medical/", ar: SITE+"/ar/medical/", desc: "General medical-tourism enquiries — any treatment, hospital search, or \"what would this cost\" question." },
@@ -694,8 +1255,8 @@
     return null;
   }
 
-  // ---- view toggle (4 tabs: partners / customers / announce / forms) ----
-  var VIEWS = ["partners","customers","announce","forms"];
+  // ---- view toggle ----
+  var VIEWS = ["partners","customers","helpers","announce","forms"];
   function showView(name){
     VIEWS.forEach(function(v){
       document.getElementById("view-"+v).style.display = (v===name) ? "block" : "none";
@@ -771,7 +1332,7 @@
   }
   function unique(arr){ var s={}; arr.forEach(function(v){ if(v) s[v]=1; }); return Object.keys(s); }
 
-  ["f-search","f-category","f-country","f-status","f-priority","f-hide-done","f-show-deleted"].forEach(function(id){
+  ["f-search","f-category","f-country","f-status","f-priority","f-hide-done","f-show-deleted","f-view","f-sort"].forEach(function(id){
     document.getElementById(id).addEventListener("input", render);
     document.getElementById(id).addEventListener("change", render);
   });
@@ -824,6 +1385,8 @@
     var prio = document.getElementById("f-priority").value;
     var hideDone = document.getElementById("f-hide-done").checked;
     var showDeleted = document.getElementById("f-show-deleted").checked;
+    var view = document.getElementById("f-view").value;
+    var sortMode = document.getElementById("f-sort").value;
 
     var rows = ALL.filter(function(r){
       var done = !!(state[r.id] && state[r.id].done);
@@ -831,6 +1394,13 @@
       if(deleted && !showDeleted) return false;
       if(!deleted && showDeleted) return false;
       if(hideDone && done) return false;
+      if(view==="attention" && !partnerNeedsAttention(r)) return false;
+      if(view==="awaiting" && (done || !awaitingReply(r))) return false;
+      if(view==="emailed" && !lastInbound(r)) return false;
+      if(view==="urgent" && partnerFlagKey(r)!=="urgent") return false;
+      if(view==="review" && partnerFlagKey(r)!=="review") return false;
+      if(view==="notcontacted" && lastContacted(r)) return false;
+      if(view==="contacted" && !lastContacted(r)) return false;
       var s = state[r.id] || {};
       var effCategory = s.category || r.category;
       var effCountry = s.country || r.country;
@@ -854,17 +1424,14 @@
       return true;
     });
 
-    rows = rows.map(function(r,i){ return {r:r, i:i}; }).sort(function(a,b){
-      var da = !!(state[a.r.id] && state[a.r.id].done);
-      var db = !!(state[b.r.id] && state[b.r.id].done);
-      if(da!==db) return da ? -1 : 1;
-      return a.i - b.i;
-    }).map(function(x){ return x.r; });
+    rows = sortRows(rows, sortMode, partnerRank,
+      function(r){ return (state[r.id]&&state[r.id].name) || r.name || ""; },
+      function(r){ return (state[r.id]&&state[r.id].country) || r.country || ""; });
 
     var active = ALL.filter(function(r){ return !(state[r.id]&&state[r.id].deleted); });
     document.getElementById("kpi-total").textContent = active.length;
     document.getElementById("kpi-live").textContent = active.filter(function(r){return ((state[r.id]&&state[r.id].status)||r.status)==="Live Partner"}).length;
-    document.getElementById("kpi-open").textContent = active.filter(function(r){return !(state[r.id]&&state[r.id].done)}).length;
+    document.getElementById("kpi-open").textContent = active.filter(partnerNeedsAttention).length;
     document.getElementById("kpi-shown").textContent = rows.length;
     document.getElementById("count-line").textContent = "Showing " + rows.length + " of " + active.length + " contacts" + (showDeleted ? " (archived)" : "");
 
@@ -893,11 +1460,12 @@
       var effSummary = (st.summary!=null ? st.summary : r.summary);
       var edited = !!(st.status||st.name||st.category||st.country||st.priority||st.contact!=null||st.email!=null||st.phone!=null||st.next_action||st.summary!=null);
       return (
-        '<div class="card'+(done?' done':'')+(deleted?' deleted':'')+' flag-'+flag+'" data-id="'+esc(r.id)+'">'+
+        '<div class="card'+(done?' done':'')+(deleted?' deleted':'')+' flag-'+flag+(flag==="urgent"&&!done?' is-urgent':'')+'" data-id="'+esc(r.id)+'">'+
           '<div class="card-top">'+
             '<div><h3>'+esc(effName)+'</h3>'+
             '<div class="tags">'+
               '<span class="pill flag-'+flag+'">'+esc(flagOpt.label)+'</span>'+
+              (!done && awaitingReply(r) ? '<span class="pill crit">✉️ Awaiting our reply</span>' : '')+
               '<span class="pill '+pillClass("status",effStatus)+'">'+esc(effStatus)+'</span>'+
               (edited ? '<span class="pill neu">edited</span>' : '')+
               '<span class="pill '+pillClass("priority",effPriority)+'">'+esc(effPriority)+'</span>'+
@@ -910,6 +1478,7 @@
           '<p class="summary">'+esc(effSummary)+'</p>'+
           '<p class="meta-line">'+(effContact?esc(effContact)+' · ':'')+(effEmail?('<button type="button" class="info-toggle" style="background:none;border:none;padding:0;color:var(--teal);text-decoration:underline;cursor:pointer;font-size:inherit">'+esc(effEmail)+'</button>'):'<span>no email on file</span>')+(effPhone?(' · 📞 '+esc(effPhone)):'')+(r.date?(' · '+esc(r.date)):'')+'</p>'+
           '<p class="next-action">→ '+esc(effNextAction)+'</p>'+
+          lastcHtml(r)+
           (atts.length ? '<p class="meta-line">📎 '+atts.length+' attachment'+(atts.length>1?'s':'')+' — see "Attachments" below</p>' : '')+
           (extraContacts.length ? '<div class="extra-contacts">'+extraContacts.map(function(c,i){
             return '<span class="contact-chip" data-i="'+i+'">'+esc(c.name||"(no name)")+
@@ -1036,6 +1605,8 @@
       });
       var replyBtn = card.querySelector(".reply-btn");
       if(replyBtn) replyBtn.addEventListener("click", function(){ openModal(effRow); });
+      var mcBtn = card.querySelector(".mark-contacted");
+      if(mcBtn) mcBtn.addEventListener("click", function(){ markContacted(id); rerenderAll(); });
 
       var infoBtn = card.querySelector(".info-toggle");
       if(infoBtn) infoBtn.addEventListener("click", function(){ openInfoModal(effRow, "partner"); });
@@ -1268,8 +1839,9 @@
     var overrides = ALL_CUST.map(function(r){ return state[r.id] || {}; });
     fill("fc-type", unique(ALL_CUST.map(function(r){return r.enquiry_type}).concat(overrides.map(function(s){return s.enquiry_type;}))).sort());
     fill("fc-status", unique(ALL_CUST.map(function(r){return r.status}).concat(overrides.map(function(s){return s.status;}))));
+    fill("fc-country", unique(ALL_CUST.map(custCountry)).sort());
   }
-  ["fc-search","fc-type","fc-status","fc-hide-done","fc-show-deleted"].forEach(function(id){
+  ["fc-search","fc-type","fc-status","fc-hide-done","fc-show-deleted","fc-view","fc-country","fc-sort"].forEach(function(id){
     document.getElementById(id).addEventListener("input", renderCustomers);
     document.getElementById(id).addEventListener("change", renderCustomers);
   });
@@ -1285,46 +1857,60 @@
     var status = document.getElementById("fc-status").value;
     var hideDone = document.getElementById("fc-hide-done").checked;
     var showDeleted = document.getElementById("fc-show-deleted").checked;
+    var view = document.getElementById("fc-view").value;
+    var countryF = document.getElementById("fc-country").value;
+    var sortMode = document.getElementById("fc-sort").value;
 
     var rows = ALL_CUST.filter(function(r){
       var done = !!(state[r.id] && state[r.id].done);
       var deleted = isCustArchived(r);
-      if(deleted && !showDeleted) return false;
-      if(!deleted && showDeleted) return false;
+      var legacy = /legacy/i.test(r.source||"");
+      // "From old forms" shows the archive too, without having to tick Show archived.
+      if(view==="legacy"){ if(!legacy) return false; }
+      else {
+        if(deleted && !showDeleted) return false;
+        if(!deleted && showDeleted) return false;
+      }
       if(hideDone && done) return false;
       var s = state[r.id] || {};
       var effType = s.enquiry_type || r.enquiry_type;
       var effStatus = s.status || r.status;
+      var effEmail = (s.email!=null ? s.email : r.email);
+      var effPhone = (s.phone!=null ? s.phone : r.phone) || "";
+      var country = custCountry(r);
+      var f = custFlagKey(r);
+      var h = custHoursOld(r);
       if(type && effType!==type) return false;
       if(status && effStatus!==status) return false;
+      if(countryF && country!==countryF) return false;
+      if(view==="attention" && !custNeedsAttention(r)) return false;
+      if(view==="urgent" && f!=="urgent") return false;
+      if(view==="overdue" && !custOverdue(r)) return false;
+      if(view==="new12" && !(h!=null && h<=12)) return false;
+      if(view==="notcontacted" && lastContacted(r)) return false;
+      if(view==="contacted" && !lastContacted(r)) return false;
+      if((view==="waiting"||view==="ready"||view==="review") && f!==view) return false;
+      if(view==="hasemail" && !effEmail) return false;
+      if(view==="phoneonly" && (effEmail || !effPhone)) return false;
       if(q){
         var effName = s.name || r.name;
-        var effEmail = (s.email!=null ? s.email : r.email);
-        var effPhone = (s.phone!=null ? s.phone : r.phone) || "";
         var effSummary = (s.summary!=null ? s.summary : r.summary) || "";
         var extra = s.extraContacts || [];
         var extraText = extra.map(function(c){ return (c.name||"")+" "+(c.role||"")+" "+(c.email||"")+" "+(c.phone||""); }).join(" ");
-        var hay = (effName+" "+effEmail+" "+effPhone+" "+effSummary+" "+effType+" "+extraText).toLowerCase();
+        var hay = (effName+" "+effEmail+" "+effPhone+" "+effSummary+" "+effType+" "+country+" "+(r.source||"")+" "+extraText).toLowerCase();
         if(hay.indexOf(q)===-1) return false;
       }
       return true;
     });
 
-    rows = rows.map(function(r,i){ return {r:r, i:i}; }).sort(function(a,b){
-      var da = !!(state[a.r.id] && state[a.r.id].done);
-      var db = !!(state[b.r.id] && state[b.r.id].done);
-      if(da!==db) return da ? -1 : 1;
-      // new (red) enquiries sort first among the not-done ones
-      var na = ((state[a.r.id]&&state[a.r.id].flag)||a.r.flag_default||"new")==="new";
-      var nb = ((state[b.r.id]&&state[b.r.id].flag)||b.r.flag_default||"new")==="new";
-      if(!da && na!==nb) return na ? -1 : 1;
-      return a.i - b.i;
-    }).map(function(x){ return x.r; });
+    rows = sortRows(rows, sortMode, custRank,
+      function(r){ return (state[r.id]&&state[r.id].name) || r.name || ""; },
+      custCountry);
 
     var active = ALL_CUST.filter(function(r){ return !isCustArchived(r); });
     document.getElementById("kpi-cust-total").textContent = active.length;
-    document.getElementById("kpi-cust-new").textContent = active.filter(function(r){ return ((state[r.id]&&state[r.id].flag)||"new")==="new"; }).length;
-    document.getElementById("kpi-cust-open").textContent = active.filter(function(r){return !(state[r.id]&&state[r.id].done)}).length;
+    document.getElementById("kpi-cust-new").textContent = active.filter(custNeedsAttention).length;
+    document.getElementById("kpi-cust-open").textContent = active.filter(custOverdue).length;
     document.getElementById("kpi-cust-shown").textContent = rows.length;
     document.getElementById("count-line-cust").textContent = "Showing " + rows.length + " of " + active.length + " enquiries" + (showDeleted ? " (archived)" : "");
 
@@ -1352,14 +1938,17 @@
       var matches = matchingPartners(effType);
       var atts = r.attachments || [];
       var slaHtml = "";
-      if(r.received_at){
-        var hoursLeft = 12 - (Date.now() - new Date(r.received_at).getTime())/3600000;
-        var slaCls = hoursLeft<=0 ? "crit" : hoursLeft<=4 ? "warn" : "ok";
-        var slaTxt = hoursLeft<=0 ? "Overdue by "+Math.ceil(-hoursLeft)+"h (12h promise)" : Math.ceil(hoursLeft)+"h left of 12h promise";
-        slaHtml = '<span class="sla-badge '+slaCls+'">'+esc(slaTxt)+'</span>';
+      var hOld = custHoursOld(r);
+      if(custOverdue(r)){
+        var late = hOld - 12;
+        slaHtml = '<span class="sla-badge crit">⏰ Overdue by '+(late>48 ? Math.floor(late/24)+' days' : Math.ceil(late)+'h')+' — 12h reply promise</span>';
+      } else if(!done && !deleted && !lastContacted(r) && flag==="new" && hOld!=null && hOld<=12){
+        slaHtml = '<span class="sla-badge '+(12-hOld<=4?'warn':'ok')+'">'+Math.ceil(12-hOld)+'h left of 12h promise</span>';
       }
+      var isUrg = !done && custUrgent(r);
+      var cCountry = custCountry(r);
       return (
-        '<div class="card'+(done?' done':'')+(deleted?' deleted':'')+' flag-'+flag+'" data-id="'+esc(r.id)+'">'+
+        '<div class="card'+(done?' done':'')+(deleted?' deleted':'')+' flag-'+flag+(isUrg?' is-urgent':'')+'" data-id="'+esc(r.id)+'">'+
           '<div class="card-top">'+
             '<div><h3>'+esc(effName)+'</h3>'+
             '<div class="tags">'+
@@ -1369,6 +1958,8 @@
               (dup ? '<span class="dup-flag">⚠ Also a '+dup.kind+': '+esc(dup.name)+'</span>' : '')+
               (edited ? '<span class="pill neu">edited</span>' : '')+
               '<span class="pill neu">'+esc(effType)+'</span>'+
+              (cCountry ? '<span class="pill neu">🌍 '+esc(cCountry)+'</span>' : '')+
+              (/legacy/i.test(r.source||"") ? '<span class="pill neu">Old form</span>' : '')+
               (r.custom ? '<span class="pill neu">Added manually</span>' : '')+
             '</div></div>'+
             '<label class="done-toggle"><input type="checkbox" class="done-check" '+(done?'checked':'')+'> Done</label>'+
@@ -1380,6 +1971,7 @@
           (matches.length ? '<p class="match-line">🤝 Suggested partner'+(matches.length>1?'s':'')+' for this enquiry: '+matches.map(esc).join(", ")+'</p>' : '')+
           (effStatus==="Booked" && (st.dealValue||r.deal_value) ? '<p class="match-line">💰 Est. commission: '+esc((((st.dealValue||r.deal_value||0)*((st.commissionPct!=null?st.commissionPct:(r.commission_pct||15))/100)).toFixed(0)))+' SAR (on '+esc(st.dealValue||r.deal_value)+' SAR at '+esc(st.commissionPct!=null?st.commissionPct:(r.commission_pct||15))+'%)</p>' : '')+
           '<p class="next-action">→ '+esc(effNextAction)+'</p>'+
+          lastcHtml(r)+
           (extraContacts.length ? '<div class="extra-contacts">'+extraContacts.map(function(c,i){
             return '<span class="contact-chip" data-i="'+i+'">'+esc(c.name||"(no name)")+
               (c.role? ' — '+esc(c.role):'')+
@@ -1477,6 +2069,7 @@
       var _s = state[id] || {};
       var effRow = Object.assign({}, row, {
         name: _s.name || row.name,
+        kind: "customer",
         category: _s.enquiry_type || row.enquiry_type,
         country: "",
         email: (_s.email!=null ? _s.email : row.email),
@@ -1516,6 +2109,8 @@
       });
       var replyBtn = card.querySelector(".reply-btn");
       if(replyBtn) replyBtn.addEventListener("click", function(){ openModal(effRow); });
+      var mcBtnC = card.querySelector(".mark-contacted");
+      if(mcBtnC) mcBtnC.addEventListener("click", function(){ markContacted(id); rerenderAll(); });
       var infoBtnC = card.querySelector(".info-toggle");
       if(infoBtnC) infoBtnC.addEventListener("click", function(){ openInfoModal(Object.assign({}, effRow, {extraContacts: _s.extraContacts}), "customer"); });
       var chainBtn = card.querySelector(".chain-toggle");
@@ -1754,10 +2349,18 @@
       document.getElementById("m-body").value = "";
     } else {
       document.getElementById("modal-title").textContent = "Reply to " + row.name;
-      document.getElementById("modal-sub").textContent = row.category + " · " + row.country;
+      document.getElementById("modal-sub").textContent = [row.category, row.country].filter(Boolean).join(" · ");
       document.getElementById("m-to").value = row.email || "";
-      document.getElementById("m-subject").value = "Re: Partnership with Hayakkom — " + row.name;
-      document.getElementById("m-body").value = "Hi,\n\nThank you for reaching out about " + row.name + ". ";
+      if(row.kind==="customer"){
+        document.getElementById("m-subject").value = "Re: Your enquiry with Hayakkom";
+        document.getElementById("m-body").value = "Hi " + row.name + ",\n\nThank you for contacting Hayakkom. ";
+      } else if(row.kind==="helper"){
+        document.getElementById("m-subject").value = "Re: Your application to Hayakkom";
+        document.getElementById("m-body").value = "Hi " + row.name + ",\n\nThank you for your interest in working with Hayakkom. ";
+      } else {
+        document.getElementById("m-subject").value = "Re: Partnership with Hayakkom — " + row.name;
+        document.getElementById("m-body").value = "Hi,\n\nThank you for reaching out about " + row.name + ". ";
+      }
     }
     fillTitles();
     updateSigPreview();
@@ -1803,10 +2406,18 @@
     if(kind==="partner"){
       if(row.category) rows.push(["Category", esc(row.category)]);
       if(row.country) rows.push(["Country", esc(row.country)]);
+    } else if(kind==="helper"){
+      if(row.profession) rows.push(["Profession", esc(row.profession)]);
+      if(row.role_detail) rows.push(["Role", esc(row.role_detail)]);
+      if(row.location) rows.push(["Location", esc(row.location)]);
+      if(row.languages) rows.push(["Languages", esc(row.languages)]);
     } else {
       if(row.enquiry_type) rows.push(["Enquiry type", esc(row.enquiry_type)]);
+      var cc = custCountry(row);
+      if(cc) rows.push(["Country", esc(cc)]);
       if(row.source) rows.push(["Source", esc(row.source)]);
     }
+    rows.push(["Last contacted", esc(lastContacted(row) || "Not contacted yet")]);
     var html = '<div class="atts-modal-list">'+rows.map(function(pair){
       return '<div class="atts-row"><span style="color:var(--sub)">'+esc(pair[0])+'</span><span>'+pair[1]+'</span></div>';
     }).join("")+'</div>';
@@ -1921,6 +2532,7 @@
     var subject = document.getElementById("m-subject").value;
     var body = document.getElementById("m-body").value + "\n\n" + sigPlain();
     var url = "mailto:"+encodeURIComponent(to)+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
+    if(current && current.id){ markContacted(current.id); rerenderAll(); }
     window.location.href = url;
   });
 
@@ -1928,6 +2540,7 @@
     var bodyText = document.getElementById("m-body").value;
     var html = '<div style="font-family:Calibri,Arial,sans-serif;font-size:14px;color:#0A2E36;white-space:pre-wrap">'+esc(bodyText)+'</div><br>'+sigHtml();
     var plain = bodyText + "\n\n" + sigPlain();
+    if(current && current.id){ markContacted(current.id); rerenderAll(); }
     function fallback(){
       var ta = document.createElement("textarea"); ta.value = plain; document.body.appendChild(ta); ta.select();
       try{ document.execCommand("copy"); }catch(e){}
