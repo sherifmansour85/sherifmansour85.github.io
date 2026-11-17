@@ -66,6 +66,11 @@
   .form-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:8px}
   .form-row .f-name{font-weight:600;font-size:13px;flex:1 1 220px}
   .copy-btn{font-size:12px}
+  /* New customer enquiries are marked red (not the shared gold "new" color) and sorted
+     to the top of the list — scoped to #list-customers only, partners keep gold. */
+  #list-customers .card.flag-new{border-color:#C0392B;box-shadow:0 0 0 3px rgba(192,57,43,.15)}
+  #list-customers .flag-dot.flag-new{background:#C0392B}
+  #list-customers .pill.flag-new{background:var(--crit-bg);color:var(--crit-fg)}
   .upcoming-panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:18px}
   .upcoming-head{display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:14px;margin-bottom:8px}
   .upcoming-toggle{font-size:11.5px;border:none;background:none;color:var(--sub);cursor:pointer;text-decoration:underline}
@@ -272,7 +277,7 @@
   </div>
 
   <div id="view-forms" style="display:none">
-    <p class="lede" style="margin-top:0">Every live Hayakkom enquiry form, Arabic and English — copy a link and send it straight to a customer.</p>
+    <p class="lede" style="margin-top:0">Every live Hayakkom form — customer enquiry forms (copy the Arabic or English link and send it straight to a customer) and the partner-facing form (send its one link to any hospital, clinic or tourism company). Each one below has a short note on what it's for.</p>
     <div id="forms-list"></div>
   </div>
 
@@ -401,6 +406,14 @@
     <h2 id="atts-title">Attachments</h2>
     <p class="sub" id="atts-sub"></p>
     <div class="atts-modal-list" id="atts-body"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="info-modal">
+  <div class="modal">
+    <button class="close-x" id="info-modal-close" aria-label="Close">×</button>
+    <h2 id="info-title">Contact info</h2>
+    <div id="info-body"></div>
   </div>
 </div>
 
@@ -584,17 +597,21 @@
 
   // ---- forms list ----
   var FORM_LINKS = [
+    { group: "Partners", desc: "For hospitals, clinics and tourism companies — not customers.", items: [
+      { name: "Partner Onboarding & Profile Update", single: "https://form.jotform.com/263202563928055",
+        desc: "Send this one link to any partner (new or existing). It has a language dropdown so they pick English or Arabic themselves. Collects company info, contacts/coordinators, accreditation, services, price list and photos — the Hub checks it hourly and updates or creates that partner's card automatically." }
+    ]},
     { group: "Treatments", items: [
-      { name: "Medical Treatment", en: SITE+"/medical/", ar: SITE+"/ar/medical/" },
-      { name: "Dental & Hollywood Smile", en: SITE+"/dental/", ar: SITE+"/ar/dental/" }
+      { name: "Medical Treatment", en: SITE+"/medical/", ar: SITE+"/ar/medical/", desc: "General medical-tourism enquiries — any treatment, hospital search, or \"what would this cost\" question." },
+      { name: "Dental & Hollywood Smile", en: SITE+"/dental/", ar: SITE+"/ar/dental/", desc: "Dental treatment and Hollywood Smile / veneer enquiries specifically." }
     ]},
     { group: "Planner & Collections", items: [
-      { name: "Egypt Gateway (all-in-one trip planner)", en: SITE+"/gateway/", ar: SITE+"/ar/gateway/" },
-      { name: "Kunooz: Egypt's Hidden Gems", en: SITE+"/kunooz/", ar: SITE+"/ar/kunooz/" },
-      { name: "VIP Luxury Trips", en: SITE+"/vip-trip/", ar: SITE+"/ar/vip-trip/" },
-      { name: "Holiday packages (general)", en: SITE+"/holidays/", ar: SITE+"/ar/holidays/" }
+      { name: "Egypt Gateway (all-in-one trip planner)", en: SITE+"/gateway/", ar: SITE+"/ar/gateway/", desc: "For someone who wants to combine several things (treatment + stay + trips) into one itinerary and total price." },
+      { name: "Kunooz: Egypt's Hidden Gems", en: SITE+"/kunooz/", ar: SITE+"/ar/kunooz/", desc: "The 10 off-the-beaten-path experiences collection — for customers who've \"done Egypt before\" and want something different." },
+      { name: "VIP Luxury Trips", en: SITE+"/vip-trip/", ar: SITE+"/ar/vip-trip/", desc: "High-budget, bespoke private itineraries." },
+      { name: "Holiday packages (general)", en: SITE+"/holidays/", ar: SITE+"/ar/holidays/", desc: "Ready-made holiday packages — use this for a general \"I want a family trip\" enquiry with no specific destination yet." }
     ]},
-    { group: "Destinations", items: [
+    { group: "Destinations", desc: "Use when the customer already knows where they want to go.", items: [
       { name: "Cairo & Giza", en: SITE+"/cairo/", ar: SITE+"/ar/cairo/" },
       { name: "Luxor", en: SITE+"/luxor/", ar: SITE+"/ar/luxor/" },
       { name: "Aswan", en: SITE+"/aswan/", ar: SITE+"/ar/aswan/" },
@@ -605,11 +622,11 @@
       { name: "North Coast (Sahel)", en: SITE+"/north-coast/", ar: SITE+"/ar/north-coast/" },
       { name: "Siwa, Fayoum & Oases", en: SITE+"/siwa/", ar: SITE+"/ar/siwa/" },
       { name: "Safaga, Soma Bay & Marsa Alam", en: SITE+"/marsa-alam/", ar: SITE+"/ar/marsa-alam/" },
-      { name: "Nile Cruise & Private Events", en: SITE+"/nile-cruise-events/", ar: SITE+"/ar/nile-cruise-events/" }
+      { name: "Nile Cruise & Private Events", en: SITE+"/nile-cruise-events/", ar: SITE+"/ar/nile-cruise-events/", desc: "Cruise bookings and private on-board events (birthdays, proposals, etc.)." }
     ]},
     { group: "Business & Study", items: [
-      { name: "Study in Egypt", en: SITE+"/educational/", ar: SITE+"/ar/educational/" },
-      { name: "Investment Tourism", en: SITE+"/business/", ar: SITE+"/ar/business/" }
+      { name: "Study in Egypt", en: SITE+"/educational/", ar: SITE+"/ar/educational/", desc: "University/school enquiries for students coming from the Gulf." },
+      { name: "Investment Tourism", en: SITE+"/business/", ar: SITE+"/ar/business/", desc: "Investors exploring opportunities in Egypt, not treatment or holiday customers." }
     ]}
   ];
   function copyLink(url, btn){
@@ -620,10 +637,15 @@
   function renderFormsList(){
     document.getElementById("forms-list").innerHTML = FORM_LINKS.map(function(g){
       return '<div class="form-group"><h3>'+esc(g.group)+'</h3>'+
+        (g.desc ? '<p class="lede" style="margin:0 0 8px">'+esc(g.desc)+'</p>' : '')+
         g.items.map(function(it){
-          return '<div class="form-row"><span class="f-name">'+esc(it.name)+'</span>'+
-            '<button type="button" class="btn copy-btn" data-url="'+esc(it.en)+'">Copy English link</button>'+
-            '<button type="button" class="btn copy-btn" data-url="'+esc(it.ar)+'">Copy Arabic link</button>'+
+          var linksHtml = it.single
+            ? '<button type="button" class="btn copy-btn" data-url="'+esc(it.single)+'">Copy link</button>'
+            : '<button type="button" class="btn copy-btn" data-url="'+esc(it.en)+'">Copy English link</button>'+
+              '<button type="button" class="btn copy-btn" data-url="'+esc(it.ar)+'">Copy Arabic link</button>';
+          return '<div class="form-row"><div style="flex:1 1 220px"><span class="f-name">'+esc(it.name)+'</span>'+
+            (it.desc ? '<div style="font-size:11.5px;color:var(--sub);margin-top:2px">'+esc(it.desc)+'</div>' : '')+
+            '</div>'+linksHtml+
           '</div>';
         }).join("") +
       '</div>';
@@ -886,7 +908,7 @@
             '<label class="done-toggle"><input type="checkbox" class="done-check" '+(done?'checked':'')+'> Done</label>'+
           '</div>'+
           '<p class="summary">'+esc(effSummary)+'</p>'+
-          '<p class="meta-line">'+(effContact?esc(effContact)+' · ':'')+(effEmail?('<a href="mailto:'+esc(effEmail)+'">'+esc(effEmail)+'</a>'):'<span>no email on file</span>')+(effPhone?(' · 📞 '+esc(effPhone)):'')+(r.date?(' · '+esc(r.date)):'')+'</p>'+
+          '<p class="meta-line">'+(effContact?esc(effContact)+' · ':'')+(effEmail?('<button type="button" class="info-toggle" style="background:none;border:none;padding:0;color:var(--teal);text-decoration:underline;cursor:pointer;font-size:inherit">'+esc(effEmail)+'</button>'):'<span>no email on file</span>')+(effPhone?(' · 📞 '+esc(effPhone)):'')+(r.date?(' · '+esc(r.date)):'')+'</p>'+
           '<p class="next-action">→ '+esc(effNextAction)+'</p>'+
           (atts.length ? '<p class="meta-line">📎 '+atts.length+' attachment'+(atts.length>1?'s':'')+' — see "Attachments" below</p>' : '')+
           (extraContacts.length ? '<div class="extra-contacts">'+extraContacts.map(function(c,i){
@@ -1014,6 +1036,9 @@
       });
       var replyBtn = card.querySelector(".reply-btn");
       if(replyBtn) replyBtn.addEventListener("click", function(){ openModal(effRow); });
+
+      var infoBtn = card.querySelector(".info-toggle");
+      if(infoBtn) infoBtn.addEventListener("click", function(){ openInfoModal(effRow, "partner"); });
 
       var chainBtn = card.querySelector(".chain-toggle");
       if(chainBtn) chainBtn.addEventListener("click", function(){ openChainModal(effRow); });
@@ -1289,6 +1314,10 @@
       var da = !!(state[a.r.id] && state[a.r.id].done);
       var db = !!(state[b.r.id] && state[b.r.id].done);
       if(da!==db) return da ? -1 : 1;
+      // new (red) enquiries sort first among the not-done ones
+      var na = ((state[a.r.id]&&state[a.r.id].flag)||a.r.flag_default||"new")==="new";
+      var nb = ((state[b.r.id]&&state[b.r.id].flag)||b.r.flag_default||"new")==="new";
+      if(!da && na!==nb) return na ? -1 : 1;
       return a.i - b.i;
     }).map(function(x){ return x.r; });
 
@@ -1345,7 +1374,7 @@
             '<label class="done-toggle"><input type="checkbox" class="done-check" '+(done?'checked':'')+'> Done</label>'+
           '</div>'+
           '<p class="summary">'+esc(effSummary)+'</p>'+
-          '<p class="meta-line">'+(effEmail?('<a href="mailto:'+esc(effEmail)+'">'+esc(effEmail)+'</a>'):'<span>no email on file</span>')+(effPhone?(' · 📞 '+esc(effPhone)):'')+(r.date?(' · '+esc(r.date)):'')+'</p>'+
+          '<p class="meta-line">'+(effEmail?('<button type="button" class="info-toggle" style="background:none;border:none;padding:0;color:var(--teal);text-decoration:underline;cursor:pointer;font-size:inherit">'+esc(effEmail)+'</button>'):'<span>no email on file</span>')+(effPhone?(' · 📞 '+esc(effPhone)):'')+(r.date?(' · '+esc(r.date)):'')+'</p>'+
           (r.source ? '<p class="meta-line">📍 Source: '+(r.source_url?('<a href="'+esc(r.source_url)+'" target="_blank" rel="noopener">'+esc(r.source)+'</a>'):esc(r.source))+'</p>' : '')+
           (atts.length ? '<p class="meta-line">📎 '+atts.length+' attachment'+(atts.length>1?'s':'')+' — see "Attachments" below</p>' : '')+
           (matches.length ? '<p class="match-line">🤝 Suggested partner'+(matches.length>1?'s':'')+' for this enquiry: '+matches.map(esc).join(", ")+'</p>' : '')+
@@ -1487,6 +1516,8 @@
       });
       var replyBtn = card.querySelector(".reply-btn");
       if(replyBtn) replyBtn.addEventListener("click", function(){ openModal(effRow); });
+      var infoBtnC = card.querySelector(".info-toggle");
+      if(infoBtnC) infoBtnC.addEventListener("click", function(){ openInfoModal(Object.assign({}, effRow, {extraContacts: _s.extraContacts}), "customer"); });
       var chainBtn = card.querySelector(".chain-toggle");
       if(chainBtn) chainBtn.addEventListener("click", function(){ openChainModal(Object.assign({}, effRow, {thread: row.thread, email_link: row.email_link, attachments: row.attachments})); });
 
@@ -1758,6 +1789,40 @@
   }
   document.getElementById("atts-modal-close").addEventListener("click", function(){ attsModal.classList.remove("open"); });
   attsModal.addEventListener("click", function(e){ if(e.target===attsModal) attsModal.classList.remove("open"); });
+
+  // ---- contact-info popup: click an email on a card to see full contact details
+  // and why they got in touch, instead of the browser silently trying mailto: ----
+  var infoModal = document.getElementById("info-modal");
+  function openInfoModal(row, kind){
+    document.getElementById("info-title").textContent = row.name;
+    var extra = row.extraContacts || [];
+    var rows = [];
+    if(kind==="partner" && row.contact) rows.push(["Contact person", row.contact]);
+    if(row.email) rows.push(["Email", '<a href="mailto:'+esc(row.email)+'">'+esc(row.email)+'</a>']);
+    if(row.phone) rows.push(["Phone / WhatsApp", esc(row.phone)]);
+    if(kind==="partner"){
+      if(row.category) rows.push(["Category", esc(row.category)]);
+      if(row.country) rows.push(["Country", esc(row.country)]);
+    } else {
+      if(row.enquiry_type) rows.push(["Enquiry type", esc(row.enquiry_type)]);
+      if(row.source) rows.push(["Source", esc(row.source)]);
+    }
+    var html = '<div class="atts-modal-list">'+rows.map(function(pair){
+      return '<div class="atts-row"><span style="color:var(--sub)">'+esc(pair[0])+'</span><span>'+pair[1]+'</span></div>';
+    }).join("")+'</div>';
+    if(extra.length){
+      html += '<p style="font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.03em;margin:14px 0 6px">Additional contacts</p>'+
+        '<div class="atts-modal-list">'+extra.map(function(c){
+          return '<div class="atts-row"><span>'+esc(c.name||"(no name)")+(c.role?' — '+esc(c.role):'')+'</span><span>'+(c.email?esc(c.email):'')+(c.phone?(' · '+esc(c.phone)):'')+'</span></div>';
+        }).join("")+'</div>';
+    }
+    html += '<p style="font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.03em;margin:14px 0 6px">'+(kind==="partner"?"Why they're in the system":"Why they contacted us")+'</p>'+
+      '<p style="font-size:13.5px;line-height:1.5;color:var(--ink);margin:0">'+esc(row.summary||"No summary on file.")+'</p>';
+    document.getElementById("info-body").innerHTML = html;
+    infoModal.classList.add("open");
+  }
+  document.getElementById("info-modal-close").addEventListener("click", function(){ infoModal.classList.remove("open"); });
+  infoModal.addEventListener("click", function(e){ if(e.target===infoModal) infoModal.classList.remove("open"); });
 
   function openChainModal(row){
     document.getElementById("chain-title").textContent = "Email chain — " + row.name;
