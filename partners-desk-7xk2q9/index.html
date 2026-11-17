@@ -37,13 +37,29 @@
   .card:hover{box-shadow:0 4px 18px rgba(10,46,54,.08)}
   .card.done{opacity:.55}
   .card.deleted{opacity:.6;border-color:#C44}
-  .card.unseen{border:2px solid var(--gold);box-shadow:0 0 0 3px rgba(184,146,42,.15)}
+  .card.flag-new{border:2px solid #B8922A;box-shadow:0 0 0 3px rgba(184,146,42,.15)}
+  .card.flag-urgent{border:2px solid #C0392B;box-shadow:0 0 0 3px rgba(192,57,43,.15)}
+  .card.flag-waiting{border:2px solid #2E6DA4;box-shadow:0 0 0 3px rgba(46,109,164,.15)}
+  .card.flag-ready{border:2px solid #2E8B57;box-shadow:0 0 0 3px rgba(46,139,87,.15)}
+  .flag-btn{position:relative;display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer}
+  .flag-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+  .flag-dot.flag-new{border:none;background:#B8922A;box-shadow:none}
+  .flag-dot.flag-urgent{border:none;background:#C0392B;box-shadow:none}
+  .flag-dot.flag-waiting{border:none;background:#2E6DA4;box-shadow:none}
+  .flag-dot.flag-ready{border:none;background:#2E8B57;box-shadow:none}
+  .flag-picker{display:none;position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px;box-shadow:0 8px 24px rgba(10,46,54,.15);z-index:20;min-width:190px}
+  .flag-picker.open{display:block}
+  .flag-opt{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:7px;font-size:12.5px;cursor:pointer;white-space:nowrap}
+  .flag-opt:hover{background:var(--cream)}
   .delete-btn{color:#A33;border-color:#E9C3C3}
   .delete-btn:hover{border-color:#A33}
   .view-toggle{display:flex;gap:8px;margin-bottom:18px}
   .view-btn{font-size:13.5px;font-weight:600;padding:9px 18px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--sub);cursor:pointer}
   .view-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .pill.new{background:var(--crit-bg);color:var(--crit-fg)}
+  .pill.flag-new{background:#F6ECD2;color:#8F701D}
+  .pill.flag-urgent{background:var(--crit-bg);color:var(--crit-fg)}
+  .pill.flag-waiting{background:#DCEBF7;color:#2E6DA4}
+  .pill.flag-ready{background:var(--ok-bg);color:var(--ok-fg)}
   .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
   .card-top h3{font-family:Georgia,serif;font-size:17px;margin:0;color:var(--ink)}
   .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
@@ -163,7 +179,7 @@
   <div id="view-customers" style="display:none">
   <div class="kpis">
     <div class="kpi"><div class="num" id="kpi-cust-total">—</div><div class="lbl">Total enquiries</div></div>
-    <div class="kpi"><div class="num" id="kpi-cust-new">—</div><div class="lbl">New / unread</div></div>
+    <div class="kpi"><div class="num" id="kpi-cust-new">—</div><div class="lbl">Flagged "New"</div></div>
     <div class="kpi"><div class="num" id="kpi-cust-open">—</div><div class="lbl">Open / not done</div></div>
     <div class="kpi"><div class="num" id="kpi-cust-shown">—</div><div class="lbl">Matching filters</div></div>
   </div>
@@ -380,6 +396,13 @@
   var ALL_CUST = [];
   var ENQUIRY_TYPE_OPTIONS = ["Trip","Dental","Medical","Study","VIP","Investor","General"];
   var CUST_STATUS_OPTIONS = ["New Enquiry","Contacted","Quoted","Booked","Lost"];
+  var FLAG_OPTIONS = [
+    { key: "new", label: "New" },
+    { key: "urgent", label: "Urgent" },
+    { key: "waiting", label: "Waiting on customer" },
+    { key: "ready", label: "Ready to book" }
+  ];
+  document.addEventListener("click", function(){ document.querySelectorAll(".flag-picker.open").forEach(function(p){ p.classList.remove("open"); }); });
 
   // ---- view toggle ----
   document.getElementById("view-btn-partners").addEventListener("click", function(){
@@ -910,7 +933,7 @@
 
     var active = ALL_CUST.filter(function(r){ return !(state[r.id]&&state[r.id].deleted); });
     document.getElementById("kpi-cust-total").textContent = active.length;
-    document.getElementById("kpi-cust-new").textContent = active.filter(function(r){ return !(state[r.id] && state[r.id].seen); }).length;
+    document.getElementById("kpi-cust-new").textContent = active.filter(function(r){ return ((state[r.id]&&state[r.id].flag)||"new")==="new"; }).length;
     document.getElementById("kpi-cust-open").textContent = active.filter(function(r){return !(state[r.id]&&state[r.id].done)}).length;
     document.getElementById("kpi-cust-shown").textContent = rows.length;
     document.getElementById("count-line-cust").textContent = "Showing " + rows.length + " of " + active.length + " enquiries" + (showDeleted ? " (deleted)" : "");
@@ -922,7 +945,8 @@
       var st = state[r.id] || {};
       var done = !!st.done;
       var deleted = !!st.deleted;
-      var seen = !!st.seen;
+      var flag = st.flag || "new";
+      var flagOpt = FLAG_OPTIONS.filter(function(f){return f.key===flag;})[0] || FLAG_OPTIONS[0];
       var notes = st.notes || "";
       var extraContacts = st.extraContacts || [];
       var effName = st.name || r.name;
@@ -934,11 +958,11 @@
       var effNextAction = st.next_action || r.next_action || "Follow up";
       var edited = !!(st.name||st.enquiry_type||st.status||st.email!=null||st.phone!=null||st.summary!=null||st.next_action);
       return (
-        '<div class="card'+(done?' done':'')+(deleted?' deleted':'')+(!seen?' unseen':'')+'" data-id="'+esc(r.id)+'">'+
+        '<div class="card'+(done?' done':'')+(deleted?' deleted':'')+' flag-'+flag+'" data-id="'+esc(r.id)+'">'+
           '<div class="card-top">'+
             '<div><h3>'+esc(effName)+'</h3>'+
             '<div class="tags">'+
-              (!seen ? '<span class="pill new">New</span>' : '')+
+              '<span class="pill flag-'+flag+'">'+esc(flagOpt.label)+'</span>'+
               '<span class="pill '+custPillClass("status",effStatus)+'">'+esc(effStatus)+'</span>'+
               (edited ? '<span class="pill neu">edited</span>' : '')+
               '<span class="pill neu">'+esc(effType)+'</span>'+
@@ -948,6 +972,7 @@
           '</div>'+
           '<p class="summary">'+esc(effSummary)+'</p>'+
           '<p class="meta-line">'+(effEmail?('<a href="mailto:'+esc(effEmail)+'">'+esc(effEmail)+'</a>'):'<span>no email on file</span>')+(effPhone?(' · 📞 '+esc(effPhone)):'')+(r.date?(' · '+esc(r.date)):'')+'</p>'+
+          (r.source ? '<p class="meta-line">📍 Source: '+(r.source_url?('<a href="'+esc(r.source_url)+'" target="_blank" rel="noopener">'+esc(r.source)+'</a>'):esc(r.source))+'</p>' : '')+
           '<p class="next-action">→ '+esc(effNextAction)+'</p>'+
           (extraContacts.length ? '<div class="extra-contacts">'+extraContacts.map(function(c,i){
             return '<span class="contact-chip" data-i="'+i+'">'+esc(c.name||"(no name)")+
@@ -965,6 +990,14 @@
             '<button class="btn book-toggle">Book a call</button>'+
             '<button class="btn contact-toggle">+ Add contact</button>'+
             '<button class="btn edit-toggle">Edit</button>'+
+            '<div class="flag-wrap" style="position:relative;display:inline-block">'+
+              '<button class="flag-btn" type="button"><span class="flag-dot flag-'+flag+'"></span>'+esc(flagOpt.label)+'</button>'+
+              '<div class="flag-picker">'+
+                FLAG_OPTIONS.map(function(f){
+                  return '<div class="flag-opt" data-flag="'+f.key+'"><span class="flag-dot flag-'+f.key+'"></span>'+esc(f.label)+'</div>';
+                }).join("")+
+              '</div>'+
+            '</div>'+
             (deleted ? '<button class="btn restore-btn">Restore</button>' : '<button class="btn delete-btn">Delete</button>')+
           '</div>'+
           '<div class="edit-box" style="display:none">'+
@@ -1042,12 +1075,22 @@
         status: _s.status || row.status
       });
 
-      if(!_s.seen){
-        card.addEventListener("click", function(){
+      var flagBtn = card.querySelector(".flag-btn");
+      var flagPicker = card.querySelector(".flag-picker");
+      flagBtn.addEventListener("click", function(e){
+        e.stopPropagation();
+        document.querySelectorAll(".flag-picker.open").forEach(function(p){ if(p!==flagPicker) p.classList.remove("open"); });
+        flagPicker.classList.toggle("open");
+      });
+      flagPicker.querySelectorAll(".flag-opt").forEach(function(opt){
+        opt.addEventListener("click", function(e){
+          e.stopPropagation();
           state[id] = state[id] || {};
-          if(!state[id].seen){ state[id].seen = true; saveState(state); card.classList.remove("unseen"); card.querySelector(".pill.new") && card.querySelector(".pill.new").remove(); }
+          state[id].flag = opt.getAttribute("data-flag");
+          saveState(state);
+          renderCustomers();
         });
-      }
+      });
 
       card.querySelector(".done-check").addEventListener("change", function(e){
         state[id] = state[id] || {};
