@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Partners Desk — Hayakkom</title>
+<title>Hayakkom Hub</title>
 <link rel="icon" href="/favicon.ico">
 <style>
   :root{
@@ -37,8 +37,13 @@
   .card:hover{box-shadow:0 4px 18px rgba(10,46,54,.08)}
   .card.done{opacity:.55}
   .card.deleted{opacity:.6;border-color:#C44}
+  .card.unseen{border:2px solid var(--gold);box-shadow:0 0 0 3px rgba(184,146,42,.15)}
   .delete-btn{color:#A33;border-color:#E9C3C3}
   .delete-btn:hover{border-color:#A33}
+  .view-toggle{display:flex;gap:8px;margin-bottom:18px}
+  .view-btn{font-size:13.5px;font-weight:600;padding:9px 18px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--sub);cursor:pointer}
+  .view-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .pill.new{background:var(--crit-bg);color:var(--crit-fg)}
   .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
   .card-top h3{font-family:Georgia,serif;font-size:17px;margin:0;color:var(--ink)}
   .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
@@ -111,7 +116,7 @@
 <div id="pw-gate">
   <div class="box">
     <img src="https://www.hayakkom.com/assets/logo.png" alt="Hayakkom">
-    <h1>Partners Desk</h1>
+    <h1>Hayakkom Hub</h1>
     <p class="hint">Enter the password Sherif gave you to continue.</p>
     <input type="password" id="pw-input" placeholder="Password" autofocus>
     <p class="err" id="pw-err"></p>
@@ -121,11 +126,17 @@
 <div id="app-content" style="display:none">
 <div class="wrap">
   <header class="top">
-    <h1>Partners Desk</h1>
+    <h1>Hayakkom Hub</h1>
     <span class="badge">Internal — not for public sharing</span>
   </header>
-  <p class="lede">Every hospital, clinic, agency and tourism company that has contacted Hayakkom, in one searchable place — built for Reham to track, reply to and keep moving.</p>
+  <p class="lede">Every partner and every customer who has contacted Hayakkom, in one searchable place — built for Reham to track, reply to and keep moving.</p>
 
+  <div class="view-toggle">
+    <button class="view-btn active" id="view-btn-partners" type="button">🤝 Partners</button>
+    <button class="view-btn" id="view-btn-customers" type="button">🧳 Customers</button>
+  </div>
+
+  <div id="view-partners">
   <div class="kpis">
     <div class="kpi"><div class="num" id="kpi-total">—</div><div class="lbl">Total contacts</div></div>
     <div class="kpi"><div class="num" id="kpi-live">—</div><div class="lbl">Live partners</div></div>
@@ -146,6 +157,28 @@
 
   <p class="count-line" id="count-line"></p>
   <div id="list"></div>
+  </div>
+
+  <div id="view-customers" style="display:none">
+  <div class="kpis">
+    <div class="kpi"><div class="num" id="kpi-cust-total">—</div><div class="lbl">Total enquiries</div></div>
+    <div class="kpi"><div class="num" id="kpi-cust-new">—</div><div class="lbl">New / unread</div></div>
+    <div class="kpi"><div class="num" id="kpi-cust-open">—</div><div class="lbl">Open / not done</div></div>
+    <div class="kpi"><div class="num" id="kpi-cust-shown">—</div><div class="lbl">Matching filters</div></div>
+  </div>
+
+  <div class="toolbar">
+    <input type="search" id="fc-search" placeholder="Search by name, email, phone or enquiry…">
+    <select id="fc-type"><option value="">All enquiry types</option></select>
+    <select id="fc-status"><option value="">All statuses</option></select>
+    <label class="chk"><input type="checkbox" id="fc-hide-done"> Hide done</label>
+    <label class="chk"><input type="checkbox" id="fc-show-deleted"> Show deleted</label>
+    <button class="btn gold" id="add-customer-btn" type="button">+ Add customer</button>
+  </div>
+
+  <p class="count-line" id="count-line-cust"></p>
+  <div id="list-customers"></div>
+  </div>
 
   <p class="hk-legal-foot">Important: accommodation, hotel bookings, villa and chalet rentals, trips, tours and all transport are provided by registered Egyptian tourism companies. All medical treatment and operations are performed by registered, licensed medical institutions. This applies to every package and offer on this site; Hayakkom coordinates these services and does not provide them itself.</p>
 </div>
@@ -226,6 +259,34 @@
   </div>
 </div>
 
+<div class="modal-backdrop" id="add-cust-modal">
+  <div class="modal">
+    <button class="close-x" id="add-cust-modal-close" aria-label="Close">×</button>
+    <h2>Add a customer manually</h2>
+    <p class="sub">Saved on this device only — not shared automatically with other browsers.</p>
+
+    <div class="field"><label>Name</label><input type="text" id="ac-name"></div>
+    <div class="row2">
+      <div class="field"><label>Enquiry type</label>
+        <select id="ac-type"><option>Trip</option><option>Dental</option><option>Medical</option><option>Study</option><option>VIP</option><option>Investor</option><option>Question</option><option>General</option></select>
+      </div>
+      <div class="field"><label>Status</label>
+        <select id="ac-status"><option>New Enquiry</option><option>Contacted</option><option>Quoted</option><option>Booked</option><option>Lost</option></select>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>Email</label><input type="email" id="ac-email"></div>
+      <div class="field"><label>Phone</label><input type="text" id="ac-phone"></div>
+    </div>
+    <div class="field"><label>Summary / what they asked</label><textarea id="ac-summary" placeholder="What does this customer want?"></textarea></div>
+    <div class="field"><label>Next action</label><input type="text" id="ac-next-action" placeholder="e.g. Send quote, follow up on WhatsApp"></div>
+
+    <div class="modal-actions">
+      <button class="btn gold" id="ac-save">Add customer</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-backdrop" id="chain-modal">
   <div class="modal chain-modal">
     <button class="close-x" id="chain-modal-close" aria-label="Close">×</button>
@@ -260,19 +321,38 @@
     document.getElementById("app-content").style.display = "block";
   }
   var ENCRYPTED = null;
+  var ENCRYPTED_CUST = null;
   fetch("data.enc.json").then(function(r){return r.json();}).then(function(j){ ENCRYPTED = j; });
+  fetch("customers.enc.json").then(function(r){return r.json();}).then(function(j){ ENCRYPTED_CUST = j; }).catch(function(){ ENCRYPTED_CUST = null; });
   document.getElementById("pw-submit").addEventListener("click", tryUnlock);
   document.getElementById("pw-input").addEventListener("keydown", function(e){ if(e.key==="Enter") tryUnlock(); });
+  function decryptWith(password, enc){
+    return deriveKey(password, enc.salt).then(function(key){
+      return crypto.subtle.decrypt({ name:"AES-GCM", iv:b64(enc.iv) }, key, b64(enc.data));
+    }).then(function(plainBuf){ return JSON.parse(new TextDecoder().decode(plainBuf)); });
+  }
   function tryUnlock(){
     var val = document.getElementById("pw-input").value;
     if(!ENCRYPTED){ document.getElementById("pw-err").textContent = "Still loading, try again in a second."; return; }
-    deriveKey(val, ENCRYPTED.salt).then(function(key){
-      return crypto.subtle.decrypt({ name:"AES-GCM", iv:b64(ENCRYPTED.iv) }, key, b64(ENCRYPTED.data));
-    }).then(function(plainBuf){
-      var text = new TextDecoder().decode(plainBuf);
-      ALL = JSON.parse(text).concat(loadCustom());
+    decryptWith(val, ENCRYPTED).then(function(json){
+      ALL = json.concat(loadCustom());
       buildFilterOptions();
       render();
+      return ENCRYPTED_CUST ? decryptWith(val, ENCRYPTED_CUST) : [];
+    }).then(function(custJson){
+      ALL_CUST = (custJson||[]).concat(loadCustomCustomers());
+      ALL_CUST.forEach(function(c){
+        if(!c.thread && c.answers && c.answers.length){
+          c.thread = [{
+            from: c.name + (c.email ? " <"+c.email+">" : ""),
+            date: c.date,
+            subject: c.subject || c.enquiry_type + " enquiry",
+            text: c.answers.map(function(a){ return "Q: "+a.question+"\nA: "+a.answer; }).join("\n\n")
+          }];
+        }
+      });
+      buildCustFilterOptions();
+      renderCustomers();
       unlock();
     }).catch(function(){
       document.getElementById("pw-err").textContent = "Incorrect password.";
@@ -292,6 +372,27 @@
 
   function loadCustom(){ try{ return JSON.parse(localStorage.getItem(CUSTOM_KEY)||"[]"); }catch(e){ return []; } }
   function saveCustom(c){ try{ localStorage.setItem(CUSTOM_KEY, JSON.stringify(c)); }catch(e){} }
+
+  var CUSTOM_CUST_KEY = "hk_customers_custom_v1";
+  function loadCustomCustomers(){ try{ return JSON.parse(localStorage.getItem(CUSTOM_CUST_KEY)||"[]"); }catch(e){ return []; } }
+  function saveCustomCustomers(c){ try{ localStorage.setItem(CUSTOM_CUST_KEY, JSON.stringify(c)); }catch(e){} }
+  var ALL_CUST = [];
+  var ENQUIRY_TYPE_OPTIONS = ["Trip","Dental","Medical","Study","VIP","Investor","General"];
+  var CUST_STATUS_OPTIONS = ["New Enquiry","Contacted","Quoted","Booked","Lost"];
+
+  // ---- view toggle ----
+  document.getElementById("view-btn-partners").addEventListener("click", function(){
+    document.getElementById("view-partners").style.display = "block";
+    document.getElementById("view-customers").style.display = "none";
+    document.getElementById("view-btn-partners").classList.add("active");
+    document.getElementById("view-btn-customers").classList.remove("active");
+  });
+  document.getElementById("view-btn-customers").addEventListener("click", function(){
+    document.getElementById("view-partners").style.display = "none";
+    document.getElementById("view-customers").style.display = "block";
+    document.getElementById("view-btn-customers").classList.add("active");
+    document.getElementById("view-btn-partners").classList.remove("active");
+  });
 
   function pillClass(kind, val){
     if(kind==="status") return val==="Live Partner" ? "ok" : val==="Documents Received" ? "warn" : val==="Low Priority" ? "neu" : "crit";
@@ -745,6 +846,418 @@
       });
     });
   }
+
+  // ==== CUSTOMERS ====
+  function custPillClass(kind, val){
+    if(kind==="status") return val==="Booked" ? "ok" : val==="Lost" ? "neu" : val==="Quoted" ? "warn" : "crit";
+    return "neu";
+  }
+  function buildCustFilterOptions(){
+    function fill(id, values){
+      var sel = document.getElementById(id);
+      var keep = sel.options[0];
+      sel.innerHTML = "";
+      sel.appendChild(keep);
+      values.forEach(function(v){ var o=document.createElement("option"); o.value=v; o.textContent=v; sel.appendChild(o); });
+    }
+    var overrides = ALL_CUST.map(function(r){ return state[r.id] || {}; });
+    fill("fc-type", unique(ALL_CUST.map(function(r){return r.enquiry_type}).concat(overrides.map(function(s){return s.enquiry_type;}))).sort());
+    fill("fc-status", unique(ALL_CUST.map(function(r){return r.status}).concat(overrides.map(function(s){return s.status;}))));
+  }
+  ["fc-search","fc-type","fc-status","fc-hide-done","fc-show-deleted"].forEach(function(id){
+    document.getElementById(id).addEventListener("input", renderCustomers);
+    document.getElementById(id).addEventListener("change", renderCustomers);
+  });
+
+  function renderCustomers(){
+    var q = document.getElementById("fc-search").value.trim().toLowerCase();
+    var type = document.getElementById("fc-type").value;
+    var status = document.getElementById("fc-status").value;
+    var hideDone = document.getElementById("fc-hide-done").checked;
+    var showDeleted = document.getElementById("fc-show-deleted").checked;
+
+    var rows = ALL_CUST.filter(function(r){
+      var done = !!(state[r.id] && state[r.id].done);
+      var deleted = !!(state[r.id] && state[r.id].deleted);
+      if(deleted && !showDeleted) return false;
+      if(!deleted && showDeleted) return false;
+      if(hideDone && done) return false;
+      var s = state[r.id] || {};
+      var effType = s.enquiry_type || r.enquiry_type;
+      var effStatus = s.status || r.status;
+      if(type && effType!==type) return false;
+      if(status && effStatus!==status) return false;
+      if(q){
+        var effName = s.name || r.name;
+        var effEmail = (s.email!=null ? s.email : r.email);
+        var effPhone = (s.phone!=null ? s.phone : r.phone) || "";
+        var effSummary = (s.summary!=null ? s.summary : r.summary) || "";
+        var extra = s.extraContacts || [];
+        var extraText = extra.map(function(c){ return (c.name||"")+" "+(c.role||"")+" "+(c.email||"")+" "+(c.phone||""); }).join(" ");
+        var hay = (effName+" "+effEmail+" "+effPhone+" "+effSummary+" "+effType+" "+extraText).toLowerCase();
+        if(hay.indexOf(q)===-1) return false;
+      }
+      return true;
+    });
+
+    rows = rows.map(function(r,i){ return {r:r, i:i}; }).sort(function(a,b){
+      var da = !!(state[a.r.id] && state[a.r.id].done);
+      var db = !!(state[b.r.id] && state[b.r.id].done);
+      if(da!==db) return da ? -1 : 1;
+      return a.i - b.i;
+    }).map(function(x){ return x.r; });
+
+    var active = ALL_CUST.filter(function(r){ return !(state[r.id]&&state[r.id].deleted); });
+    document.getElementById("kpi-cust-total").textContent = active.length;
+    document.getElementById("kpi-cust-new").textContent = active.filter(function(r){ return !(state[r.id] && state[r.id].seen); }).length;
+    document.getElementById("kpi-cust-open").textContent = active.filter(function(r){return !(state[r.id]&&state[r.id].done)}).length;
+    document.getElementById("kpi-cust-shown").textContent = rows.length;
+    document.getElementById("count-line-cust").textContent = "Showing " + rows.length + " of " + active.length + " enquiries" + (showDeleted ? " (deleted)" : "");
+
+    var list = document.getElementById("list-customers");
+    if(!rows.length){ list.innerHTML = '<p class="empty">No customers match these filters.</p>'; return; }
+
+    list.innerHTML = rows.map(function(r){
+      var st = state[r.id] || {};
+      var done = !!st.done;
+      var deleted = !!st.deleted;
+      var seen = !!st.seen;
+      var notes = st.notes || "";
+      var extraContacts = st.extraContacts || [];
+      var effName = st.name || r.name;
+      var effType = st.enquiry_type || r.enquiry_type;
+      var effStatus = st.status || r.status;
+      var effEmail = (st.email!=null ? st.email : r.email);
+      var effPhone = (st.phone!=null ? st.phone : r.phone);
+      var effSummary = (st.summary!=null ? st.summary : r.summary);
+      var effNextAction = st.next_action || r.next_action || "Follow up";
+      var edited = !!(st.name||st.enquiry_type||st.status||st.email!=null||st.phone!=null||st.summary!=null||st.next_action);
+      return (
+        '<div class="card'+(done?' done':'')+(deleted?' deleted':'')+(!seen?' unseen':'')+'" data-id="'+esc(r.id)+'">'+
+          '<div class="card-top">'+
+            '<div><h3>'+esc(effName)+'</h3>'+
+            '<div class="tags">'+
+              (!seen ? '<span class="pill new">New</span>' : '')+
+              '<span class="pill '+custPillClass("status",effStatus)+'">'+esc(effStatus)+'</span>'+
+              (edited ? '<span class="pill neu">edited</span>' : '')+
+              '<span class="pill neu">'+esc(effType)+'</span>'+
+              (r.custom ? '<span class="pill neu">Added manually</span>' : '')+
+            '</div></div>'+
+            '<label class="done-toggle"><input type="checkbox" class="done-check" '+(done?'checked':'')+'> Done</label>'+
+          '</div>'+
+          '<p class="summary">'+esc(effSummary)+'</p>'+
+          '<p class="meta-line">'+(effEmail?('<a href="mailto:'+esc(effEmail)+'">'+esc(effEmail)+'</a>'):'<span>no email on file</span>')+(effPhone?(' · 📞 '+esc(effPhone)):'')+(r.date?(' · '+esc(r.date)):'')+'</p>'+
+          '<p class="next-action">→ '+esc(effNextAction)+'</p>'+
+          (extraContacts.length ? '<div class="extra-contacts">'+extraContacts.map(function(c,i){
+            return '<span class="contact-chip" data-i="'+i+'">'+esc(c.name||"(no name)")+
+              (c.role? ' — '+esc(c.role):'')+
+              (c.email? ' · <a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a>':'')+
+              (c.phone? ' · '+esc(c.phone):'')+
+              ' <button type="button" class="chip-remove" data-i="'+i+'" aria-label="Remove contact">×</button></span>';
+          }).join("")+'</div>' : '')+
+          '<textarea class="notes" placeholder="Add a note…">'+esc(notes)+'</textarea>'+
+          '<div class="card-actions">'+
+            (effEmail ? '<button class="btn gold reply-btn">Reply</button>' : '')+
+            (r.thread && r.thread.length ? '<button class="btn chain-toggle">View enquiry</button>' : '')+
+            (r.email_link ? '<a class="btn" target="_blank" rel="noopener" href="'+esc(r.email_link)+'">View full email</a>' : '')+
+            '<button class="btn remind-toggle">Set a reminder</button>'+
+            '<button class="btn book-toggle">Book a call</button>'+
+            '<button class="btn contact-toggle">+ Add contact</button>'+
+            '<button class="btn edit-toggle">Edit</button>'+
+            (deleted ? '<button class="btn restore-btn">Restore</button>' : '<button class="btn delete-btn">Delete</button>')+
+          '</div>'+
+          '<div class="edit-box" style="display:none">'+
+            '<div class="row2">'+
+              '<div><label>Name</label><input type="text" class="e-name" value="'+esc(effName)+'"></div>'+
+              '<div><label>Enquiry type</label>'+
+                '<select class="e-type">'+
+                  ENQUIRY_TYPE_OPTIONS.concat(["Question"]).map(function(t){ return '<option value="'+esc(t)+'"'+(t===effType?' selected':'')+'>'+esc(t)+'</option>'; }).join("")+
+                '</select>'+
+              '</div>'+
+            '</div>'+
+            '<div class="row2">'+
+              '<div><label>Status</label>'+
+                '<select class="e-status">'+
+                  CUST_STATUS_OPTIONS.map(function(s){ return '<option value="'+esc(s)+'"'+(s===effStatus?' selected':'')+'>'+esc(s)+'</option>'; }).join("")+
+                '</select>'+
+              '</div>'+
+              '<div><label>Email</label><input type="email" class="e-email" value="'+esc(effEmail)+'"></div>'+
+            '</div>'+
+            '<div class="row2">'+
+              '<div><label>Phone</label><input type="text" class="e-phone" value="'+esc(effPhone)+'"></div>'+
+              '<div><label>Next action</label><input type="text" class="e-next-action" value="'+esc(effNextAction)+'"></div>'+
+            '</div>'+
+            '<label>Summary</label><textarea class="e-summary">'+esc(effSummary)+'</textarea>'+
+            '<div class="modal-actions" style="margin-top:10px"><button class="btn gold edit-save">Save changes</button></div>'+
+          '</div>'+
+          '<div class="contact-box" style="display:none">'+
+            '<div class="row2">'+
+              '<div><label>Name</label><input type="text" class="c-name"></div>'+
+              '<div><label>Position</label><input type="text" class="c-role" placeholder="e.g. travelling companion"></div>'+
+            '</div>'+
+            '<div class="row2">'+
+              '<div><label>Email</label><input type="email" class="c-email"></div>'+
+              '<div><label>Phone</label><input type="text" class="c-phone"></div>'+
+            '</div>'+
+            '<div class="modal-actions" style="margin-top:10px"><button class="btn gold contact-save">Add contact</button></div>'+
+          '</div>'+
+          '<div class="reminder-box" style="display:none">'+
+            '<label>Email for the reminder</label>'+
+            '<input type="email" class="remind-email" placeholder="you@hayakkom.com" value="'+esc(st.remindEmail||"")+'">'+
+            renderReminderOptions(r.id)+
+          '</div>'+
+          '<div class="booking-box" style="display:none">'+
+            '<label>Who’s joining (comma-separated emails)</label>'+
+            '<input type="text" class="book-emails" placeholder="'+esc(effEmail||"customer@example.com")+', reham@hayakkom.com" value="'+esc(st.bookEmails|| (effEmail||""))+'">'+
+            '<div class="row2">'+
+              '<div><label>Date</label><input type="date" class="book-date"></div>'+
+              '<div><label>Time</label><input type="time" class="book-time" value="10:00"></div>'+
+            '</div>'+
+            '<label>Subject</label>'+
+            '<input type="text" class="book-subject" value="Call with Hayakkom — '+esc(effName)+'">'+
+            '<div class="modal-actions" style="margin-top:10px">'+
+              '<button class="btn gold book-open">Open in Outlook</button>'+
+              '<button class="btn book-copy">Copy details to share</button>'+
+            '</div>'+
+            '<p class="note" style="margin-top:8px">Opens a prefilled Outlook invite — Teams shows the same calendar. Toggle “Teams meeting” in Outlook before sending to get a real join link.</p>'+
+            '<p class="copy-flash book-flash" style="display:none">Copied — paste into WhatsApp or email.</p>'+
+          '</div>'+
+        '</div>'
+      );
+    }).join("");
+
+    list.querySelectorAll(".card").forEach(function(card){
+      var id = card.getAttribute("data-id");
+      var row = ALL_CUST.filter(function(r){return r.id===id})[0];
+      var _s = state[id] || {};
+      var effRow = Object.assign({}, row, {
+        name: _s.name || row.name,
+        category: _s.enquiry_type || row.enquiry_type,
+        country: "",
+        email: (_s.email!=null ? _s.email : row.email),
+        phone: (_s.phone!=null ? _s.phone : row.phone),
+        summary: (_s.summary!=null ? _s.summary : row.summary),
+        next_action: _s.next_action || row.next_action || "Follow up",
+        status: _s.status || row.status
+      });
+
+      if(!_s.seen){
+        card.addEventListener("click", function(){
+          state[id] = state[id] || {};
+          if(!state[id].seen){ state[id].seen = true; saveState(state); card.classList.remove("unseen"); card.querySelector(".pill.new") && card.querySelector(".pill.new").remove(); }
+        });
+      }
+
+      card.querySelector(".done-check").addEventListener("change", function(e){
+        state[id] = state[id] || {};
+        state[id].done = e.target.checked;
+        saveState(state);
+        renderCustomers();
+      });
+      card.querySelector(".notes").addEventListener("change", function(e){
+        state[id] = state[id] || {};
+        state[id].notes = e.target.value;
+        saveState(state);
+      });
+      var replyBtn = card.querySelector(".reply-btn");
+      if(replyBtn) replyBtn.addEventListener("click", function(){ openModal(effRow); });
+      var chainBtn = card.querySelector(".chain-toggle");
+      if(chainBtn) chainBtn.addEventListener("click", function(){ openChainModal(Object.assign({}, effRow, {thread: row.thread, email_link: row.email_link, attachments: row.attachments})); });
+
+      var deleteBtn = card.querySelector(".delete-btn");
+      if(deleteBtn) deleteBtn.addEventListener("click", function(){
+        if(!confirm("Remove \""+effRow.name+"\" from the list? You can bring it back with \"Show deleted\".")) return;
+        state[id] = state[id] || {};
+        state[id].deleted = true;
+        saveState(state);
+        renderCustomers();
+      });
+      var restoreBtn = card.querySelector(".restore-btn");
+      if(restoreBtn) restoreBtn.addEventListener("click", function(){
+        state[id] = state[id] || {};
+        state[id].deleted = false;
+        saveState(state);
+        renderCustomers();
+      });
+
+      var editToggle = card.querySelector(".edit-toggle");
+      var editBox = card.querySelector(".edit-box");
+      editToggle.addEventListener("click", function(){
+        editBox.style.display = editBox.style.display==="none" ? "block" : "none";
+      });
+      card.querySelector(".edit-save").addEventListener("click", function(){
+        state[id] = state[id] || {};
+        var name = card.querySelector(".e-name").value.trim();
+        if(name && name!==row.name) state[id].name = name;
+        var type = card.querySelector(".e-type").value;
+        if(type!==row.enquiry_type) state[id].enquiry_type = type;
+        state[id].status = card.querySelector(".e-status").value;
+        var email = card.querySelector(".e-email").value.trim();
+        if(email!==(row.email||"")) state[id].email = email;
+        var phone = card.querySelector(".e-phone").value.trim();
+        if(phone!==(row.phone||"")) state[id].phone = phone;
+        var summary = card.querySelector(".e-summary").value.trim();
+        if(summary!==(row.summary||"")) state[id].summary = summary;
+        var nextAction = card.querySelector(".e-next-action").value.trim();
+        if(nextAction && nextAction!==row.next_action) state[id].next_action = nextAction;
+        saveState(state);
+        buildCustFilterOptions();
+        renderCustomers();
+      });
+
+      var contactToggle = card.querySelector(".contact-toggle");
+      var contactBox = card.querySelector(".contact-box");
+      contactToggle.addEventListener("click", function(){
+        contactBox.style.display = contactBox.style.display==="none" ? "block" : "none";
+      });
+      card.querySelector(".contact-save").addEventListener("click", function(){
+        var name = card.querySelector(".c-name").value.trim();
+        if(!name){ card.querySelector(".c-name").focus(); return; }
+        state[id] = state[id] || {};
+        state[id].extraContacts = state[id].extraContacts || [];
+        state[id].extraContacts.push({
+          name: name,
+          role: card.querySelector(".c-role").value.trim(),
+          email: card.querySelector(".c-email").value.trim(),
+          phone: card.querySelector(".c-phone").value.trim()
+        });
+        saveState(state);
+        renderCustomers();
+      });
+      card.querySelectorAll(".chip-remove").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var i = parseInt(btn.getAttribute("data-i"), 10);
+          state[id].extraContacts.splice(i, 1);
+          saveState(state);
+          renderCustomers();
+        });
+      });
+
+      var remindToggle = card.querySelector(".remind-toggle");
+      var remindBox = card.querySelector(".reminder-box");
+      remindToggle.addEventListener("click", function(){
+        remindBox.style.display = remindBox.style.display==="none" ? "block" : "none";
+      });
+      var emailInput = card.querySelector(".remind-email");
+      function currentEmail(){ return emailInput.value.trim(); }
+      emailInput.addEventListener("change", function(){
+        state[id] = state[id] || {};
+        state[id].remindEmail = currentEmail();
+        saveState(state);
+        refreshLinks();
+      });
+      function refreshLinks(){
+        card.querySelectorAll(".remind-row").forEach(function(rowEl){
+          var key = rowEl.getAttribute("data-key");
+          var opt = REMIND_OPTIONS.filter(function(o){return o.key===key})[0];
+          rowEl.querySelector(".remind-cal-link").href = calendarLink(effRow, opt, currentEmail());
+        });
+      }
+      refreshLinks();
+      card.querySelectorAll(".remind-check").forEach(function(cb){
+        cb.addEventListener("change", function(){
+          var rowEl = cb.closest(".remind-row");
+          var key = rowEl.getAttribute("data-key");
+          state[id] = state[id] || {};
+          state[id].reminders = state[id].reminders || {};
+          state[id].reminders[key] = cb.checked;
+          saveState(state);
+          rowEl.classList.toggle("checked", cb.checked);
+          refreshLinks();
+        });
+      });
+
+      var bookToggle = card.querySelector(".book-toggle");
+      var bookBox = card.querySelector(".booking-box");
+      bookToggle.addEventListener("click", function(){
+        bookBox.style.display = bookBox.style.display==="none" ? "block" : "none";
+        var dateInput = card.querySelector(".book-date");
+        if(!dateInput.value){
+          var d = new Date(); d.setDate(d.getDate()+1);
+          dateInput.value = d.toISOString().slice(0,10);
+        }
+      });
+      var bookEmailsInput = card.querySelector(".book-emails");
+      bookEmailsInput.addEventListener("change", function(){
+        state[id] = state[id] || {};
+        state[id].bookEmails = bookEmailsInput.value.trim();
+        saveState(state);
+      });
+      function bookingDetails(){
+        var dateVal = card.querySelector(".book-date").value;
+        var timeVal = card.querySelector(".book-time").value || "10:00";
+        var subject = card.querySelector(".book-subject").value;
+        var emails = bookEmailsInput.value.split(",").map(function(s){return s.trim();}).filter(Boolean);
+        var start = new Date(dateVal + "T" + timeVal + ":00");
+        var end = new Date(start); end.setHours(end.getHours()+1);
+        return { start:start, end:end, subject:subject, emails:emails };
+      }
+      card.querySelector(".book-open").addEventListener("click", function(){
+        var d = bookingDetails();
+        var body = "Booked from the Hayakkom Hub.\n\nCustomer: " + effRow.name + "\nEnquiry: " + effRow.category;
+        var url = "https://outlook.office.com/calendar/0/deeplink/compose?path=/calendar/action/compose&rru=addevent"
+          + "&subject=" + encodeURIComponent(d.subject)
+          + "&startdt=" + encodeURIComponent(isoLocal(d.start))
+          + "&enddt=" + encodeURIComponent(isoLocal(d.end))
+          + "&body=" + encodeURIComponent(body)
+          + "&to=" + encodeURIComponent(d.emails.join(";"));
+        window.open(url, "_blank", "noopener");
+      });
+      card.querySelector(".book-copy").addEventListener("click", function(){
+        var d = bookingDetails();
+        var dateStr = d.start.toLocaleDateString(undefined,{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+        var timeStr = d.start.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"});
+        var text = d.subject + "\n" + dateStr + " at " + timeStr + "\nParticipants: " + d.emails.join(", ") +
+          "\n\n(Join link will be added once the Outlook invite with Teams meeting is sent.)";
+        function flashBook(){
+          var f = card.querySelector(".book-flash");
+          f.style.display = "block";
+          setTimeout(function(){ f.style.display = "none"; }, 3500);
+        }
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(text).then(flashBook, flashBook);
+        } else {
+          var ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select();
+          try{ document.execCommand("copy"); }catch(e){}
+          document.body.removeChild(ta);
+          flashBook();
+        }
+      });
+    });
+  }
+
+  document.getElementById("add-customer-btn").addEventListener("click", function(){
+    ["ac-name","ac-email","ac-phone","ac-summary","ac-next-action"].forEach(function(id){ document.getElementById(id).value = ""; });
+    document.getElementById("ac-type").value = "General";
+    document.getElementById("ac-status").value = "New Enquiry";
+    document.getElementById("add-cust-modal").classList.add("open");
+  });
+  document.getElementById("add-cust-modal-close").addEventListener("click", function(){ document.getElementById("add-cust-modal").classList.remove("open"); });
+  document.getElementById("add-cust-modal").addEventListener("click", function(e){ if(e.target===document.getElementById("add-cust-modal")) document.getElementById("add-cust-modal").classList.remove("open"); });
+  document.getElementById("ac-save").addEventListener("click", function(){
+    var name = document.getElementById("ac-name").value.trim();
+    if(!name){ document.getElementById("ac-name").focus(); return; }
+    var id = "cust-custom-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,7);
+    var row = {
+      id: id,
+      name: name,
+      enquiry_type: document.getElementById("ac-type").value,
+      status: document.getElementById("ac-status").value,
+      email: document.getElementById("ac-email").value.trim(),
+      phone: document.getElementById("ac-phone").value.trim(),
+      date: new Date().toISOString().slice(0,10),
+      summary: document.getElementById("ac-summary").value.trim(),
+      next_action: document.getElementById("ac-next-action").value.trim() || "Follow up",
+      custom: true
+    };
+    var custom = loadCustomCustomers();
+    custom.push(row);
+    saveCustomCustomers(custom);
+    ALL_CUST.push(row);
+    buildCustFilterOptions();
+    document.getElementById("add-cust-modal").classList.remove("open");
+    renderCustomers();
+  });
 
   // ---- reply modal ----
   var modal = document.getElementById("modal");
