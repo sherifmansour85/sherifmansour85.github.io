@@ -784,16 +784,26 @@
     var lc = lastContacted(r);
     return !lc || lc < li;
   }
-  function markContacted(id){
+  function markContacted(id, isoDate){
     if(!id) return;
     state[id] = state[id] || {};
-    state[id].lastContacted = new Date().toISOString();
+    state[id].lastContacted = isoDate || new Date().toISOString();
     saveState(state);
+  }
+  // Replies often go out by WhatsApp or phone, which the Hub can't see — let Reham record the real date.
+  function askContacted(id){
+    var today = new Date().toISOString().slice(0,10);
+    var d = prompt("When did you last contact them? (YYYY-MM-DD)", today);
+    if(d===null) return false;
+    d = d.trim();
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(d) || isNaN(new Date(d+"T12:00:00").getTime())){ alert("Please use the format YYYY-MM-DD, e.g. " + today); return false; }
+    markContacted(id, d + "T12:00:00.000Z");
+    return true;
   }
   function lastcHtml(r){
     var lc = lastContacted(r);
     return '<p class="lastc'+(lc?'':' never')+'">📨 '+(lc ? 'Last contacted: '+esc(lc) : 'Not contacted yet')+
-      '<button type="button" class="btn mark-contacted">✓ Mark contacted today</button></p>';
+      '<button type="button" class="btn mark-contacted">✓ Mark contacted</button></p>';
   }
   function validFlag(opts, f){ return opts.some(function(o){ return o.key===f; }) ? f : "new"; }
 
@@ -1123,7 +1133,7 @@
       var ib = card.querySelector(".info-toggle"); if(ib) ib.addEventListener("click", function(){ openInfoModal(effRow, "helper"); });
       var ab = card.querySelector(".atts-toggle"); if(ab) ab.addEventListener("click", function(){ openAttsModal(effRow); });
       var wb = card.querySelector(".wa-btn"); if(wb) wb.addEventListener("click", function(){ markContacted(id); setTimeout(rerenderAll, 400); });
-      card.querySelector(".mark-contacted").addEventListener("click", function(){ markContacted(id); rerenderAll(); });
+      card.querySelector(".mark-contacted").addEventListener("click", function(){ if(askContacted(id)) rerenderAll(); });
       var fb = card.querySelector(".flag-btn"), fp = card.querySelector(".flag-picker");
       fb.addEventListener("click", function(e){
         e.stopPropagation();
@@ -1478,6 +1488,12 @@
           '<p class="summary">'+esc(effSummary)+'</p>'+
           '<p class="meta-line">'+(effContact?esc(effContact)+' · ':'')+(effEmail?('<button type="button" class="info-toggle" style="background:none;border:none;padding:0;color:var(--teal);text-decoration:underline;cursor:pointer;font-size:inherit">'+esc(effEmail)+'</button>'):'<span>no email on file</span>')+(effPhone?(' · 📞 '+esc(effPhone)):'')+(r.date?(' · '+esc(r.date)):'')+'</p>'+
           '<p class="next-action">→ '+esc(effNextAction)+'</p>'+
+          ((r.contacts||[]).length ? '<p class="meta-line">👥 '+r.contacts.map(function(c){
+            return '<b>'+esc(c.label||"Contact")+':</b> '+[c.name, c.role, c.email, c.phone].filter(Boolean).map(esc).join(' · ');
+          }).join(' &nbsp;|&nbsp; ')+'</p>' : '')+
+          (r.social && (r.social.website||r.social.instagram||r.social.facebook||r.social.tiktok) ? '<p class="meta-line">🔗 '+["website","instagram","facebook","tiktok"].filter(function(k){ return r.social[k] && /^https?:\/\//i.test(r.social[k]); }).map(function(k){
+            return '<a href="'+esc(r.social[k])+'" target="_blank" rel="noopener">'+esc(k.charAt(0).toUpperCase()+k.slice(1))+'</a>';
+          }).join(' · ')+'</p>' : '')+
           lastcHtml(r)+
           (atts.length ? '<p class="meta-line">📎 '+atts.length+' attachment'+(atts.length>1?'s':'')+' — see "Attachments" below</p>' : '')+
           (extraContacts.length ? '<div class="extra-contacts">'+extraContacts.map(function(c,i){
@@ -1606,7 +1622,7 @@
       var replyBtn = card.querySelector(".reply-btn");
       if(replyBtn) replyBtn.addEventListener("click", function(){ openModal(effRow); });
       var mcBtn = card.querySelector(".mark-contacted");
-      if(mcBtn) mcBtn.addEventListener("click", function(){ markContacted(id); rerenderAll(); });
+      if(mcBtn) mcBtn.addEventListener("click", function(){ if(askContacted(id)) rerenderAll(); });
 
       var infoBtn = card.querySelector(".info-toggle");
       if(infoBtn) infoBtn.addEventListener("click", function(){ openInfoModal(effRow, "partner"); });
@@ -2110,7 +2126,7 @@
       var replyBtn = card.querySelector(".reply-btn");
       if(replyBtn) replyBtn.addEventListener("click", function(){ openModal(effRow); });
       var mcBtnC = card.querySelector(".mark-contacted");
-      if(mcBtnC) mcBtnC.addEventListener("click", function(){ markContacted(id); rerenderAll(); });
+      if(mcBtnC) mcBtnC.addEventListener("click", function(){ if(askContacted(id)) rerenderAll(); });
       var infoBtnC = card.querySelector(".info-toggle");
       if(infoBtnC) infoBtnC.addEventListener("click", function(){ openInfoModal(Object.assign({}, effRow, {extraContacts: _s.extraContacts}), "customer"); });
       var chainBtn = card.querySelector(".chain-toggle");
