@@ -846,6 +846,8 @@
   var ENCRYPTED = null;
   var ENCRYPTED_CUST = null;
   var HELP_P = fetch("helpers.enc.json", {cache: "no-store"}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; });
+  var DRAFTS_P = fetch("drafts.enc.json", {cache: "no-store"}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; });
+  var AI_DRAFTS = [];
   var CAL_P = fetch("calendar.enc.json", {cache: "no-store"}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; });
   var SESSION_PW = "hk_session_pw";
   function sessGet(){ try{ return sessionStorage.getItem(SESSION_PW); }catch(e){ return null; } }
@@ -896,7 +898,8 @@
         buildHelpFilterOptions();
         renderHelpers();
       }, function(){ ALL_HELP = []; renderHelpers(); }).then(function(){
-        return CAL_P.then(function(enc){ return enc ? decryptWith(val, enc) : null; }).then(function(c){ if(c) CAL = c; }, function(){});
+        return CAL_P.then(function(enc){ return enc ? decryptWith(val, enc) : null; }).then(function(c){ if(c) CAL = c; }, function(){})
+          .then(function(){ return DRAFTS_P.then(function(enc){ return enc ? decryptWith(val, enc) : []; }).then(function(d){ AI_DRAFTS = Array.isArray(d) ? d : []; }, function(){}); });
       }).then(function(){
         renderUpcoming();
         showView(currentView);
@@ -3705,15 +3708,25 @@
   function suggestionsFor(kind){
     var list = kind==="partner" ? ALL : kind==="customer" ? ALL_CUST : ALL_HELP;
     var out = [], byRec = {};
-    (SHARED.outbox||[]).forEach(function(o){
+    AI_DRAFTS.concat(SHARED.outbox||[]).forEach(function(o){
       if(o.kind!==kind || (o.status && o.status!=="pending") || decided(o.id)) return;
       var r = o.record_id ? list.filter(function(x){ return x.id===o.record_id; })[0] : null;
       if(o.record_id && !r) return;
-      if(r && (state[r.id]||{}).done) return;
+      if(r && byRec[r.id]) return;
+      if(r){
+        var rs = state[r.id]||{};
+        if(rs.done || rs.removed) return;
+        if(kind==="customer" ? isCustArchived(r) : rs.deleted) return;
+        // someone already contacted them after this draft was written → it's out of date
+        var lc = lastContacted(r);
+        if(lc && o.created && lc >= String(o.created).slice(0,10)) return;
+      }
       out.push({ key:o.id, ai:true, kind:kind, rec:r, to:o.to || (r && r.email) || "", rank: o.rank!=null ? o.rank : 1, label: o.label || "Drafted by Claude",
         why:o.reason || "", plan:o.plan || [], draft:{ subject:o.subject, body:o.body } });
       if(r) byRec[r.id] = 1;
     });
+    // every open case gets a Claude-written draft; the built-in templates are only a stop-gap
+    // for brand-new cases until the next hourly run writes one
     list.forEach(function(r){ if(byRec[r.id]) return; var s = ruleSugg(kind, r); if(s && !decided(s.key) && s.to) out.push(s); });
     return out.sort(function(a,b){ return a.rank - b.rank || (b.ai?1:0) - (a.ai?1:0); });
   }
@@ -3731,7 +3744,7 @@
         '<div class="sugg-tools"><span class="sync-pill"></span><button type="button" class="btn hist-btn" data-kind="'+kind+'">🕘 History</button></div></div>'+
       (items.length ? '<div class="sugg-list">' + show.map(function(s, i){
         return '<div class="sugg-item'+(s.rank===0?' hot':'')+'" data-i="'+items.indexOf(s)+'">'+
-          '<div class="sugg-main"><div class="sugg-title"><span class="sugg-badge'+(s.ai?' ai':'')+'">'+(s.ai?'🤖 ':'')+esc(s.label)+'</span> '+esc(s.rec ? s.rec.name : (s.to||""))+'</div>'+
+          '<div class="sugg-main"><div class="sugg-title"><span class="sugg-badge'+(s.ai?' ai':'')+'" title="'+(s.ai?'Written by Claude after reading the whole conversation':'Quick template — Claude replaces it with a written draft at the next hourly run')+'">'+(s.ai?'🤖 ':'')+esc(s.label)+(s.ai?'':' · template')+'</span> '+esc(s.rec ? s.rec.name : (s.to||""))+'</div>'+
           '<div class="sugg-why">'+esc(s.why)+'</div>'+
           (s.plan && s.plan.length ? '<ol class="sugg-plan">'+s.plan.map(function(p){ return '<li>'+esc(p)+'</li>'; }).join("")+'</ol>' : '')+
           '<div class="sugg-subj">✉️ '+esc(s.draft.subject)+'</div></div>'+
@@ -3806,7 +3819,7 @@
       var label = m.side==="them" ? "📩 From them" : m.side==="us" ? "📤 We replied" : m.side==="note" ? "🗒 Notes" : "✓ Team";
       html += '<div class="conv-msg conv-'+m.side+'"><div class="conv-head"><b>'+label+'</b> · '+esc(String(m.when).slice(0,16).replace("T"," "))+(m.from ? ' · '+esc(m.from) : '')+'</div>'+
         (m.subject ? '<div class="conv-subj">'+esc(m.subject)+'</div>' : '')+
-        '<div class="conv-text">'+esc(m.text||"")+'</div></div>';
+        '<div class="conv-text" dir="auto">'+esc(m.text||"")+'</div></div>';
     });
     if(r.email_link) html += '<a class="btn" target="_blank" rel="noopener" href="'+esc(r.email_link)+'">Open the original email in Outlook ↗</a>';
     return html;
@@ -3820,7 +3833,7 @@
     document.getElementById("pv-title").textContent = "Preview — " + (s.rec ? s.rec.name : s.to);
     document.getElementById("pv-meta").innerHTML = '<b>From:</b> support@hayakkom.com<br><b>To:</b> '+esc(s.to)+'<br><b>Subject:</b> '+esc(s.draft.subject);
     document.getElementById("pv-why").innerHTML = '<b>Why:</b> '+esc(s.why) + (s.plan && s.plan.length ? '<ol class="sugg-plan">'+s.plan.map(function(p){ return '<li>'+esc(p)+'</li>'; }).join("")+'</ol>' : '');
-    document.getElementById("pv-body").innerHTML = '<div style="white-space:pre-wrap">'+esc(s.draft.body)+'</div><br>' + sigHtmlFor(w.name, w.title || titlesFor(w.key)[0]);
+    document.getElementById("pv-body").innerHTML = '<div style="white-space:pre-wrap" dir="auto">'+esc(s.draft.body)+'</div><br>' + sigHtmlFor(w.name, w.title || titlesFor(w.key)[0]);
     var conv = document.getElementById("pv-conv");
     var n = s.rec ? conversationOf(s.rec).length : 0;
     document.getElementById("pv-conv-title").textContent = "💬 Conversation so far" + (n ? " (" + n + ")" : "");
