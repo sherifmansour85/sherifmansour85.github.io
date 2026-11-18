@@ -3297,8 +3297,12 @@
   // hourly job folds those into shared.enc.json, which every browser loads — so Reham, Sherif and
   // any trainee see the same Hub. Until the next run, your own changes show only in your browser.
   var RELAY = { form: "263210812055042", kind: "q2_textbox0", payload: "q3_textarea1" };
-  var QUEUE_KEY = "hk_sync_queue_v1", WHO_KEY = "hk_who_v1", MIG_KEY = "hk_sync_migrated_v1",
-      PEOPLE_KEY = "hk_people_v1", CTITLE_KEY = "hk_titles_custom_v1", SIGTXT_KEY = "hk_sig_text_v1";
+  var QUEUE_KEY = "hk_sync_queue_v1";
+  var WHO_KEY = "hk_who_v1";
+  var MIG_KEY = "hk_sync_migrated_v1";
+  var PEOPLE_KEY = "hk_people_v1";
+  var CTITLE_KEY = "hk_titles_custom_v1";
+  var SIGTXT_KEY = "hk_sig_text_v1";
   var SHARED = { state:{}, custom:{ partner:[], customer:[] }, history:[], outbox:[], applied:[], synced_at:null };
   var SHARED_P = fetch("shared.enc.json", {cache:"no-store"}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; });
   var SHARED_OK = false, PW = null, SYNC_READY = false, SNAP = {}, PRE_STATE = null;
