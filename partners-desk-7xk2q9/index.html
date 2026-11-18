@@ -3366,6 +3366,20 @@
       return Array.prototype.map.call(new Uint8Array(buf), function(b){ return ("0" + b.toString(16)).slice(-2); }).join("").slice(0, 32);
     });
   }
+  // POST to the Google script and explain failures in plain words.
+  function scriptPost(body){
+    return fetch(SYNC_URL, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify(body) })
+      .catch(function(){ throw new Error("the browser couldn't connect to Google (check the internet connection, or the deployment's access must be \"Anyone\")"); })
+      .then(function(r){ return r.text(); })
+      .then(function(t){
+        try{ return JSON.parse(t); }catch(e){
+          var msg = (t.match(/<div[^>]*>([^<]*(Exception|Error|permission|authoriz)[^<]*)<\/div>/i) || [])[1] || "";
+          if(/permission|authoriz/i.test(t)) throw new Error("the Google script needs your permission. In script.google.com choose the function doGet at the top, press ▶ Run, then Review permissions → Allow" + (msg ? " (" + msg + ")" : ""));
+          if(/sign in|accounts\.google/i.test(t)) throw new Error("the deployment is not open to the Hub — in Deploy → Manage deployments set 'Who has access' to Anyone");
+          throw new Error("the Google script returned an error" + (msg ? ": " + msg : " — please send Claude a screenshot"));
+        }
+      });
+  }
   function syncGet(pw){
     return syncToken(pw).then(function(t){
       SYNC_TOKEN = t;
@@ -4064,9 +4078,7 @@
       return p.then(function(){
         status.textContent = "Uploading " + (i+1) + " of " + files.length + ": " + file.name + "…";
         return fileB64(file).then(function(data){
-          return fetch(SYNC_URL, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" },
-            body: JSON.stringify({ t: SYNC_TOKEN, op:"upload", kind: DOC_FOR.kind, id: DOC_FOR.id, name: DOC_FOR.name, docType: type, note: note, by: myName(), fileName: file.name, mimeType: file.type, data: data }) })
-            .then(function(r){ return r.json(); })
+          return scriptPost({ t: SYNC_TOKEN, op:"upload", kind: DOC_FOR.kind, id: DOC_FOR.id, name: DOC_FOR.name, docType: type, note: note, by: myName(), fileName: file.name, mimeType: file.type, data: data })
             .then(function(u){
               if(!u || !u.ok) throw new Error((u && u.error) || "upload failed — the Google script may need updating to the latest version");
               done++;
@@ -4112,8 +4124,7 @@
     var name = st.name || r.name, email = (st.email!=null ? st.email : r.email) || "";
     if(!SYNC_TOKEN){ alert("The shared Google Drive storage isn't connected yet, so the folder can't be created. Open the Hub again in a moment, or ask Sherif to finish the Google Drive set-up."); return; }
     b.disabled = true; var old = b.textContent; b.textContent = "Creating folder…";
-    fetch(SYNC_URL, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify({ t: SYNC_TOKEN, op:"partnerKit", partner:{ id: r.id, name: name, email: email } }) })
-      .then(function(x){ return x.json(); })
+    scriptPost({ t: SYNC_TOKEN, op:"partnerKit", partner:{ id: r.id, name: name, email: email } })
       .then(function(k){
         b.disabled = false; b.textContent = old;
         if(!k || !k.ok || !k.folder_url){ alert("Couldn't create the folder" + (k && k.error ? ": " + k.error : "") + ". If this keeps happening, the Google script needs updating to the latest version."); return; }
@@ -4127,7 +4138,7 @@
         document.getElementById("m-subject").value = "Your Hayakkom partner kit — " + name;
         document.getElementById("m-body").value = kitEmail(Object.assign({}, r, { name:name }), k.folder_url);
       })
-      .catch(function(){ b.disabled = false; b.textContent = old; alert("Couldn't reach the Google Drive script. Check your connection and try again."); });
+      .catch(function(err){ b.disabled = false; b.textContent = old; alert("Couldn't create the folder: " + err.message + "."); });
   });
 
   // ---- Delete (in addition to Archive) on every card ----
