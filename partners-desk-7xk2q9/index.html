@@ -2261,6 +2261,8 @@
             '<button class="btn contact-toggle">+ Add contact</button>'+
             '<button class="btn edit-toggle">Edit</button>'+
             (atts.length ? '<button class="btn atts-toggle">📎 Attachments ('+atts.length+')</button>' : '')+
+            '<button type="button" class="btn kit-btn" title="Create their Google Drive folder with the Hayakkom partner kit and email it to them">📦 Partner kit</button>'+
+            ((st.driveFolder || r.drive_folder) ? '<a class="btn" target="_blank" rel="noopener" href="'+esc(st.driveFolder || r.drive_folder)+'">📁 Drive folder</a>' : '')+
             '<div class="flag-wrap" style="position:relative;display:inline-block">'+
               '<button class="flag-btn" type="button"><span class="flag-dot flag-'+flag+'"></span>'+esc(flagOpt.label)+'</button>'+
               '<div class="flag-picker">'+
@@ -3940,6 +3942,49 @@
   });
   document.getElementById("hist-q").addEventListener("input", renderHistory);
   var hb = document.getElementById("hist-btn-top"); if(hb) hb.addEventListener("click", function(){ openHistory("all"); });
+
+  // ---- 📦 Partner kit: Drive folder (Clinics › name) with the kit, then a ready email to approve ----
+  var PARTNER_FORM = "https://form.jotform.com/263202563928055";
+  function kitEmail(r, folderUrl){
+    var greet = r.contact ? firstName(r.contact) : (r.name + " team");
+    return "Dear " + greet + ",\n\n" +
+      "Thank you for partnering with Hayakkom. To make things easy for your team, we've prepared a partner kit and a shared folder for " + r.name + ":\n" +
+      folderUrl + "\n\n" +
+      "What's in the folder (for your website team):\n" +
+      "• hayakkom-logo.png — the official Hayakkom logo, for a Partners or International patients page.\n" +
+      "• hayakkom-partner-badge.png / .svg — a \"Partner of Hayakkom\" badge for your website footer or international-patients page.\n" +
+      "• hayakkom-partner-snippet.html — ready-to-paste website code that shows the badge and links it to hayakkom.com.\n" +
+      "• README-Hayakkom-partner-kit.txt — how to use each file, plus a short description of the partnership in English and Arabic.\n\n" +
+      "One step from your side: please complete your partner profile (contacts, licence and accreditation, a few photos of your facility and your logo). It takes about 5 minutes:\n" +
+      PARTNER_FORM + "\n\n" +
+      "Everything you send through the form is filed in your folder, so we always present " + r.name + " accurately to the families we coordinate from Saudi Arabia and the Gulf.\n\n" +
+      "Kind regards.";
+  }
+  document.addEventListener("click", function(e){
+    var b = e.target.closest(".kit-btn"); if(!b) return;
+    var card = b.closest(".card[data-id]"); if(!card) return;
+    var f = findRec(card.getAttribute("data-id")); if(!f) return;
+    var r = f.rec, st = state[r.id] || {};
+    var name = st.name || r.name, email = (st.email!=null ? st.email : r.email) || "";
+    if(!SYNC_TOKEN){ alert("The shared Google Drive storage isn't connected yet, so the folder can't be created. Open the Hub again in a moment, or ask Sherif to finish the Google Drive set-up."); return; }
+    b.disabled = true; var old = b.textContent; b.textContent = "Creating folder…";
+    fetch(SYNC_URL, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify({ t: SYNC_TOKEN, op:"partnerKit", partner:{ id: r.id, name: name, email: email } }) })
+      .then(function(x){ return x.json(); })
+      .then(function(k){
+        b.disabled = false; b.textContent = old;
+        if(!k || !k.ok || !k.folder_url){ alert("Couldn't create the folder" + (k && k.error ? ": " + k.error : "") + ". If this keeps happening, the Google script needs updating to the latest version."); return; }
+        state[r.id] = state[r.id] || {}; state[r.id].driveFolder = k.folder_url; saveState(state);
+        act({ t:"log", kind:"partner", id:r.id, name:name, what:"Created Google Drive folder Clinics › " + k.folder_name + " with the partner kit" });
+        render();
+        openModal(Object.assign({}, r, { kind:"partner", name:name, email: email }));
+        document.getElementById("modal-title").textContent = "📦 Partner kit for " + name;
+        document.getElementById("modal-sub").textContent = "Folder created: Clinics › " + k.folder_name + " (view-only link). Check the email, then press ✓ Approve & send.";
+        document.getElementById("m-to").value = email;
+        document.getElementById("m-subject").value = "Your Hayakkom partner kit — " + name;
+        document.getElementById("m-body").value = kitEmail(Object.assign({}, r, { name:name }), k.folder_url);
+      })
+      .catch(function(){ b.disabled = false; b.textContent = old; alert("Couldn't reach the Google Drive script. Check your connection and try again."); });
+  });
 
   // ---- Delete (in addition to Archive) on every card ----
   document.addEventListener("click", function(e){
