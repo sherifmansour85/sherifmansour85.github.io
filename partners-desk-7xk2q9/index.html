@@ -3360,7 +3360,7 @@
   // so Reham, Sherif and any trainee see the same Hub. The script only answers requests carrying a
   // token derived from the Hub password. The hourly job sends the approved emails.
   var SYNC_URL = "https://script.google.com/macros/s/AKfycbyNF6QJPbxwaOH90YV7jA5c0yh-USYepimKa_7qxR0Nte8zKssTR8n63MymVv6k7AFhZg/exec";
-  var SYNC_TOKEN = null;
+  var SYNC_TOKEN = null, SYNC_ERR = "";
   function syncToken(pw){
     return crypto.subtle.digest("SHA-256", new TextEncoder().encode("hayakkom-hub:" + pw)).then(function(buf){
       return Array.prototype.map.call(new Uint8Array(buf), function(b){ return ("0" + b.toString(16)).slice(-2); }).join("").slice(0, 32);
@@ -3384,7 +3384,7 @@
     return syncToken(pw).then(function(t){
       SYNC_TOKEN = t;
       return fetch(SYNC_URL + "?t=" + encodeURIComponent(t), { cache:"no-store" }).then(function(r){ return r.json(); });
-    }).then(function(j){ return (j && j.ok) ? j : null; }).catch(function(){ return null; });
+    }).then(function(j){ SYNC_ERR = (j && !j.ok) ? (j.error || "") : ""; return (j && j.ok) ? j : null; }).catch(function(){ SYNC_ERR = ""; return null; });
   }
   var QUEUE_KEY = "hk_sync_queue_v1";
   var WHO_KEY = "hk_who_v1";
@@ -3481,7 +3481,7 @@
     FLUSHING = true;
     fetch(SYNC_URL, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify({ t: SYNC_TOKEN, actions: due }) })
       .then(function(r){ return r.json(); })
-      .then(function(j){ FLUSHING = false; if(j && j.ok){ applyRemote(j); if(queue.length) scheduleFlush(); } else renderSyncPills(); })
+      .then(function(j){ FLUSHING = false; if(j && j.ok){ SYNC_ERR = ""; applyRemote(j); if(queue.length) scheduleFlush(); } else { SYNC_ERR = (j && j.error) || SYNC_ERR; renderSyncPills(); } })
       .catch(function(){ FLUSHING = false; renderSyncPills(); clearTimeout(flushTimer); flushTimer = setTimeout(flush, 30000); });
   }
   // Pull the team's latest changes every minute while the Hub is open.
@@ -3630,7 +3630,7 @@
   function renderSyncPills(){
     var pending = queue.length;
     var txt, cls;
-    if(!SHARED_OK){ txt = "⚠ Can't reach the shared storage right now — your changes are kept on this device and sent automatically when it's back"; cls = "warn"; }
+    if(!SHARED_OK){ txt = SYNC_ERR ? "⚠ Shared storage problem: " + SYNC_ERR : "⚠ Can't reach the shared storage right now — your changes are kept on this device and sent automatically when it's back"; cls = "warn"; }
     else if(pending){ txt = "⏳ Saving " + pending + " change" + (pending>1?"s":"") + " for the team…"; cls = "warn"; }
     else { txt = "✓ In sync with the team" + (SHARED.synced_at ? " · updated " + String(SHARED.synced_at).slice(0,16).replace("T"," ") + " UTC" : ""); cls = "ok"; }
     document.querySelectorAll(".sync-pill").forEach(function(el){ el.textContent = txt; el.className = "sync-pill " + cls; });
