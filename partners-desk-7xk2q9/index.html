@@ -70,6 +70,10 @@
   .sugg-title{font-weight:700;font-size:13.5px}
   .sugg-badge{display:inline-block;font-size:11px;font-weight:600;border-radius:6px;padding:2px 7px;background:#F1EDE2;color:#5A4A1A;margin-inline-end:4px}
   .sugg-badge.ai{background:#ECE6F7;color:#4B3880}
+  .sugg-name{background:none;border:0;padding:0;font:inherit;font-weight:700;color:#0E5A62;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  .sugg-name:hover{color:#0A2E36}
+  .card.card-flash{animation:cardflash 2.4s ease}
+  @keyframes cardflash{0%,40%{box-shadow:0 0 0 4px #B8922A,0 8px 28px rgba(184,146,42,.35)}100%{box-shadow:none}}
   .sugg-why{font-size:12.5px;color:var(--sub);margin-top:3px}
   .sugg-plan{margin:5px 0 0;padding-inline-start:18px;font-size:12px;color:var(--ink)}
   .sugg-plan li{margin:1px 0}
@@ -3633,17 +3637,23 @@
     return { subject: "Following up on your Hayakkom enquiry",
       body: "Hi " + firstName(r.name) + ",\n\nI'm following up on your " + (r.enquiry_type ? r.enquiry_type.toLowerCase() + " " : "") + "enquiry in case my last message got buried.\n\nIf your plans are still on, just reply with your preferred dates and I'll send an updated, no-obligation indicative quote. If now isn't the right time, no problem — let me know and I'll check back later.\n\nKind regards." };
   }
+  var FORM_URL = "https://form.jotform.com/263202563928055";
+  var FORM_STEPS = "What to do (about 5 minutes):\n" +
+    "1. Open the link and fill in your facility details and contacts.\n" +
+    "2. Upload your licence or accreditation, a few photos of your facility and your logo.\n" +
+    "3. Press Submit — we'll review it and confirm your listing with you.";
+  function partnerFormBlock(){ return "Please complete our partner form:\n" + FORM_URL + "\n\n" + FORM_STEPS; }
   function partnerReplyDraft(r){
     var last = (r.thread||[]).filter(function(m){ return !isOurs(m.from); }).slice(-1)[0] || {};
     return { subject: "Re: " + (last.subject || ("Partnership with Hayakkom — " + r.name)),
       body: "Dear " + (r.contact ? firstName(r.contact) : r.name + " team") + ",\n\nThank you for your message" + (last.date ? " of " + last.date : "") + ". We've reviewed it and would like to take the next step.\n\n" +
-        "To list " + r.name + " correctly for the Gulf families we coordinate, could you complete our short partner profile (contacts, accreditation, photos and logo):\nhttps://form.jotform.com/263202563928055\n\n" +
+        "To list " + r.name + " correctly for the Gulf families we coordinate, the next step is our partner profile. " + partnerFormBlock() + "\n\n" +
         "Once it's in, I'll come back to you with how referrals and quotes will work. Would a short call this week suit you?\n\nKind regards." };
   }
   function partnerIntroDraft(r){
     return { subject: "Working together — Hayakkom × " + r.name,
       body: "Dear " + (r.contact ? firstName(r.contact) : r.name + " team") + ",\n\nThank you for reaching out to Hayakkom. We coordinate treatment, stays and trips in Egypt for families from Saudi Arabia and the Gulf, and we'd be glad to explore working with " + r.name + ".\n\n" +
-        "As a first step, please complete our partner profile (about 5 minutes):\nhttps://form.jotform.com/263202563928055\n\nIf you'd prefer to talk first, reply with a good time for a 15-minute call.\n\nKind regards." };
+        "As a first step, " + partnerFormBlock().charAt(0).toLowerCase() + partnerFormBlock().slice(1) + "\n\nIf you'd prefer to talk first, reply with a good time for a 15-minute call.\n\nKind regards." };
   }
   function helperDraft(r, prio){
     if(prio==="High") return { subject: "Your application to Hayakkom — next step",
@@ -3746,7 +3756,7 @@
         '<div class="sugg-tools"><span class="sync-pill"></span><button type="button" class="btn hist-btn" data-kind="'+kind+'">🕘 History</button></div></div>'+
       (items.length ? '<div class="sugg-list">' + show.map(function(s, i){
         return '<div class="sugg-item'+(s.rank===0?' hot':'')+'" data-i="'+items.indexOf(s)+'">'+
-          '<div class="sugg-main"><div class="sugg-title"><span class="sugg-badge'+(s.ai?' ai':'')+'" title="'+(s.ai?'Written by Claude after reading the whole conversation':'Quick template — Claude replaces it with a written draft at the next hourly run')+'">'+(s.ai?'🤖 ':'')+esc(s.label)+(s.ai?'':' · template')+'</span> '+esc(s.rec ? s.rec.name : (s.to||""))+'</div>'+
+          '<div class="sugg-main"><div class="sugg-title"><span class="sugg-badge'+(s.ai?' ai':'')+'" title="'+(s.ai?'Written by Claude after reading the whole conversation':'Quick template — Claude replaces it with a written draft at the next hourly run')+'">'+(s.ai?'🤖 ':'')+esc(s.label)+(s.ai?'':' · template')+'</span> '+(s.rec ? '<button type="button" class="sugg-name" title="Show this card in the list">'+esc(s.rec.name)+' ↗</button>' : esc(s.to||""))+'</div>'+
           '<div class="sugg-why">'+esc(s.why)+'</div>'+
           (s.plan && s.plan.length ? '<ol class="sugg-plan">'+s.plan.map(function(p){ return '<li>'+esc(p)+'</li>'; }).join("")+'</ol>' : '')+
           '<div class="sugg-subj">✉️ '+esc(s.draft.subject)+'</div></div>'+
@@ -3764,6 +3774,7 @@
       if(e.target.closest(".sugg-more")){ SUGG_OPEN[kind] = !SUGG_OPEN[kind]; renderSugg(kind); return; }
       var item = e.target.closest(".sugg-item"); if(!item) return;
       var s = SUGG[kind][+item.getAttribute("data-i")]; if(!s) return;
+      if(e.target.closest(".sugg-name")){ if(s.rec) goToCard(kind, s.rec.id); return; }
       if(e.target.closest(".sg-conv")) openPreview(s, true);
       else if(e.target.closest(".sg-prev")) openPreview(s);
       else if(e.target.closest(".sg-edit")) editSugg(s);
@@ -3825,6 +3836,23 @@
     });
     if(r.email_link) html += '<a class="btn" target="_blank" rel="noopener" href="'+esc(r.email_link)+'">Open the original email in Outlook ↗</a>';
     return html;
+  }
+
+  // ---- jump from a suggestion to its card in the list ----
+  function goToCard(kind, id){
+    var view = kind==="partner" ? "partners" : kind==="customer" ? "customers" : "helpers";
+    jumpTo(view, {});
+    var find = function(){ return document.querySelector('#view-' + view + ' .card[data-id="' + (window.CSS && CSS.escape ? CSS.escape(id) : id) + '"]'); };
+    var card = find();
+    if(!card){   // archived cards only show with "Show archived"
+      var showArch = { partners:"f-show-deleted", customers:"fc-show-deleted", helpers:"fh-show-deleted" }[view];
+      var p = {}; p[showArch] = true; jumpTo(view, p); card = find();
+    }
+    if(!card) return;
+    setTimeout(function(){
+      card.scrollIntoView({ behavior:"smooth", block:"center" });
+      card.classList.remove("card-flash"); void card.offsetWidth; card.classList.add("card-flash");
+    }, 120);
   }
 
   // ---- preview ----
@@ -3955,8 +3983,7 @@
       "• hayakkom-partner-badge.png / .svg — a \"Partner of Hayakkom\" badge for your website footer or international-patients page.\n" +
       "• hayakkom-partner-snippet.txt — ready-to-paste website code that shows the badge and links it to hayakkom.com.\n" +
       "• README-Hayakkom-partner-kit.txt — how to use each file, plus a short description of the partnership in English and Arabic.\n\n" +
-      "One step from your side: please complete your partner profile (contacts, licence and accreditation, a few photos of your facility and your logo). It takes about 5 minutes:\n" +
-      PARTNER_FORM + "\n\n" +
+      "One step from your side — please complete our partner form:\n" + PARTNER_FORM + "\n\n" + FORM_STEPS + "\n\n" +
       "Everything you send through the form is filed in your folder, so we always present " + r.name + " accurately to the families we coordinate from Saudi Arabia and the Gulf.\n\n" +
       "Kind regards.";
   }
