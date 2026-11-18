@@ -4041,7 +4041,7 @@
     var st = state[f.rec.id] || {};
     DOC_FOR = { kind: f.kind, id: f.rec.id, name: st.name || f.rec.name };
     document.getElementById("doc-title").textContent = "📎 Add a document — " + DOC_FOR.name;
-    document.getElementById("doc-sub").textContent = "Saved to Google Drive › " + (f.kind==="customer" ? "Hub Customers › " + DOC_FOR.name : "Clinics › " + DOC_FOR.name + " › Documents") + ", and listed on this card for the whole team.";
+    document.getElementById("doc-sub").textContent = "Saved to Google Drive › Hayakom Info Center › " + (f.kind==="customer" ? "Hub Customers › " + DOC_FOR.name : "Contracts › Clinics › " + DOC_FOR.name + " › Documents") + ", and listed on this card for the whole team.";
     document.getElementById("doc-file").value = ""; document.getElementById("doc-note").value = ""; document.getElementById("doc-status").textContent = "";
     document.getElementById("doc-type").value = f.kind==="customer" ? "Quotation" : "Contract";
     docModal.classList.add("open");
@@ -4118,11 +4118,11 @@
         b.disabled = false; b.textContent = old;
         if(!k || !k.ok || !k.folder_url){ alert("Couldn't create the folder" + (k && k.error ? ": " + k.error : "") + ". If this keeps happening, the Google script needs updating to the latest version."); return; }
         state[r.id] = state[r.id] || {}; state[r.id].driveFolder = k.folder_url; saveState(state);
-        act({ t:"log", kind:"partner", id:r.id, name:name, what:"Created Google Drive folder Clinics › " + k.folder_name + " with the partner kit" });
+        act({ t:"log", kind:"partner", id:r.id, name:name, what:"Created Google Drive folder Contracts › Clinics › " + k.folder_name + " with the partner kit" });
         render();
         openModal(Object.assign({}, r, { kind:"partner", name:name, email: email }));
         document.getElementById("modal-title").textContent = "📦 Partner kit for " + name;
-        document.getElementById("modal-sub").textContent = "Folder created: Clinics › " + k.folder_name + " (view-only link). Check the email, then press ✓ Approve & send.";
+        document.getElementById("modal-sub").textContent = "Folder created: Hayakom Info Center › Contracts › Clinics › " + k.folder_name + " (view-only link). Check the email, then press ✓ Approve & send.";
         document.getElementById("m-to").value = email;
         document.getElementById("m-subject").value = "Your Hayakkom partner kit — " + name;
         document.getElementById("m-body").value = kitEmail(Object.assign({}, r, { name:name }), k.folder_url);
