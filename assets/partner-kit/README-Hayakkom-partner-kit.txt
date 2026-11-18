@@ -12,8 +12,8 @@ the partnership on your website and social media. Please use them as they are, w
    A "Partner of Hayakkom" badge. Put it in your website footer or on your international-patients page.
    The PNG works everywhere; the SVG stays sharp at any size if your website supports it.
 
-3. hayakkom-partner-snippet.html
-   Ready-to-paste website code: it shows the badge and links it to www.hayakkom.com.
+3. hayakkom-partner-snippet.txt
+   Ready-to-paste website code (copy everything in the file): it shows the badge and links it to www.hayakkom.com.
    Your webmaster pastes it into the page where the badge should appear. No other setup is needed.
 
 4. Short description you may use (English)
