@@ -343,6 +343,7 @@
     <span class="tab-actions">
       <span class="who-chip">👤 <span id="who-label">—</span> · <a id="who-switch">switch</a></span>
       <button class="btn" id="hist-btn-top" type="button">🕘 History</button>
+      <button class="btn" id="lock-btn" type="button" title="Lock the Hub (asks for the password again)">🔒 Lock</button>
       <button class="btn" id="tour-btn" type="button">🎓 Tour</button>
       <button class="btn gold" id="new-email-btn" type="button">✉️ New email</button>
     </span>
@@ -833,7 +834,15 @@
   var ENCRYPTED_CUST = null;
   var HELP_P = fetch("helpers.enc.json", {cache: "no-store"}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; });
   var CAL_P = fetch("calendar.enc.json", {cache: "no-store"}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; });
-  fetch("data.enc.json", {cache: "no-store"}).then(function(r){return r.json();}).then(function(j){ ENCRYPTED = j; });
+  var SESSION_PW = "hk_session_pw";
+  function sessGet(){ try{ return sessionStorage.getItem(SESSION_PW); }catch(e){ return null; } }
+  function sessSet(v){ try{ if(v) sessionStorage.setItem(SESSION_PW, v); else sessionStorage.removeItem(SESSION_PW); }catch(e){} }
+  var AUTO_UNLOCK = false;
+  if(sessGet()){ AUTO_UNLOCK = true; document.getElementById("pw-err").textContent = "Opening the Hub…"; }
+  fetch("data.enc.json", {cache: "no-store"}).then(function(r){return r.json();}).then(function(j){
+    ENCRYPTED = j;
+    if(AUTO_UNLOCK){ document.getElementById("pw-input").value = sessGet() || ""; tryUnlock(); }
+  });
   fetch("customers.enc.json", {cache: "no-store"}).then(function(r){return r.json();}).then(function(j){ ENCRYPTED_CUST = j; }).catch(function(){ ENCRYPTED_CUST = null; });
   document.getElementById("pw-submit").addEventListener("click", tryUnlock);
   document.getElementById("pw-input").addEventListener("keydown", function(e){ if(e.key==="Enter") tryUnlock(); });
@@ -846,7 +855,7 @@
     var val = document.getElementById("pw-input").value;
     if(!ENCRYPTED){ document.getElementById("pw-err").textContent = "Still loading, try again in a second."; return; }
     decryptWith(val, ENCRYPTED).then(function(json){
-      PW = val;
+      PW = val; sessSet(val);
       return SHARED_P.then(function(enc){ return enc ? decryptWith(val, enc).catch(function(){ return null; }) : null; }).then(function(sh){ initShared(sh); return json; });
     }).then(function(json){
       RAW_P = json.concat(mergeCustom("partner", loadCustom())); ALL = RAW_P;
@@ -883,6 +892,7 @@
         maybeStartTour();
       });
     }).catch(function(){
+      if(AUTO_UNLOCK){ AUTO_UNLOCK = false; sessSet(null); document.getElementById("pw-input").value = ""; document.getElementById("pw-err").textContent = "Please enter the password."; return; }
       document.getElementById("pw-err").textContent = "Incorrect password.";
     });
   }
@@ -1996,8 +2006,12 @@
 
   // ---- view toggle ----
   var VIEWS = ["dashboard","partners","customers","helpers","calendar","announce","forms"];
-  var currentView = "dashboard";
+  var currentView = (function(){ var h = (location.hash||"").slice(1); return VIEWS.indexOf(h) >= 0 ? h : "dashboard"; })();
+  var NAV_POP = false;
   function showView(name){
+    if(VIEWS.indexOf(name) < 0) name = "dashboard";
+    if(!NAV_POP && name !== currentView){ try{ history.pushState({ hkView:name }, "", "#"+name); }catch(e){} }
+    else { try{ history.replaceState({ hkView:name }, "", "#"+name); }catch(e){} }
     currentView = name;
     VIEWS.forEach(function(v){
       document.getElementById("view-"+v).style.display = (v===name) ? "block" : "none";
@@ -3897,6 +3911,46 @@
     fillPeopleSelect(sEl);
     wirePickers(sEl, tEl, updateSigPreview);
   })();
+  // ---- Back button: close the open popup first, otherwise go to the previous tab ----
+  var MODAL_IDS = [], POP_CLOSING = false, IGNORE_POP = 0, PENDING_BACK = false;
+  function openModals(){ return Array.prototype.slice.call(document.querySelectorAll(".modal-backdrop.open")); }
+  var modalObs = new MutationObserver(function(muts){
+    muts.forEach(function(m){
+      var el = m.target, isOpen = el.classList.contains("open"), i = MODAL_IDS.indexOf(el.id);
+      if(isOpen && i < 0){
+        MODAL_IDS.push(el.id);
+        if(PENDING_BACK){ PENDING_BACK = false; try{ history.replaceState({ hkView: currentView, hkModal: el.id }, "", location.hash); }catch(e){} }
+        else { try{ history.pushState({ hkView: currentView, hkModal: el.id }, "", location.hash); }catch(e){} }
+      } else if(!isOpen && i >= 0){
+        MODAL_IDS.splice(i, 1);
+        if(POP_CLOSING) return;
+        // closed with × or Cancel: drop the history step we added for it — unless another popup
+        // opens straight away (Preview → Edit), which then reuses that step
+        PENDING_BACK = true;
+        setTimeout(function(){ if(!PENDING_BACK) return; PENDING_BACK = false; IGNORE_POP++; try{ history.back(); }catch(e){ IGNORE_POP--; } }, 0);
+      }
+    });
+  });
+  document.querySelectorAll(".modal-backdrop").forEach(function(el){ modalObs.observe(el, { attributes:true, attributeFilter:["class"] }); });
+  window.addEventListener("popstate", function(e){
+    if(IGNORE_POP > 0){ IGNORE_POP--; return; }
+    var open = openModals();
+    if(open.length){
+      POP_CLOSING = true; open[open.length-1].classList.remove("open");
+      setTimeout(function(){ POP_CLOSING = false; }, 0);
+      return;
+    }
+    if(document.getElementById("app-content").style.display !== "block") return;
+    var v = (e.state && e.state.hkView) || ((location.hash||"").slice(1)) || "dashboard";
+    NAV_POP = true; showView(v); NAV_POP = false;
+    window.scrollTo(0, 0);
+  });
+  try{ history.replaceState({ hkView: currentView }, "", "#" + currentView); }catch(e){}
+  document.getElementById("lock-btn").addEventListener("click", function(){
+    if(!confirm("Lock the Hub on this device? You'll need the password to open it again.")) return;
+    sessSet(null); location.replace(location.pathname);
+  });
+
   function flash(){
     var f = document.getElementById("copy-flash");
     f.style.display = "block";
