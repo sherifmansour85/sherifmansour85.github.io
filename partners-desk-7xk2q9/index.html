@@ -79,6 +79,17 @@
   .sugg-more{margin-top:8px;font-size:12px}
   .sugg-empty{font-size:12.5px;color:var(--sub);margin:10px 0 0}
   .pv-why{font-size:12.5px;background:#FFFBEF;border:1px solid #EEDFB4;border-radius:8px;padding:8px 10px;margin:8px 0}
+  .pv-conv-wrap h3,.pv-draft-title{font-size:13.5px;margin:12px 0 6px;color:#0A2E36}
+  .pv-conv{max-height:38vh;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:10px;background:#FBFAF6;display:flex;flex-direction:column;gap:8px}
+  .conv-msg{border-radius:10px;padding:8px 10px;font-size:12.5px;max-width:92%}
+  .conv-them{background:#fff;border:1px solid var(--line);align-self:flex-start}
+  .conv-us{background:#FFF6DD;border:1px solid #EEDFB4;align-self:flex-end}
+  .conv-team{background:#EEF6EF;border:1px solid #BFDCC6;align-self:flex-end;font-size:12px}
+  .conv-note{background:#F3EEFA;border:1px solid #D9CDEE}
+  .conv-head{font-size:11.5px;color:var(--sub);margin-bottom:3px}
+  .conv-subj{font-weight:600;margin-bottom:3px}
+  .conv-text{white-space:pre-wrap}
+  .pv-conv .btn{align-self:flex-start;font-size:12px;padding:5px 10px}
   .pv-body{border:1px solid var(--line);border-radius:10px;padding:14px;font-family:Calibri,Arial,sans-serif;font-size:14px;max-height:50vh;overflow:auto;background:#fff}
   .field label.how, label.how{display:flex;flex-direction:row;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:6px;cursor:pointer;font-size:13px;text-transform:none;letter-spacing:normal;font-weight:400;color:var(--ink)}
   label.how input{margin-top:3px;flex:none}
@@ -627,6 +638,8 @@
     <h2 id="pv-title">Preview</h2>
     <p class="sub" id="pv-meta"></p>
     <div class="pv-why" id="pv-why"></div>
+    <div class="pv-conv-wrap" id="pv-conv-wrap"><h3 id="pv-conv-title">💬 Conversation so far</h3><div id="pv-conv" class="pv-conv"></div></div>
+    <h3 class="pv-draft-title">✉️ The email you're approving</h3>
     <div class="pv-body" id="pv-body"></div>
     <div class="modal-actions">
       <button class="btn gold" id="pv-ok" type="button">✓ Approve &amp; send…</button>
@@ -3190,6 +3203,8 @@
     var outlookLink = document.getElementById("chain-outlook-link");
     if(row.email_link){ outlookLink.href = row.email_link; outlookLink.style.display = "inline-block"; }
     else { outlookLink.style.display = "none"; }
+    var rec = (findRec(row.id)||{}).rec || row;
+    if(typeof convHtml === "function" && SYNC_READY){ document.getElementById("chain-body").innerHTML = convHtml(rec, { all:true }); chainModal.classList.add("open"); return; }
     document.getElementById("chain-body").innerHTML = row.thread.map(function(m){
       var atts = (m===row.thread[row.thread.length-1] && row.attachments && row.attachments.length) ? row.attachments : null;
       return (
@@ -3575,7 +3590,16 @@
   }
 
   // ---- suggested actions (AI drafts from the hourly job + rule-based drafts) ----
-  function firstName(n){ var s = String(n||"").trim().split(/\s+/)[0] || ""; return s ? s.charAt(0).toUpperCase() + s.slice(1) : "there"; }
+  var NAME_TITLES = /^(dr|dr\.|doctor|mr|mr\.|mrs|mrs\.|ms|ms\.|miss|eng|eng\.|prof|prof\.|sheikh|د|د\.|م|م\.|أ|أ\.|الدكتور|الدكتورة|دكتور|دكتورة|المهندس|السيد|السيدة)$/i;
+  function firstName(n){
+    var parts = String(n||"").trim().split(/\s+/).filter(Boolean);
+    var t = parts.length && NAME_TITLES.test(parts[0]) ? parts[0] : "";
+    if(t) parts.shift();
+    var s = parts[0] || "";
+    if(!s) return "there";
+    s = s.charAt(0).toUpperCase() + s.slice(1);
+    return /^(dr|doctor)\.?$/i.test(t) ? "Dr " + s : s;
+  }
   function daysSince(d){ if(!d) return null; var t = new Date(String(d).length===10 ? d+"T12:00:00Z" : d).getTime(); return isNaN(t) ? null : (Date.now()-t)/864e5; }
   function decided(key){ var d = state._decisions || {}; return !!d[key]; }
   function decide(key, how){ state._decisions = state._decisions || {}; state._decisions[key] = how + ":" + new Date().toISOString().slice(0,10); saveState(state); }
@@ -3711,7 +3735,7 @@
           '<div class="sugg-why">'+esc(s.why)+'</div>'+
           (s.plan && s.plan.length ? '<ol class="sugg-plan">'+s.plan.map(function(p){ return '<li>'+esc(p)+'</li>'; }).join("")+'</ol>' : '')+
           '<div class="sugg-subj">✉️ '+esc(s.draft.subject)+'</div></div>'+
-          '<div class="sugg-btns"><button type="button" class="btn sg-prev">👁 Preview</button><button type="button" class="btn sg-edit">✎ Edit</button>'+
+          '<div class="sugg-btns">'+(s.rec ? '<button type="button" class="btn sg-conv" title="See every message with them and what the team did">💬 Conversation</button>' : '')+'<button type="button" class="btn sg-prev">👁 Preview</button><button type="button" class="btn sg-edit">✎ Edit</button>'+
           '<button type="button" class="btn gold sg-ok">✓ Approve</button><button type="button" class="btn sg-no" title="Dismiss this suggestion">✕</button></div></div>';
       }).join("") + '</div>' + (items.length > 4 ? '<button type="button" class="btn sugg-more">'+(SUGG_OPEN[kind] ? 'Show fewer' : 'Show all '+items.length)+'</button>' : '')
       : '<p class="sugg-empty">Nothing waiting — every open case has had its next step. 🎉</p>');
@@ -3725,7 +3749,8 @@
       if(e.target.closest(".sugg-more")){ SUGG_OPEN[kind] = !SUGG_OPEN[kind]; renderSugg(kind); return; }
       var item = e.target.closest(".sugg-item"); if(!item) return;
       var s = SUGG[kind][+item.getAttribute("data-i")]; if(!s) return;
-      if(e.target.closest(".sg-prev")) openPreview(s);
+      if(e.target.closest(".sg-conv")) openPreview(s, true);
+      else if(e.target.closest(".sg-prev")) openPreview(s);
       else if(e.target.closest(".sg-edit")) editSugg(s);
       else if(e.target.closest(".sg-ok")) openSend({ kind:kind, id: s.rec && s.rec.id, name: s.rec ? s.rec.name : s.to, to:s.to, subject:s.draft.subject, body:s.draft.body, key:s.key });
       else if(e.target.closest(".sg-no")){
@@ -3737,18 +3762,76 @@
     });
   });
 
+  // ---- conversation: their messages, our replies, and what the team did — oldest first ----
+  function conversationOf(r){
+    if(!r) return [];
+    var items = [];
+    var thread = r.thread || [];
+    var hasTheirs = thread.some(function(m){ return !isOurs(m.from); });
+    if(!hasTheirs && r.answers && r.answers.length){
+      items.push({ side:"them", when: r.received_at || r.date || "", from: r.name + (r.email ? " <"+r.email+">" : ""),
+        subject: r.subject || ((r.enquiry_type||"") + " enquiry"), text: r.answers.filter(function(a){ return a.answer && a.answer!=="{}"; }).map(function(a){ return a.question + ": " + a.answer; }).join("\n") });
+    }
+    thread.forEach(function(m){ items.push({ side: isOurs(m.from) ? "us" : "them", when: m.date || "", from: m.from, subject: m.subject, text: m.text }); });
+    var hist = (SHARED.history||[]).concat(queue.filter(function(a){ return !a.silent; }));
+    hist.forEach(function(h){
+      if(h.id !== r.id || !h.what) return;
+      if(/^Edited notes|^Flag|^Priority|^Status|^Dismissed/.test(h.what)) return;
+      items.push({ side:"team", when: h.at || "", from: h.by || "", text: h.what });
+    });
+    var st = state[r.id] || {};
+    if(r.last_replied && !items.some(function(i){ return i.side!=="them" && String(i.when).slice(0,10) >= r.last_replied; })){
+      items.push({ side:"team", when: r.last_replied, from: "support@hayakkom.com", text: "We emailed them on " + r.last_replied + " (seen in Sent Items)." });
+    }
+    if(st.notes) items.push({ side:"note", when: "", from: "Team notes", text: st.notes });
+    // the same person elsewhere in the Hub (e.g. a doctor who is also a customer)
+    var em = String(r.email||"").toLowerCase().trim();
+    if(em){
+      [["Partner", RAW_P], ["Customer", RAW_C], ["Helper", RAW_H]].forEach(function(g){
+        g[1].forEach(function(o){
+          if(o.id===r.id || String(o.email||"").toLowerCase().trim()!==em) return;
+          items.push({ side:"note", when:"", from:"Same email also in " + g[0] + "s", text: o.name + (o.date ? " · " + o.date : "") + (o.summary ? " — " + o.summary : "") });
+        });
+      });
+    }
+    return items.sort(function(a,b){ if(a.side==="note") return 1; if(b.side==="note") return -1; return String(a.when).localeCompare(String(b.when)); });
+  }
+  function convHtml(r, opts){
+    var items = conversationOf(r);
+    if(!items.length) return '<p class="sugg-empty">No messages recorded yet.</p>';
+    var showAll = opts && opts.all, cut = showAll ? 0 : Math.max(0, items.length - 4);
+    var html = cut ? '<button type="button" class="btn conv-more">Show '+cut+' earlier message'+(cut>1?'s':'')+'</button>' : '';
+    items.forEach(function(m, i){
+      if(i < cut) return;
+      var label = m.side==="them" ? "📩 From them" : m.side==="us" ? "📤 We replied" : m.side==="note" ? "🗒 Notes" : "✓ Team";
+      html += '<div class="conv-msg conv-'+m.side+'"><div class="conv-head"><b>'+label+'</b> · '+esc(String(m.when).slice(0,16).replace("T"," "))+(m.from ? ' · '+esc(m.from) : '')+'</div>'+
+        (m.subject ? '<div class="conv-subj">'+esc(m.subject)+'</div>' : '')+
+        '<div class="conv-text">'+esc(m.text||"")+'</div></div>';
+    });
+    if(r.email_link) html += '<a class="btn" target="_blank" rel="noopener" href="'+esc(r.email_link)+'">Open the original email in Outlook ↗</a>';
+    return html;
+  }
+
   // ---- preview ----
   var pvModal = document.getElementById("pv-modal"), PV = null;
-  function openPreview(s){
+  function openPreview(s, focusConv){
     PV = s;
     var w = me() || { key:"reham", name:"Reham Mobasher" };
     document.getElementById("pv-title").textContent = "Preview — " + (s.rec ? s.rec.name : s.to);
     document.getElementById("pv-meta").innerHTML = '<b>From:</b> support@hayakkom.com<br><b>To:</b> '+esc(s.to)+'<br><b>Subject:</b> '+esc(s.draft.subject);
     document.getElementById("pv-why").innerHTML = '<b>Why:</b> '+esc(s.why) + (s.plan && s.plan.length ? '<ol class="sugg-plan">'+s.plan.map(function(p){ return '<li>'+esc(p)+'</li>'; }).join("")+'</ol>' : '');
     document.getElementById("pv-body").innerHTML = '<div style="white-space:pre-wrap">'+esc(s.draft.body)+'</div><br>' + sigHtmlFor(w.name, w.title || titlesFor(w.key)[0]);
+    var conv = document.getElementById("pv-conv");
+    var n = s.rec ? conversationOf(s.rec).length : 0;
+    document.getElementById("pv-conv-title").textContent = "💬 Conversation so far" + (n ? " (" + n + ")" : "");
+    conv.innerHTML = s.rec ? convHtml(s.rec) : '<p class="sugg-empty">No record linked to this draft.</p>';
     pvModal.classList.add("open");
+    if(focusConv) setTimeout(function(){ document.getElementById("pv-conv-wrap").scrollIntoView({ block:"start" }); }, 50);
   }
   document.getElementById("pv-close").addEventListener("click", function(){ pvModal.classList.remove("open"); });
+  document.getElementById("pv-conv").addEventListener("click", function(e){
+    if(e.target.closest(".conv-more") && PV && PV.rec) this.innerHTML = convHtml(PV.rec, { all:true });
+  });
   pvModal.addEventListener("click", function(e){ if(e.target===pvModal) pvModal.classList.remove("open"); });
   document.getElementById("pv-ok").addEventListener("click", function(){ pvModal.classList.remove("open"); var s = PV;
     openSend({ kind:s.kind, id: s.rec && s.rec.id, name: s.rec ? s.rec.name : s.to, to:s.to, subject:s.draft.subject, body:s.draft.body, key:s.key }); });
