@@ -1843,16 +1843,18 @@
     { view: "dashboard", sel: "#dash-stats", title: "The headline numbers", text: "Partners, open enquiries, job applicants, how many people we have contacted at least once, bookings with estimated commission, and what's next on the calendar." },
     { view: "dashboard", sel: "#dash-charts", title: "Charts", text: "Hover any bar or column for the exact number: enquiries per month, the customer pipeline, response health, countries, partner categories and applicants. In 'Latest activity', click a name to open that card." },
     { view: "partners", sel: "#view-btn-partners", title: "🤝 Partners", text: "Every hospital, clinic and tourism company that contacted us. Urgent ones and anyone waiting for our reply sit at the top automatically." },
-    { view: "partners", sel: "#sugg-partners", title: "✨ Suggested next actions", text: "The best next step for every open case, with the email already written — some by the automatic rules, some (🤖) drafted by Claude from the full email thread. 👁 Preview shows exactly what will go out, ✎ Edit lets you change it, ✓ Approve sends it, ✕ dismisses it. Nothing is ever sent without your OK. The same box is on Customers and Helpers." },
-    { view: "partners", sel: "#sugg-partners .sync-pill", title: "Shared with the whole team", text: "Everything you do here — approvals, archive, delete, contact dates, flags, notes — is shared with everyone who uses the Hub. ✓ means you're in sync; Changes reach everyone within about a minute; ⏳ means yours are still being saved." },
+    { view: "partners", sel: "#sugg-partners", title: "✨ Suggested next actions", text: "The best next step for every open case, with the email already written — some by the automatic rules, some (🤖) drafted by Claude from the full email thread. 👁 Preview shows exactly what will go out, ✎ Edit lets you change it, ✓ Approve sends it, ✕ dismisses it. 💬 Conversation shows every message with that person so you can decide without opening Outlook, and clicking a name jumps to their card. Nothing is ever sent without your OK. The same box is on Customers and Helpers." },
+    { view: "partners", sel: "#sugg-partners .sync-pill", title: "Shared with the whole team", text: "Everything you do here — approvals, archive, delete, contact dates, flags, notes — is shared with everyone who uses the Hub. Changes reach everyone within about a minute. ✓ means you're in sync, ⏳ means yours are still being saved, and ⚠ means Google Drive couldn't be reached (your changes wait on your device and go when it's back)." },
     { view: "partners", sel: "#hist-btn-top", title: "🕘 History", text: "A log of everything the team has done: emails approved and sent, bulk announcements, archive and delete, status changes — with who did it and when. Deleted something by mistake? Undo it from here." },
     { view: "partners", sel: "#f-view", title: "Show filter", text: "'Needs attention' = urgent, to review, or waiting for our reply. 'Sent us an email — awaiting our reply' is your partner inbox to-do list." },
     { view: "partners", sel: "#f-sort", title: "Sorting", text: "Urgent first by default. Switch to newest, oldest, longest since contact, name or country whenever you need a different view." },
     { view: "partners", sel: "#list .card", title: "A partner card", text: "Flag, status and priority at the top, then the summary, contact details and the next action. A red-tinted card is urgent." },
     { view: "partners", sel: "#list .card .info-toggle", title: "Contact popup", text: "Click the email address to see every contact detail in one box and why they are in the system." },
     { view: "partners", sel: "#list .card .mark-contacted", title: "Mark contacted", text: "Replied by WhatsApp or phone? Click this and enter the date. The card stops showing as 'awaiting our reply'. Replies sent through the Hub are recorded for you." },
-    { view: "partners", sel: "#list .card .card-actions", title: "Card buttons", text: "Reply (write an email, then approve it) · View email chain · Set a reminder · Book a meeting (adds it to the Outlook/Teams calendar) · Add contact · Edit · colour flag · Archive (hide, keep in archive) · 🗑 Delete (remove for everyone; undo from History)." },
+    { view: "partners", sel: "#list .card .card-actions", title: "Card buttons", text: "Reply (write an email, then approve it) · 📎 Add document · 📧 View email (the whole conversation, inside the Hub) · Set a reminder · Book a meeting (adds it to the Outlook/Teams calendar) · Add contact · Edit · colour flag · Archive (hide, keep in archive) · 🗑 Delete (remove for everyone; undo from History)." },
     { view: "partners", sel: "#list .card .flag-btn", title: "Colour flags", text: "Gold = New, red = Urgent, blue = Waiting on partner, green = Live/active, purple = Needs review (a new card the system wasn't sure about — check it isn't a duplicate)." },
+    { view: "partners", sel: "#list .card .doc-btn", title: "📎 Add document", text: "Attach an invoice, quotation, contract or any file. It's saved to Google Drive (partners: Contracts › Clinics › <name> › Documents; customers: Hub Customers › <name>) and listed on the card for the whole team." },
+    { view: "partners", sel: "#list .card .kit-btn", title: "📦 Partner kit", text: "Partners only. Creates the partner's view-only Google Drive folder with our logo, partner badge and website snippet, then opens an email explaining the files, with the partner form link and steps. Check it and approve — the files are saved in the folder, never attached." },
     { view: "customers", sel: "#view-btn-customers", title: "🧳 Customers", text: "Every enquiry from the website forms, added automatically every hour. Our promise is a reply within 12 hours — past that, the card turns red and jumps to the top." },
     { view: "customers", sel: "#fc-view", title: "Customer filters", text: "Needs attention, over 12 hours, new in the last 12 hours, contacted, waiting, ready to book, phone-only, and 'From old forms' — the 80 people from our previous forms." },
     { view: "customers", sel: "#fc-country", title: "Country", text: "Filter by country — taken from their answer, or from the country code of their phone number." },
@@ -1864,6 +1866,7 @@
     { view: "announce", sel: "#an-generate", title: "Generate — nothing sends on its own", text: "You get one Outlook draft per person (or one BCC email), plus a WhatsApp link for anyone without email. You check each one and press Send yourself." },
     { view: "forms", sel: "#view-btn-forms", title: "📄 Forms", text: "Copy the right English or Arabic form link for a customer, or the partner onboarding form for a hospital, clinic or tourism company." },
     { sel: "#new-email-btn", title: "✉️ New email", text: "Write a fresh email from support@hayakkom.com with your signature already added." },
+    { sel: "#lock-btn", title: "🔒 Lock, refresh and Back", text: "The Hub stays unlocked in this tab, even when you refresh. The browser's Back button closes a window or returns to the tab you were on, without leaving the Hub. On a shared computer, press 🔒 Lock when you step away." },
     { sel: "#tour-btn", title: "You're ready 🎉", text: "Your daily routine: open the Dashboard, clear the red tiles first, reply to everyone waiting, and mark people contacted. Replay this tour any time from here." }
   ];
   var tourIdx = -1, tourEls = null;
@@ -1895,7 +1898,7 @@
   function endTour(){
     if(tourEls){ ["shade","spot","pop"].forEach(function(k){ tourEls[k].remove(); }); }
     tourEls = null; tourIdx = -1;
-    try{ localStorage.setItem("hk_tour_done", "1"); }catch(e){}
+    try{ localStorage.setItem("hk_tour_done_v2", "1"); }catch(e){}
     showView("dashboard");
     window.scrollTo({ top: 0 });
   }
@@ -1905,6 +1908,7 @@
     var target = st.sel ? document.querySelector(st.sel) : null;
     if(target) target.scrollIntoView({ block: "center" });
     setTimeout(function(){ placeTour(target, st); }, 90);
+    var idx = tourIdx; setTimeout(function(){ if(tourIdx===idx && st.sel){ var t2 = document.querySelector(st.sel); if(t2) placeTour(t2, st); } }, 450);  // buttons added after a redraw can shift the target
   }
   function placeTour(target, st){
     if(!tourEls) return;
@@ -1942,7 +1946,7 @@
   window.addEventListener("resize", function(){ if(tourEls) showTourStep(); });
   function maybeStartTour(){
     var done = false;
-    try{ done = !!localStorage.getItem("hk_tour_done"); }catch(e){}
+    try{ done = !!localStorage.getItem("hk_tour_done_v2"); }catch(e){}
     if(!done) setTimeout(startTour, 700);
   }
   document.getElementById("tour-btn").addEventListener("click", startTour);
