@@ -825,8 +825,9 @@
     <p class="sub" id="chain-sub"></p>
     <div id="chain-body"></div>
     <div class="modal-actions">
-      <a class="btn gold" id="chain-outlook-link" target="_blank" rel="noopener">Open in Outlook to download attachments</a>
+      <a class="btn gold" id="chain-outlook-link" target="_blank" rel="noopener">Open in Outlook ↗ (for attachments)</a>
     </div>
+    <p class="sd-note" id="chain-outlook-hint">The Outlook link opens the email in the <b>support@hayakkom.com</b> mailbox. If Outlook says “This message might have been moved or deleted”, your browser is signed into a different mailbox — sign out of Outlook and sign in as support@hayakkom.com (or open the link in a private/incognito window).</p>
   </div>
 </div>
 
@@ -1454,7 +1455,7 @@
           '<div class="card-actions">'+
             (r.email ? '<button class="btn gold reply-btn">Reply</button>' : '')+
             (wa ? '<a class="btn wa-btn" target="_blank" rel="noopener" href="'+esc(wa)+'">WhatsApp</a>' : '')+
-            (r.email_link ? '<a class="btn" target="_blank" rel="noopener" href="'+esc(r.email_link)+'">View full email</a>' : '')+
+            ((r.email_link || (r.thread && r.thread.length)) ? '<button type="button" class="btn full-email-btn" title="Read the whole email here in the Hub">📧 View email</button>' : '')+
             (atts.length ? '<button class="btn atts-toggle">📎 CV / attachments ('+atts.length+')</button>' : '')+
             '<select class="h-prio btn" aria-label="Priority">'+["High","Medium","Low"].map(function(x){ return '<option'+(x===p?' selected':'')+'>'+x+'</option>'; }).join("")+'</select>'+
             '<div class="flag-wrap" style="position:relative;display:inline-block">'+
@@ -2279,8 +2280,8 @@
           '<textarea class="notes" placeholder="Add a note…">'+esc(notes)+'</textarea>'+
           '<div class="card-actions">'+
             (effEmail ? '<button class="btn gold reply-btn">Reply</button>' : '')+
-            (r.thread && r.thread.length ? '<button class="btn chain-toggle">View email chain</button>' : '')+
-            (r.email_link ? '<a class="btn" target="_blank" rel="noopener" href="'+esc(r.email_link)+'">View full email</a>' : '')+
+            (r.thread && r.thread.length ? '<button class="btn chain-toggle" title="Every message with them, read here in the Hub">📧 View email</button>' : '')+
+            ((!(r.thread && r.thread.length)) && (r.email_link || (r.answers && r.answers.length)) ? '<button type="button" class="btn full-email-btn" title="Read the whole email here in the Hub">📧 View email</button>' : '')+
             '<button class="btn remind-toggle">Set a reminder</button>'+
             '<button class="btn book-toggle">Book a meeting</button>'+
             '<button class="btn contact-toggle">+ Add contact</button>'+
@@ -2773,8 +2774,8 @@
           '<textarea class="notes" placeholder="Add a note…">'+esc(notes)+'</textarea>'+
           '<div class="card-actions">'+
             (effEmail ? '<button class="btn gold reply-btn">Reply</button>' : '')+
-            (r.thread && r.thread.length ? '<button class="btn chain-toggle">View enquiry</button>' : '')+
-            (r.email_link ? '<a class="btn" target="_blank" rel="noopener" href="'+esc(r.email_link)+'">View full email</a>' : '')+
+            (r.thread && r.thread.length ? '<button class="btn chain-toggle" title="Their enquiry and every message since, read here in the Hub">📧 View enquiry</button>' : '')+
+            ((!(r.thread && r.thread.length)) && (r.email_link || (r.answers && r.answers.length)) ? '<button type="button" class="btn full-email-btn" title="Read the whole email here in the Hub">📧 View email</button>' : '')+
             '<button class="btn remind-toggle">Set a reminder</button>'+
             '<button class="btn book-toggle">Book a call</button>'+
             '<button class="btn contact-toggle">+ Add contact</button>'+
@@ -3177,7 +3178,7 @@
     document.getElementById("atts-body").innerHTML = (row.attachments||[]).map(function(a){
       var url = attUrl(a);
       return '<div class="atts-row"><span>📎 '+esc(attName(a))+'</span>'+
-        (url ? '<a class="btn gold" target="_blank" rel="noopener" href="'+esc(url)+'">Open / download</a>' : '<span style="color:var(--sub);font-size:11.5px">no direct link — see "View full email"</span>')+
+        (url ? '<a class="btn gold" target="_blank" rel="noopener" href="'+esc(url)+'">Open / download</a>' : '<span style="color:var(--sub);font-size:11.5px">no direct link — see "📧 View email"</span>')+
       '</div>';
     }).join("");
     attsModal.classList.add("open");
@@ -3229,12 +3230,14 @@
 
   function openChainModal(row){
     document.getElementById("chain-title").textContent = "Email chain — " + row.name;
-    document.getElementById("chain-sub").textContent = row.thread.length + " message" + (row.thread.length>1?"s":"") + " · " + row.category + " · " + row.country;
+    var n = (row.thread||[]).length;
+    document.getElementById("chain-sub").textContent = (n ? n + " message" + (n>1?"s":"") + " · " : "") + [row.category, row.country].filter(Boolean).join(" · ");
     var outlookLink = document.getElementById("chain-outlook-link");
     if(row.email_link){ outlookLink.href = row.email_link; outlookLink.style.display = "inline-block"; }
     else { outlookLink.style.display = "none"; }
+    document.getElementById("chain-outlook-hint").style.display = row.email_link ? "block" : "none";
     var rec = (findRec(row.id)||{}).rec || row;
-    if(typeof convHtml === "function" && SYNC_READY){ document.getElementById("chain-body").innerHTML = convHtml(rec, { all:true }); chainModal.classList.add("open"); return; }
+    if(typeof convHtml === "function" && SYNC_READY){ document.getElementById("chain-body").innerHTML = convHtml(rec, { all:true, noLink:true }); chainModal.classList.add("open"); return; }
     document.getElementById("chain-body").innerHTML = row.thread.map(function(m){
       var atts = (m===row.thread[row.thread.length-1] && row.attachments && row.attachments.length) ? row.attachments : null;
       return (
@@ -3855,9 +3858,17 @@
         (m.subject ? '<div class="conv-subj">'+esc(m.subject)+'</div>' : '')+
         '<div class="conv-text" dir="auto">'+esc(m.text||"")+'</div></div>';
     });
-    if(r.email_link) html += '<a class="btn" target="_blank" rel="noopener" href="'+esc(r.email_link)+'">Open the original email in Outlook ↗</a>';
+    if(r.email_link && !(opts && opts.noLink)) html += '<a class="btn" target="_blank" rel="noopener" href="'+esc(r.email_link)+'" title="Opens in the support@hayakkom.com mailbox — if Outlook says moved or deleted, sign in as support@hayakkom.com">Open the original in Outlook ↗ (support@hayakkom.com)</a>';
     return html;
   }
+
+  // ---- 📧 View email: the whole email, read inside the Hub ----
+  document.addEventListener("click", function(e){
+    var b = e.target.closest(".full-email-btn"); if(!b) return;
+    var card = b.closest(".card[data-id]"); var f = card && findRec(card.getAttribute("data-id")); if(!f) return;
+    var st = state[f.rec.id] || {};
+    openChainModal(Object.assign({}, f.rec, { name: st.name || f.rec.name, thread: f.rec.thread || [] }));
+  });
 
   // ---- jump from a suggestion to its card in the list ----
   function goToCard(kind, id){
