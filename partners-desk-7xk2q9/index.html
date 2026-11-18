@@ -661,7 +661,7 @@
   <div class="modal wide">
     <button class="close-x" id="hist-close" aria-label="Close">×</button>
     <h2>🕘 History</h2>
-    <p class="sub">Everything the team has done in the Hub — emails approved or sent, bulk announcements, archive, delete, contact dates and status changes. ✓ = shared with everyone · ⏳ = waiting for the next hourly update.</p>
+    <p class="sub">Everything the team has done in the Hub — emails approved or sent, bulk announcements, archive, delete, contact dates and status changes. ✓ = shared with everyone · ⏳ = being saved (a few seconds).</p>
     <div class="hist-tabs">
       <button type="button" class="btn hist-tab" data-k="all">All</button>
       <button type="button" class="btn hist-tab" data-k="partner">🤝 Partners</button>
@@ -856,7 +856,7 @@
     if(!ENCRYPTED){ document.getElementById("pw-err").textContent = "Still loading, try again in a second."; return; }
     decryptWith(val, ENCRYPTED).then(function(json){
       PW = val; sessSet(val);
-      return SHARED_P.then(function(enc){ return enc ? decryptWith(val, enc).catch(function(){ return null; }) : null; }).then(function(sh){ initShared(sh); return json; });
+      return syncGet(val).then(function(sh){ initShared(sh); return json; });
     }).then(function(json){
       RAW_P = json.concat(mergeCustom("partner", loadCustom())); ALL = RAW_P;
       buildFilterOptions();
@@ -1802,7 +1802,7 @@
     { view: "dashboard", sel: "#dash-charts", title: "Charts", text: "Hover any bar or column for the exact number: enquiries per month, the customer pipeline, response health, countries, partner categories and applicants. In 'Latest activity', click a name to open that card." },
     { view: "partners", sel: "#view-btn-partners", title: "🤝 Partners", text: "Every hospital, clinic and tourism company that contacted us. Urgent ones and anyone waiting for our reply sit at the top automatically." },
     { view: "partners", sel: "#sugg-partners", title: "✨ Suggested next actions", text: "The best next step for every open case, with the email already written — some by the automatic rules, some (🤖) drafted by Claude from the full email thread. 👁 Preview shows exactly what will go out, ✎ Edit lets you change it, ✓ Approve sends it, ✕ dismisses it. Nothing is ever sent without your OK. The same box is on Customers and Helpers." },
-    { view: "partners", sel: "#sugg-partners .sync-pill", title: "Shared with the whole team", text: "Everything you do here — approvals, archive, delete, contact dates, flags, notes — is shared with everyone who uses the Hub. ✓ means you're in sync; ⏳ means your latest changes reach the others at the next hourly update." },
+    { view: "partners", sel: "#sugg-partners .sync-pill", title: "Shared with the whole team", text: "Everything you do here — approvals, archive, delete, contact dates, flags, notes — is shared with everyone who uses the Hub. ✓ means you're in sync; Changes reach everyone within about a minute; ⏳ means yours are still being saved." },
     { view: "partners", sel: "#hist-btn-top", title: "🕘 History", text: "A log of everything the team has done: emails approved and sent, bulk announcements, archive and delete, status changes — with who did it and when. Deleted something by mistake? Undo it from here." },
     { view: "partners", sel: "#f-view", title: "Show filter", text: "'Needs attention' = urgent, to review, or waiting for our reply. 'Sent us an email — awaiting our reply' is your partner inbox to-do list." },
     { view: "partners", sel: "#f-sort", title: "Sorting", text: "Urgent first by default. Switch to newest, oldest, longest since contact, name or country whenever you need a different view." },
@@ -3306,11 +3306,24 @@
   });
 
   // ================= Shared sync · suggested actions · approvals · history =================
-  // The site is static, so every change made here (archive, delete, contacted, approvals, new
-  // records) is encrypted with the Hub password and posted to a private Jotform relay form. The
-  // hourly job folds those into shared.enc.json, which every browser loads — so Reham, Sherif and
-  // any trainee see the same Hub. Until the next run, your own changes show only in your browser.
-  var RELAY = { form: "263210812055042", kind: "q2_textbox0", payload: "q3_textarea1" };
+  // The site is static, so shared team state lives in Sherif's Google Drive behind a small Google
+  // Apps Script web app (folder "Hayakkom Hub"). Every change made here (archive, delete, contacted,
+  // approvals, new records) is posted to it straight away and everyone's Hub pulls it every minute,
+  // so Reham, Sherif and any trainee see the same Hub. The script only answers requests carrying a
+  // token derived from the Hub password. The hourly job sends the approved emails.
+  var SYNC_URL = "https://script.google.com/macros/s/AKfycbyNF6QJPbxwaOH90YV7jA5c0yh-USYepimKa_7qxR0Nte8zKssTR8n63MymVv6k7AFhZg/exec";
+  var SYNC_TOKEN = null;
+  function syncToken(pw){
+    return crypto.subtle.digest("SHA-256", new TextEncoder().encode("hayakkom-hub:" + pw)).then(function(buf){
+      return Array.prototype.map.call(new Uint8Array(buf), function(b){ return ("0" + b.toString(16)).slice(-2); }).join("").slice(0, 32);
+    });
+  }
+  function syncGet(pw){
+    return syncToken(pw).then(function(t){
+      SYNC_TOKEN = t;
+      return fetch(SYNC_URL + "?t=" + encodeURIComponent(t), { cache:"no-store" }).then(function(r){ return r.json(); });
+    }).then(function(j){ return (j && j.ok) ? j : null; }).catch(function(){ return null; });
+  }
   var QUEUE_KEY = "hk_sync_queue_v1";
   var WHO_KEY = "hk_who_v1";
   var MIG_KEY = "hk_sync_migrated_v1";
@@ -3318,7 +3331,6 @@
   var CTITLE_KEY = "hk_titles_custom_v1";
   var SIGTXT_KEY = "hk_sig_text_v1";
   var SHARED = { state:{}, custom:{ partner:[], customer:[] }, history:[], outbox:[], applied:[], synced_at:null };
-  var SHARED_P = fetch("shared.enc.json", {cache:"no-store"}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; });
   var SHARED_OK = false, PW = null, SYNC_READY = false, SNAP = {}, PRE_STATE = null;
   var RAW_P = [], RAW_C = [], RAW_H = [];
   function lsGet(k, d){ try{ var v = localStorage.getItem(k); return v==null ? d : JSON.parse(v); }catch(e){ return d; } }
@@ -3397,59 +3409,48 @@
   function sigPlainFor(name, title){ return "—\n"+name+"\n"+title+" — Hayakkom\nsupport@hayakkom.com | www.hayakkom.com"; }
   function sigTextOn(){ return lsGet(SIGTXT_KEY, true) !== false; }
 
-  // ---- encryption for relay payloads ----
-  var ENC_KEY_P = null, ENC_SALT = null;
-  function encKey(){
-    if(!ENC_KEY_P){
-      ENC_SALT = crypto.getRandomValues(new Uint8Array(16));
-      ENC_KEY_P = crypto.subtle.importKey("raw", new TextEncoder().encode(PW), "PBKDF2", false, ["deriveKey"]).then(function(base){
-        return crypto.subtle.deriveKey({ name:"PBKDF2", salt:ENC_SALT, iterations:200000, hash:"SHA-256" }, base, { name:"AES-GCM", length:256 }, false, ["encrypt"]);
-      });
-    }
-    return ENC_KEY_P;
-  }
-  function toB64(u8){ var s = ""; for(var i=0;i<u8.length;i++) s += String.fromCharCode(u8[i]); return btoa(s); }
-  function encryptObj(obj){
-    return encKey().then(function(key){
-      var iv = crypto.getRandomValues(new Uint8Array(12));
-      return crypto.subtle.encrypt({ name:"AES-GCM", iv:iv }, key, new TextEncoder().encode(JSON.stringify(obj))).then(function(ct){
-        return JSON.stringify({ v:1, salt:toB64(ENC_SALT), iv:toB64(iv), data:toB64(new Uint8Array(ct)) });
-      });
-    });
-  }
-  function relayPost(payload){
-    var name = "hk-relay-" + uid();
-    var frame = document.createElement("iframe");
-    frame.name = name; frame.style.display = "none"; frame.setAttribute("aria-hidden", "true");
-    document.body.appendChild(frame);
-    var f = document.createElement("form");
-    f.method = "POST"; f.action = "https://submit.jotform.com/submit/" + RELAY.form + "/"; f.target = name; f.style.display = "none";
-    [["formID", RELAY.form], ["simple_spc", RELAY.form + "-" + RELAY.form], [RELAY.kind, "hub-v1"], [RELAY.payload, payload]].forEach(function(p){
-      var i = document.createElement(p[0]===RELAY.payload ? "textarea" : "input"); i.name = p[0]; i.value = p[1]; f.appendChild(i);
-    });
-    document.body.appendChild(f); f.submit();
-    setTimeout(function(){ f.remove(); frame.remove(); }, 30000);
-  }
-  var flushTimer = null;
-  function scheduleFlush(){ clearTimeout(flushTimer); flushTimer = setTimeout(flush, 2500); }
+  var flushTimer = null, FLUSHING = false;
+  function scheduleFlush(){ clearTimeout(flushTimer); flushTimer = setTimeout(flush, 800); }
+  // Send every change not yet confirmed by the shared store; the answer is the new shared state.
   function flush(){
-    if(!PW) return;
-    var now = Date.now();
-    var due = queue.filter(function(a){ return !a.sent || now - a.sent > 3*3600*1000; });
+    if(!PW || !SYNC_TOKEN || FLUSHING) return;
+    var due = queue.slice(0, 200).map(function(a){ var c = Object.assign({}, a); delete c.sent; return c; });
     if(!due.length){ renderSyncPills(); return; }
-    var chunks = [], cur = [], size = 0;
-    due.forEach(function(a){
-      var clean = Object.assign({}, a); delete clean.sent;
-      var s = JSON.stringify(clean).length;
-      if(cur.length && size + s > 40000){ chunks.push(cur); cur = []; size = 0; }
-      cur.push(clean); size += s;
-    });
-    if(cur.length) chunks.push(cur);
-    chunks.reduce(function(p, ch){
-      return p.then(function(){ return encryptObj(ch).then(relayPost); });
-    }, Promise.resolve()).then(function(){
-      due.forEach(function(a){ a.sent = now; }); saveQueue(); renderSyncPills();
-    });
+    FLUSHING = true;
+    fetch(SYNC_URL, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify({ t: SYNC_TOKEN, actions: due }) })
+      .then(function(r){ return r.json(); })
+      .then(function(j){ FLUSHING = false; if(j && j.ok){ applyRemote(j); if(queue.length) scheduleFlush(); } else renderSyncPills(); })
+      .catch(function(){ FLUSHING = false; renderSyncPills(); clearTimeout(flushTimer); flushTimer = setTimeout(flush, 30000); });
+  }
+  // Pull the team's latest changes every minute while the Hub is open.
+  function pull(){
+    if(!SYNC_TOKEN || document.hidden || FLUSHING) return;
+    fetch(SYNC_URL + "?t=" + encodeURIComponent(SYNC_TOKEN), { cache:"no-store" })
+      .then(function(r){ return r.json(); }).then(function(j){ if(j && j.ok) applyRemote(j); }).catch(function(){});
+  }
+  setInterval(pull, 60000);
+  document.addEventListener("visibilitychange", function(){ if(!document.hidden){ pull(); if(queue.length) flush(); } });
+  function applyRemote(j){
+    var changed = j.synced_at !== SHARED.synced_at;
+    SHARED_OK = true;
+    SHARED = Object.assign({ state:{}, custom:{ partner:[], customer:[] }, history:[], outbox:[], applied:[] }, j);
+    SHARED.custom = Object.assign({ partner:[], customer:[] }, SHARED.custom || {});
+    var applied = {}; (SHARED.applied||[]).forEach(function(u){ applied[u] = 1; });
+    queue = queue.filter(function(a){ return !applied[a.uid]; }); saveQueue();
+    if(changed){
+      var merged = JSON.parse(JSON.stringify(SHARED.state || {}));
+      queue.forEach(function(a){ if(a.t==="patch") applyPatch(merged, a.id, a.set); });
+      state = merged;
+      try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
+      snapAll();
+      // add records other people created by hand
+      mergeCustom("partner", []).forEach(function(r){ if(!RAW_P.some(function(x){ return x.id===r.id; })) RAW_P.push(r); });
+      mergeCustom("customer", []).forEach(function(r){ if(!RAW_C.some(function(x){ return x.id===r.id; })) RAW_C.push(r); });
+      var typing = document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && !document.activeElement.closest(".modal");
+      if(!typing && !document.querySelector(".modal-backdrop.open")){ applyRemoved(); rerenderAll(); }
+      else { renderAllSugg(); }
+    }
+    renderSyncPills();
   }
   function act(a){
     a.uid = uid(); a.at = new Date().toISOString(); a.by = myName();
@@ -3567,8 +3568,8 @@
   function renderSyncPills(){
     var pending = queue.length;
     var txt, cls;
-    if(!SHARED_OK){ txt = "⚠ Shared file not loaded — changes are saved on this device and will sync later"; cls = "warn"; }
-    else if(pending){ txt = "⏳ " + pending + " change" + (pending>1?"s":"") + " waiting to sync — everyone sees them after the next hourly update"; cls = "warn"; }
+    if(!SHARED_OK){ txt = "⚠ Can't reach the shared storage right now — your changes are kept on this device and sent automatically when it's back"; cls = "warn"; }
+    else if(pending){ txt = "⏳ Saving " + pending + " change" + (pending>1?"s":"") + " for the team…"; cls = "warn"; }
     else { txt = "✓ In sync with the team" + (SHARED.synced_at ? " · updated " + String(SHARED.synced_at).slice(0,16).replace("T"," ") + " UTC" : ""); cls = "ok"; }
     document.querySelectorAll(".sync-pill").forEach(function(el){ el.textContent = txt; el.className = "sync-pill " + cls; });
   }
