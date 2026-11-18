@@ -55,6 +55,54 @@
   .flag-opt:hover{background:var(--cream)}
   .archive-btn{color:#A33;border-color:#E9C3C3}
   .archive-btn:hover{border-color:#A33}
+  .sugg-wrap{background:linear-gradient(180deg,#FFFDF6,#fff);border:1px solid #E8D9AE;border-radius:14px;padding:14px 16px;margin-bottom:14px}
+  .sugg-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start}
+  .sugg-count{display:inline-block;font-size:11.5px;font-weight:600;background:#F4E9C8;color:#6E5512;border-radius:999px;padding:2px 9px;margin-inline-start:6px}
+  .sugg-count.q{background:#E2EEF8;color:#1F4E79}
+  .sugg-sub{font-size:12px;color:var(--sub);margin-top:4px;max-width:680px}
+  .sugg-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .sync-pill{font-size:11.5px;border-radius:999px;padding:4px 10px;background:#EEF6EF;color:#21603A}
+  .sync-pill.warn{background:#FFF4DC;color:#7A5A00}
+  .sugg-list{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+  .sugg-item{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;flex-wrap:wrap}
+  .sugg-item.hot{border-color:#E3A6A0;box-shadow:inset 4px 0 0 #C0392B}
+  .sugg-main{flex:1 1 320px;min-width:0}
+  .sugg-title{font-weight:700;font-size:13.5px}
+  .sugg-badge{display:inline-block;font-size:11px;font-weight:600;border-radius:6px;padding:2px 7px;background:#F1EDE2;color:#5A4A1A;margin-inline-end:4px}
+  .sugg-badge.ai{background:#ECE6F7;color:#4B3880}
+  .sugg-why{font-size:12.5px;color:var(--sub);margin-top:3px}
+  .sugg-plan{margin:5px 0 0;padding-inline-start:18px;font-size:12px;color:var(--ink)}
+  .sugg-plan li{margin:1px 0}
+  .sugg-subj{font-size:12px;margin-top:5px;color:#0E5A62}
+  .sugg-btns{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .sugg-btns .btn{padding:6px 10px;font-size:12px}
+  .sugg-more{margin-top:8px;font-size:12px}
+  .sugg-empty{font-size:12.5px;color:var(--sub);margin:10px 0 0}
+  .pv-why{font-size:12.5px;background:#FFFBEF;border:1px solid #EEDFB4;border-radius:8px;padding:8px 10px;margin:8px 0}
+  .pv-body{border:1px solid var(--line);border-radius:10px;padding:14px;font-family:Calibri,Arial,sans-serif;font-size:14px;max-height:50vh;overflow:auto;background:#fff}
+  .field label.how, label.how{display:flex;flex-direction:row;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:6px;cursor:pointer;font-size:13px;text-transform:none;letter-spacing:normal;font-weight:400;color:var(--ink)}
+  label.how input{margin-top:3px;flex:none}
+  .sig-text{white-space:pre-wrap;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#0A2E36}
+  label.how small{color:var(--sub)}
+  .sd-note{font-size:12px;color:var(--sub)}
+  .modal.wide{max-width:860px}
+  .hist-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+  .hist-tabs .btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .hist-tabs input{flex:1 1 160px;padding:7px 10px;border:1px solid var(--line);border-radius:8px}
+  .hist-list{max-height:60vh;overflow:auto}
+  .hist-row{display:grid;grid-template-columns:120px 1fr 70px;gap:10px;padding:8px 2px;border-top:1px solid var(--line);font-size:12.5px}
+  .hist-when{color:var(--sub);font-variant-numeric:tabular-nums}
+  .hist-when span{color:var(--ink);font-weight:600}
+  .hist-kind{font-size:10.5px;background:#F1EDE2;border-radius:5px;padding:1px 6px;color:#5A4A1A}
+  .hist-st{text-align:end}
+  .who-grid{display:flex;gap:8px;flex-wrap:wrap}
+  .sig-steps{font-size:12.5px;padding-inline-start:18px}
+  .delete-btn{color:#7A1F1F;border-color:#D9A5A5;background:#FFF6F6}
+  .who-chip{font-size:12px;color:var(--sub);align-self:center}
+  .who-chip a{color:#0E7C86;cursor:pointer;text-decoration:underline}
+  .hk-toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:#0A2E36;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;pointer-events:none;transition:all .25s;z-index:200;max-width:calc(100vw - 32px)}
+  .hk-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media (max-width:600px){ .hist-row{grid-template-columns:1fr} .hist-st{text-align:start} }
   .view-toggle{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
   .recip-row{display:flex;align-items:center;gap:10px;padding:9px 4px;border-top:1px solid var(--line);font-size:13px}
   .recip-row:first-child{border-top:none}
@@ -293,6 +341,8 @@
     <button class="view-btn" id="view-btn-announce" type="button">📢 Announce</button>
     <button class="view-btn" id="view-btn-forms" type="button">📄 Forms</button>
     <span class="tab-actions">
+      <span class="who-chip">👤 <span id="who-label">—</span> · <a id="who-switch">switch</a></span>
+      <button class="btn" id="hist-btn-top" type="button">🕘 History</button>
       <button class="btn" id="tour-btn" type="button">🎓 Tour</button>
       <button class="btn gold" id="new-email-btn" type="button">✉️ New email</button>
     </span>
@@ -346,6 +396,7 @@
     <div class="kpi"><div class="num" id="kpi-shown">—</div><div class="lbl">Matching filters</div></div>
   </div>
 
+  <div class="sugg-wrap" id="sugg-partners"></div>
   <div class="toolbar">
     <input type="search" id="f-search" placeholder="Search by name, hospital, clinic or tourism company…">
     <select id="f-view">
@@ -387,6 +438,7 @@
     <div class="kpi"><div class="num" id="kpi-cust-shown">—</div><div class="lbl">Matching filters</div></div>
   </div>
 
+  <div class="sugg-wrap" id="sugg-customers"></div>
   <div class="toolbar">
     <input type="search" id="fc-search" placeholder="Search by name, email, phone, country or enquiry…">
     <select id="fc-view">
@@ -499,6 +551,7 @@
     <div class="kpi"><div class="num" id="kpi-h-attn">—</div><div class="lbl">🔥 Not contacted yet</div></div>
     <div class="kpi"><div class="num" id="kpi-h-shown">—</div><div class="lbl">Matching filters</div></div>
   </div>
+  <div class="sugg-wrap" id="sugg-helpers"></div>
   <div class="toolbar">
     <input type="search" id="fh-search" placeholder="Search by name, profession, skill, language or city…">
     <select id="fh-prof"><option value="">All professions</option></select>
@@ -548,10 +601,7 @@
 
     <div class="row2">
       <div class="field"><label>Sign as</label>
-        <select id="m-signer">
-          <option value="reham">Reham Mobasher</option>
-          <option value="sherif">Sherif Mansour</option>
-        </select>
+        <select id="m-signer"></select>
       </div>
       <div class="field"><label>Title</label>
         <select id="m-title"></select>
@@ -561,12 +611,102 @@
     <div class="sig-preview" id="sig-preview"></div>
 
     <div class="modal-actions">
-      <button class="btn gold" id="m-outlook">Open in Outlook</button>
+      <button class="btn gold" id="m-approve" type="button">✓ Approve &amp; send…</button>
+      <button class="btn" id="m-outlook">Open in Outlook</button>
       <button class="btn" id="m-copy">Copy formatted email</button>
+      <button class="btn" id="m-sigsetup" type="button">🖼 Set up logo signature</button>
     </div>
     <p class="copy-flash" id="copy-flash">Copied — paste into a new Outlook message.</p>
   </div>
 </div>
+
+<div class="modal-backdrop" id="pv-modal">
+  <div class="modal">
+    <button class="close-x" id="pv-close" aria-label="Close">×</button>
+    <h2 id="pv-title">Preview</h2>
+    <p class="sub" id="pv-meta"></p>
+    <div class="pv-why" id="pv-why"></div>
+    <div class="pv-body" id="pv-body"></div>
+    <div class="modal-actions">
+      <button class="btn gold" id="pv-ok" type="button">✓ Approve &amp; send…</button>
+      <button class="btn" id="pv-edit" type="button">✎ Edit first</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="send-modal">
+  <div class="modal">
+    <button class="close-x" id="sd-close" aria-label="Close">×</button>
+    <h2>Send this email</h2>
+    <p class="sub" id="sd-summary"></p>
+    <div class="row2">
+      <div class="field"><label>Send under the name</label><select id="sd-person"></select></div>
+      <div class="field"><label>Title</label><select id="sd-title"></select></div>
+    </div>
+    <div class="field"><label>How should it go out?</label>
+      <label class="how"><input type="radio" name="sd-how" value="auto" checked> <span><b>Hayakkom sends it for me</b><br><small>From support@hayakkom.com at the next hourly update. Logged in History.</small></span></label>
+      <label class="how"><input type="radio" name="sd-how" value="outlook"> <span><b>Open in my Outlook now</b><br><small>Sends straight away from your Outlook, with your logo signature if you've set it up.</small></span></label>
+    </div>
+    <div class="sig-preview" id="sd-sig"></div>
+    <p class="sd-note" id="sd-note"></p>
+    <div class="modal-actions">
+      <button class="btn gold" id="sd-go" type="button">✓ Approve &amp; send</button>
+      <button class="btn" id="sd-cancel" type="button">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="hist-modal">
+  <div class="modal wide">
+    <button class="close-x" id="hist-close" aria-label="Close">×</button>
+    <h2>🕘 History</h2>
+    <p class="sub">Everything the team has done in the Hub — emails approved or sent, bulk announcements, archive, delete, contact dates and status changes. ✓ = shared with everyone · ⏳ = waiting for the next hourly update.</p>
+    <div class="hist-tabs">
+      <button type="button" class="btn hist-tab" data-k="all">All</button>
+      <button type="button" class="btn hist-tab" data-k="partner">🤝 Partners</button>
+      <button type="button" class="btn hist-tab" data-k="customer">🧳 Customers</button>
+      <button type="button" class="btn hist-tab" data-k="helper">🧰 Helpers</button>
+      <button type="button" class="btn hist-tab" data-k="announce">📢 Announcements</button>
+      <input type="search" id="hist-q" placeholder="Search history…">
+    </div>
+    <div id="hist-list" class="hist-list"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="who-modal">
+  <div class="modal">
+    <h2>Who's using the Hub?</h2>
+    <p class="sub">So emails are signed with the right name and History shows who did what. You can switch any time from the top bar.</p>
+    <div class="who-grid">
+      <button type="button" class="btn gold who-pick" data-k="reham">Reham Mobasher</button>
+      <button type="button" class="btn gold who-pick" data-k="sherif">Sherif Mansour</button>
+    </div>
+    <p class="sub" style="margin-top:14px"><b>New team member or trainee?</b></p>
+    <div class="row2">
+      <div class="field"><label>Your full name</label><input type="text" id="who-name" placeholder="e.g. Sara Ahmed"></div>
+      <div class="field"><label>Your title</label><input type="text" id="who-title" placeholder="e.g. Customer Relations Trainee"></div>
+    </div>
+    <div class="modal-actions"><button type="button" class="btn who-pick" data-k="other">Continue</button></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="sig-modal">
+  <div class="modal">
+    <button class="close-x" id="sig-close" aria-label="Close">×</button>
+    <h2>Set up your logo signature (once)</h2>
+    <p class="sub">Email links (“Open in Outlook”) can only carry plain text, so the Hayakkom logo can't travel inside them. Put the signature in Outlook itself and every email you send carries the logo automatically.</p>
+    <div class="sig-preview" id="sig-demo"></div>
+    <ol class="sig-steps">
+      <li>Click <b>Copy signature</b> below.</li>
+      <li>Outlook on the web: ⚙️ Settings → <b>Account → Signatures</b> → New signature. Outlook desktop: File → Options → Mail → <b>Signatures…</b> → New.</li>
+      <li>Paste, name it “Hayakkom”, and choose it as the default for <b>new messages</b> and <b>replies/forwards</b>. Save.</li>
+      <li>Untick the box below so the Hub stops adding the text version (otherwise you'd get two signatures).</li>
+    </ol>
+    <label class="chk"><input type="checkbox" id="sig-text-on"> Hub adds my signature as text when it opens Outlook</label>
+    <div class="modal-actions"><button type="button" class="btn gold" id="sig-copy">📋 Copy signature</button></div>
+  </div>
+</div>
+<div class="hk-toast" id="hk-toast" role="status" aria-live="polite"></div>
 
 <div class="modal-backdrop" id="add-modal">
   <div class="modal">
@@ -706,12 +846,15 @@
     var val = document.getElementById("pw-input").value;
     if(!ENCRYPTED){ document.getElementById("pw-err").textContent = "Still loading, try again in a second."; return; }
     decryptWith(val, ENCRYPTED).then(function(json){
-      ALL = json.concat(loadCustom());
+      PW = val;
+      return SHARED_P.then(function(enc){ return enc ? decryptWith(val, enc).catch(function(){ return null; }) : null; }).then(function(sh){ initShared(sh); return json; });
+    }).then(function(json){
+      RAW_P = json.concat(mergeCustom("partner", loadCustom())); ALL = RAW_P;
       buildFilterOptions();
       render();
       return ENCRYPTED_CUST ? decryptWith(val, ENCRYPTED_CUST) : [];
     }).then(function(custJson){
-      ALL_CUST = (custJson||[]).concat(loadCustomCustomers());
+      RAW_C = (custJson||[]).concat(mergeCustom("customer", loadCustomCustomers())); ALL_CUST = RAW_C;
       ALL_CUST.forEach(function(c){
         if(!c.thread && c.answers && c.answers.length){
           c.thread = [{
@@ -727,7 +870,7 @@
       render();
       unlock();
       return HELP_P.then(function(enc){ return enc ? decryptWith(val, enc) : []; }).then(function(h){
-        ALL_HELP = h || [];
+        RAW_H = h || []; ALL_HELP = RAW_H;
         buildHelpFilterOptions();
         renderHelpers();
       }, function(){ ALL_HELP = []; renderHelpers(); }).then(function(){
@@ -735,6 +878,8 @@
       }).then(function(){
         renderUpcoming();
         showView(currentView);
+        finishSync();
+        var w = me(); if(w) document.getElementById("who-label").textContent = w.name;
         maybeStartTour();
       });
     }).catch(function(){
@@ -750,15 +895,19 @@
   var CUSTOM_KEY = "hk_partners_desk_custom_v1";
 
   function loadState(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY)||"{}"); }catch(e){ return {}; } }
-  function saveState(s){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }catch(e){} }
+  var suggTimer = null;
+  function saveState(s){
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }catch(e){}
+    if(SYNC_READY){ diffAndQueue(); clearTimeout(suggTimer); suggTimer = setTimeout(renderAllSugg, 300); }
+  }
   var state = loadState();
 
   function loadCustom(){ try{ return JSON.parse(localStorage.getItem(CUSTOM_KEY)||"[]"); }catch(e){ return []; } }
-  function saveCustom(c){ try{ localStorage.setItem(CUSTOM_KEY, JSON.stringify(c)); }catch(e){} }
+  function saveCustom(c){ try{ localStorage.setItem(CUSTOM_KEY, JSON.stringify(c)); }catch(e){} queueCustomAdds("partner", c); }
 
   var CUSTOM_CUST_KEY = "hk_customers_custom_v1";
   function loadCustomCustomers(){ try{ return JSON.parse(localStorage.getItem(CUSTOM_CUST_KEY)||"[]"); }catch(e){ return []; } }
-  function saveCustomCustomers(c){ try{ localStorage.setItem(CUSTOM_CUST_KEY, JSON.stringify(c)); }catch(e){} }
+  function saveCustomCustomers(c){ try{ localStorage.setItem(CUSTOM_CUST_KEY, JSON.stringify(c)); }catch(e){} queueCustomAdds("customer", c); }
   var ALL_CUST = [];
   var ENQUIRY_TYPE_OPTIONS = ["Trip","Dental","Medical","Study","VIP","Investor","General"];
   var CUST_STATUS_OPTIONS = ["New Enquiry","Contacted","Quoted","Booked","Lost"];
@@ -1029,6 +1178,7 @@
   }
   function rerenderAll(){
     render(); renderCustomers(); renderHelpers();
+    if(SYNC_READY) renderAllSugg();
     if(announceRendered) renderAnnounceRecipients();
     if(currentView==="announce") renderBrief("an-brief", "announce");
     if(currentView==="dashboard") renderDashboard();
@@ -1168,7 +1318,13 @@
   document.getElementById("an-output").addEventListener("click", function(e){
     var a = e.target.closest(".an-send");
     if(!a) return;
-    (a.getAttribute("data-ids")||"").split(",").forEach(markContacted);
+    var ids = (a.getAttribute("data-ids")||"").split(",").filter(Boolean);
+    ids.forEach(markContacted);
+    var isWa = /wa\.me/.test(a.getAttribute("href")||"");
+    var subj = document.getElementById("an-subject").value || "(no subject)";
+    var one = ids.length===1 ? (findRec(ids[0])||{}).rec : null;
+    act({ t:"log", kind:"announce", id: ids.length===1 ? ids[0] : null, name: one ? one.name : document.getElementById("an-audience").value + " · " + ids.length + " recipients",
+      what: (isWa ? "WhatsApp announcement" : (ids.length>1 ? "Bulk email (BCC) to " + ids.length + " people" : "Announcement email")) + ": “" + subj + "”", ids: ids });
     a.closest(".out-item").classList.add("sent");
     rerenderAll();
   });
@@ -1256,7 +1412,7 @@
                 return '<div class="flag-opt" data-flag="'+f.key+'"><span class="flag-dot flag-'+f.key+'"></span>'+esc(f.label)+'</div>';
               }).join("")+'</div>'+
             '</div>'+
-            (deleted ? '<button class="btn restore-btn">Restore</button>' : '<button class="btn archive-btn">Archive</button>')+
+            (deleted ? '<button class="btn restore-btn">Restore</button>' : '<button class="btn archive-btn">Archive</button>')+'<button type="button" class="btn delete-btn" title="Remove for everyone (undo from History)">🗑 Delete</button>'+
           '</div>'+
         '</div>'
       );
@@ -1635,12 +1791,15 @@
     { view: "dashboard", sel: "#dash-stats", title: "The headline numbers", text: "Partners, open enquiries, job applicants, how many people we have contacted at least once, bookings with estimated commission, and what's next on the calendar." },
     { view: "dashboard", sel: "#dash-charts", title: "Charts", text: "Hover any bar or column for the exact number: enquiries per month, the customer pipeline, response health, countries, partner categories and applicants. In 'Latest activity', click a name to open that card." },
     { view: "partners", sel: "#view-btn-partners", title: "🤝 Partners", text: "Every hospital, clinic and tourism company that contacted us. Urgent ones and anyone waiting for our reply sit at the top automatically." },
+    { view: "partners", sel: "#sugg-partners", title: "✨ Suggested next actions", text: "The best next step for every open case, with the email already written — some by the automatic rules, some (🤖) drafted by Claude from the full email thread. 👁 Preview shows exactly what will go out, ✎ Edit lets you change it, ✓ Approve sends it, ✕ dismisses it. Nothing is ever sent without your OK. The same box is on Customers and Helpers." },
+    { view: "partners", sel: "#sugg-partners .sync-pill", title: "Shared with the whole team", text: "Everything you do here — approvals, archive, delete, contact dates, flags, notes — is shared with everyone who uses the Hub. ✓ means you're in sync; ⏳ means your latest changes reach the others at the next hourly update." },
+    { view: "partners", sel: "#hist-btn-top", title: "🕘 History", text: "A log of everything the team has done: emails approved and sent, bulk announcements, archive and delete, status changes — with who did it and when. Deleted something by mistake? Undo it from here." },
     { view: "partners", sel: "#f-view", title: "Show filter", text: "'Needs attention' = urgent, to review, or waiting for our reply. 'Sent us an email — awaiting our reply' is your partner inbox to-do list." },
     { view: "partners", sel: "#f-sort", title: "Sorting", text: "Urgent first by default. Switch to newest, oldest, longest since contact, name or country whenever you need a different view." },
     { view: "partners", sel: "#list .card", title: "A partner card", text: "Flag, status and priority at the top, then the summary, contact details and the next action. A red-tinted card is urgent." },
     { view: "partners", sel: "#list .card .info-toggle", title: "Contact popup", text: "Click the email address to see every contact detail in one box and why they are in the system." },
     { view: "partners", sel: "#list .card .mark-contacted", title: "Mark contacted", text: "Replied by WhatsApp or phone? Click this and enter the date. The card stops showing as 'awaiting our reply'. Replies sent through the Hub are recorded for you." },
-    { view: "partners", sel: "#list .card .card-actions", title: "Card buttons", text: "Reply (opens Outlook with your signature) · View email chain · Set a reminder · Book a meeting (adds it to the Outlook/Teams calendar) · Add contact · Edit · colour flag · Archive." },
+    { view: "partners", sel: "#list .card .card-actions", title: "Card buttons", text: "Reply (write an email, then approve it) · View email chain · Set a reminder · Book a meeting (adds it to the Outlook/Teams calendar) · Add contact · Edit · colour flag · Archive (hide, keep in archive) · 🗑 Delete (remove for everyone; undo from History)." },
     { view: "partners", sel: "#list .card .flag-btn", title: "Colour flags", text: "Gold = New, red = Urgent, blue = Waiting on partner, green = Live/active, purple = Needs review (a new card the system wasn't sure about — check it isn't a duplicate)." },
     { view: "customers", sel: "#view-btn-customers", title: "🧳 Customers", text: "Every enquiry from the website forms, added automatically every hour. Our promise is a reply within 12 hours — past that, the card turns red and jumps to the top." },
     { view: "customers", sel: "#fc-view", title: "Customer filters", text: "Needs attention, over 12 hours, new in the last 12 hours, contacted, waiting, ready to book, phone-only, and 'From old forms' — the 80 people from our previous forms." },
@@ -2080,7 +2239,7 @@
                 }).join("")+
               '</div>'+
             '</div>'+
-            (deleted ? '<button class="btn restore-btn">Restore</button>' : '<button class="btn archive-btn">Archive</button>')+
+            (deleted ? '<button class="btn restore-btn">Restore</button>' : '<button class="btn archive-btn">Archive</button>')+'<button type="button" class="btn delete-btn" title="Remove for everyone (undo from History)">🗑 Delete</button>'+
           '</div>'+
           '<div class="edit-box" style="display:none">'+
             '<div class="row2">'+
@@ -2572,7 +2731,7 @@
                 }).join("")+
               '</div>'+
             '</div>'+
-            (deleted ? '<button class="btn restore-btn">Restore</button>' : '<button class="btn archive-btn">Archive</button>')+
+            (deleted ? '<button class="btn restore-btn">Restore</button>' : '<button class="btn archive-btn">Archive</button>')+'<button type="button" class="btn delete-btn" title="Remove for everyone (undo from History)">🗑 Delete</button>'+
           '</div>'+
           '<div class="edit-box" style="display:none">'+
             '<div class="row2">'+
@@ -2905,7 +3064,7 @@
     var custom = loadCustomCustomers();
     custom.push(row);
     saveCustomCustomers(custom);
-    ALL_CUST.push(row);
+    ALL_CUST.push(row); if(RAW_C!==ALL_CUST) RAW_C.push(row);
     buildCustFilterOptions();
     document.getElementById("add-cust-modal").classList.remove("open");
     renderCustomers();
@@ -2937,6 +3096,7 @@
         document.getElementById("m-body").value = "Hi,\n\nThank you for reaching out about " + row.name + ". ";
       }
     }
+    var sEl0 = document.getElementById("m-signer"); fillPeopleSelect(sEl0, me() && me().key);
     fillTitles();
     updateSigPreview();
     modal.classList.add("open");
@@ -3064,24 +3224,23 @@
     var custom = loadCustom();
     custom.push(row);
     saveCustom(custom);
-    ALL.push(row);
+    ALL.push(row); if(RAW_P!==ALL) RAW_P.push(row);
     buildFilterOptions();
     addModal.classList.remove("open");
     render();
   });
 
   function fillTitles(){
-    var signer = document.getElementById("m-signer").value;
+    var sEl = document.getElementById("m-signer");
+    if(!sEl.options.length || sEl.value==="__new") fillPeopleSelect(sEl);
+    var signer = sEl.value;
     var sel = document.getElementById("m-title");
-    sel.innerHTML = "";
-    TITLES[signer].forEach(function(t){ var o=document.createElement("option"); o.value=t; o.textContent=t; sel.appendChild(o); });
+    fillTitleSelect(sel, signer);
   }
-  document.getElementById("m-signer").addEventListener("change", function(){ fillTitles(); updateSigPreview(); });
-  document.getElementById("m-title").addEventListener("change", updateSigPreview);
+  // signer/title pickers are wired in the sync block below (they support trainees and custom titles)
 
   function sigHtml(){
-    var signer = document.getElementById("m-signer").value;
-    var name = NAMES[signer];
+    var name = personName(document.getElementById("m-signer").value);
     var title = document.getElementById("m-title").value;
     return (
       '<table cellpadding="0" cellspacing="0" style="font-family:Calibri,Arial,sans-serif;font-size:13px;color:#0A2E36">'+
@@ -3093,8 +3252,7 @@
     );
   }
   function sigPlain(){
-    var signer = document.getElementById("m-signer").value;
-    var name = NAMES[signer];
+    var name = personName(document.getElementById("m-signer").value);
     var title = document.getElementById("m-title").value;
     return "—\n"+name+"\n"+title+" — Hayakkom\nsupport@hayakkom.com | www.hayakkom.com";
   }
@@ -3105,9 +3263,9 @@
   document.getElementById("m-outlook").addEventListener("click", function(){
     var to = document.getElementById("m-to").value;
     var subject = document.getElementById("m-subject").value;
-    var body = document.getElementById("m-body").value + "\n\n" + sigPlain();
+    var body = document.getElementById("m-body").value + (sigTextOn() ? "\n\n" + sigPlain() : "");
     var url = "mailto:"+encodeURIComponent(to)+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
-    if(current && current.id){ markContacted(current.id); rerenderAll(); }
+    logModalSend("Opened in Outlook");
     window.location.href = url;
   });
 
@@ -3115,7 +3273,7 @@
     var bodyText = document.getElementById("m-body").value;
     var html = '<div style="font-family:Calibri,Arial,sans-serif;font-size:14px;color:#0A2E36;white-space:pre-wrap">'+esc(bodyText)+'</div><br>'+sigHtml();
     var plain = bodyText + "\n\n" + sigPlain();
-    if(current && current.id){ markContacted(current.id); rerenderAll(); }
+    logModalSend("Copied formatted email");
     function fallback(){
       var ta = document.createElement("textarea"); ta.value = plain; document.body.appendChild(ta); ta.select();
       try{ document.execCommand("copy"); }catch(e){}
@@ -3132,6 +3290,609 @@
       }catch(e){ fallback(); }
     } else { fallback(); }
   });
+
+  // ================= Shared sync · suggested actions · approvals · history =================
+  // The site is static, so every change made here (archive, delete, contacted, approvals, new
+  // records) is encrypted with the Hub password and posted to a private Jotform relay form. The
+  // hourly job folds those into shared.enc.json, which every browser loads — so Reham, Sherif and
+  // any trainee see the same Hub. Until the next run, your own changes show only in your browser.
+  var RELAY = { form: "263210812055042", kind: "q2_textbox0", payload: "q3_textarea1" };
+  var QUEUE_KEY = "hk_sync_queue_v1", WHO_KEY = "hk_who_v1", MIG_KEY = "hk_sync_migrated_v1",
+      PEOPLE_KEY = "hk_people_v1", CTITLE_KEY = "hk_titles_custom_v1", SIGTXT_KEY = "hk_sig_text_v1";
+  var SHARED = { state:{}, custom:{ partner:[], customer:[] }, history:[], outbox:[], applied:[], synced_at:null };
+  var SHARED_P = fetch("shared.enc.json", {cache:"no-store"}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; });
+  var SHARED_OK = false, PW = null, SYNC_READY = false, SNAP = {}, PRE_STATE = null;
+  var RAW_P = [], RAW_C = [], RAW_H = [];
+  function lsGet(k, d){ try{ var v = localStorage.getItem(k); return v==null ? d : JSON.parse(v); }catch(e){ return d; } }
+  function lsSet(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+  var queue = lsGet(QUEUE_KEY, []);
+  function saveQueue(){ lsSet(QUEUE_KEY, queue); }
+  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 9); }
+
+  // ---- people & titles (anyone using the Hub can sign emails with their own name and title) ----
+  var BASE_TITLES = {
+    reham: ["Partnerships Manager","Business Development Manager","Marketing Manager","Customer Relations Manager","Patient Coordinator","Operations Coordinator"],
+    sherif: ["Founder","Founder & CEO","Managing Director"]
+  };
+  function people(){
+    var list = [{ key:"reham", name:"Reham Mobasher" }, { key:"sherif", name:"Sherif Mansour" }];
+    lsGet(PEOPLE_KEY, []).forEach(function(p){ if(p && p.key && p.name && !list.some(function(x){ return x.key===p.key; })) list.push(p); });
+    return list;
+  }
+  function personName(key){ var p = people().filter(function(x){ return x.key===key; })[0]; return p ? p.name : key; }
+  function titlesFor(key){
+    var custom = lsGet(CTITLE_KEY, {})[key] || [];
+    var base = BASE_TITLES[key] || ["Coordinator","Trainee"];
+    return base.concat(custom.filter(function(t){ return base.indexOf(t) < 0; }));
+  }
+  function addTitle(key, t){ var all = lsGet(CTITLE_KEY, {}); all[key] = (all[key]||[]).concat([t]); lsSet(CTITLE_KEY, all); }
+  function addPerson(name){
+    var key = "p-" + name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    var list = lsGet(PEOPLE_KEY, []);
+    if(!list.some(function(p){ return p.key===key; })){ list.push({ key:key, name:name }); lsSet(PEOPLE_KEY, list); }
+    return key;
+  }
+  function me(){ return lsGet(WHO_KEY, null); }
+  function myName(){ var w = me(); return w ? w.name : "Someone"; }
+  function fillPeopleSelect(sel, selected){
+    sel.innerHTML = "";
+    people().forEach(function(p){ var o = document.createElement("option"); o.value = p.key; o.textContent = p.name; sel.appendChild(o); });
+    var o = document.createElement("option"); o.value = "__new"; o.textContent = "➕ Someone else…"; sel.appendChild(o);
+    sel.value = selected || (me() && me().key) || "reham";
+    if(sel.value !== (selected || (me() && me().key) || "reham")) sel.value = "reham";
+  }
+  function fillTitleSelect(sel, personKey, selected){
+    sel.innerHTML = "";
+    titlesFor(personKey).forEach(function(t){ var o = document.createElement("option"); o.value = t; o.textContent = t; sel.appendChild(o); });
+    var o = document.createElement("option"); o.value = "__new"; o.textContent = "✎ Other title…"; sel.appendChild(o);
+    var w = me();
+    var want = selected || (w && w.key===personKey && w.title) || "";
+    if(want && titlesFor(personKey).indexOf(want) >= 0) sel.value = want;
+  }
+  // "Someone else…" / "Other title…" handlers shared by both pickers
+  function wirePickers(personSel, titleSel, onChange){
+    personSel.addEventListener("change", function(){
+      if(personSel.value === "__new"){
+        var n = (prompt("Full name to sign with (e.g. a trainee):") || "").trim();
+        if(n){ var k = addPerson(n); fillPeopleSelect(personSel, k); } else fillPeopleSelect(personSel);
+      }
+      fillTitleSelect(titleSel, personSel.value);
+      if(onChange) onChange();
+    });
+    titleSel.addEventListener("change", function(){
+      if(titleSel.value === "__new"){
+        var t = (prompt("Your job title (this is how it appears under your name):") || "").trim();
+        if(t){ addTitle(personSel.value, t); fillTitleSelect(titleSel, personSel.value, t); } else fillTitleSelect(titleSel, personSel.value);
+      }
+      var w = me(); if(w && w.key===personSel.value){ w.title = titleSel.value; lsSet(WHO_KEY, w); }
+      if(onChange) onChange();
+    });
+  }
+  function sigHtmlFor(name, title){
+    return '<table cellpadding="0" cellspacing="0" style="font-family:Calibri,Arial,sans-serif;font-size:13px;color:#0A2E36">'+
+      '<tr><td><img src="'+LOGO+'" alt="Hayakkom" style="height:26px;display:block;margin-bottom:8px"></td></tr>'+
+      '<tr><td style="font-weight:700;font-size:14px">'+esc(name)+'</td></tr>'+
+      '<tr><td style="color:#8F701D;font-weight:600;font-size:12.5px">'+esc(title)+' — Hayakkom</td></tr>'+
+      '<tr><td style="color:#4B656C;font-size:12px;padding-top:4px">support@hayakkom.com &nbsp;|&nbsp; <a href="'+SITE+'" style="color:#0E7C86;text-decoration:none">www.hayakkom.com</a></td></tr>'+
+    '</table>';
+  }
+  function sigPlainFor(name, title){ return "—\n"+name+"\n"+title+" — Hayakkom\nsupport@hayakkom.com | www.hayakkom.com"; }
+  function sigTextOn(){ return lsGet(SIGTXT_KEY, true) !== false; }
+
+  // ---- encryption for relay payloads ----
+  var ENC_KEY_P = null, ENC_SALT = null;
+  function encKey(){
+    if(!ENC_KEY_P){
+      ENC_SALT = crypto.getRandomValues(new Uint8Array(16));
+      ENC_KEY_P = crypto.subtle.importKey("raw", new TextEncoder().encode(PW), "PBKDF2", false, ["deriveKey"]).then(function(base){
+        return crypto.subtle.deriveKey({ name:"PBKDF2", salt:ENC_SALT, iterations:200000, hash:"SHA-256" }, base, { name:"AES-GCM", length:256 }, false, ["encrypt"]);
+      });
+    }
+    return ENC_KEY_P;
+  }
+  function toB64(u8){ var s = ""; for(var i=0;i<u8.length;i++) s += String.fromCharCode(u8[i]); return btoa(s); }
+  function encryptObj(obj){
+    return encKey().then(function(key){
+      var iv = crypto.getRandomValues(new Uint8Array(12));
+      return crypto.subtle.encrypt({ name:"AES-GCM", iv:iv }, key, new TextEncoder().encode(JSON.stringify(obj))).then(function(ct){
+        return JSON.stringify({ v:1, salt:toB64(ENC_SALT), iv:toB64(iv), data:toB64(new Uint8Array(ct)) });
+      });
+    });
+  }
+  function relayPost(payload){
+    var name = "hk-relay-" + uid();
+    var frame = document.createElement("iframe");
+    frame.name = name; frame.style.display = "none"; frame.setAttribute("aria-hidden", "true");
+    document.body.appendChild(frame);
+    var f = document.createElement("form");
+    f.method = "POST"; f.action = "https://submit.jotform.com/submit/" + RELAY.form + "/"; f.target = name; f.style.display = "none";
+    [["formID", RELAY.form], ["simple_spc", RELAY.form + "-" + RELAY.form], [RELAY.kind, "hub-v1"], [RELAY.payload, payload]].forEach(function(p){
+      var i = document.createElement(p[0]===RELAY.payload ? "textarea" : "input"); i.name = p[0]; i.value = p[1]; f.appendChild(i);
+    });
+    document.body.appendChild(f); f.submit();
+    setTimeout(function(){ f.remove(); frame.remove(); }, 30000);
+  }
+  var flushTimer = null;
+  function scheduleFlush(){ clearTimeout(flushTimer); flushTimer = setTimeout(flush, 2500); }
+  function flush(){
+    if(!PW) return;
+    var now = Date.now();
+    var due = queue.filter(function(a){ return !a.sent || now - a.sent > 3*3600*1000; });
+    if(!due.length){ renderSyncPills(); return; }
+    var chunks = [], cur = [], size = 0;
+    due.forEach(function(a){
+      var clean = Object.assign({}, a); delete clean.sent;
+      var s = JSON.stringify(clean).length;
+      if(cur.length && size + s > 40000){ chunks.push(cur); cur = []; size = 0; }
+      cur.push(clean); size += s;
+    });
+    if(cur.length) chunks.push(cur);
+    chunks.reduce(function(p, ch){
+      return p.then(function(){ return encryptObj(ch).then(relayPost); });
+    }, Promise.resolve()).then(function(){
+      due.forEach(function(a){ a.sent = now; }); saveQueue(); renderSyncPills();
+    });
+  }
+  function act(a){
+    a.uid = uid(); a.at = new Date().toISOString(); a.by = myName();
+    queue.push(a); saveQueue(); scheduleFlush(); renderSyncPills();
+    return a;
+  }
+
+  // ---- record lookup ----
+  function findRec(id){
+    var r = RAW_P.filter(function(x){ return x.id===id; })[0]; if(r) return { kind:"partner", rec:r };
+    r = RAW_C.filter(function(x){ return x.id===id; })[0]; if(r) return { kind:"customer", rec:r };
+    r = RAW_H.filter(function(x){ return x.id===id; })[0]; if(r) return { kind:"helper", rec:r };
+    return null;
+  }
+  function isRemoved(r){ return !!(state[r.id] && state[r.id].removed); }
+  function applyRemoved(){
+    ALL = RAW_P.filter(function(r){ return !isRemoved(r); });
+    ALL_CUST = RAW_C.filter(function(r){ return !isRemoved(r); });
+    ALL_HELP = RAW_H.filter(function(r){ return !isRemoved(r); });
+  }
+
+  // ---- state diff → patch actions ----
+  var FIELD_WORDS = { notes:"Edited notes", reminder:"Updated reminder", extraContacts:"Updated contacts" };
+  function describePatch(p){
+    var out = [];
+    Object.keys(p).forEach(function(k){
+      var v = p[k];
+      if(k==="deleted") out.push(v ? "Archived" : "Restored from archive");
+      else if(k==="removed") out.push(v ? "Deleted" : "Restored after delete");
+      else if(k==="lastContacted") out.push(v ? "Marked contacted (" + String(v).slice(0,10) + ")" : "Cleared contact date");
+      else if(k==="done") out.push(v ? "Marked done" : "Reopened");
+      else if(k==="flag") out.push("Flag → " + v);
+      else if(k==="status") out.push("Status → " + v);
+      else if(k==="priority") out.push("Priority → " + v);
+      else if(k==="dismissed") out.push("Dismissed a suggestion");
+      else out.push(FIELD_WORDS[k] || ("Edited " + k));
+    });
+    return out.join(" · ");
+  }
+  function snapAll(){ SNAP = {}; Object.keys(state).forEach(function(id){ SNAP[id] = JSON.stringify(state[id]||{}); }); }
+  function diffAndQueue(){
+    Object.keys(state).forEach(function(id){
+      var now = JSON.stringify(state[id]||{});
+      if(now === SNAP[id]) return;
+      var before = SNAP[id] ? JSON.parse(SNAP[id]) : {}, after = state[id] || {}, patch = {};
+      Object.keys(after).forEach(function(k){ if(JSON.stringify(after[k]) !== JSON.stringify(before[k])) patch[k] = after[k]; });
+      Object.keys(before).forEach(function(k){ if(!(k in after)) patch[k] = null; });
+      SNAP[id] = now;
+      if(!Object.keys(patch).length) return;
+      var f = findRec(id);
+      act({ t:"patch", id:id, set:patch, kind: f ? f.kind : "other", name: f ? (f.rec.name||id) : id, what: describePatch(patch), silent: id.charAt(0)==="_" });
+    });
+  }
+  function applyPatch(target, id, set){
+    target[id] = target[id] || {};
+    Object.keys(set||{}).forEach(function(k){ if(set[k]===null) delete target[id][k]; else target[id][k] = set[k]; });
+  }
+  function mergeCustom(kind, local){
+    var out = [], seen = {};
+    function add(r){ if(r && r.id && !seen[r.id]){ seen[r.id] = 1; out.push(r); } }
+    (SHARED.custom[kind]||[]).forEach(add);
+    queue.forEach(function(a){ if(a.t==="add" && a.kind===kind) add(a.rec); });
+    (local||[]).forEach(add);
+    return out;
+  }
+  function queueCustomAdds(kind, list){
+    if(!SYNC_READY) return;
+    var known = {};
+    (SHARED.custom[kind]||[]).forEach(function(r){ known[r.id] = 1; });
+    queue.forEach(function(a){ if(a.t==="add" && a.kind===kind) known[a.rec.id] = 1; });
+    (list||[]).forEach(function(r){ if(r && r.id && !known[r.id]) act({ t:"add", kind:kind, id:r.id, name:r.name, rec:r, what:"Added manually" }); });
+  }
+
+  // Called right after the password works, before any list is built.
+  function initShared(sh){
+    PRE_STATE = JSON.parse(JSON.stringify(state||{}));
+    if(!sh){ return; }               // file missing or unreadable: keep this browser's own state
+    SHARED_OK = true;
+    SHARED = Object.assign({ state:{}, custom:{ partner:[], customer:[] }, history:[], outbox:[], applied:[] }, sh);
+    SHARED.custom = Object.assign({ partner:[], customer:[] }, SHARED.custom || {});
+    var applied = {}; (SHARED.applied||[]).forEach(function(u){ applied[u] = 1; });
+    queue = queue.filter(function(a){ return !applied[a.uid]; }); saveQueue();
+    var merged = JSON.parse(JSON.stringify(SHARED.state || {}));
+    if(!lsGet(MIG_KEY, false)){
+      Object.keys(PRE_STATE).forEach(function(id){ applyPatch(merged, id, PRE_STATE[id]); });
+    }
+    queue.forEach(function(a){ if(a.t==="patch") applyPatch(merged, a.id, a.set); });
+    state = merged;
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
+  }
+  // Called once every list is loaded.
+  function finishSync(){
+    if(SHARED_OK && !lsGet(MIG_KEY, false)){
+      // First visit since sharing went live: send everything this browser had on its own.
+      Object.keys(PRE_STATE||{}).forEach(function(id){
+        if(!Object.keys(PRE_STATE[id]||{}).length) return;
+        var f = findRec(id);
+        act({ t:"patch", id:id, set:PRE_STATE[id], kind: f ? f.kind : "other", name: f ? (f.rec.name||id) : id, what:"Shared from " + myName() + "'s browser", silent:true });
+      });
+      SYNC_READY = true;
+      queueCustomAdds("partner", loadCustom());
+      queueCustomAdds("customer", loadCustomCustomers());
+      lsSet(MIG_KEY, true);
+    }
+    SYNC_READY = true;
+    snapAll();
+    applyRemoved();
+    rerenderAll();
+    renderAllSugg();
+    flush();
+    if(!me()) openWhoModal();
+  }
+
+  // ---- sync status pill ----
+  function renderSyncPills(){
+    var pending = queue.length;
+    var txt, cls;
+    if(!SHARED_OK){ txt = "⚠ Shared file not loaded — changes are saved on this device and will sync later"; cls = "warn"; }
+    else if(pending){ txt = "⏳ " + pending + " change" + (pending>1?"s":"") + " waiting to sync — everyone sees them after the next hourly update"; cls = "warn"; }
+    else { txt = "✓ In sync with the team" + (SHARED.synced_at ? " · updated " + String(SHARED.synced_at).slice(0,16).replace("T"," ") + " UTC" : ""); cls = "ok"; }
+    document.querySelectorAll(".sync-pill").forEach(function(el){ el.textContent = txt; el.className = "sync-pill " + cls; });
+  }
+
+  // ---- suggested actions (AI drafts from the hourly job + rule-based drafts) ----
+  function firstName(n){ var s = String(n||"").trim().split(/\s+/)[0] || ""; return s ? s.charAt(0).toUpperCase() + s.slice(1) : "there"; }
+  function daysSince(d){ if(!d) return null; var t = new Date(String(d).length===10 ? d+"T12:00:00Z" : d).getTime(); return isNaN(t) ? null : (Date.now()-t)/864e5; }
+  function decided(key){ var d = state._decisions || {}; return !!d[key]; }
+  function decide(key, how){ state._decisions = state._decisions || {}; state._decisions[key] = how + ":" + new Date().toISOString().slice(0,10); saveState(state); }
+  var TYPE_ASK = {
+    Dental: "• which treatment you have in mind (implants, veneers, crowns, whitening…) and, if you have one, a recent X-ray or photo of your teeth",
+    Medical: "• the treatment or procedure you need and any recent medical reports",
+    Trip: "• the cities or experiences you'd like (Cairo, Red Sea, Nile cruise, Alexandria…) and your accommodation preference",
+    Study: "• the course or university you're interested in and the intended start date",
+    VIP: "• the services you'd like arranged (private transport, villa or hotel, concierge…)",
+    Investor: "• the sector and budget range you're considering"
+  };
+  function custReplyDraft(r){
+    var type = r.enquiry_type || "General";
+    var med = /Dental|Medical/.test(type);
+    return {
+      subject: "Re: Your " + (type==="General" ? "" : type.toLowerCase() + " ") + "enquiry with Hayakkom",
+      body: "Hi " + firstName(r.name) + ",\n\nThank you for contacting Hayakkom — we've received your enquiry" + (r.summary ? " (" + r.summary.replace(/\.$/, "") + ")" : "") + " and I'll be coordinating it for you.\n\n" +
+        "So we can prepare an indicative quote with our " + (med ? "licensed partner clinics and hospitals" : "registered partner tourism companies in Egypt") + ", could you confirm:\n" +
+        "• your preferred dates and how many people are travelling\n" + (TYPE_ASK[type] ? TYPE_ASK[type] + "\n" : "") +
+        "• the best WhatsApp number to reach you" + (r.phone ? " (is " + r.phone + " correct?)" : "") + "\n\n" +
+        "Prices we share are indicative, in SAR and exclude flights" + (med ? "; your final treatment plan is always confirmed by the licensed medical institution after assessment" : "") + ".\n\n" +
+        "Looking forward to helping you plan this."
+    };
+  }
+  function custFollowDraft(r){
+    return { subject: "Following up on your Hayakkom enquiry",
+      body: "Hi " + firstName(r.name) + ",\n\nI'm following up on your " + (r.enquiry_type ? r.enquiry_type.toLowerCase() + " " : "") + "enquiry in case my last message got buried.\n\nIf your plans are still on, just reply with your preferred dates and I'll send an updated, no-obligation indicative quote. If now isn't the right time, no problem — let me know and I'll check back later.\n\nKind regards." };
+  }
+  function partnerReplyDraft(r){
+    var last = (r.thread||[]).filter(function(m){ return !isOurs(m.from); }).slice(-1)[0] || {};
+    return { subject: "Re: " + (last.subject || ("Partnership with Hayakkom — " + r.name)),
+      body: "Dear " + (r.contact ? firstName(r.contact) : r.name + " team") + ",\n\nThank you for your message" + (last.date ? " of " + last.date : "") + ". We've reviewed it and would like to take the next step.\n\n" +
+        "To list " + r.name + " correctly for the Gulf families we coordinate, could you complete our short partner profile (contacts, accreditation, photos and logo):\nhttps://form.jotform.com/263202563928055\n\n" +
+        "Once it's in, I'll come back to you with how referrals and quotes will work. Would a short call this week suit you?\n\nKind regards." };
+  }
+  function partnerIntroDraft(r){
+    return { subject: "Working together — Hayakkom × " + r.name,
+      body: "Dear " + (r.contact ? firstName(r.contact) : r.name + " team") + ",\n\nThank you for reaching out to Hayakkom. We coordinate treatment, stays and trips in Egypt for families from Saudi Arabia and the Gulf, and we'd be glad to explore working with " + r.name + ".\n\n" +
+        "As a first step, please complete our partner profile (about 5 minutes):\nhttps://form.jotform.com/263202563928055\n\nIf you'd prefer to talk first, reply with a good time for a 15-minute call.\n\nKind regards." };
+  }
+  function helperDraft(r, prio){
+    if(prio==="High") return { subject: "Your application to Hayakkom — next step",
+      body: "Hi " + firstName(r.name) + ",\n\nThank you for applying to work with Hayakkom" + (r.profession ? " as a " + r.profession.toLowerCase() : "") + ". Your background looks relevant to what we do.\n\nCould you reply with two or three times that suit you for a 15-minute call this week, and attach your CV if you haven't already?\n\nKind regards." };
+    if(prio==="Medium") return { subject: "Your application to Hayakkom",
+      body: "Hi " + firstName(r.name) + ",\n\nThank you for your interest in working with Hayakkom. To consider you properly, could you reply with:\n• your availability\n• the areas of Egypt you can cover\n• the languages you speak\n• any licence or certificate that applies to the role" + (r.profession ? " (" + r.profession + ")" : "") + "\n\nKind regards." };
+    return { subject: "Thank you for your application to Hayakkom",
+      body: "Hi " + firstName(r.name) + ",\n\nThank you for getting in touch with Hayakkom. We've kept your details on file and will contact you if a suitable opportunity comes up.\n\nKind regards." };
+  }
+  function ruleSugg(kind, r){
+    var st = state[r.id] || {};
+    if(st.done || st.removed) return null;
+    var lc = lastContacted(r), li = lastInbound(r);
+    var s = null;
+    if(kind==="customer"){
+      if(isCustArchived(r)) return null;
+      if(!lc){
+        var od = custOverdue(r);
+        s = { key:"first:"+r.id, rank: od ? 0 : 1, label: od ? "Overdue first reply" : "First reply",
+          why: (r.enquiry_type||"New") + " enquiry from " + (r.date||"recently") + " — nobody has contacted them yet" + (od ? ", and it's past our 12-hour reply promise." : "."),
+          plan: ["Approve and send the first reply below", r.phone ? "Same day: send a WhatsApp hello to " + r.phone : "Ask for a WhatsApp number (it's in the draft)", "Set the flag to “Waiting on customer” once sent"],
+          draft: custReplyDraft(r) };
+      } else if(li && li > lc){
+        s = { key:"reply:"+r.id+":"+li, rank:0, label:"They wrote back", why:"They replied on " + li + " and we haven't answered since " + lc + ".",
+          plan:["Read their message (View email chain)", "Edit the draft to answer their question, then approve", "Move the flag to “Ready to book” if they confirmed dates"], draft: custFollowDraft(r) };
+      } else if(daysSince(lc) >= 5 && custFlagKey(r)!=="ready"){
+        s = { key:"fu:"+r.id+":"+lc, rank:3, label:"Follow-up", why:"Last contacted " + lc + " (" + Math.floor(daysSince(lc)) + " days ago) with no answer yet.",
+          plan:["Send the gentle follow-up below", "If still no reply in a week, archive the card"], draft: custFollowDraft(r) };
+      }
+    } else if(kind==="partner"){
+      if(st.deleted) return null;
+      var prio = st.priority || r.priority, status = st.status || r.status;
+      if(status==="Low Priority" || (st.category||r.category)==="Vendor/Low Priority") return null;
+      if(awaitingReply(r)){
+        s = { key:"reply:"+r.id+":"+li, rank: prio==="High" ? 0 : 1, label:"Awaiting our reply", why:"They emailed on " + li + (lc ? "; our last contact was " + lc : " and we haven't replied yet") + ".",
+          plan:["Check their latest email (View email chain)", "Approve the reply — it asks them to complete the partner profile", "Offer a short call and book it with “Book a meeting”"], draft: partnerReplyDraft(r) };
+      } else if(status==="New Inquiry" && !lc){
+        s = { key:"intro:"+r.id, rank:2, label:"Introduce Hayakkom", why:"New partner enquiry — no contact recorded yet.",
+          plan:["Send the introduction with the partner-profile link", "Follow up in 3 days if no answer (Set reminder)"], draft: partnerIntroDraft(r) };
+      }
+    } else if(kind==="helper"){
+      if(st.deleted) return null;
+      var hp = st.priority || r.priority || "Low";
+      var lastMsg = (r.thread||[]).slice(-1)[0];
+      if(lastMsg && !isOurs(lastMsg.from) && lc && !(st.lastContacted && st.lastContacted > (r.received_at || lastMsg.date))){
+        var hot = hp==="High" || /Tour Guide|Interpreter|Patient|Customer/.test(r.profession||"");
+        s = { key:"hreply:"+r.id+":"+lastMsg.date, rank: hot ? 1 : 4, label:"Replied — your move",
+          why: firstName(r.name) + " answered our questions on " + lastMsg.date + ". " + (r.summary ? r.summary.split(" — ").slice(-1)[0] : ""),
+          plan: hp==="High" ? ["Read the reply and CV (📎 button on the card)", "Approve the invite to a 15-minute call", "Flag as “Shortlisted” if it goes well"] : ["Read the reply and CV", "Shortlist or send the polite thank-you"],
+          draft: { subject:"Re: Your application to Hayakkom",
+            body:"Hi " + firstName(r.name) + ",\n\nThank you for the details" + ((r.attachments||[]).length ? " and your CV" : "") + " — that's very helpful.\n\nWe'd like to have a short 15-minute call to get to know you and explain how we work with " + (r.profession ? r.profession.toLowerCase() + "s" : "our team") + ". Could you reply with two or three times that suit you this week?\n\nKind regards." } };
+        s.kind = kind; s.rec = r; s.to = (st.email!=null ? st.email : r.email) || "";
+        return s;
+      }
+      if(lc) return null;
+      s = { key:"apply:"+r.id, rank: hp==="High" ? 1 : hp==="Medium" ? 3 : 6, label: hp + "-value applicant",
+        why: (r.profession||"Applicant") + (r.priority_reason ? " — " + r.priority_reason : "") + ". Not contacted yet.",
+        plan: hp==="High" ? ["Approve the invite to a 15-minute call", "Flag as “Shortlisted” after the call"] : hp==="Medium" ? ["Ask for the missing details (draft below)", "Decide after they reply"] : ["Send the polite thank-you and keep on file"],
+        draft: helperDraft(r, hp) };
+    }
+    if(s){ s.kind = kind; s.rec = r; s.to = (st.email!=null ? st.email : r.email) || ""; }
+    return s;
+  }
+  function suggestionsFor(kind){
+    var list = kind==="partner" ? ALL : kind==="customer" ? ALL_CUST : ALL_HELP;
+    var out = [], byRec = {};
+    (SHARED.outbox||[]).forEach(function(o){
+      if(o.kind!==kind || (o.status && o.status!=="pending") || decided(o.id)) return;
+      var r = o.record_id ? list.filter(function(x){ return x.id===o.record_id; })[0] : null;
+      if(o.record_id && !r) return;
+      if(r && (state[r.id]||{}).done) return;
+      out.push({ key:o.id, ai:true, kind:kind, rec:r, to:o.to || (r && r.email) || "", rank: o.rank!=null ? o.rank : 1, label: o.label || "Drafted by Claude",
+        why:o.reason || "", plan:o.plan || [], draft:{ subject:o.subject, body:o.body } });
+      if(r) byRec[r.id] = 1;
+    });
+    list.forEach(function(r){ if(byRec[r.id]) return; var s = ruleSugg(kind, r); if(s && !decided(s.key) && s.to) out.push(s); });
+    return out.sort(function(a,b){ return a.rank - b.rank || (b.ai?1:0) - (a.ai?1:0); });
+  }
+  var SUGG = { partner:[], customer:[], helper:[] }, SUGG_OPEN = {};
+  var SUGG_EL = { partner:"sugg-partners", customer:"sugg-customers", helper:"sugg-helpers" };
+  function renderSugg(kind){
+    var el = document.getElementById(SUGG_EL[kind]); if(!el) return;
+    var items = SUGG[kind] = suggestionsFor(kind);
+    var show = SUGG_OPEN[kind] ? items : items.slice(0, 4);
+    var queued = queue.filter(function(a){ return a.t==="send" && a.kind===kind; }).length;
+    el.innerHTML =
+      '<div class="sugg-head"><div><b>✨ Suggested next actions</b> <span class="sugg-count">'+items.length+' waiting for your OK</span>'+
+        (queued ? ' <span class="sugg-count q">📤 '+queued+' approved, sending at next update</span>' : '')+
+        '<div class="sugg-sub">Best next step for each open case, with an email already written. Preview it, edit if needed, then approve — nothing is sent without your OK.</div></div>'+
+        '<div class="sugg-tools"><span class="sync-pill"></span><button type="button" class="btn hist-btn" data-kind="'+kind+'">🕘 History</button></div></div>'+
+      (items.length ? '<div class="sugg-list">' + show.map(function(s, i){
+        return '<div class="sugg-item'+(s.rank===0?' hot':'')+'" data-i="'+items.indexOf(s)+'">'+
+          '<div class="sugg-main"><div class="sugg-title"><span class="sugg-badge'+(s.ai?' ai':'')+'">'+(s.ai?'🤖 ':'')+esc(s.label)+'</span> '+esc(s.rec ? s.rec.name : (s.to||""))+'</div>'+
+          '<div class="sugg-why">'+esc(s.why)+'</div>'+
+          (s.plan && s.plan.length ? '<ol class="sugg-plan">'+s.plan.map(function(p){ return '<li>'+esc(p)+'</li>'; }).join("")+'</ol>' : '')+
+          '<div class="sugg-subj">✉️ '+esc(s.draft.subject)+'</div></div>'+
+          '<div class="sugg-btns"><button type="button" class="btn sg-prev">👁 Preview</button><button type="button" class="btn sg-edit">✎ Edit</button>'+
+          '<button type="button" class="btn gold sg-ok">✓ Approve</button><button type="button" class="btn sg-no" title="Dismiss this suggestion">✕</button></div></div>';
+      }).join("") + '</div>' + (items.length > 4 ? '<button type="button" class="btn sugg-more">'+(SUGG_OPEN[kind] ? 'Show fewer' : 'Show all '+items.length)+'</button>' : '')
+      : '<p class="sugg-empty">Nothing waiting — every open case has had its next step. 🎉</p>');
+    renderSyncPills();
+  }
+  function renderAllSugg(){ ["partner","customer","helper"].forEach(renderSugg); }
+  ["partner","customer","helper"].forEach(function(kind){
+    var el = document.getElementById(SUGG_EL[kind]); if(!el) return;
+    el.addEventListener("click", function(e){
+      if(e.target.closest(".hist-btn")){ openHistory(kind); return; }
+      if(e.target.closest(".sugg-more")){ SUGG_OPEN[kind] = !SUGG_OPEN[kind]; renderSugg(kind); return; }
+      var item = e.target.closest(".sugg-item"); if(!item) return;
+      var s = SUGG[kind][+item.getAttribute("data-i")]; if(!s) return;
+      if(e.target.closest(".sg-prev")) openPreview(s);
+      else if(e.target.closest(".sg-edit")) editSugg(s);
+      else if(e.target.closest(".sg-ok")) openSend({ kind:kind, id: s.rec && s.rec.id, name: s.rec ? s.rec.name : s.to, to:s.to, subject:s.draft.subject, body:s.draft.body, key:s.key });
+      else if(e.target.closest(".sg-no")){
+        if(!confirm("Dismiss this suggestion for " + (s.rec ? s.rec.name : s.to) + "? It won't come back unless something new happens on this case.")) return;
+        decide(s.key, "dismissed");
+        act({ t:"log", kind:kind, id: s.rec && s.rec.id, name: s.rec ? s.rec.name : s.to, what:"Dismissed suggestion: " + s.label + " — “" + s.draft.subject + "”", key:s.key, decision:"dismissed" });
+        renderSugg(kind);
+      }
+    });
+  });
+
+  // ---- preview ----
+  var pvModal = document.getElementById("pv-modal"), PV = null;
+  function openPreview(s){
+    PV = s;
+    var w = me() || { key:"reham", name:"Reham Mobasher" };
+    document.getElementById("pv-title").textContent = "Preview — " + (s.rec ? s.rec.name : s.to);
+    document.getElementById("pv-meta").innerHTML = '<b>From:</b> support@hayakkom.com<br><b>To:</b> '+esc(s.to)+'<br><b>Subject:</b> '+esc(s.draft.subject);
+    document.getElementById("pv-why").innerHTML = '<b>Why:</b> '+esc(s.why) + (s.plan && s.plan.length ? '<ol class="sugg-plan">'+s.plan.map(function(p){ return '<li>'+esc(p)+'</li>'; }).join("")+'</ol>' : '');
+    document.getElementById("pv-body").innerHTML = '<div style="white-space:pre-wrap">'+esc(s.draft.body)+'</div><br>' + sigHtmlFor(w.name, w.title || titlesFor(w.key)[0]);
+    pvModal.classList.add("open");
+  }
+  document.getElementById("pv-close").addEventListener("click", function(){ pvModal.classList.remove("open"); });
+  pvModal.addEventListener("click", function(e){ if(e.target===pvModal) pvModal.classList.remove("open"); });
+  document.getElementById("pv-ok").addEventListener("click", function(){ pvModal.classList.remove("open"); var s = PV;
+    openSend({ kind:s.kind, id: s.rec && s.rec.id, name: s.rec ? s.rec.name : s.to, to:s.to, subject:s.draft.subject, body:s.draft.body, key:s.key }); });
+  document.getElementById("pv-edit").addEventListener("click", function(){ pvModal.classList.remove("open"); editSugg(PV); });
+  function editSugg(s){
+    var r = s.rec ? Object.assign({}, s.rec, { kind:s.kind, category: s.rec.category || s.rec.profession || s.rec.enquiry_type, country: s.rec.country || s.rec.location }) : { blank:true };
+    openModal(r);
+    document.getElementById("m-to").value = s.to || "";
+    document.getElementById("m-subject").value = s.draft.subject;
+    document.getElementById("m-body").value = s.draft.body;
+    current.suggKey = s.key;
+  }
+
+  // ---- "Approve & send" popup: who signs, which title, how it goes out ----
+  var sendModal = document.getElementById("send-modal"), SEND = null;
+  var sdPerson = document.getElementById("sd-person"), sdTitle = document.getElementById("sd-title");
+  function updSendSig(){
+    var name = personName(sdPerson.value), title = sdTitle.value==="__new" ? "" : sdTitle.value;
+    var auto = document.querySelector('input[name="sd-how"]:checked').value === "auto";
+    document.getElementById("sd-sig").innerHTML = auto ? '<div class="sig-text">'+esc(sigPlainFor(name, title))+'</div>' : sigHtmlFor(name, title);
+    document.getElementById("sd-note").textContent = auto
+      ? "Hayakkom sends it from support@hayakkom.com at the next hourly update (within about an hour). The automatic sender can't attach images, so the signature goes out as text — name, title, email and website."
+      : "Outlook opens with the email ready — press Send. If you set up the Outlook signature (✎ Set up logo signature), your logo is added automatically.";
+  }
+  wirePickers(sdPerson, sdTitle, updSendSig);
+  document.querySelectorAll('input[name="sd-how"]').forEach(function(r){ r.addEventListener("change", updSendSig); });
+  function openSend(o){
+    if(!o.to || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(o.to)){ alert("This contact has no valid email address. Use WhatsApp or add an email first."); return; }
+    SEND = o;
+    document.getElementById("sd-summary").innerHTML = '<b>To:</b> '+esc(o.to)+'<br><b>Subject:</b> '+esc(o.subject);
+    var w = me();
+    fillPeopleSelect(sdPerson, w && w.key);
+    fillTitleSelect(sdTitle, sdPerson.value, w && w.title);
+    updSendSig();
+    sendModal.classList.add("open");
+  }
+  document.getElementById("sd-close").addEventListener("click", function(){ sendModal.classList.remove("open"); });
+  document.getElementById("sd-cancel").addEventListener("click", function(){ sendModal.classList.remove("open"); });
+  sendModal.addEventListener("click", function(e){ if(e.target===sendModal) sendModal.classList.remove("open"); });
+  document.getElementById("sd-go").addEventListener("click", function(){
+    var o = SEND; if(!o) return;
+    if(sdTitle.value==="__new" || !sdTitle.value){ alert("Pick a title first."); return; }
+    var name = personName(sdPerson.value), title = sdTitle.value;
+    var how = document.querySelector('input[name="sd-how"]:checked').value;
+    if(how==="auto"){
+      act({ t:"send", kind:o.kind, id:o.id, name:o.name, to:o.to, subject:o.subject, body:o.body, signer:name, title:title, key:o.key||null,
+        what:"Approved — Hayakkom will send “" + o.subject + "” signed by " + name + " (" + title + ")" });
+      toast("Approved. Hayakkom sends it from support@hayakkom.com at the next hourly update.");
+    } else {
+      var body = o.body + (sigTextOn() ? "\n\n" + sigPlainFor(name, title) : "");
+      act({ t:"log", kind:o.kind, id:o.id, name:o.name, what:"Sent from Outlook: “" + o.subject + "” (signed " + name + ")", key:o.key||null, decision:"approved" });
+      if(o.id) markContacted(o.id);
+      window.location.href = "mailto:"+encodeURIComponent(o.to)+"?subject="+encodeURIComponent(o.subject)+"&body="+encodeURIComponent(body);
+    }
+    if(o.key) decide(o.key, "approved"); else saveState(state);
+    sendModal.classList.remove("open");
+    var mm = document.getElementById("modal"); if(mm) mm.classList.remove("open");
+    rerenderAll(); renderAllSugg();
+  });
+  function toast(msg){
+    var t = document.getElementById("hk-toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(toast._t); toast._t = setTimeout(function(){ t.classList.remove("show"); }, 5000);
+  }
+
+  // ---- history ----
+  var histModal = document.getElementById("hist-modal"), HIST_KIND = "all";
+  function histRows(){
+    var rows = (SHARED.history||[]).map(function(h){ return Object.assign({ synced:true }, h); });
+    queue.forEach(function(a){ if(!a.silent) rows.push({ uid:a.uid, at:a.at, by:a.by, kind:a.kind, id:a.id, name:a.name, what:a.what, synced:false }); });
+    return rows.sort(function(a,b){ return (b.at||"").localeCompare(a.at||""); });
+  }
+  function renderHistory(){
+    var q = document.getElementById("hist-q").value.trim().toLowerCase();
+    var rows = histRows().filter(function(h){
+      if(HIST_KIND!=="all" && h.kind!==HIST_KIND) return false;
+      return !q || [h.name, h.what, h.by].join(" ").toLowerCase().indexOf(q) >= 0;
+    });
+    document.querySelectorAll(".hist-tab").forEach(function(b){ b.classList.toggle("active", b.getAttribute("data-k")===HIST_KIND); });
+    document.getElementById("hist-list").innerHTML = rows.length ? rows.slice(0, 400).map(function(h){
+      var canUndo = h.id && state[h.id] && state[h.id].removed && /Deleted/.test(h.what||"");
+      return '<div class="hist-row"><div class="hist-when">'+esc(String(h.at||"").slice(0,16).replace("T"," "))+'<br><span>'+esc(h.by||"")+'</span></div>'+
+        '<div class="hist-what"><b>'+esc(h.name||"")+'</b> <span class="hist-kind">'+esc(h.kind||"")+'</span><br>'+esc(h.what||"")+'</div>'+
+        '<div class="hist-st">'+(h.synced ? '✓' : '⏳')+(canUndo ? '<br><button type="button" class="btn hist-undo" data-id="'+esc(h.id)+'">Undo delete</button>' : '')+'</div></div>';
+    }).join("") : '<p class="sugg-empty">Nothing recorded yet for this section. From now on every email, archive, delete and status change is logged here for the whole team.</p>';
+  }
+  function openHistory(kind){ HIST_KIND = kind || "all"; document.getElementById("hist-q").value = ""; renderHistory(); histModal.classList.add("open"); }
+  document.getElementById("hist-close").addEventListener("click", function(){ histModal.classList.remove("open"); });
+  histModal.addEventListener("click", function(e){
+    if(e.target===histModal){ histModal.classList.remove("open"); return; }
+    var t = e.target.closest(".hist-tab"); if(t){ HIST_KIND = t.getAttribute("data-k"); renderHistory(); return; }
+    var u = e.target.closest(".hist-undo");
+    if(u){ var id = u.getAttribute("data-id"); state[id] = state[id] || {}; delete state[id].removed; saveState(state); applyRemoved(); rerenderAll(); renderAllSugg(); renderHistory(); }
+  });
+  document.getElementById("hist-q").addEventListener("input", renderHistory);
+  var hb = document.getElementById("hist-btn-top"); if(hb) hb.addEventListener("click", function(){ openHistory("all"); });
+
+  // ---- Delete (in addition to Archive) on every card ----
+  document.addEventListener("click", function(e){
+    var b = e.target.closest(".delete-btn"); if(!b) return;
+    var card = b.closest(".card[data-id]"); if(!card) return;
+    var id = card.getAttribute("data-id"), f = findRec(id), nm = f ? f.rec.name : id;
+    if(!confirm("Delete “" + nm + "”?\n\nIt disappears from every list, the archive, the dashboard and announcements — for everyone using the Hub. You can undo it from 🕘 History.")) return;
+    state[id] = state[id] || {}; state[id].removed = true; saveState(state);
+    applyRemoved(); rerenderAll(); renderAllSugg();
+    toast("Deleted “" + nm + "”. Undo from 🕘 History if this was a mistake.");
+  });
+
+  // ---- who is using the Hub ----
+  var whoModal = document.getElementById("who-modal");
+  function openWhoModal(){ whoModal.classList.add("open"); }
+  whoModal.addEventListener("click", function(e){
+    var b = e.target.closest(".who-pick"); if(!b) return;
+    var key = b.getAttribute("data-k"), name, title;
+    if(key==="other"){
+      name = document.getElementById("who-name").value.trim(); title = document.getElementById("who-title").value.trim();
+      if(!name){ alert("Please type your name."); return; }
+      key = addPerson(name); if(title) addTitle(key, title);
+    } else { name = personName(key); title = titlesFor(key)[0]; }
+    lsSet(WHO_KEY, { key:key, name:name, title: title || titlesFor(key)[0] });
+    whoModal.classList.remove("open");
+    var wl = document.getElementById("who-label"); if(wl) wl.textContent = name;
+  });
+  var wb2 = document.getElementById("who-switch"); if(wb2) wb2.addEventListener("click", openWhoModal);
+
+  // ---- logo signature setup (the logo can't travel in a mailto link, so Outlook has to add it) ----
+  var sigModal = document.getElementById("sig-modal");
+  document.getElementById("m-sigsetup").addEventListener("click", function(){
+    var w = me() || { key:"reham", name:"Reham Mobasher" };
+    var name = personName(document.getElementById("m-signer").value) || w.name, title = document.getElementById("m-title").value;
+    document.getElementById("sig-demo").innerHTML = sigHtmlFor(name, title);
+    document.getElementById("sig-text-on").checked = sigTextOn();
+    sigModal.classList.add("open");
+  });
+  document.getElementById("sig-close").addEventListener("click", function(){ sigModal.classList.remove("open"); });
+  sigModal.addEventListener("click", function(e){ if(e.target===sigModal) sigModal.classList.remove("open"); });
+  document.getElementById("sig-text-on").addEventListener("change", function(e){ lsSet(SIGTXT_KEY, e.target.checked); });
+  document.getElementById("sig-copy").addEventListener("click", function(){
+    var html = document.getElementById("sig-demo").innerHTML;
+    var done = function(){ toast("Signature copied — paste it into Outlook → Settings → Signatures."); };
+    if(navigator.clipboard && window.ClipboardItem){
+      navigator.clipboard.write([new ClipboardItem({ "text/html": new Blob([html], {type:"text/html"}), "text/plain": new Blob([document.getElementById("sig-demo").innerText], {type:"text/plain"}) })]).then(done, function(){ alert("Copy didn't work in this browser — select the signature above and copy it manually."); });
+    } else alert("Select the signature above and copy it (Ctrl/Cmd + C).");
+  });
+  document.getElementById("m-approve").addEventListener("click", function(){
+    var row = current || {};
+    openSend({ kind: row.kind || "partner", id: row.id, name: row.name || document.getElementById("m-to").value, to: document.getElementById("m-to").value.trim(),
+      subject: document.getElementById("m-subject").value, body: document.getElementById("m-body").value, key: row.suggKey || null });
+  });
+
+  function logModalSend(how){
+    if(!current) return;
+    var subj = document.getElementById("m-subject").value;
+    if(current.id) markContacted(current.id);
+    act({ t:"log", kind: current.kind || (current.id && findRec(current.id) ? findRec(current.id).kind : "other"), id: current.id || null,
+      name: current.name || document.getElementById("m-to").value, what: how + ": “" + subj + "” (signed " + personName(document.getElementById("m-signer").value) + ")", key: current.suggKey || null, decision: current.suggKey ? "approved" : null });
+    if(current.suggKey){ decide(current.suggKey, "approved"); current.suggKey = null; }
+    rerenderAll();
+  }
+  (function(){
+    var sEl = document.getElementById("m-signer"), tEl = document.getElementById("m-title");
+    fillPeopleSelect(sEl);
+    wirePickers(sEl, tEl, updateSigPreview);
+  })();
   function flash(){
     var f = document.getElementById("copy-flash");
     f.style.display = "block";
