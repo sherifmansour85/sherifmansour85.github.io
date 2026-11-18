@@ -1,3 +1,25 @@
+/* HK-ZARA stub: the assistant button (#hkAi, Zara's picture) now opens Hayakkom's own assistant
+   (assets/hk-zara.js) instead of the Jotform AI agent. Each page's inline script still points the panel at the
+   Jotform agent, so this removes that frame, swaps the button for a clean copy (dropping those listeners) and loads
+   hk-zara.js on first hover, touch or focus. Runs first in this file so later blocks find the new button. */
+(function(){
+  if(window.__hkZaraStub)return;window.__hkZaraStub=1;
+  function init(){
+    var b=document.getElementById("hkAi"),p=document.getElementById("hkAiPanel");if(!b||!p)return;
+    var fr=document.getElementById("hkAiFrame");if(fr)fr.remove();
+    var nb=b.cloneNode(true);b.parentNode.replaceChild(nb,b);b=nb;
+    var lt=document.getElementById("hkAiLoadText");if(lt&&/^ar/.test(document.documentElement.lang||""))lt.textContent="جارٍ فتح زارا…";
+    var loaded=false;
+    function load(){if(loaded)return;loaded=true;var s=document.createElement("script");s.src="/assets/hk-zara.js?v=1";s.async=true;document.head.appendChild(s);}
+    ["pointerenter","touchstart","focus"].forEach(function(ev){b.addEventListener(ev,load,{once:true,passive:true});});
+    b.addEventListener("click",function(){
+      load();var opening=p.hidden;p.hidden=!opening;document.body.classList.toggle("hk-ai-open",opening);
+      if(opening&&window.innerWidth>640)setTimeout(function(){var i=p.querySelector(".zr-in input");if(i)try{i.focus({preventScroll:true});}catch(e){}},700);
+    });
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+})();
+
 /* Hayakkom: "Add to your phone" + "Recommend to a friend".
    No app store app exists: the site installs from the browser (web app manifest).
    Lives outside the React root so SPA re-renders never remove it. */
