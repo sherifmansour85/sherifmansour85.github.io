@@ -1125,7 +1125,7 @@
   function markContacted(id, isoDate){
     if(!id) return;
     state[id] = state[id] || {};
-    state[id].lastContacted = isoDate || new Date().toISOString();
+    state[id].lastContacted = (typeof isoDate==="string" && isoDate) ? isoDate : new Date().toISOString();
     saveState(state);
   }
   // Replies often go out by WhatsApp or phone, which the Hub can't see — let Reham record the real date.
@@ -1371,7 +1371,7 @@
     var a = e.target.closest(".an-send");
     if(!a) return;
     var ids = (a.getAttribute("data-ids")||"").split(",").filter(Boolean);
-    ids.forEach(markContacted);
+    ids.forEach(function(id){ markContacted(id); });  // not forEach(markContacted): that passes the list position as the date
     var isWa = /wa\.me/.test(a.getAttribute("href")||"");
     var subj = document.getElementById("an-subject").value || "(no subject)";
     var one = ids.length===1 ? (findRec(ids[0])||{}).rec : null;
@@ -3509,6 +3509,7 @@
       state = merged;
       try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
       snapAll();
+      repairContactDates();
       // add records other people created by hand
       mergeCustom("partner", []).forEach(function(r){ if(!RAW_P.some(function(x){ return x.id===r.id; })) RAW_P.push(r); });
       mergeCustom("customer", []).forEach(function(r){ if(!RAW_C.some(function(x){ return x.id===r.id; })) RAW_C.push(r); });
@@ -3570,6 +3571,19 @@
       act({ t:"patch", id:id, set:patch, kind: f ? f.kind : "other", name: f ? (f.rec.name||id) : id, what: describePatch(patch), silent: id.charAt(0)==="_" });
     });
   }
+  // An earlier Announce bug saved list positions (1, 2, 3…) as contact dates. Put back the real time from
+  // History ("Marked contacted" entries), or the shared file's date, and save it quietly for everyone.
+  function repairContactDates(){
+    Object.keys(state).forEach(function(id){
+      var st = state[id]; if(!st || st.lastContacted==null || typeof st.lastContacted==="string") return;
+      var hit = (SHARED.history||[]).filter(function(h){ return h.id===id && /^Marked contacted/.test(h.what||"") && h.at; }).pop();
+      var iso = hit ? hit.at : (SHARED.synced_at || new Date().toISOString());
+      st.lastContacted = iso; SNAP[id] = JSON.stringify(st);
+      var f = findRec(id);
+      act({ t:"patch", id:id, set:{ lastContacted: iso }, kind: f ? f.kind : "other", name: f ? (f.rec.name||id) : id, what: "Repaired contact date", silent: true });
+    });
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
+  }
   function applyPatch(target, id, set){
     target[id] = target[id] || {};
     Object.keys(set||{}).forEach(function(k){ if(set[k]===null) delete target[id][k]; else target[id][k] = set[k]; });
@@ -3623,6 +3637,7 @@
     }
     SYNC_READY = true;
     snapAll();
+    if(SHARED_OK) repairContactDates();
     applyRemoved();
     rerenderAll();
     renderAllSugg();
