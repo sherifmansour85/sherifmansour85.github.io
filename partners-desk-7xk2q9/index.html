@@ -70,6 +70,10 @@
   .sugg-title{font-weight:700;font-size:13.5px}
   .sugg-badge{display:inline-block;font-size:11px;font-weight:600;border-radius:6px;padding:2px 7px;background:#F1EDE2;color:#5A4A1A;margin-inline-end:4px}
   .sugg-badge.ai{background:#ECE6F7;color:#4B3880}
+  .doc-list{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px;align-items:center;font-size:12px}
+  .doc-list .doc-lbl{color:var(--sub);font-weight:600}
+  .doc-chip{display:inline-flex;gap:5px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:3px 10px;background:#fff;color:#0E5A62;text-decoration:none;max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .doc-chip b{color:#8F701D;font-weight:600}
   .sugg-name{background:none;border:0;padding:0;font:inherit;font-weight:700;color:#0E5A62;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
   .sugg-name:hover{color:#0A2E36}
   .card.card-flash{animation:cardflash 2.4s ease}
@@ -633,6 +637,23 @@
       <button class="btn" id="m-sigsetup" type="button">🖼 Set up logo signature</button>
     </div>
     <p class="copy-flash" id="copy-flash">Copied — paste into a new Outlook message.</p>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="doc-modal">
+  <div class="modal">
+    <button class="close-x" id="doc-close" aria-label="Close">×</button>
+    <h2 id="doc-title">Add a document</h2>
+    <p class="sub" id="doc-sub"></p>
+    <div class="row2">
+      <div class="field"><label>Type</label>
+        <select id="doc-type"><option>Invoice</option><option>Quotation</option><option>Contract</option><option>Agreement</option><option>Receipt</option><option>Medical report</option><option>Licence / accreditation</option><option>Other</option></select>
+      </div>
+      <div class="field"><label>File (up to 25 MB)</label><input type="file" id="doc-file" multiple></div>
+    </div>
+    <div class="field"><label>Note (optional)</label><input type="text" id="doc-note" placeholder="e.g. Quote for implants, valid until 30 Dec"></div>
+    <p class="sd-note" id="doc-status"></p>
+    <div class="modal-actions"><button class="btn gold" id="doc-go" type="button">⬆ Save to Google Drive</button><button class="btn" id="doc-cancel" type="button">Cancel</button></div>
   </div>
 </div>
 
@@ -3970,6 +3991,91 @@
   });
   document.getElementById("hist-q").addEventListener("input", renderHistory);
   var hb = document.getElementById("hist-btn-top"); if(hb) hb.addEventListener("click", function(){ openHistory("all"); });
+
+  // ---- 📎 Documents on partner and customer cards (saved to Google Drive by the Apps Script) ----
+  var docModal = document.getElementById("doc-modal"), DOC_FOR = null;
+  function decorateCards(){
+    ["partners","customers"].forEach(function(view){
+      var kind = view==="partners" ? "partner" : "customer";
+      document.querySelectorAll("#view-" + view + " .card[data-id]").forEach(function(card){
+        if(card.querySelector(".doc-btn")) return;
+        var id = card.getAttribute("data-id"), st = state[id] || {};
+        var acts = card.querySelector(".card-actions"); if(!acts) return;
+        var btn = document.createElement("button");
+        btn.type = "button"; btn.className = "btn doc-btn"; btn.setAttribute("data-kind", kind);
+        btn.title = "Attach an invoice, quotation, contract or any document — saved to Google Drive";
+        btn.textContent = "📎 Add document";
+        acts.insertBefore(btn, acts.firstChild ? acts.firstChild.nextSibling : null);
+        var docs = st.docs || [];
+        if(docs.length || (kind==="customer" && st.driveFolder)){
+          var box = document.createElement("div"); box.className = "doc-list";
+          box.innerHTML = '<span class="doc-lbl">📄 Documents:</span>' + docs.slice().reverse().map(function(d){
+            return '<a class="doc-chip" target="_blank" rel="noopener" href="'+esc(d.url)+'" title="'+esc((d.note ? d.note + " · " : "") + "Added " + String(d.at||"").slice(0,10) + (d.by ? " by " + d.by : ""))+'"><b>'+esc(d.type||"Doc")+'</b>'+esc(String(d.name||"").replace((d.type||"")+" — ",""))+'</a>';
+          }).join("") + ((st.driveFolder || docs.length) ? ' <a class="doc-chip" target="_blank" rel="noopener" href="'+esc(st.driveFolder || docs[docs.length-1].folder)+'">📁 Folder</a>' : '');
+          acts.parentNode.insertBefore(box, acts);
+        }
+      });
+    });
+  }
+  // lists are redrawn by many filters and buttons — add the documents after every redraw
+  var decoQueued = false;
+  var decoObs = new MutationObserver(function(){
+    if(decoQueued) return; decoQueued = true;
+    requestAnimationFrame(function(){ decoQueued = false; decorateCards(); });
+  });
+  ["view-partners","view-customers"].forEach(function(v){ var el = document.getElementById(v); if(el) decoObs.observe(el, { childList:true, subtree:true }); });
+  document.addEventListener("click", function(e){
+    var b = e.target.closest(".doc-btn"); if(!b) return;
+    var card = b.closest(".card[data-id]"); var f = card && findRec(card.getAttribute("data-id")); if(!f) return;
+    var st = state[f.rec.id] || {};
+    DOC_FOR = { kind: f.kind, id: f.rec.id, name: st.name || f.rec.name };
+    document.getElementById("doc-title").textContent = "📎 Add a document — " + DOC_FOR.name;
+    document.getElementById("doc-sub").textContent = "Saved to Google Drive › " + (f.kind==="customer" ? "Hub Customers › " + DOC_FOR.name : "Clinics › " + DOC_FOR.name + " › Documents") + ", and listed on this card for the whole team.";
+    document.getElementById("doc-file").value = ""; document.getElementById("doc-note").value = ""; document.getElementById("doc-status").textContent = "";
+    document.getElementById("doc-type").value = f.kind==="customer" ? "Quotation" : "Contract";
+    docModal.classList.add("open");
+  });
+  document.getElementById("doc-close").addEventListener("click", function(){ docModal.classList.remove("open"); });
+  document.getElementById("doc-cancel").addEventListener("click", function(){ docModal.classList.remove("open"); });
+  docModal.addEventListener("click", function(e){ if(e.target===docModal) docModal.classList.remove("open"); });
+  function fileB64(file){
+    return new Promise(function(res, rej){ var r = new FileReader(); r.onload = function(){ res(String(r.result).split(",")[1] || ""); }; r.onerror = rej; r.readAsDataURL(file); });
+  }
+  document.getElementById("doc-go").addEventListener("click", function(){
+    var files = Array.prototype.slice.call(document.getElementById("doc-file").files || []);
+    var status = document.getElementById("doc-status"), go = this;
+    if(!files.length){ status.textContent = "Choose a file first."; return; }
+    if(files.some(function(f){ return f.size > 25*1024*1024; })){ status.textContent = "One of the files is larger than 25 MB — please upload it to Google Drive directly."; return; }
+    if(!SYNC_TOKEN){ status.textContent = "The shared Google Drive storage isn't connected yet — try again in a moment."; return; }
+    var type = document.getElementById("doc-type").value, note = document.getElementById("doc-note").value.trim(), done = 0;
+    go.disabled = true;
+    files.reduce(function(p, file, i){
+      return p.then(function(){
+        status.textContent = "Uploading " + (i+1) + " of " + files.length + ": " + file.name + "…";
+        return fileB64(file).then(function(data){
+          return fetch(SYNC_URL, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" },
+            body: JSON.stringify({ t: SYNC_TOKEN, op:"upload", kind: DOC_FOR.kind, id: DOC_FOR.id, name: DOC_FOR.name, docType: type, note: note, by: myName(), fileName: file.name, mimeType: file.type, data: data }) })
+            .then(function(r){ return r.json(); })
+            .then(function(u){
+              if(!u || !u.ok) throw new Error((u && u.error) || "upload failed — the Google script may need updating to the latest version");
+              done++;
+              state[DOC_FOR.id] = state[DOC_FOR.id] || {};
+              var docs = (state[DOC_FOR.id].docs || []).slice();
+              docs.push({ name: u.file_name, type: type, url: u.url, folder: u.folder_url, at: new Date().toISOString(), by: myName(), note: note });
+              state[DOC_FOR.id].docs = docs;
+              if(DOC_FOR.kind==="customer") state[DOC_FOR.id].driveFolder = u.folder_url;
+              try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
+              SNAP[DOC_FOR.id] = JSON.stringify(state[DOC_FOR.id]);   // the script already saved it for the team
+            });
+        });
+      });
+    }, Promise.resolve()).then(function(){
+      go.disabled = false; docModal.classList.remove("open");
+      toast("Saved " + done + " document" + (done>1?"s":"") + " to Google Drive.");
+      if(DOC_FOR.kind==="partner") render(); else renderCustomers();
+      pull();
+    }).catch(function(err){ go.disabled = false; status.textContent = "Couldn't save: " + err.message + (done ? " (" + done + " saved before the error)" : ""); });
+  });
 
   // ---- 📦 Partner kit: Drive folder (Clinics › name) with the kit, then a ready email to approve ----
   var PARTNER_FORM = "https://form.jotform.com/263202563928055";
