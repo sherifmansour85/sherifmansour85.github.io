@@ -18,7 +18,7 @@
   var WA = "201031567949";
   /* The AI Zara (Claude Managed Agents) through Hayakkom's Cloudflare relay, which holds the key. Empty = the built-in
      assistant below answers everything. If the relay fails or times out, the built-in assistant answers that message. */
-  var AI_URL = "";
+  var AI_URL = "https://zara.sherif-mansour-85.workers.dev/";
   /* Zara's picture: resized copy first, then the original, then the Hayakkom logo */
   function zaraImg(im) { im.src = AV; im.alt = ""; im.onerror = function () { if (this.src !== AV2 && this.dataset.f !== "1") { this.dataset.f = "1"; this.src = AV2; } else { this.onerror = null; this.src = "/assets/ai-avatar.png"; } }; return im; }
   var L = document.documentElement.lang || "";
