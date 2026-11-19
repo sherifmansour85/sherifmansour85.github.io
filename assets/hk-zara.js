@@ -516,6 +516,7 @@
   }
   /* questions about Zara herself, answered before the knowledge search */
   var INTENT = {
+    contact: /(phone number|contact number|your (phone|number|contact|mobile)|call (you|us)\b|how (can|do) i (call|contact|reach)|رقم(كم| التواصل| الهاتف| الاتصال| التليفون| الجوال| الموبايل)|رقم للتواصل|رقم للاتصال|كيف (أتواصل|اتواصل|أتصل|اتصل)|ваш (телефон|номер)|номер телефона|как (позвонить|связаться))/i,
     voice: /(voice|speak|talk to you|call me|audio|صوت|صوتي|مكالمة|اتصال|أكلم|اكلم|كلمني|голос|позвон)/i,
     human: /(human|real person|agent|someone|staff|coordinator|موظف|شخص|إنسان|انسان|منسق|مسؤول|человек|оператор)/i,
     hello: /^(hi|hello|hey|salam|مرحبا|مرحبًا|هلا|اهلا|أهلا|السلام عليكم|السلام|привет|здравствуйте)[\s!.؟?]*$/i,
@@ -526,18 +527,21 @@
     en: { voice: "You can talk to me: tap 🎙️ next to the message box and speak, and tap 🔊 at the top so I read my answers aloud. You can also send a voice note on WhatsApp — a coordinator replies, usually within a few hours.",
           voiceNo: "Your browser can't take voice input here (try Chrome or Safari), but tap 🔊 at the top and I'll read my answers aloud. You can also send a voice note on WhatsApp.",
           human: "Of course — a Hayakkom coordinator can take over. Message us on WhatsApp, or leave your details and we'll contact you within 12 hours.",
+          contact: "You can call us on +20 100 010 0529 (from outside Egypt: 00201000100529). For messages, WhatsApp +20 103 156 7949, or email support@hayakkom.com.",
           thanks: "You're very welcome! Anything else I can help with?",
           trust: "Treatment is always delivered by licensed Egyptian medical institutions — never by Hayakkom. Our hospital partners include Dar Al Fouad Hospital (6th of October — the first hospital in Egypt with Joint Commission International accreditation — and Nasr City) and As-Salam International Hospital (Maadi and New Cairo), both JCI-accredited. Your doctor reviews your case before you travel, and you get a written itemised estimate before paying.",
           trustLink: "/how-to-choose/", trustLabel: "How to choose a medical coordinator" },
     ar: { voice: "يمكنك التحدث معي: اضغط 🎙️ بجانب خانة الكتابة وتكلّم، واضغط 🔊 في الأعلى لأقرأ لك إجاباتي بصوت. ويمكنك أيضًا إرسال رسالة صوتية على واتساب ويرد عليك منسّق عادةً خلال ساعات قليلة.",
           voiceNo: "متصفحك لا يدعم الإدخال الصوتي هنا (جرّب Chrome أو Safari)، لكن اضغط 🔊 في الأعلى وسأقرأ لك إجاباتي بصوت. ويمكنك أيضًا إرسال رسالة صوتية على واتساب.",
           human: "بكل سرور — يمكن لمنسّق من حياكم أن يتابع معك. راسلنا على واتساب، أو اترك بياناتك ونتواصل معك خلال 12 ساعة.",
+          contact: "للاتصال: ‎+20 100 010 0529 (من خارج مصر: 00201000100529). للرسائل على واتساب: ‎+20 103 156 7949، أو البريد support@hayakkom.com.",
           thanks: "العفو، حياك الله! هل أساعدك في شيء آخر؟",
           trust: "العلاج تقدّمه دائمًا منشآت طبية مصرية مرخّصة — وليس حياكم. من شركائنا مستشفى دار الفؤاد (6 أكتوبر — أول مستشفى في مصر يحصل على اعتماد اللجنة الدولية المشتركة JCI — ومدينة نصر) ومستشفى السلام الدولي (المعادي والقاهرة الجديدة)، وكلاهما معتمد من JCI. يراجع الطبيب حالتك قبل السفر، وتحصل على تقدير مكتوب ومفصّل قبل الدفع.",
           trustLink: "/ar/how-to-choose/", trustLabel: "كيف تختار منسّق رحلتك العلاجية" },
     ru: { voice: "Со мной можно говорить: нажмите 🎙️ рядом с полем ввода и говорите, а 🔊 вверху — и я буду читать ответы вслух. Можно также отправить голосовое сообщение в WhatsApp.",
           voiceNo: "Ваш браузер не поддерживает голосовой ввод (попробуйте Chrome или Safari), но нажмите 🔊 вверху — и я буду читать ответы вслух.",
           human: "Конечно — координатор Hayakkom может продолжить. Напишите нам в WhatsApp или оставьте контакты, и мы свяжемся в течение 12 часов.",
+          contact: "Позвонить нам: +20 100 010 0529 (из-за пределов Египта: 00201000100529). Сообщения — WhatsApp +20 103 156 7949, или почта support@hayakkom.com.",
           thanks: "Пожалуйста! Чем ещё могу помочь?",
           trust: "Лечение всегда проводят лицензированные медицинские учреждения Египта, а не Hayakkom. Среди наших партнёров — больница Dar Al Fouad и международная больница As-Salam, аккредитованные Joint Commission International (JCI). Врач изучает ваш случай до поездки, а до оплаты вы получаете письменную смету.",
           trustLink: "/how-to-choose/", trustLabel: "How to choose a medical coordinator" }
@@ -548,6 +552,7 @@
     if (INTENT.hello.test(t)) { greet(); return true; }
     if (INTENT.thanks.test(t)) { bot(IT.thanks); chips([[T.newQ, "ask"], [T.waBtn, "wa"]]); return true; }
     if (INTENT.trust.test(t)) { bot(null, esc(IT.trust) + '<small><a href="' + esc(IT.trustLink) + '">' + esc(IT.trustLabel) + " →</a></small>"); chips(S.sent ? [[T.newQ, "ask"], [T.waBtn, "wa"]] : [[T.yes, "lead"], [T.newQ, "ask"], [T.waBtn, "wa"]]); return true; }
+    if (INTENT.contact.test(t)) { bot(IT.contact); chips([[T.waBtn, "wa"], [T.newQ, "ask"]]); return true; }
     if (INTENT.voice.test(t)) { bot(SR ? IT.voice : IT.voiceNo); chips([[T.waBtn, "wa"], [T.newQ, "ask"]]); return true; }
     if (INTENT.human.test(t)) { bot(IT.human); chips(S.sent ? [[T.waBtn, "wa"]] : [[T.waBtn, "wa"], [T.yes, "lead"]]); return true; }
     return false;
