@@ -546,6 +546,13 @@
             <option value="followup_ar">تواصل / عرض جديد (Arabic)</option>
             <option value="helper_thanks_en">Helpers: thanks for applying (English)</option>
             <option value="partner_profile_en">Partners: please update your profile (English)</option>
+            <option value="partner_welcome_en">Partners: welcome to the network — next steps (English)</option>
+            <option value="partner_checkin_en">Partners: quarterly check-in — prices &amp; availability (English)</option>
+            <option value="partner_season_en">Partners: busy season ahead — are you ready for GCC families? (English)</option>
+            <option value="partner_call_en">Partners: let's book a short partnership call (English)</option>
+            <option value="partner_standards_en">Partners: how referrals work &amp; our service standards (English)</option>
+            <option value="partner_marketing_en">Partners: our marketing services for clinics (English)</option>
+            <option value="partner_marketing_ar">الشركاء: خدماتنا التسويقية للعيادات والمستشفيات (Arabic)</option>
           </select>
         </div>
         <div class="field" style="margin-bottom:0"><label>Send as</label>
@@ -1112,6 +1119,35 @@
   ANNOUNCE_TEMPLATES.partner_profile_en = {
     subject: "Please update your Hayakkom partner profile",
     body: "Dear {{name}} team,\n\nTo route Gulf families to you faster and quote them accurately the first time, we're updating our partner directory.\n\nCould you take about 5 minutes to complete your profile here:\nhttps://form.jotform.com/263202563928055\n\nIt covers your contacts, accreditation, facility photos, logo and social links. Thank you for working with us.\n\nKind regards."
+  };
+
+  ANNOUNCE_TEMPLATES.partner_welcome_en = {
+    subject: "Welcome to the Hayakkom partner network — next steps",
+    body: "Dear {{name}} team,\n\nThank you for joining the Hayakkom partner network. We coordinate treatment and stays in Egypt for families from Saudi Arabia, the UAE and Kuwait, and we're glad to have you with us.\n\nTo start receiving enquiries, here's what we need from you:\n\n1. Your completed partner profile (about 5 minutes):\nhttps://form.jotform.com/263202563928055\n2. Your licence or accreditation, a few photos of your facility and your logo (you can upload them in the same form).\n3. One contact person and a WhatsApp number we can reach quickly when a family is waiting.\n\nOnce your profile is in, we'll confirm your listing and share how referrals reach you.\n\nWe look forward to working together."
+  };
+  ANNOUNCE_TEMPLATES.partner_checkin_en = {
+    subject: "Quick check-in from Hayakkom — prices and availability",
+    body: "Dear {{name}} team,\n\nWe hope all is well. We're updating the information we share with families from the Gulf, so they get accurate answers the first time.\n\nCould you reply with any changes on your side:\n• your current indicative prices for your main treatments or services (a range is fine),\n• any new services, doctors or packages,\n• your availability over the coming weeks, and any dates you're closed,\n• the best contact person and WhatsApp number for referrals.\n\nIf nothing has changed, a short reply saying so is perfect.\n\nThank you for being part of the network."
+  };
+  ANNOUNCE_TEMPLATES.partner_season_en = {
+    subject: "Busy season ahead for families from the Gulf",
+    body: "Dear {{name}} team,\n\nSchool holidays, Eid and the summer are the busiest times for families from Saudi Arabia, the UAE and Kuwait planning treatment or a stay in Egypt.\n\nTo help us place families with you smoothly, could you let us know:\n• your availability and any dates that are already full,\n• whether you have Arabic-speaking staff on site,\n• whether you can help with airport pick-up or a nearby place to stay,\n• how quickly you can usually confirm an appointment or booking.\n\nThe earlier we know, the better we can plan. Thank you!"
+  };
+  ANNOUNCE_TEMPLATES.partner_call_en = {
+    subject: "A short call to plan our work together",
+    body: "Dear {{name}} team,\n\nWe'd like to set up a short call (about 15 minutes) to go through how we work together: how referrals reach you, what families from the Gulf usually ask, and anything that would make the process easier on your side.\n\nCould you reply with two or three times that suit you this week or next? A WhatsApp call is fine.\n\nKind regards"
+  };
+  ANNOUNCE_TEMPLATES.partner_standards_en = {
+    subject: "How Hayakkom referrals work — and what families expect",
+    body: "Dear {{name}} team,\n\nA quick reminder of how referrals from Hayakkom work, so every family has a great experience:\n\n1. We send you the family's details and what they need, with their consent.\n2. Families expect a first reply within 12 hours, and a clear written estimate before they pay anything.\n3. All treatment and clinical decisions are yours, as the licensed provider. Hayakkom coordinates; we don't treat or diagnose.\n4. Please let us know when you've contacted the family and when anything changes (dates, price, plan), so we can keep them informed.\n\nIf anything in this process doesn't work well for you, just reply and tell us — we'd rather fix it early.\n\nThank you for looking after our families."
+  };
+  ANNOUNCE_TEMPLATES.partner_marketing_en = {
+    subject: "Reach more patients from the Gulf — Hayakkom marketing services",
+    body: "Dear {{name}} team,\n\nBesides coordinating patients, Hayakkom is a marketing company for medical services (Egyptian Commercial Register 49973). We help doctors, clinics, hospitals and wellness resorts in Egypt reach patients from Saudi Arabia, the UAE and Kuwait.\n\nWhat we can do for you:\n• Bilingual Arabic–English websites and landing pages, fast and mobile-first, with WhatsApp enquiries\n• Search and AI visibility, so Google and AI assistants find and describe your services correctly\n• Google Ads campaigns by treatment, with proper lead tracking\n• WhatsApp and enquiry handling, and content written for GCC families\n• All within the rules for medical advertising\n\nOur own website, hayakkom.com, is our work — every page in Arabic and English.\n\nSee the details here:\nhttps://www.hayakkom.com/medical-marketing/\n\nIf you'd like, reply with what you'd like to improve and we'll suggest a plan on a short call.\n\nKind regards"
+  };
+  ANNOUNCE_TEMPLATES.partner_marketing_ar = {
+    subject: "وصّلوا خدماتكم لمرضى الخليج — خدمات حياكم التسويقية",
+    body: "السادة فريق {{name}}،\n\nإلى جانب تنسيق المرضى، حياكم شركة تسويق للخدمات الطبية (سجل تجاري مصري رقم 49973). نساعد الأطباء والعيادات والمستشفيات والمنتجعات العلاجية في مصر على الوصول إلى المرضى من السعودية والإمارات والكويت.\n\nما نقدّمه لكم:\n• مواقع وصفحات هبوط بالعربية والإنجليزية، سريعة ومناسبة للجوال، مع استقبال الاستفسارات على واتساب\n• الظهور في محركات البحث ومساعدات الذكاء الاصطناعي، ليجد Google وغيره خدماتكم ويصفها بدقة\n• حملات إعلانات Google حسب العلاج، مع تتبّع دقيق للعملاء المحتملين\n• إدارة الاستفسارات على واتساب، ومحتوى مكتوب لعائلات الخليج\n• وكل ذلك وفق ضوابط الإعلان الطبي\n\nموقعنا hayakkom.com من عملنا — كل صفحاته بالعربية والإنجليزية.\n\nالتفاصيل هنا:\nhttps://www.hayakkom.com/ar/medical-marketing/\n\nإذا رغبتم، ردّوا علينا بما تريدون تحسينه، ونقترح عليكم خطة في مكالمة قصيرة.\n\nمع خالص التحية"
   };
 
   // ---- shared helpers: country, WhatsApp, last-contacted, urgency, sorting ----
