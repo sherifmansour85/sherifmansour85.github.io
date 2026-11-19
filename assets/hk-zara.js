@@ -20,8 +20,12 @@
   function zaraImg(im) { im.src = AV; im.alt = ""; im.onerror = function () { if (this.src !== AV2 && this.dataset.f !== "1") { this.dataset.f = "1"; this.src = AV2; } else { this.onerror = null; this.src = "/assets/ai-avatar.png"; } }; return im; }
   var L = document.documentElement.lang || "";
   var lang = /^ar/.test(L) || /^\/ar(\/|$)/.test(location.pathname) ? "ar" : /^ru/.test(L) || /^\/ru(\/|$)/.test(location.pathname) ? "ru" : "en";
+  /* the visitor's own choice on the AR | EN | RU toggle wins over the page language */
+  var KEY = "hk-zara-v1", S;
+  try { S = JSON.parse(sessionStorage.getItem(KEY) || "null"); } catch (e) { S = null; }
+  if (S && /^(ar|en|ru)$/.test(S.lang)) lang = S.lang;
   var RTL = lang === "ar";
-  var T = {
+  var TT = {
     en: { title: "Zara · Hayakkom", sub: "Instant answers · our team replies within 12 hours",
       hi: "Hi, I'm Zara from Hayakkom 👋 I can answer your questions about treatment and trips in Egypt, or prepare a free personal plan with our team. What are you interested in?",
       opts: [["dental", "🦷 Dental"], ["medical", "🩺 Medical treatment"], ["trip", "🌴 Holiday / trip"], ["vip", "⭐ VIP trip"], ["study", "🎓 Study in Egypt"], ["invest", "📈 Invest in Egypt"], ["ask", "💬 Ask a question"]],
@@ -93,12 +97,11 @@
       privacy: "Отправляя данные, вы соглашаетесь, что Hayakkom свяжется с вами по заявке.",
       needs: { dental: "Стоматология", medical: "Лечение", trip: "Отдых / экскурсии", ask: "Вопрос" },
       q: { dental: "стоматология виниры импланты", medical: "лечение", trip: "отдых экскурсии" } }
-  }[lang];
+  };
+  var T = TT[lang];
 
   /* ---------- state (kept for the browser tab, so a refresh doesn't lose the chat) ---------- */
-  var KEY = "hk-zara-v1", S;
-  try { S = JSON.parse(sessionStorage.getItem(KEY) || "null"); } catch (e) { S = null; }
-  function fresh() { return { lang: lang, log: [], step: null, lead: {}, sent: false, need: "" }; }
+  function fresh() { return { lang: lang, log: [], step: null, lead: {}, sent: false, need: "", voice: false }; }
   if (!S || S.lang !== lang) S = fresh();
   function save() { try { sessionStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
 
@@ -128,6 +131,14 @@
     ".zr-typing span{display:inline-block;width:6px;height:6px;margin:0 2px;border-radius:50%;background:#9DB2B6;animation:zrb 1s infinite}" +
     ".zr-typing span:nth-child(2){animation-delay:.15s}.zr-typing span:nth-child(3){animation-delay:.3s}" +
     "body.hk-ai-open #hkInst{display:none!important}" +
+    "#hkAiPanel .zr-ctl{display:flex;gap:5px;align-items:center;flex:none}" +
+    "#hkAiPanel .zr-lg{display:flex;border:1px solid rgba(255,255,255,.55);border-radius:999px;overflow:hidden}" +
+    "#hkAiPanel .zr-lg button{background:transparent;color:inherit;border:0;padding:4px 7px;font:inherit;font-size:11px;font-weight:700;cursor:pointer;opacity:.8;line-height:1}" +
+    "#hkAiPanel .zr-lg button[aria-pressed=true]{background:#C9A43D;color:#0A2E36;opacity:1}" +
+    "#hkAiPanel .zr-spk{background:transparent;border:1px solid rgba(255,255,255,.55);color:inherit;border-radius:50%;width:30px;height:30px;padding:0;cursor:pointer;font-size:14px;line-height:1}" +
+    "#hkAiPanel .zr-spk[aria-pressed=true]{background:#C9A43D;border-color:#C9A43D}" +
+    ".zr-in .zr-mic{background:#E3EFEE;color:#0B6B73;padding:0 12px;font-size:18px}" +
+    ".zr-in .zr-mic.on{background:#C0392B;color:#fff;animation:zrp 1.2s infinite}@keyframes zrp{50%{opacity:.65}}" +
     "@keyframes zrb{0%,80%,100%{opacity:.3}40%{opacity:1}}@media (prefers-reduced-motion:reduce){.zr-typing span{animation:none}}";
   document.head.appendChild(css);
 
@@ -140,11 +151,16 @@
     ht.innerHTML = "<b></b><small></small>"; ht.firstChild.textContent = T.title; ht.lastChild.textContent = T.sub;
     head.insertBefore(hav, head.firstChild); title.replaceWith(ht);
   }
+  /* AR | EN | RU toggle and the read-aloud speaker, in the header next to the close button */
+  var ctl = document.createElement("span"); ctl.className = "zr-ctl";
+  ctl.innerHTML = '<span class="zr-lg" role="group"><button type="button" data-l="ar">AR</button><button type="button" data-l="en">EN</button><button type="button" data-l="ru">RU</button></span><button type="button" class="zr-spk"></button>';
+  if (head) { var xb = document.getElementById("hkAiX"); if (xb && xb.parentNode === head) head.insertBefore(ctl, xb); else head.appendChild(ctl); }
+  var spk = ctl.querySelector(".zr-spk");
   var body = panel.querySelector(".ai-own-body") || panel;
   body.innerHTML = '<div class="zr-msgs" role="log" aria-live="polite"></div><div class="zr-chips"></div>' +
-    '<form class="zr-in" autocomplete="on"><input type="text" enterkeyhint="send" maxlength="600"><button type="submit"></button></form><div class="zr-foot"></div>';
+    '<form class="zr-in" autocomplete="on"><input type="text" enterkeyhint="send" maxlength="600"><button type="button" class="zr-mic" hidden>🎙️</button><button type="submit"></button></form><div class="zr-foot"></div>';
   var box = body.querySelector(".zr-msgs"), chipBox = body.querySelector(".zr-chips"), form = body.querySelector(".zr-in"),
-    input = form.querySelector("input"), sendBtn = form.querySelector("button");
+    input = form.querySelector("input"), sendBtn = form.querySelector("button[type=submit]"), mic = form.querySelector(".zr-mic");
   input.placeholder = T.ph; input.setAttribute("aria-label", T.ph); sendBtn.textContent = T.send;
   body.querySelector(".zr-foot").textContent = T.note;
 
@@ -158,7 +174,7 @@
     row.appendChild(b); box.appendChild(row); box.scrollTop = box.scrollHeight;
   }
   function plain(html) { var d = document.createElement("div"); d.innerHTML = html; return (d.innerText || d.textContent || "").trim(); }
-  function bot(text, html) { var m = { text: text || plain(html), html: html || null }; S.log.push(m); save(); render(m); }
+  function bot(text, html) { var m = { text: text || plain(html), html: html || null }; S.log.push(m); save(); render(m); speak(m.text); }
   function me(text) { var m = { me: 1, text: text }; S.log.push(m); save(); render(m); }
   function typing(ms, fn) {
     var row = document.createElement("div"); row.className = "zr-row"; row.appendChild(avatar());
@@ -180,6 +196,91 @@
       chipBox.appendChild(el);
     });
   }
+
+  /* ---------- voice: free, built into the visitor's browser (speech in Arabic, English and Russian) ----------
+     🎙️ listens with the browser's speech recognition (Chrome, Edge, Safari; hidden where unsupported, e.g. Firefox);
+     🔊 reads Zara's replies aloud with the device's own voice. Nothing is recorded or sent anywhere by this script. */
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition, synth = window.speechSynthesis || null;
+  var LOC = { ar: "ar-SA", en: "en-US", ru: "ru-RU" };
+  var VT = {
+    en: { mic: "Speak", stop: "Stop listening", on: "Read answers aloud: on", off: "Read answers aloud: off", lg: "Language",
+          den: "I can't hear you — please allow the microphone for this site in your browser settings, or type your message." },
+    ar: { mic: "تحدّث", stop: "إيقاف الاستماع", on: "قراءة الإجابات بصوت: مفعّلة", off: "قراءة الإجابات بصوت: متوقفة", lg: "اللغة",
+          den: "لا أستطيع سماعك — اسمح باستخدام الميكروفون لهذا الموقع من إعدادات المتصفح، أو اكتب رسالتك." },
+    ru: { mic: "Говорить", stop: "Остановить", on: "Читать ответы вслух: вкл.", off: "Читать ответы вслух: выкл.", lg: "Язык",
+          den: "Я вас не слышу — разрешите доступ к микрофону для этого сайта или напишите сообщение." }
+  };
+  if (synth) { try { synth.getVoices(); synth.onvoiceschanged = function () { synth.getVoices(); }; } catch (e) { synth = null; } }
+  function pickVoice() {
+    var vs = []; try { vs = synth.getVoices() || []; } catch (e) {}
+    var want = LOC[lang].toLowerCase(), pre = lang;
+    function l(v) { return (v.lang || "").replace("_", "-").toLowerCase(); }
+    return vs.filter(function (v) { return l(v) === want; })[0] || vs.filter(function (v) { return l(v).indexOf(pre) === 0; })[0] || null;
+  }
+  function sayable(t) {
+    return String(t || "").replace(/https?:\/\/\S+/g, " ").replace(/[\u{1F000}-\u{1FFFF}☀-➿️→]/gu, " ")
+      .replace(/\+?\d[\d\s]{7,}\d/g, function (n) { return n.replace(/\s+/g, "").split("").join(" "); }).replace(/\s+/g, " ").trim();
+  }
+  function speak(t) {
+    if (!S.voice || !synth) return;
+    var s = sayable(t); if (!s) return;
+    try {
+      var u = new SpeechSynthesisUtterance(s.slice(0, 1200)); u.lang = LOC[lang];
+      var v = pickVoice(); if (v) u.voice = v; u.rate = lang === "ar" ? 0.95 : 1;
+      synth.speak(u);
+    } catch (e) {}
+  }
+  function hush() { if (synth) try { synth.cancel(); } catch (e) {} }
+  function setVoice(on) {
+    S.voice = !!on; save(); if (!on) hush();
+    spk.textContent = on ? "🔊" : "🔇"; spk.setAttribute("aria-pressed", on ? "true" : "false");
+    spk.title = VT[lang][on ? "on" : "off"]; spk.setAttribute("aria-label", spk.title);
+  }
+  if (!synth) spk.hidden = true;
+  spk.addEventListener("click", function () { setVoice(!S.voice); if (S.voice) { var last = S.log.filter(function (m) { return !m.me; }).pop(); if (last) speak(last.text); } });
+  var rec = null, listening = false;
+  function micUi(on) {
+    listening = on; mic.classList.toggle("on", on); mic.setAttribute("aria-pressed", on ? "true" : "false");
+    mic.title = VT[lang][on ? "stop" : "mic"]; mic.setAttribute("aria-label", mic.title);
+  }
+  function listen() {
+    if (!SR) return;
+    if (listening && rec) { try { rec.stop(); } catch (e) {} return; }
+    hush(); if (!S.voice && synth) setVoice(true);   /* someone who talks usually wants to hear the answer */
+    var heard = "";
+    rec = new SR(); rec.lang = LOC[lang]; rec.interimResults = true; rec.continuous = false; rec.maxAlternatives = 1;
+    rec.onresult = function (e) {
+      var interim = "";
+      for (var i = e.resultIndex; i < e.results.length; i++) { if (e.results[i].isFinal) heard += e.results[i][0].transcript; else interim += e.results[i][0].transcript; }
+      input.value = (heard + " " + interim).trim();
+    };
+    rec.onerror = function (e) { if (e.error === "not-allowed" || e.error === "service-not-allowed") bot(VT[lang].den); };
+    rec.onend = function () {
+      micUi(false);
+      if (input.value.trim()) { if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event("submit", { cancelable: true })); }
+    };
+    try { rec.start(); micUi(true); } catch (e) { micUi(false); }
+  }
+  if (SR) { mic.hidden = false; mic.addEventListener("click", listen); micUi(false); }
+
+  /* ---------- AR | EN | RU ---------- */
+  function paintLang() {
+    RTL = lang === "ar"; panel.setAttribute("dir", RTL ? "rtl" : "ltr"); panel.setAttribute("aria-label", T.title);
+    var ht2 = document.getElementById("hkAiTitle");
+    if (ht2 && ht2.firstChild && ht2.lastChild) { ht2.firstChild.textContent = T.title; ht2.lastChild.textContent = T.sub; }
+    input.placeholder = T.ph; input.setAttribute("aria-label", T.ph); sendBtn.textContent = T.send;
+    body.querySelector(".zr-foot").textContent = T.note;
+    ctl.querySelector(".zr-lg").setAttribute("aria-label", VT[lang].lg);
+    Array.prototype.forEach.call(ctl.querySelectorAll(".zr-lg button"), function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-l") === lang ? "true" : "false"); });
+    setVoice(S.voice); if (SR) micUi(listening);
+  }
+  function setLang(l) {
+    if (l === lang || !TT[l]) return;
+    hush(); if (listening && rec) try { rec.abort(); } catch (e) {}
+    lang = l; T = TT[l]; IT = ITT[l]; S.lang = l; save(); paintLang();
+    if (S.step) ask(S.step); else typing(300, greet);
+  }
+  Array.prototype.forEach.call(ctl.querySelectorAll(".zr-lg button"), function (b) { b.addEventListener("click", function () { setLang(b.getAttribute("data-l")); }); });
 
   /* ---------- knowledge base: assets/search-index.json ---------- */
   var IDX = null, idxP = null;
@@ -247,29 +348,33 @@
     trust: /(accredit|jci|licen[cs]ed|is it safe|safety|trust|معتمد|اعتماد|مرخص|ترخيص|آمن|امان|أمان|موثوق|аккредит|лиценз|безопас)/i,
     thanks: /^(thanks|thank you|shukran|شكرا|شكرًا|مشكور|يعطيك العافية|спасибо)[\s!.]*$/i
   };
-  var IT = {
-    en: { voice: "Voice chat with me is coming soon. For now you can send a voice note on WhatsApp — a coordinator listens and replies, usually within a few hours.",
+  var ITT = {
+    en: { voice: "You can talk to me: tap 🎙️ next to the message box and speak, and tap 🔊 at the top so I read my answers aloud. You can also send a voice note on WhatsApp — a coordinator replies, usually within a few hours.",
+          voiceNo: "Your browser can't take voice input here (try Chrome or Safari), but tap 🔊 at the top and I'll read my answers aloud. You can also send a voice note on WhatsApp.",
           human: "Of course — a Hayakkom coordinator can take over. Message us on WhatsApp, or leave your details and we'll contact you within 12 hours.",
           thanks: "You're very welcome! Anything else I can help with?",
           trust: "Treatment is always delivered by licensed Egyptian medical institutions — never by Hayakkom. Our hospital partners include Dar Al Fouad Hospital (6th of October — the first hospital in Egypt with Joint Commission International accreditation — and Nasr City) and As-Salam International Hospital (Maadi and New Cairo), both JCI-accredited. Your doctor reviews your case before you travel, and you get a written itemised estimate before paying.",
           trustLink: "/how-to-choose/", trustLabel: "How to choose a medical coordinator" },
-    ar: { voice: "المحادثة الصوتية معي قادمة قريبًا. حاليًا يمكنك إرسال رسالة صوتية على واتساب، ويستمع لها منسّق ويرد عليك عادةً خلال ساعات قليلة.",
+    ar: { voice: "يمكنك التحدث معي: اضغط 🎙️ بجانب خانة الكتابة وتكلّم، واضغط 🔊 في الأعلى لأقرأ لك إجاباتي بصوت. ويمكنك أيضًا إرسال رسالة صوتية على واتساب ويرد عليك منسّق عادةً خلال ساعات قليلة.",
+          voiceNo: "متصفحك لا يدعم الإدخال الصوتي هنا (جرّب Chrome أو Safari)، لكن اضغط 🔊 في الأعلى وسأقرأ لك إجاباتي بصوت. ويمكنك أيضًا إرسال رسالة صوتية على واتساب.",
           human: "بكل سرور — يمكن لمنسّق من حياكم أن يتابع معك. راسلنا على واتساب، أو اترك بياناتك ونتواصل معك خلال 12 ساعة.",
           thanks: "العفو، حياك الله! هل أساعدك في شيء آخر؟",
           trust: "العلاج تقدّمه دائمًا منشآت طبية مصرية مرخّصة — وليس حياكم. من شركائنا مستشفى دار الفؤاد (6 أكتوبر — أول مستشفى في مصر يحصل على اعتماد اللجنة الدولية المشتركة JCI — ومدينة نصر) ومستشفى السلام الدولي (المعادي والقاهرة الجديدة)، وكلاهما معتمد من JCI. يراجع الطبيب حالتك قبل السفر، وتحصل على تقدير مكتوب ومفصّل قبل الدفع.",
           trustLink: "/ar/how-to-choose/", trustLabel: "كيف تختار منسّق رحلتك العلاجية" },
-    ru: { voice: "Голосовой чат скоро появится. Пока можно отправить голосовое сообщение в WhatsApp — координатор ответит в течение нескольких часов.",
+    ru: { voice: "Со мной можно говорить: нажмите 🎙️ рядом с полем ввода и говорите, а 🔊 вверху — и я буду читать ответы вслух. Можно также отправить голосовое сообщение в WhatsApp.",
+          voiceNo: "Ваш браузер не поддерживает голосовой ввод (попробуйте Chrome или Safari), но нажмите 🔊 вверху — и я буду читать ответы вслух.",
           human: "Конечно — координатор Hayakkom может продолжить. Напишите нам в WhatsApp или оставьте контакты, и мы свяжемся в течение 12 часов.",
           thanks: "Пожалуйста! Чем ещё могу помочь?",
           trust: "Лечение всегда проводят лицензированные медицинские учреждения Египта, а не Hayakkom. Среди наших партнёров — больница Dar Al Fouad и международная больница As-Salam, аккредитованные Joint Commission International (JCI). Врач изучает ваш случай до поездки, а до оплаты вы получаете письменную смету.",
           trustLink: "/how-to-choose/", trustLabel: "How to choose a medical coordinator" }
-  }[lang];
+  };
+  var IT = ITT[lang];
   function intent(q) {
     var t = q.trim();
     if (INTENT.hello.test(t)) { greet(); return true; }
     if (INTENT.thanks.test(t)) { bot(IT.thanks); chips([[T.newQ, "ask"], [T.waBtn, "wa"]]); return true; }
     if (INTENT.trust.test(t)) { bot(null, esc(IT.trust) + '<small><a href="' + esc(IT.trustLink) + '">' + esc(IT.trustLabel) + " →</a></small>"); chips(S.sent ? [[T.newQ, "ask"], [T.waBtn, "wa"]] : [[T.yes, "lead"], [T.newQ, "ask"], [T.waBtn, "wa"]]); return true; }
-    if (INTENT.voice.test(t)) { bot(IT.voice); chips([[T.waBtn, "wa"], [T.newQ, "ask"]]); return true; }
+    if (INTENT.voice.test(t)) { bot(SR ? IT.voice : IT.voiceNo); chips([[T.waBtn, "wa"], [T.newQ, "ask"]]); return true; }
     if (INTENT.human.test(t)) { bot(IT.human); chips(S.sent ? [[T.waBtn, "wa"]] : [[T.waBtn, "wa"], [T.yes, "lead"]]); return true; }
     return false;
   }
@@ -371,10 +476,11 @@
   });
   /* the visitor closes the panel or leaves after giving a WhatsApp number but before the end: still send what we have */
   function partial() { if (!S.sent && S.lead.phone && !S.partialSent) { S.partialSent = true; save(); send(false).catch(function () {}); } }
-  var x = document.getElementById("hkAiX"); if (x) x.addEventListener("click", partial);
+  var x = document.getElementById("hkAiX"); if (x) x.addEventListener("click", function () { partial(); hush(); if (listening && rec) try { rec.abort(); } catch (e) {} });
   window.addEventListener("pagehide", partial);
 
   /* ---------- start ---------- */
+  paintLang();
   if (S.log.length) {
     S.log.forEach(render);
     if (S.step) ask(S.step);

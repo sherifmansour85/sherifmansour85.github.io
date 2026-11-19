@@ -10,7 +10,7 @@
     var nb=b.cloneNode(true);b.parentNode.replaceChild(nb,b);b=nb;
     var lt=document.getElementById("hkAiLoadText");if(lt&&/^ar/.test(document.documentElement.lang||""))lt.textContent="جارٍ فتح زارا…";
     var loaded=false;
-    function load(){if(loaded)return;loaded=true;var s=document.createElement("script");s.src="/assets/hk-zara.js?v=2";s.async=true;document.head.appendChild(s);}
+    function load(){if(loaded)return;loaded=true;var s=document.createElement("script");s.src="/assets/hk-zara.js?v=3";s.async=true;document.head.appendChild(s);}
     ["pointerenter","touchstart","focus"].forEach(function(ev){b.addEventListener(ev,load,{once:true,passive:true});});
     b.addEventListener("click",function(){
       load();var opening=p.hidden;p.hidden=!opening;document.body.classList.toggle("hk-ai-open",opening);
