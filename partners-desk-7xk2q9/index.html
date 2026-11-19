@@ -54,6 +54,7 @@
   .flag-opt{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:7px;font-size:12.5px;cursor:pointer;white-space:nowrap}
   .flag-opt:hover{background:var(--cream)}
   .archive-btn{color:#A33;border-color:#E9C3C3}
+  .sugg-since{font-size:.88em;color:#7A5A00;background:#FFF4DC;border-radius:6px;padding:3px 8px;margin:4px 0;display:inline-block}
   .ai-box{border:1px dashed #9fc9cc;background:#F2F8F8;border-radius:10px;padding:10px 12px;margin:6px 0 12px}
   .ai-box label{display:block;font-weight:600;color:#0B6B73;margin-bottom:4px}
   .ai-box textarea.ai-ask{width:100%;min-height:46px;box-sizing:border-box;font:inherit}
@@ -3968,14 +3969,13 @@
       if(r && byRec[r.id]) return;
       if(r){
         var rs = state[r.id]||{};
-        if(rs.done || rs.removed) return;
+        // A suggestion stays until someone approves (sends) it or presses ✕ — only a deleted or archived card hides it.
+        if(rs.removed) return;
         if(kind==="customer" ? isCustArchived(r) : rs.deleted) return;
-        // someone already contacted them after this draft was written → it's out of date
-        var lc = lastContacted(r);
-        if(lc && o.created && lc >= String(o.created).slice(0,10)) return;
+        var lc = lastContacted(r), since = (lc && o.created && lc >= String(o.created).slice(0,10)) ? lc : "";
       }
       out.push({ key:o.id, ai:true, kind:kind, rec:r, to:o.to || (r && r.email) || "", rank: o.rank!=null ? o.rank : 1, label: o.label || "Drafted by Claude",
-        why:o.reason || "", plan:o.plan || [], draft:{ subject:o.subject, body:o.body } });
+        why:o.reason || "", plan:o.plan || [], draft:{ subject:o.subject, body:o.body }, since: r ? since : "", done: r ? !!(state[r.id]||{}).done : false });
       if(r) byRec[r.id] = 1;
     });
     // every open case gets a Claude-written draft; the built-in templates are only a stop-gap
@@ -3999,6 +3999,7 @@
         return '<div class="sugg-item'+(s.rank===0?' hot':'')+'" data-i="'+items.indexOf(s)+'">'+
           '<div class="sugg-main"><div class="sugg-title"><span class="sugg-badge'+(s.ai?' ai':'')+'" title="'+(s.ai?'Written by Claude after reading the whole conversation':'Quick template — Claude replaces it with a written draft at the next hourly run')+'">'+(s.ai?'🤖 ':'')+esc(s.label)+(s.ai?'':' · template')+'</span> '+(s.rec ? '<button type="button" class="sugg-name" title="Show this card in the list">'+esc(s.rec.name)+' ↗</button>' : esc(s.to||""))+'</div>'+
           '<div class="sugg-why">'+esc(s.why)+'</div>'+
+          (s.since || s.done ? '<div class="sugg-since">'+(s.since ? '📨 Contacted on '+esc(s.since)+' since this was written — check it\'s still needed, or press ✕ to remove it.' : '')+(s.done ? ' ✔ Card marked done.' : '')+'</div>' : '')+
           (s.plan && s.plan.length ? '<ol class="sugg-plan">'+s.plan.map(function(p){ return '<li>'+esc(p)+'</li>'; }).join("")+'</ol>' : '')+
           '<div class="sugg-subj">✉️ '+esc(s.draft.subject)+'</div></div>'+
           '<div class="sugg-btns">'+(s.rec ? '<button type="button" class="btn sg-conv" title="See every message with them and what the team did">💬 Conversation</button>' : '')+'<button type="button" class="btn sg-prev">👁 Preview</button><button type="button" class="btn sg-edit">✎ Edit</button>'+
@@ -4021,7 +4022,7 @@
       else if(e.target.closest(".sg-edit")) editSugg(s);
       else if(e.target.closest(".sg-ok")) openSend({ kind:kind, id: s.rec && s.rec.id, name: s.rec ? s.rec.name : s.to, to:s.to, subject:s.draft.subject, body:s.draft.body, key:s.key });
       else if(e.target.closest(".sg-no")){
-        if(!confirm("Dismiss this suggestion for " + (s.rec ? s.rec.name : s.to) + "? It won't come back unless something new happens on this case.")) return;
+        if(!confirm("Dismiss this suggestion for " + (s.rec ? s.rec.name : s.to) + "? It won't come back unless something new happens on this case. (Approving or dismissing are the only ways a suggestion leaves this list.)")) return;
         decide(s.key, "dismissed");
         act({ t:"log", kind:kind, id: s.rec && s.rec.id, name: s.rec ? s.rec.name : s.to, what:"Dismissed suggestion: " + s.label + " — “" + s.draft.subject + "”", key:s.key, decision:"dismissed" });
         renderSugg(kind);
