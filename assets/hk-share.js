@@ -10,7 +10,7 @@
     var nb=b.cloneNode(true);b.parentNode.replaceChild(nb,b);b=nb;
     var lt=document.getElementById("hkAiLoadText");if(lt&&/^ar/.test(document.documentElement.lang||""))lt.textContent="جارٍ فتح زارا…";
     var loaded=false;
-    function load(){if(loaded)return;loaded=true;var s=document.createElement("script");s.src="/assets/hk-zara.js?v=13";s.async=true;document.head.appendChild(s);}
+    function load(){if(loaded)return;loaded=true;var s=document.createElement("script");s.src="/assets/hk-zara.js?v=14";s.async=true;document.head.appendChild(s);}
     ["pointerenter","touchstart","focus"].forEach(function(ev){b.addEventListener(ev,load,{once:true,passive:true});});
     b.addEventListener("click",function(){
       load();var opening=p.hidden;p.hidden=!opening;document.body.classList.toggle("hk-ai-open",opening);
@@ -18,6 +18,148 @@
     });
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+})();
+
+/* HK-ZARA-INVITE: "Talk to our coordination specialist" — an invitation card above Zara's button on every page,
+   with her photo, a "new" badge and two or three questions about the page being read. A question opens the chat
+   and asks it straight away (window.hkZaraAsk in hk-zara.js). Shows once per page per visit, after a short pause
+   or some scrolling; never while the chat is open; ✕ hides it for the rest of the visit. */
+(function(){
+  if(window.__hkZaraInvite)return;window.__hkZaraInvite=1;
+  var path=location.pathname, ar=/^ar/.test(document.documentElement.lang||"")||/^\/ar(\/|$)/.test(path), ru=/^\/ru(\/|$)/.test(path);
+  var L=ar?"ar":ru?"ru":"en";
+  var PIC="https://images.weserv.nl/?url=le-de.cdn-website.com%2F570f220f41214a5784b09af2ac39327a%2Fdms3rep%2Fmulti%2Fopt%2FCapture-dccf701f-1920w.PNG&w=180&h=180&fit=cover&a=top&q=82&output=webp";
+  var T={
+    en:{badge:"✨ New",title:"Talk to our coordination specialist",who:"Zara · AI coordination specialist",online:"Online now",
+        lead:"Ask me anything about {p} — answers in seconds, day and night.",lead0:"Ask me anything about treatment, trips and stays in Egypt — answers in seconds, day and night.",
+        start:"Start a chat",close:"Close",
+        q:{home:"What does Hayakkom do for my family?",dental:"Which dental treatment suits me?",medical:"Which hospital or doctor would you suggest?",trip:"Plan a trip in Egypt for my family",
+           study:"How do I apply to study in Egypt?",invest:"What investment options are there?",vip:"What does a VIP trip include?",jobs:"How can I work with Hayakkom?",def:"Explain this page in simple words"},
+        cost:"How much does it cost? (indicative)",next:"What's the next step?"},
+    ar:{badge:"✨ جديد",title:"تحدّث مع أخصائية التنسيق",who:"زارا · أخصائية تنسيق بالذكاء الاصطناعي",online:"متصلة الآن",
+        lead:"اسألني أي شيء عن {p} — إجابات خلال ثوانٍ، ليلًا ونهارًا.",lead0:"اسألني أي شيء عن العلاج والرحلات والإقامة في مصر — إجابات خلال ثوانٍ، ليلًا ونهارًا.",
+        start:"ابدأ المحادثة",close:"إغلاق",
+        q:{home:"ماذا تقدّم حياكم لعائلتي؟",dental:"أي علاج أسنان يناسبني؟",medical:"أي مستشفى أو طبيب تقترحين؟",trip:"خططي لي رحلة عائلية في مصر",
+           study:"كيف أقدّم للدراسة في مصر؟",invest:"ما فرص الاستثمار المتاحة؟",vip:"ماذا تشمل رحلة VIP؟",jobs:"كيف أعمل مع حياكم؟",def:"اشرحي لي هذه الصفحة ببساطة"},
+        cost:"كم التكلفة التقريبية؟",next:"ما الخطوة التالية؟"},
+    ru:{badge:"✨ Новое",title:"Поговорите с нашим координатором",who:"Зара · ИИ‑координатор",online:"Сейчас онлайн",
+        lead:"Спросите меня о «{p}» — ответ за секунды, днём и ночью.",lead0:"Спросите о лечении, поездках и проживании в Египте — ответ за секунды, днём и ночью.",
+        start:"Начать чат",close:"Закрыть",
+        q:{home:"Чем Hayakkom поможет моей семье?",dental:"Какое лечение зубов мне подойдёт?",medical:"Какую клинику или врача посоветуете?",trip:"Спланируйте поездку в Египет для семьи",
+           study:"Как поступить на учёбу в Египте?",invest:"Какие есть варианты инвестиций?",vip:"Что входит в VIP‑поездку?",jobs:"Как работать с Hayakkom?",def:"Объясните эту страницу простыми словами"},
+        cost:"Сколько это стоит (ориентировочно)?",next:"Какой следующий шаг?"}
+  }[L];
+  function pageName(){
+    var h=document.querySelector("main h1, h1"), t=(h&&h.textContent||document.title||"").replace(/\s+/g," ").trim();
+    t=t.split(/\s[|–—-]\s/)[0].trim();
+    if(!t||/^hayakkom$|^حياكم$/i.test(t))return "";
+    return t.length>60?t.slice(0,57)+"…":t;
+  }
+  function kind(){
+    var p=path.replace(/^\/(ar|ru)\//,"/");
+    if(p==="/"||p==="/ar/"||p==="/ru/")return "home";
+    if(/dental|teeth|implant|veneer|smile/.test(p))return "dental";
+    if(/medical|treatment|hospital|doctor|surgery|ivf|check|nurse|clinic|health|cancer|ortho|eye|cardio/.test(p))return "medical";
+    if(/vip/.test(p))return "vip";
+    if(/study|universit|student/.test(p))return "study";
+    if(/invest|property|real-estate/.test(p))return "invest";
+    if(/career|job|work-with|helper/.test(p))return "jobs";
+    if(/trip|tour|holiday|travel|cairo|luxor|aswan|sharm|hurghada|alexandria|sahel|coast|nile|stay|hotel|family/.test(p))return "trip";
+    return "def";
+  }
+  var KEY="hk-zinv:"+path, shown=false, card=null;
+  function seen(){try{return sessionStorage.getItem(KEY)||sessionStorage.getItem("hk-zinv-off");}catch(e){return null;}}
+  function mark(k){try{sessionStorage.setItem(k||KEY,"1");}catch(e){}}
+  function chatOpen(){var p=document.getElementById("hkAiPanel");return document.body.classList.contains("hk-ai-open")||(p&&!p.hidden);}
+  function css(){
+    if(document.getElementById("hk-zinv-css"))return;
+    var st=document.createElement("style");st.id="hk-zinv-css";
+    st.textContent=
+    ".hk-zinv{position:fixed;right:24px;bottom:98px;z-index:997;width:340px;max-width:calc(100vw - 32px);border-radius:22px;padding:1px;"+
+      "background:linear-gradient(135deg,#E3C46A,#0B6B73 45%,#072A31);box-shadow:0 26px 60px -18px rgba(7,42,49,.55),0 4px 14px rgba(7,42,49,.12);"+
+      "opacity:0;transform:translateY(18px) scale(.96);transition:opacity .45s ease,transform .55s cubic-bezier(.2,.9,.25,1.2);font-family:inherit}"+
+    ".hk-zinv.on{opacity:1;transform:none}"+
+    ".hk-zinv-in{position:relative;border-radius:21px;background:linear-gradient(180deg,rgba(255,255,255,.97),#F4F9F8);padding:16px 16px 14px;overflow:hidden}"+
+    ".hk-zinv-in:before{content:'';position:absolute;inset:-40% -30% auto auto;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,79,.22),transparent 65%);pointer-events:none}"+
+    ".hk-zinv-top{display:flex;gap:12px;align-items:center;position:relative}"+
+    ".hk-zinv-pic{position:relative;flex:0 0 58px;width:58px;height:58px}"+
+    ".hk-zinv-pic img{width:58px;height:58px;border-radius:50%;object-fit:cover;object-position:top;border:2px solid #fff;box-shadow:0 6px 16px -6px rgba(7,42,49,.6);position:relative;z-index:1}"+
+    ".hk-zinv-pic:before{content:'';position:absolute;inset:-5px;border-radius:50%;background:conic-gradient(#E3C46A,#0B6B73,#E3C46A);animation:hkzspin 4s linear infinite}"+
+    ".hk-zinv-pic:after{content:'';position:absolute;right:1px;bottom:2px;width:13px;height:13px;border-radius:50%;background:#1FA855;border:2px solid #fff;z-index:2;box-shadow:0 0 0 0 rgba(31,168,85,.6);animation:hkzping 2s infinite}"+
+    "@keyframes hkzspin{to{transform:rotate(360deg)}}@keyframes hkzping{0%{box-shadow:0 0 0 0 rgba(31,168,85,.55)}80%,100%{box-shadow:0 0 0 9px rgba(31,168,85,0)}}"+
+    ".hk-zinv-badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#072A31;background:linear-gradient(180deg,#F0D98C,#D4AF4F);border-radius:999px;padding:2px 9px;margin-bottom:4px}"+
+    ".hk-zinv-t{font-size:16.5px;line-height:1.25;font-weight:800;color:#072A31;margin:0}"+
+    ".hk-zinv-w{font-size:12px;color:#0B6B73;margin-top:2px}.hk-zinv-w b{color:#1a7a3c;font-weight:700}"+
+    ".hk-zinv-lead{font-size:13.5px;line-height:1.45;color:#2b4a52;margin:12px 0 10px;position:relative}"+
+    ".hk-zinv-qs{display:flex;flex-direction:column;gap:7px;position:relative}"+
+    ".hk-zinv-q{text-align:start;border:1px solid rgba(11,107,115,.22);background:#fff;color:#0A4F57;border-radius:14px;padding:9px 12px;font:inherit;font-size:13.5px;cursor:pointer;transition:all .18s;display:flex;gap:8px;align-items:center}"+
+    ".hk-zinv-q:hover{border-color:#0B6B73;background:#EAF4F3;transform:translateX(2px)}[dir=rtl] .hk-zinv-q:hover{transform:translateX(-2px)}"+
+    ".hk-zinv-go{margin-top:11px;width:100%;border:0;border-radius:14px;padding:12px;font:inherit;font-size:15px;font-weight:800;cursor:pointer;color:#072A31;"+
+      "background:linear-gradient(180deg,#F0D98C,#D4AF4F 55%,#B8922A);box-shadow:0 10px 22px -10px rgba(184,146,42,.9);transition:transform .15s}"+
+    ".hk-zinv-go:hover{transform:translateY(-1px)}"+
+    ".hk-zinv-x{position:absolute;top:8px;right:10px;border:0;background:rgba(7,42,49,.06);color:#2b4a52;width:28px;height:28px;border-radius:50%;font-size:17px;line-height:1;cursor:pointer;z-index:3}"+
+    "[dir=rtl] .hk-zinv-x{right:auto;left:10px}"+
+    ".hk-zinv-tail{position:absolute;right:30px;bottom:-7px;width:14px;height:14px;background:#072A31;transform:rotate(45deg);border-radius:2px;z-index:-1}"+
+    "@media(max-width:600px){.hk-zinv{right:12px;left:12px;width:auto;max-width:none;bottom:84px;border-radius:18px}.hk-zinv-in{padding:12px 12px 11px;border-radius:17px}"+
+      ".hk-zinv-pic,.hk-zinv-pic img{width:46px;height:46px;flex-basis:46px}.hk-zinv-t{font-size:15px}.hk-zinv-lead{display:none}.hk-zinv-qs{margin-top:10px;gap:6px}"+
+      ".hk-zinv-q{padding:8px 10px;font-size:13px}.hk-zinv-q:nth-child(3){display:none}.hk-zinv-go{padding:10px;font-size:14px;margin-top:9px}.hk-zinv-tail{right:28px}}"+
+    "@media(prefers-reduced-motion:reduce){.hk-zinv,.hk-zinv-pic:before,.hk-zinv-pic:after{animation:none!important;transition:none!important}}"+
+    "body.hk-ai-open .hk-zinv{display:none!important}";
+    document.head.appendChild(st);
+  }
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function ask(q){
+    hide(true);
+    var b=document.getElementById("hkAi");if(!b)return;
+    if(!chatOpen())b.click();
+    var n=0,t=setInterval(function(){
+      if(window.hkZaraAsk){clearInterval(t);setTimeout(function(){window.hkZaraAsk(q);},350);}
+      else if(++n>80)clearInterval(t);
+    },100);
+  }
+  function hide(forVisit){if(card){card.classList.remove("on");var c=card;setTimeout(function(){c.remove();},450);card=null;}if(forVisit)mark("hk-zinv-off");}
+  // wait until the cookie bar and the "install the app" prompt are out of the way
+  function blocked(){
+    var c=document.getElementById("hkCc"),v=false;
+    if(c&&!c.hidden){var cs=getComputedStyle(c);v=cs.display!=="none"&&cs.visibility!=="hidden"&&c.getBoundingClientRect().height>0&&c.getBoundingClientRect().top<window.innerHeight;}
+    // the homepage welcome guide (#hkTour) and any other open popup window
+    var modal=[].slice.call(document.querySelectorAll('#hkTour,[aria-modal="true"],.modal-backdrop.open')).some(function(m){
+      if(m.closest&&m.closest(".hk-zinv"))return false;var r=m.getBoundingClientRect();return r.width>0&&r.height>0&&getComputedStyle(m).display!=="none"&&getComputedStyle(m).visibility!=="hidden";});
+    return v||modal||!!document.getElementById("hkInst");
+  }
+  function show(){
+    if(shown||seen()||chatOpen()||!document.getElementById("hkAi"))return;
+    if(blocked()){setTimeout(show,2500);return;}
+    shown=true;mark();css();
+    var pn=pageName(), k=kind(), qs=[T.q[k]];
+    if(k!=="home"&&k!=="jobs")qs.push(T.cost);
+    qs.push(T.next);
+    card=document.createElement("div");card.className="hk-zinv";card.setAttribute("role","dialog");card.setAttribute("aria-label",T.title);
+    if(ar)card.setAttribute("dir","rtl");
+    card.innerHTML='<div class="hk-zinv-in"><button type="button" class="hk-zinv-x" aria-label="'+esc(T.close)+'">×</button>'+
+      '<div class="hk-zinv-top"><div class="hk-zinv-pic"><img src="'+PIC+'" alt="" onerror="this.onerror=null;this.src=\'/assets/ai-avatar.png\'"></div>'+
+      '<div><span class="hk-zinv-badge">'+esc(T.badge)+'</span><p class="hk-zinv-t">'+esc(T.title)+'</p><div class="hk-zinv-w">'+esc(T.who)+' · <b>● '+esc(T.online)+'</b></div></div></div>'+
+      '<p class="hk-zinv-lead">'+esc(pn?T.lead.replace("{p}",ar?pn:"“"+pn+"”"):T.lead0)+'</p>'+
+      '<div class="hk-zinv-qs">'+qs.map(function(q){return '<button type="button" class="hk-zinv-q" data-q="'+esc(q)+'"><span aria-hidden="true">💬</span>'+esc(q)+'</button>';}).join("")+'</div>'+
+      '<button type="button" class="hk-zinv-go">'+esc(T.start)+' →</button></div><span class="hk-zinv-tail"></span>';
+    document.body.appendChild(card);
+    requestAnimationFrame(function(){requestAnimationFrame(function(){if(card)card.classList.add("on");});});
+    card.addEventListener("click",function(e){
+      if(e.target.closest(".hk-zinv-x")){hide(true);return;}
+      var q=e.target.closest(".hk-zinv-q");if(q){ask(q.getAttribute("data-q")+(pn&&q.getAttribute("data-q")===T.q.def?" ("+pn+")":""));return;}
+      if(e.target.closest(".hk-zinv-go")){hide(true);var b=document.getElementById("hkAi");if(b&&!chatOpen())b.click();}
+    });
+    // warm up the chat code so the first answer is quick
+    var b=document.getElementById("hkAi");if(b)try{b.dispatchEvent(new Event("pointerenter"));}catch(e){}
+  }
+  function arm(){
+    if(seen())return;
+    var timer=setTimeout(show,9000);
+    function onScroll(){var h=document.documentElement;if((h.scrollTop||document.body.scrollTop)>(h.scrollHeight-h.clientHeight)*0.35){window.removeEventListener("scroll",onScroll);clearTimeout(timer);setTimeout(show,600);}}
+    window.addEventListener("scroll",onScroll,{passive:true});
+    document.addEventListener("click",function(e){if(e.target.closest&&e.target.closest("#hkAi")){clearTimeout(timer);hide(false);mark();}},true);
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",arm);else arm();
 })();
 
 /* Hayakkom: "Add to your phone" + "Recommend to a friend".
