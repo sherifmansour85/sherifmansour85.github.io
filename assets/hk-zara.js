@@ -587,6 +587,14 @@
           help: "Конечно, я здесь, чтобы помочь! 😊 Отвечу на вопросы о лечении и поездках в Египет, назову ориентировочные цены или подготовлю с командой бесплатный личный план. Что вас интересует?",
           lost: "Я не совсем поняла. Расскажите чуть подробнее — например, «цена имплантов», «семейный отдых в Шарме» или «как оплатить»? Можно выбрать тему ниже или передать вопрос нашей команде (ответ в течение 12 часов)." }
   };
+  var MULTI = {
+    en: { intro: "Your question covers a few things — here's what we have on each part:",
+          team: "For one combined plan — what to do first, how long to stay and an indicative total in SAR (excluding flights) — our team will answer your whole question. Shall I pass it to them? They reply within 12 hours, or message us on WhatsApp." },
+    ar: { intro: "سؤالك يشمل أكثر من أمر — هذا ما لدينا عن كل جزء منه:",
+          team: "لخطة واحدة متكاملة — بماذا تبدأ، وكم مدة الإقامة، وتكلفة تقديرية إجمالية بالريال السعودي (بدون الطيران) — سيجيب فريقنا عن سؤالك كاملًا. هل أحوّله إليهم؟ يردّون خلال 12 ساعة، أو راسلنا على واتساب." },
+    ru: { intro: "Ваш вопрос касается нескольких тем — вот что у нас есть по каждой:",
+          team: "Чтобы составить единый план — с чего начать, сколько пробыть и ориентировочная общая стоимость в SAR (без перелёта) — наша команда ответит на весь вопрос. Передать его? Ответ в течение 12 часов, или напишите нам в WhatsApp." }
+  };
   function topics() { return T.opts.map(function (o) { return [o[1], o[0]]; }).concat([[T.waBtn, "wa"]]); }
   function countryOf(q) { for (var i = 0; i < COUNTRY.length; i++) if (COUNTRY[i].re.test(q)) return COUNTRY[i]; return null; }
   function stripCountry(q, c) { return q.replace(new RegExp(c.re.source, "gi"), " ").replace(/\b(i am|i'm|im|we are|we're|from|living in|live in|based in|and|need|help|please)\b|أنا|انا|من|نحن|وأحتاج|واحتاج|مساعدة|я|мы|из|нужна|помощь/gi, " ").replace(/\s+/g, " ").trim(); }
@@ -659,6 +667,27 @@
       }
       /* a bare "I need help" / "can you help me?" gets a welcome and topics, not a random page */
       if (/^\W*(hi|hello|hey|please)?\W*((i|we)\s+)?(really\s+)?(need|want|would like|require)?\s*(some\s+|your\s+)?(help|assistance|support|advice|information|info)(\s+(me|please|us))?\W*$|^\W*(can|could)\s+you\s+help(\s+(me|us))?\W*$|^\W*help(\s+me)?\W*$|^[\s\W]*(أحتاج|احتاج|أبغى|ابغى|أبي|ابي|أريد|اريد)?\s*(مساعدة|مساعده)[\s\W]*$|^[\s\W]*(ساعدني|ساعدوني|ممكن تساعدني|ممكن مساعدة)[\s\W]*$|^[\s\W]*(мне\s+)?(нужна\s+)?помощь[\s\W]*$|^[\s\W]*помогите[\s\W]*$/i.test(q)) { bot(cw.help); chips(topics()); return; }
+      /* a question with several parts ("implants for my father, a hair transplant for me and a week in Sharm —
+         cost, stay, visa?"): answer each part with its own page, and offer to pass the whole question to the team */
+      var parts = q.split(/\s*(?:[,;.?!\n؟،]+|\band\b|\balso\b|\bplus\b|\bthen\b|\bafter\b|\s+و(?=\S)|كمان|أيضًا|أيضا|وبعدين|\sи\s|также|потом)\s*/i)
+        .map(function (x) { return x.trim(); }).filter(function (x) { return x.split(/\s+/).length >= 2; });
+      if (parts.length >= 2) {
+        var seen = {}, cards = [];
+        parts.forEach(function (pt) { var h = find(pt); if (h && !seen[h.p.u]) { seen[h.p.u] = 1; cards.push(h); } });
+        if (cards.length >= 2) {
+          S.pending = q; if (!S.need) S.need = q.slice(0, 80); save();
+          bot(MULTI[lang].intro);
+          cards.slice(0, 4).forEach(function (h, i) {
+            typing(350 * (i + 1), function () {
+              var p3 = h.p;
+              if (h.qa) bot(null, esc(h.qa[1]) + "<small>" + esc(T.from) + ': <a href="' + esc(p3.u) + '">' + esc(p3.h || p3.t) + "</a></small>");
+              else bot(null, pageCard(p3));
+            });
+          });
+          typing(350 * (Math.min(cards.length, 4) + 1), function () { bot(MULTI[lang].team); chips([[T.pass, "passq"], [T.waBtn, "wa"]]); });
+          return;
+        }
+      }
       var hit = find(q);
       if (!hit && HELP.test(q) && q.split(/\s+/).length <= 8) { bot(cw.help); chips(topics()); return; }
       if (!hit) { S.pending = q; save(); bot(cw.lost); chips([[T.pass, "passq"]].concat(topics())); return; }
