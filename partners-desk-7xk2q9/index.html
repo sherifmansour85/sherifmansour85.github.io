@@ -933,8 +933,18 @@
   var AI_DRAFTS = [];
   var CAL_P = fetch("calendar.enc.json", {cache: "no-store"}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; });
   var SESSION_PW = "hk_session_pw";
-  function sessGet(){ try{ return sessionStorage.getItem(SESSION_PW); }catch(e){ return null; } }
-  function sessSet(v){ try{ if(v) sessionStorage.setItem(SESSION_PW, v); else sessionStorage.removeItem(SESSION_PW); }catch(e){} }
+  // Stay signed in on this device for 12 hours: phones often wipe the tab's memory on pull-to-refresh,
+  // so the password is also kept (with an expiry) in this browser's storage. 🔒 Lock clears both.
+  var STAY_KEY = "hk_stay_v1", STAY_MS = 12 * 3600 * 1000;
+  function sessGet(){
+    try{ var v = sessionStorage.getItem(SESSION_PW); if(v) return v; }catch(e){}
+    try{ var o = JSON.parse(localStorage.getItem(STAY_KEY) || "null"); if(o && o.pw && o.until > Date.now()) return o.pw; localStorage.removeItem(STAY_KEY); }catch(e){}
+    return null;
+  }
+  function sessSet(v){
+    try{ if(v) sessionStorage.setItem(SESSION_PW, v); else sessionStorage.removeItem(SESSION_PW); }catch(e){}
+    try{ if(v) localStorage.setItem(STAY_KEY, JSON.stringify({ pw: v, until: Date.now() + STAY_MS })); else localStorage.removeItem(STAY_KEY); }catch(e){}
+  }
   var AUTO_UNLOCK = false;
   if(sessGet()){ AUTO_UNLOCK = true; document.getElementById("pw-err").textContent = "Opening the Hub…"; }
   fetch("data.enc.json", {cache: "no-store"}).then(function(r){return r.json();}).then(function(j){
@@ -982,7 +992,8 @@
       renderCustomers();
       render();
       unlock();
-      if(manual) openWhoModal();   // ask who is signing in at every password sign-in
+      // ask who is signing in at a password sign-in, unless someone picked their name here in the last 12 hours
+      var w0 = me(); if(manual && !(w0 && w0.at && Date.now() - w0.at < STAY_MS)) openWhoModal();
       return HELP_P.then(function(enc){ return enc ? decryptWith(val, enc) : []; }).then(function(h){
         RAW_H = h || []; ALL_HELP = RAW_H;
         buildHelpFilterOptions();
@@ -1014,7 +1025,9 @@
         var w = me(); if(w) document.getElementById("who-label").textContent = w.name;
         maybeStartTour();
       });
-    }).catch(function(){
+    }).catch(function(err){
+      // a problem after the Hub has opened is not a wrong password — keep the person signed in
+      if(document.getElementById("app-content").style.display === "block"){ try{ console.error("Hub:", err); }catch(e){} return; }
       if(AUTO_UNLOCK){ AUTO_UNLOCK = false; sessSet(null); document.getElementById("pw-input").value = ""; document.getElementById("pw-err").textContent = "Please enter the password."; return; }
       document.getElementById("pw-err").textContent = "Incorrect password.";
     });
@@ -2097,7 +2110,7 @@
     { view: "announce", sel: "#an-generate", title: "Generate — nothing sends on its own", text: "You get one Outlook draft per person (or one BCC email), plus a WhatsApp link for anyone without email. You check each one and press Send yourself." },
     { view: "forms", sel: "#view-btn-forms", title: "📄 Forms", text: "Copy the right English or Arabic form link for a customer, or the partner onboarding form for a hospital, clinic or tourism company." },
     { sel: "#new-email-btn", title: "✉️ New email", text: "Write a fresh email from support@hayakkom.com with your signature already added." },
-    { sel: "#lock-btn", title: "🔒 Lock, refresh and Back", text: "The Hub stays unlocked in this tab, even when you refresh. The browser's Back button closes a window or returns to the tab you were on, without leaving the Hub. On a shared computer, press 🔒 Lock when you step away." },
+    { sel: "#lock-btn", title: "🔒 Lock, refresh and Back", text: "The Hub stays signed in on this device for 12 hours, even when you refresh. The browser's Back button closes a window or returns to the tab you were on, without leaving the Hub. On a shared computer, press 🔒 Lock when you step away." },
     { sel: "#tour-btn", title: "You're ready 🎉", text: "Your daily routine: open the Dashboard, clear the red tiles first, reply to everyone waiting, and mark people contacted. Replay this tour any time from here." }
   ];
   var tourIdx = -1, tourEls = null;
@@ -4676,7 +4689,7 @@
       if(!name){ alert("Please type your name."); return; }
       key = addPerson(name); if(title) addTitle(key, title);
     } else { name = personName(key); title = titlesFor(key)[0]; }
-    lsSet(WHO_KEY, { key:key, name:name, title: title || titlesFor(key)[0] });
+    lsSet(WHO_KEY, { key:key, name:name, title: title || titlesFor(key)[0], at: Date.now() });
     whoModal.classList.remove("open");
     var wl = document.getElementById("who-label"); if(wl) wl.textContent = name;
   });
