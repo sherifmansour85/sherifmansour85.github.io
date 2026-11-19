@@ -91,6 +91,10 @@
   .ai-box textarea.ai-ask{width:100%;min-height:46px;box-sizing:border-box;font:inherit}
   .ai-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
   .ai-note{font-size:.9em;color:#4a5a5c}
+  .ai-lang{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 8px;padding-bottom:8px;border-bottom:1px dashed #c3dcde}
+  .ai-lang b{color:#0B6B73;font-size:.95em}
+  .ai-lang select{font:inherit;padding:6px 10px;border-radius:8px;border:1px solid #9fc9cc;background:#fff;min-width:150px}
+  .ai-lang small{color:#4a5a5c}
   .ai-note.err{color:#A33}
   .btn.wa-open{background:#1FA855;border-color:#1FA855;color:#fff;text-decoration:none}
   .btn.wa-open:hover{background:#178a45;border-color:#178a45}
@@ -572,8 +576,8 @@
           </select>
         </div>
       </div>
-      <div class="field"><label>Subject</label><input type="text" id="an-subject"></div>
-      <div class="field"><label>Message — use <code>{{name}}</code> where you want their name inserted</label><textarea id="an-body" style="min-height:140px"></textarea></div>
+      <div class="field"><label>Subject</label><input type="text" id="an-subject" dir="auto"></div>
+      <div class="field"><label>Message — use <code>{{name}}</code> where you want their name inserted</label><textarea id="an-body" dir="auto" style="min-height:140px"></textarea></div>
       <div id="an-ai"></div>
     </div>
 
@@ -672,8 +676,8 @@
     <p class="sub" id="modal-sub"></p>
 
     <div class="field"><label>To</label><input type="text" id="m-to"></div>
-    <div class="field"><label>Subject</label><input type="text" id="m-subject"></div>
-    <div class="field"><label>Message</label><textarea id="m-body"></textarea></div>
+    <div class="field"><label>Subject</label><input type="text" id="m-subject" dir="auto"></div>
+    <div class="field"><label>Message</label><textarea id="m-body" dir="auto"></textarea></div>
     <div id="m-ai"></div>
 
     <div class="row2">
@@ -1348,33 +1352,52 @@
   function mountAi(holderId, o){
     var box = document.getElementById(holderId); if(!box) return;
     box.className = "ai-box";
-    box.innerHTML = '<label>✨ Ask the AI to adjust this message</label>'+
+    box.innerHTML = '<div class="ai-lang"><b>🌐 Language</b><select class="ai-lang-sel" aria-label="Message language">'+
+        '<option value="en">English</option><option value="ar">العربية — Arabic</option></select>'+
+        '<small>Pick the other language and the AI rewrites the whole message in it.</small></div>'+
+      '<label>✨ Ask the AI to adjust this message</label>'+
       '<textarea class="ai-ask" dir="auto" placeholder="Type what you want, in English or Arabic, e.g. make it shorter · more formal · translate to Arabic · explain the visa steps · say we will call tomorrow"></textarea>'+
       '<div class="ai-row"><button type="button" class="btn gold ai-go">✨ Adjust message</button>'+
       '<button type="button" class="btn ai-undo" hidden>↶ Undo</button><span class="ai-note"></span></div>';
     var ask = box.querySelector(".ai-ask"), go = box.querySelector(".ai-go"), undo = box.querySelector(".ai-undo"), note = box.querySelector(".ai-note"), prev = null;
+    var sel = box.querySelector(".ai-lang-sel"), busy = false;
     function say(t, err){ note.textContent = t; note.className = "ai-note" + (err ? " err" : ""); }
-    function run(){
-      var instr = ask.value.trim(); if(!instr){ ask.focus(); return; }
+    // show which language the message is in now (it follows the text, e.g. after a template or AI change)
+    function syncLang(){ if(busy || document.activeElement === sel) return; var m = (o.get() || {}).message || ""; if(m.trim()) sel.value = langOf(m); }
+    setInterval(function(){ if(box.offsetParent) syncLang(); }, 1200);
+    var LANG_ASK = {
+      ar: "Rewrite the whole message, and the subject, in Arabic: clear, warm Modern Standard Arabic suited to Gulf families (a natural Arabic greeting, not a word-for-word translation). Keep every fact, name, number, date, price and link exactly; for Zara's link use https://www.hayakkom.com/ar/zara/ (keep any ?ref=). Don't add or remove anything else.",
+      en: "Rewrite the whole message, and the subject, in clear, warm English. Keep every fact, name, number, date, price and link exactly; for Zara's link use https://www.hayakkom.com/zara/ (keep any ?ref=). Don't add or remove anything else."
+    };
+    sel.addEventListener("change", function(){
+      var want = sel.value, m = (o.get() || {}).message || "";
+      if(!m.trim()){ say("Write or pick a message first, then choose its language.", true); return; }
+      if(langOf(m) === want){ say("The message is already in " + (want === "ar" ? "Arabic" : "English") + "."); return; }
+      run(LANG_ASK[want], want === "ar" ? "Translated to Arabic" : "Translated to English");
+    });
+    function run(fixed, label){
+      var instr = typeof fixed === "string" ? fixed : ask.value.trim(); if(!instr){ ask.focus(); return; }
       var cur = o.get(), c = o.ctx ? o.ctx() : {};
-      go.disabled = true; say("Working on it… (about 10–20 seconds)");
+      busy = true; go.disabled = true; sel.disabled = true; say(label ? (label.replace("Translated", "Translating") + "… (about 10–20 seconds)") : "Working on it… (about 10–20 seconds)");
       hubAiKey().then(function(key){
         return fetch(HUB_AI_URL, { method:"POST", headers:{ "content-type":"application/json", "x-hub-key": key },
           body: JSON.stringify({ channel: o.channel, message: cur.message, subject: cur.subject || "", instruction: instr,
             kind: c.kind || "", name: c.name || "", context: c.rec ? aiContextOf(c.rec) : (c.context || "") }) });
       }).then(function(r){ return r.json(); }).then(function(res){
         if(res.error){ say(res.detail || ("The AI couldn't do that (" + res.error + "). Try again or edit by hand."), true); return; }
-        prev = cur; o.set(res.message, res.subject); undo.hidden = false; ask.value = "";
-        say("✓ " + (res.note || "Updated.") + " Check it before sending.");
-        act({ t:"log", kind: c.kind || "note", id: c.rec ? c.rec.id : null, name: c.name || "message", what: "Adjusted a message with AI: “" + instr.slice(0,80) + "”" });
+        prev = cur; o.set(res.message, res.subject); undo.hidden = false; if(!label) ask.value = "";
+        say("✓ " + (label ? label + "." : (res.note || "Updated.")) + " Check it before sending.");
+        act({ t:"log", kind: c.kind || "note", id: c.rec ? c.rec.id : null, name: c.name || "message", what: label ? label + " with AI" : "Adjusted a message with AI: “" + instr.slice(0,80) + "”" });
       }).catch(function(){ say("Couldn't reach the AI. Check the connection and try again.", true); })
-        .then(function(){ go.disabled = false; });
+        .then(function(){ busy = false; go.disabled = false; sel.disabled = false; sel.value = langOf((o.get() || {}).message || ""); });
     }
-    go.addEventListener("click", run);
+    go.addEventListener("click", function(){ run(); });
     ask.addEventListener("keydown", function(e){ if(e.key==="Enter" && (e.ctrlKey||e.metaKey)) run(); });
     undo.addEventListener("click", function(){ if(!prev) return; o.set(prev.message, prev.subject); prev = null; undo.hidden = true; say("Back to the previous version."); });
   }
   function recById(id){ var f = id ? findRec(id) : null; return f ? f.rec : null; }
+  // "ar" when most letters are Arabic, otherwise "en"
+  function langOf(t){ var a = (String(t).match(/[\u0600-\u06FF]/g) || []).length, l = (String(t).match(/[A-Za-z]/g) || []).length; return a > l ? "ar" : "en"; }
   mountAi("m-ai", { channel:"email",
     get: function(){ return { message: document.getElementById("m-body").value, subject: document.getElementById("m-subject").value }; },
     set: function(m, sj){ document.getElementById("m-body").value = m; if(sj) document.getElementById("m-subject").value = sj; },
