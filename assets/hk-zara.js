@@ -519,7 +519,10 @@
         clearTimeout(timer); stop(); aiBusy = false;
         S.ai = d.session_id || S.ai; if (d.contact && d.contact.name) S.aiContact = d.contact; save();
         if (!d.replies.length && !(d.images && d.images.length)) throw new Error("empty");
-        d.replies.forEach(function (t) { bot(t, md(t)); });
+        d.replies.forEach(function (t) {   /* the screen shows bold and links; the voice reads clean words only */
+          var said = t.replace(/\[([^\]\n]+)\]\((https?:[^)\s]+)\)/g, "$1").replace(/[*_#`>]+/g, "").replace(/^\s*[-•]\s+/gm, "");
+          bot(said, md(t));
+        });
         if (d.images && d.images.length) photos(d.images);
         if (d.contact && (d.contact.phone || d.contact.email)) { S.lead.phone = S.lead.phone || d.contact.phone; S.sent = true; save(); }
         chips(d.handoff ? [[T.waBtn, "wa"]] : [[T.waBtn, "wa"]]);
