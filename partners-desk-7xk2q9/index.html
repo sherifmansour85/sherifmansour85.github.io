@@ -4099,18 +4099,18 @@
           (a.why ? '<div class="sugg-why">'+esc(a.why)+'</div>' : '')+'<div class="sugg-subj">✉️ '+esc(a.draft.subject||"")+'</div>'+
           '<details class="arch-body"><summary>Read the message</summary><div dir="auto" style="white-space:pre-wrap">'+esc(a.draft.body||"")+'</div></details></div>'+
           '<div class="sugg-btns">'+(a.legacy ? '' : '<button type="button" class="btn sg-restore">↩ Restore</button>')+'</div></div>';
-      }).join("") + '</div>' : '<p class="sugg-empty">Nothing archived yet. Press 🗄 on a suggestion to archive it.</p>') :
+      }).join("") + '</div>' : '<p class="sugg-empty">Nothing archived yet. Press 🗄 Archive on a suggestion to move it here.</p>') :
 
       (items.length ? '<div class="sugg-list">' + show.map(function(s, i){
         return '<div class="sugg-item'+(s.sent?' sent':(s.rank===0?' hot':''))+'" data-i="'+items.indexOf(s)+'">'+
-          (s.sent ? '<div class="sugg-sent-tag">✓ Approved'+(s.sent!=="✓" ? ' on '+esc(s.sent) : '')+' — sent (or sending at the next hourly update). Press ✕ to remove it from this list.</div>' : '')+
+          (s.sent ? '<div class="sugg-sent-tag">✓ Approved'+(s.sent!=="✓" ? ' on '+esc(s.sent) : '')+' — sent (or sending at the next hourly update). Press 🗄 Archive to move it out of this list.</div>' : '')+
           '<div class="sugg-main"><div class="sugg-title"><span class="sugg-badge'+(s.ai?' ai':'')+'" title="'+(s.ai?'Written by Claude after reading the whole conversation':'Quick template — Claude replaces it with a written draft at the next hourly run')+'">'+(s.ai?'🤖 ':'')+esc(s.label)+(s.ai?'':' · template')+'</span> '+(s.rec ? '<button type="button" class="sugg-name" title="Show this card in the list">'+esc(s.rec.name)+' ↗</button>' : esc(s.to||""))+'</div>'+
           '<div class="sugg-why">'+esc(s.why)+'</div>'+
-          (s.since || s.done ? '<div class="sugg-since">'+(s.since ? '📨 Contacted on '+esc(s.since)+' since this was written — check it\'s still needed, or press ✕ to remove it.' : '')+(s.done ? ' ✔ Card marked done.' : '')+'</div>' : '')+
+          (s.since || s.done ? '<div class="sugg-since">'+(s.since ? '📨 Contacted on '+esc(s.since)+' since this was written — check it\'s still needed, or press 🗄 Archive to move it out of the list.' : '')+(s.done ? ' ✔ Card marked done.' : '')+'</div>' : '')+
           (s.plan && s.plan.length ? '<ol class="sugg-plan">'+s.plan.map(function(p){ return '<li>'+esc(p)+'</li>'; }).join("")+'</ol>' : '')+
           '<div class="sugg-subj">✉️ '+esc(s.draft.subject)+'</div></div>'+
           '<div class="sugg-btns">'+(s.rec ? '<button type="button" class="btn sg-conv" title="See every message with them and what the team did">💬 Conversation</button>' : '')+'<button type="button" class="btn sg-prev">👁 Preview</button><button type="button" class="btn sg-edit">✎ Edit</button>'+
-          (s.sent ? '' : '<button type="button" class="btn gold sg-ok">✓ Approve</button>')+'<button type="button" class="btn sg-no" title="'+(s.sent?'Move to the archive':'Archive this suggestion')+'">🗄</button></div></div>';
+          (s.sent ? '' : '<button type="button" class="btn gold sg-ok">✓ Approve</button>')+'<button type="button" class="btn sg-no" title="'+(s.sent?'Move to the archive':'Archive this suggestion')+'">🗄 Archive</button></div></div>';
       }).join("") + '</div>' + (items.length > 4 ? '<button type="button" class="btn sugg-more">'+(SUGG_OPEN[kind] ? 'Show fewer' : 'Show all '+items.length)+'</button>' : '')
       : '<p class="sugg-empty">Nothing waiting — every open case has had its next step. 🎉</p>'));
     renderSyncPills();
