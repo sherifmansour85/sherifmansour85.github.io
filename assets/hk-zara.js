@@ -137,8 +137,16 @@
     "#hkAiPanel .zr-lg button[aria-pressed=true]{background:#C9A43D;color:#0A2E36;opacity:1}" +
     "#hkAiPanel .zr-spk{background:transparent;border:1px solid rgba(255,255,255,.55);color:inherit;border-radius:50%;width:30px;height:30px;padding:0;cursor:pointer;font-size:14px;line-height:1}" +
     "#hkAiPanel .zr-spk[aria-pressed=true]{background:#C9A43D;border-color:#C9A43D}" +
-    ".zr-in .zr-mic{background:#E3EFEE;color:#0B6B73;padding:0 12px;font-size:18px}" +
-    ".zr-in .zr-mic.on{background:#C0392B;color:#fff;animation:zrp 1.2s infinite}@keyframes zrp{50%{opacity:.65}}" +
+    ".zr-in{position:relative}" +
+    ".zr-in .zr-mic{background:#E3EFEE;color:#0B6B73;padding:0 12px;font-size:18px;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;transition:transform .15s ease}" +
+    ".zr-in .zr-mic.on{background:#C0392B;color:#fff;transform:scale(1.25);box-shadow:0 0 0 6px rgba(192,57,43,.18);z-index:2}" +
+    ".zr-rec{position:absolute;inset:8px 0 8px 10px;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #F1C9C4;border-radius:10px;padding:0 12px;font-size:14px;color:#173B44;z-index:1;right:auto;width:calc(100% - 130px)}" +
+    "[dir=rtl] .zr-rec{inset:8px 10px 8px 0;left:auto}" +
+    ".zr-rec .zr-dot{width:10px;height:10px;border-radius:50%;background:#C0392B;animation:zrp 1s infinite;flex:none}" +
+    ".zr-rec .zr-tm{font-variant-numeric:tabular-nums;font-weight:700;flex:none}.zr-rec .zr-sl{color:#6A8389;font-size:12.5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}" +
+    ".zr-rec.zr-cx{border-color:#C0392B}.zr-rec.zr-cx .zr-sl{color:#C0392B;font-weight:700}" +
+    ".zr-recording button[type=submit]{visibility:hidden}" +
+    "@keyframes zrp{50%{opacity:.35}}" +
     "@keyframes zrb{0%,80%,100%{opacity:.3}40%{opacity:1}}@media (prefers-reduced-motion:reduce){.zr-typing span{animation:none}}";
   document.head.appendChild(css);
 
@@ -203,11 +211,14 @@
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition, synth = window.speechSynthesis || null;
   var LOC = { ar: "ar-SA", en: "en-US", ru: "ru-RU" };
   var VT = {
-    en: { mic: "Speak", stop: "Stop listening", on: "Read answers aloud: on", off: "Read answers aloud: off", lg: "Language",
+    en: { mic: "Hold to talk, release to send", stop: "Recording — release to send", on: "Read answers aloud: on", off: "Read answers aloud: off", lg: "Language",
+          slide: "‹ Slide to cancel", hold: "Hold 🎙️ to record, release to send", none: "I didn't catch that — hold 🎙️ and speak a little longer.",
           den: "I can't hear you — please allow the microphone for this site in your browser settings, or type your message." },
-    ar: { mic: "تحدّث", stop: "إيقاف الاستماع", on: "قراءة الإجابات بصوت: مفعّلة", off: "قراءة الإجابات بصوت: متوقفة", lg: "اللغة",
+    ar: { mic: "اضغط مطوّلًا للتحدث، وارفع إصبعك للإرسال", stop: "جارٍ التسجيل — ارفع إصبعك للإرسال", on: "قراءة الإجابات بصوت: مفعّلة", off: "قراءة الإجابات بصوت: متوقفة", lg: "اللغة",
+          slide: "اسحب للإلغاء ›", hold: "اضغط مطوّلًا على 🎙️ للتسجيل، وارفع إصبعك للإرسال", none: "لم أسمعك جيدًا — اضغط مطوّلًا على 🎙️ وتحدّث لفترة أطول قليلًا.",
           den: "لا أستطيع سماعك — اسمح باستخدام الميكروفون لهذا الموقع من إعدادات المتصفح، أو اكتب رسالتك." },
-    ru: { mic: "Говорить", stop: "Остановить", on: "Читать ответы вслух: вкл.", off: "Читать ответы вслух: выкл.", lg: "Язык",
+    ru: { mic: "Удерживайте, чтобы говорить; отпустите, чтобы отправить", stop: "Запись — отпустите, чтобы отправить", on: "Читать ответы вслух: вкл.", off: "Читать ответы вслух: выкл.", lg: "Язык",
+          slide: "‹ Сдвиньте для отмены", hold: "Удерживайте 🎙️ для записи, отпустите для отправки", none: "Я не расслышала — удерживайте 🎙️ и говорите чуть дольше.",
           den: "Я вас не слышу — разрешите доступ к микрофону для этого сайта или напишите сообщение." }
   };
   if (synth) { try { synth.getVoices(); synth.onvoiceschanged = function () { synth.getVoices(); }; } catch (e) { synth = null; } }
@@ -238,30 +249,76 @@
   }
   if (!synth) spk.hidden = true;
   spk.addEventListener("click", function () { setVoice(!S.voice); if (S.voice) { var last = S.log.filter(function (m) { return !m.me; }).pop(); if (last) speak(last.text); } });
-  var rec = null, listening = false;
+  /* Hold-to-talk, like a WhatsApp voice note: press and hold 🎙️ → "recording" bar with a timer;
+     release → what was said is sent; slide away (toward the text box) → cancelled. A quick tap shows how to use it.
+     Space/Enter held on the focused button does the same for keyboard users. */
+  var rec = null, listening = false, holding = false, cancelled = false, heard = "", interim = "", t0 = 0, tick = 0, sx = 0, gotSome = false;
+  var recBar = document.createElement("div"); recBar.className = "zr-rec"; recBar.hidden = true; recBar.setAttribute("aria-live", "polite");
+  recBar.innerHTML = '<span class="zr-dot"></span><span class="zr-tm">0:00</span><span class="zr-sl"></span>';
+  form.insertBefore(recBar, form.firstChild);
   function micUi(on) {
     listening = on; mic.classList.toggle("on", on); mic.setAttribute("aria-pressed", on ? "true" : "false");
     mic.title = VT[lang][on ? "stop" : "mic"]; mic.setAttribute("aria-label", mic.title);
+    recBar.hidden = !on; form.classList.toggle("zr-recording", on);
+    if (on) { recBar.querySelector(".zr-sl").textContent = VT[lang].slide; recBar.classList.remove("zr-cx"); }
   }
-  function listen() {
-    if (!SR) return;
-    if (listening && rec) { try { rec.stop(); } catch (e) {} return; }
-    hush(); if (!S.voice && synth) setVoice(true);   /* someone who talks usually wants to hear the answer */
-    var heard = "";
-    rec = new SR(); rec.lang = LOC[lang]; rec.interimResults = true; rec.continuous = false; rec.maxAlternatives = 1;
+  function clock() { var s = Math.floor((Date.now() - t0) / 1000); recBar.querySelector(".zr-tm").textContent = Math.floor(s / 60) + ":" + ("0" + s % 60).slice(-2); }
+  function startRec() {
+    rec = new SR(); rec.lang = LOC[lang]; rec.interimResults = true; rec.continuous = true; rec.maxAlternatives = 1;
     rec.onresult = function (e) {
-      var interim = "";
-      for (var i = e.resultIndex; i < e.results.length; i++) { if (e.results[i].isFinal) heard += e.results[i][0].transcript; else interim += e.results[i][0].transcript; }
-      input.value = (heard + " " + interim).trim();
+      interim = "";
+      for (var i = e.resultIndex; i < e.results.length; i++) { if (e.results[i].isFinal) heard += e.results[i][0].transcript + " "; else interim += e.results[i][0].transcript; }
+      gotSome = true;
     };
-    rec.onerror = function (e) { if (e.error === "not-allowed" || e.error === "service-not-allowed") bot(VT[lang].den); };
+    rec.onerror = function (e) { if (e.error === "not-allowed" || e.error === "service-not-allowed") { holding = false; cancelled = true; bot(VT[lang].den); } };
     rec.onend = function () {
-      micUi(false);
-      if (input.value.trim()) { if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event("submit", { cancelable: true })); }
+      if (holding && !cancelled) { try { startRec(); } catch (e) {} return; }  /* the browser stopped early: keep recording while the finger is down */
+      finishRec();
     };
-    try { rec.start(); micUi(true); } catch (e) { micUi(false); }
+    rec.start();
   }
-  if (SR) { mic.hidden = false; mic.addEventListener("click", listen); micUi(false); }
+  function press(e) {
+    if (!SR || listening) return;
+    if (e && e.pointerId != null) { try { mic.setPointerCapture(e.pointerId); } catch (x) {} sx = e.clientX; }
+    if (e && e.preventDefault) e.preventDefault();
+    hush(); if (!S.voice && synth) setVoice(true);   /* someone who talks usually wants to hear the answer */
+    holding = true; cancelled = false; heard = ""; interim = ""; gotSome = false; t0 = Date.now();
+    try { startRec(); } catch (x) { holding = false; return; }
+    micUi(true); clock(); tick = setInterval(clock, 250);
+    if (navigator.vibrate) try { navigator.vibrate(30); } catch (x) {}
+  }
+  function release(cancel) {
+    if (!holding) return;
+    holding = false; cancelled = !!cancel; clearInterval(tick);
+    var short = Date.now() - t0 < 400;
+    if (short && !cancel) { cancelled = true; }
+    try { if (cancelled) rec.abort(); else rec.stop(); } catch (x) { finishRec(); }
+    if (short && !cancel) { micUi(false); typing(200, function () { bot(VT[lang].hold); }); }
+  }
+  function finishRec() {
+    var said = (heard + " " + interim).replace(/\s+/g, " ").trim(), wasCancelled = cancelled;
+    clearInterval(tick); micUi(false); heard = ""; interim = "";
+    if (wasCancelled) return;
+    if (!said) { bot(VT[lang].none); return; }
+    input.value = said;
+    if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event("submit", { cancelable: true }));
+  }
+  if (SR) {
+    mic.hidden = false; micUi(false);
+    mic.addEventListener("pointerdown", press);
+    mic.addEventListener("pointerup", function () { release(false); });
+    mic.addEventListener("pointercancel", function () { release(true); });
+    mic.addEventListener("pointermove", function (e) {
+      if (!holding) return;
+      var moved = RTL ? e.clientX - sx : sx - e.clientX;       /* toward the text box */
+      recBar.classList.toggle("zr-cx", moved > 40);
+      if (moved > 90) release(true);
+    });
+    mic.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+    mic.addEventListener("click", function (e) { e.preventDefault(); });
+    mic.addEventListener("keydown", function (e) { if ((e.key === " " || e.key === "Enter") && !e.repeat) { e.preventDefault(); press(null); } else if (e.key === "Escape") release(true); });
+    mic.addEventListener("keyup", function (e) { if (e.key === " " || e.key === "Enter") { e.preventDefault(); release(false); } });
+  }
 
   /* ---------- AR | EN | RU ---------- */
   function paintLang() {
@@ -276,7 +333,7 @@
   }
   function setLang(l) {
     if (l === lang || !TT[l]) return;
-    hush(); if (listening && rec) try { rec.abort(); } catch (e) {}
+    hush(); if (holding) release(true); else if (listening && rec) try { rec.abort(); } catch (e) {}
     lang = l; T = TT[l]; IT = ITT[l]; S.lang = l; save(); paintLang();
     if (S.step) ask(S.step); else typing(300, greet);
   }
@@ -476,7 +533,7 @@
   });
   /* the visitor closes the panel or leaves after giving a WhatsApp number but before the end: still send what we have */
   function partial() { if (!S.sent && S.lead.phone && !S.partialSent) { S.partialSent = true; save(); send(false).catch(function () {}); } }
-  var x = document.getElementById("hkAiX"); if (x) x.addEventListener("click", function () { partial(); hush(); if (listening && rec) try { rec.abort(); } catch (e) {} });
+  var x = document.getElementById("hkAiX"); if (x) x.addEventListener("click", function () { partial(); hush(); if (holding) release(true); else if (listening && rec) try { rec.abort(); } catch (e) {} });
   window.addEventListener("pagehide", partial);
 
   /* ---------- start ---------- */
