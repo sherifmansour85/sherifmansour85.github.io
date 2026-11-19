@@ -370,6 +370,7 @@
   #pw-gate input{width:100%;padding:11px 13px;border-radius:9px;border:1px solid var(--line);font-size:14px;text-align:center;margin-bottom:10px}
   #pw-gate .err{font-size:12px;color:var(--crit-fg);min-height:16px;margin-bottom:6px}
   #pw-gate button{width:100%;padding:11px;border-radius:999px;border:none;background:linear-gradient(135deg,#C9A43D,#8F701D);color:#fff;font-weight:600;font-size:13.5px;cursor:pointer}
+.wk-note{margin:6px 0 2px;padding:6px 10px;border-radius:8px;background:#EAF6F0;color:#1B6B47;font-size:12.5px;font-weight:600}
 </style>
 </head>
 <body>
@@ -968,14 +969,23 @@
   }
   var ENCRYPTED = null;
   var ENCRYPTED_CUST = null;
-  var HELP_P = fetch("helpers.enc.json", {cache: "no-store"}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; });
-  var DRAFTS_P = fetch("drafts.enc.json", {cache: "no-store"}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; });
+  // Download one of the Hub's data files, trying again (up to 4 times) if the connection drops.
+  function getEnc(name, n){
+    n = n || 0;
+    return fetch(name, {cache: "no-store"}).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .catch(function(err){ if(n >= 3) return null; return new Promise(function(res){ setTimeout(res, 800 * (n + 1)); }).then(function(){ return getEnc(name, n + 1); }); });
+  }
+  // a file that failed to download is fetched again when it's needed, instead of showing an empty list
+  function again(p, name){ return p.then(function(j){ return j || getEnc(name); }); }
+  var HELP_P = getEnc("helpers.enc.json");
+  var DRAFTS_P = getEnc("drafts.enc.json");
   var AI_DRAFTS = [];
-  var CAL_P = fetch("calendar.enc.json", {cache: "no-store"}).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; });
+  var CAL_P = getEnc("calendar.enc.json");
   var SESSION_PW = "hk_session_pw";
-  // Stay signed in on this device for 12 hours: phones often wipe the tab's memory on pull-to-refresh,
-  // so the password is also kept (with an expiry) in this browser's storage. 🔒 Lock clears both.
-  var STAY_KEY = "hk_stay_v1", STAY_MS = 12 * 3600 * 1000;
+  // Stay signed in on this device: phones often wipe the tab's memory on pull-to-refresh or when you switch
+  // apps, so the password is also kept in this browser's storage for 30 days, renewed every time the Hub is
+  // used (so it never expires while you use it). Only 🔒 Lock signs this device out.
+  var STAY_KEY = "hk_stay_v1", STAY_MS = 30 * 24 * 3600 * 1000, WHO_MS = 12 * 3600 * 1000;
   function sessGet(){
     try{ var v = sessionStorage.getItem(SESSION_PW); if(v) return v; }catch(e){}
     try{ var o = JSON.parse(localStorage.getItem(STAY_KEY) || "null"); if(o && o.pw && o.until > Date.now()) return o.pw; localStorage.removeItem(STAY_KEY); }catch(e){}
@@ -987,13 +997,19 @@
   }
   var AUTO_UNLOCK = false;
   if(sessGet()){ AUTO_UNLOCK = true; document.getElementById("pw-err").textContent = "Opening the Hub…"; }
-  fetch("data.enc.json", {cache: "no-store"}).then(function(r){return r.json();}).then(function(j){
-    ENCRYPTED = j;
-    if(AUTO_UNLOCK){ document.getElementById("pw-input").value = sessGet() || ""; tryUnlock(); }
-  });
+  // retry the download if the connection drops (a failed download used to leave you at the password box)
+  (function loadData(n){
+    fetch("data.enc.json", {cache: "no-store"}).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); }).then(function(j){
+      ENCRYPTED = j;
+      if(AUTO_UNLOCK){ document.getElementById("pw-input").value = sessGet() || ""; tryUnlock(); }
+    }).catch(function(){
+      if(n < 6) setTimeout(function(){ loadData(n + 1); }, 1000 * (n + 1));
+      else document.getElementById("pw-err").textContent = "No connection — check the internet and reload the page.";
+    });
+  })(0);
+  var UNLOCK_TRIES = 0;
   // the customer list downloads in parallel; sign-in waits for it (it used to be read before it had arrived → 0 customers)
-  function fetchCust(){ return fetch("customers.enc.json", {cache: "no-store"}).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); }); }
-  var CUST_P = fetchCust().catch(function(){ return fetchCust(); }).then(function(j){ ENCRYPTED_CUST = j; return j; }, function(){ ENCRYPTED_CUST = null; return null; });
+  var CUST_P = getEnc("customers.enc.json").then(function(j){ ENCRYPTED_CUST = j; return j; });
   document.getElementById("pw-submit").addEventListener("click", tryUnlock);
   document.getElementById("pw-input").addEventListener("keydown", function(e){ if(e.key==="Enter") tryUnlock(); });
   function decryptWith(password, enc){
@@ -1004,9 +1020,9 @@
   function tryUnlock(){
     var val = document.getElementById("pw-input").value;
     if(!ENCRYPTED){ document.getElementById("pw-err").textContent = "Still loading, try again in a second."; return; }
-    var manual = !AUTO_UNLOCK, SYNC_P = null, STATE0 = null;
+    var manual = !AUTO_UNLOCK, SYNC_P = null, STATE0 = null, pwOk = false;
     decryptWith(val, ENCRYPTED).then(function(json){
-      PW = val; sessSet(val);
+      pwOk = true; PW = val; sessSet(val);
       // The team's shared storage (Google Apps Script) can take several seconds to answer:
       // show the Hub straight away from this device's copy and load the team's changes in the background.
       SYNC_WAIT = true;
@@ -1017,7 +1033,10 @@
       RAW_P = json.concat(mergeCustom("partner", loadCustom())); ALL = RAW_P;
       buildFilterOptions();
       render();
-      return CUST_P.then(function(enc){ return enc ? decryptWith(val, enc) : []; });
+      // never open with an empty customer list because the download failed: fetch again, and if it still
+      // fails, the retry below opens the Hub again a moment later (you stay signed in)
+      CUST_P = again(CUST_P, "customers.enc.json").then(function(j){ ENCRYPTED_CUST = j; return j; });
+      return CUST_P.then(function(enc){ if(!enc) throw new Error("customers file did not download"); return decryptWith(val, enc); });
     }).then(function(custJson){
       RAW_C = (custJson||[]).concat(mergeCustom("customer", loadCustomCustomers())); ALL_CUST = RAW_C;
       ALL_CUST.forEach(function(c){
@@ -1035,12 +1054,14 @@
       render();
       unlock();
       // ask who is signing in at a password sign-in, unless someone picked their name here in the last 12 hours
-      var w0 = me(); if(manual && !(w0 && w0.at && Date.now() - w0.at < STAY_MS)) openWhoModal();
+      var w0 = me(); if(manual && !(w0 && w0.at && Date.now() - w0.at < WHO_MS)) openWhoModal();
+      HELP_P = again(HELP_P, "helpers.enc.json");
       return HELP_P.then(function(enc){ return enc ? decryptWith(val, enc) : []; }).then(function(h){
         RAW_H = h || []; ALL_HELP = RAW_H;
         buildHelpFilterOptions();
         renderHelpers();
       }, function(){ ALL_HELP = []; renderHelpers(); }).then(function(){
+        CAL_P = again(CAL_P, "calendar.enc.json"); DRAFTS_P = again(DRAFTS_P, "drafts.enc.json");
         return CAL_P.then(function(enc){ return enc ? decryptWith(val, enc) : null; }).then(function(c){ if(c) CAL = c; }, function(){})
           .then(function(){ return DRAFTS_P.then(function(enc){ return enc ? decryptWith(val, enc) : []; }).then(function(d){ AI_DRAFTS = Array.isArray(d) ? d : []; }, function(){}); });
       }).then(function(){
@@ -1070,6 +1091,17 @@
     }).catch(function(err){
       // a problem after the Hub has opened is not a wrong password — keep the person signed in
       if(document.getElementById("app-content").style.display === "block"){ try{ console.error("Hub:", err); }catch(e){} return; }
+      // the password was right but something else failed while opening (usually the connection):
+      // keep this device signed in and try again, instead of asking for the password
+      if(pwOk){
+        try{ console.error("Hub: opening failed, retrying", err); }catch(e){}
+        UNLOCK_TRIES++;
+        if(UNLOCK_TRIES <= 4){
+          document.getElementById("pw-err").textContent = "Opening the Hub… (connection slow, trying again)";
+          setTimeout(function(){ AUTO_UNLOCK = true; document.getElementById("pw-input").value = val; tryUnlock(); }, 1500 * UNLOCK_TRIES);
+        } else document.getElementById("pw-err").textContent = "Couldn't open the Hub — check the internet connection, then reload the page (you stay signed in).";
+        return;
+      }
       if(AUTO_UNLOCK){ AUTO_UNLOCK = false; sessSet(null); document.getElementById("pw-input").value = ""; document.getElementById("pw-err").textContent = "Please enter the password."; return; }
       document.getElementById("pw-err").textContent = "Incorrect password.";
     });
@@ -4898,6 +4930,85 @@
     if(!confirm("Lock the Hub on this device? You'll need the password to open it again.")) return;
     sessSet(null); location.replace(location.pathname);
   });
+
+  // ---- Keep what you're typing when you leave the page ----
+  // Phones close a page in the background when you switch apps; when you come back it reloads and anything not
+  // yet saved was lost. Now: (1) a note you're typing is saved the moment you leave the page; (2) every 2 seconds
+  // the text in open windows (emails, WhatsApp, AI requests) and in card boxes you've typed in is kept on this
+  // device, and put back — with a small notice — when the same window or card shows the same starting text again.
+  var WK_KEY = "hk_work_v1", WK_MAX = 48 * 3600 * 1000;
+  function wkLoad(){ var o = lsGet(WK_KEY, {}), now = Date.now(); Object.keys(o).forEach(function(k){ if(!o[k] || now - o[k].at > WK_MAX) delete o[k]; }); return o; }
+  var WK = wkLoad(), WK_RESTORE = JSON.parse(JSON.stringify(WK));   // what was left from before this page load
+  function wkFields(root){ return Array.prototype.slice.call(root.querySelectorAll('textarea, input[type="text"], input[type="email"], input:not([type])')).filter(function(el){ return el.id !== "pw-input" && !/(^|-)q$|search/.test(el.id || "") && !el.classList.contains("ch-q"); }); }
+  function wkKey(el){
+    var m = el.closest(".modal-backdrop[id]"), c = el.closest(".card[data-id]"), v = el.closest('[id^="view-"]');
+    var box = m ? "m:" + m.id : c ? "c:" + c.getAttribute("data-id") : v ? "v:" + v.id : null;
+    var name = el.id || (el.className || "").split(" ")[0] || el.name;
+    return box && name ? box + "|" + name : null;
+  }
+  function wkSnap(){
+    var seen = {};
+    document.querySelectorAll(".modal-backdrop.open").forEach(function(m){ if(m.id !== "who-modal") wkFields(m).forEach(function(el){ if(el.dataset.wkInit == null) el.dataset.wkInit = el.value; seen[wkKey(el)] = el; }); });
+    document.querySelectorAll("#app-content textarea[data-wk-init]").forEach(function(el){ seen[wkKey(el)] = el; });
+    var changed = false;
+    Object.keys(seen).forEach(function(k){
+      if(!k || k === "null") return;
+      var el = seen[k], init = el.dataset.wkInit || "";
+      if(el.value !== init && el.value.trim()){ if(!WK[k] || WK[k].val !== el.value){ WK[k] = { init: init, val: el.value, at: Date.now() }; changed = true; } }
+      else if(WK[k]){ delete WK[k]; changed = true; }
+    });
+    if(changed) lsSet(WK_KEY, WK);
+  }
+  document.addEventListener("focusin", function(e){ var el = e.target; if(el && el.matches && el.matches("#app-content textarea") && el.dataset.wkInit == null) el.dataset.wkInit = el.value; });
+  setInterval(function(){ if(PW) wkSnap(); }, 2000);
+  function wkLeave(){
+    if(!PW) return;
+    var a = document.activeElement;   // save a note being typed (notes save on "change")
+    if(a && /TEXTAREA|INPUT|SELECT/.test(a.tagName)) try{ a.dispatchEvent(new Event("change", { bubbles:true })); }catch(e){}
+    wkSnap();
+    if(typeof sessGet === "function" && sessGet()) sessSet(PW);   // renew the 30-day sign-in
+  }
+  window.addEventListener("pagehide", wkLeave);
+  document.addEventListener("visibilitychange", function(){ if(document.hidden) wkLeave(); else if(PW) sessSet(PW); });
+  function wkNotice(el){
+    var n = document.createElement("div"); n.className = "wk-note";
+    n.textContent = "↺ Put back what you were writing before you left the page" + (el.classList.contains("notes") ? " (saved)." : " — not sent or saved yet.");
+    el.insertAdjacentElement("afterend", n); setTimeout(function(){ if(n.parentNode) n.parentNode.removeChild(n); }, 12000);
+  }
+  function wkRestoreIn(root){
+    if(!Object.keys(WK_RESTORE).length) return;
+    wkFields(root).forEach(function(el){
+      var k = wkKey(el), r = k && WK_RESTORE[k]; if(!r) return;
+      var cur = el.dataset.wkInit != null ? el.dataset.wkInit : el.value;
+      if(el.value !== r.init && cur !== r.init) return;   // a different email / card content now: leave it
+      delete WK_RESTORE[k];
+      el.dataset.wkInit = r.init; el.value = r.val;
+      try{ el.dispatchEvent(new Event("input", { bubbles:true })); }catch(e){}
+      wkNotice(el);
+      if(el.classList.contains("notes")) try{ el.dispatchEvent(new Event("change", { bubbles:true })); }catch(e){}
+    });
+  }
+  // windows: restore when one opens (after the Hub has filled it in)
+  var wkModalObs = new MutationObserver(function(list){
+    list.forEach(function(m){
+      var t = m.target;
+      if(t.classList.contains("open")){ setTimeout(function(){ wkFields(t).forEach(function(el){ el.dataset.wkInit = el.value; }); wkRestoreIn(t); }, 150); }
+      else if(!document.hidden){   // closed on purpose: forget what was kept for it
+        var pre = "m:" + t.id + "|", ch = false;
+        Object.keys(WK).forEach(function(k){ if(k.indexOf(pre) === 0){ delete WK[k]; ch = true; } });
+        wkFields(t).forEach(function(el){ delete el.dataset.wkInit; });
+        if(ch) lsSet(WK_KEY, WK);
+      }
+    });
+  });
+  document.querySelectorAll(".modal-backdrop[id]").forEach(function(m){ wkModalObs.observe(m, { attributes:true, attributeFilter:["class"] }); });
+  // cards and pages: restore once they're drawn
+  var wkQueued = false;
+  var wkViewObs = new MutationObserver(function(){
+    if(wkQueued || !Object.keys(WK_RESTORE).length) return; wkQueued = true;
+    setTimeout(function(){ wkQueued = false; document.querySelectorAll('#app-content [id^="view-"]').forEach(function(v){ wkRestoreIn(v); }); }, 300);
+  });
+  var wkApp = document.getElementById("app-content"); if(wkApp) wkViewObs.observe(wkApp, { childList:true, subtree:true });
 
   function flash(){
     var f = document.getElementById("copy-flash");
