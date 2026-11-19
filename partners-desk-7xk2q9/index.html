@@ -61,6 +61,7 @@
   .upd-row select{font:inherit;margin-left:4px}
   .upd-latest{font-size:.9em;background:#FFFBEF;border-left:3px solid #D4AF4F;padding:4px 8px;margin:6px 0}
   .upd-pending{font-size:.9em;font-weight:600;color:#a05a00;margin:4px 0}
+  .who-pick.who-last{outline:3px solid #1FA855;outline-offset:2px}
   .ch-btn{}
   .card-hist{margin:8px 0 4px;border:1px solid var(--line);border-radius:10px;background:#FBFAF7;padding:10px 12px}
   .ch-brief{font-size:.88em;color:#4a5a5c;margin-bottom:6px}
@@ -771,6 +772,7 @@
   <div class="modal">
     <h2>Who's using the Hub?</h2>
     <p class="sub">So emails are signed with the right name and History shows who did what. You can switch any time from the top bar.</p>
+    <p class="sub" id="who-last-note" style="font-weight:600;color:#0B6B73"></p>
     <div class="who-grid">
       <button type="button" class="btn gold who-pick" data-k="reham">Reham Mobasher</button>
       <button type="button" class="btn gold who-pick" data-k="sherif">Sherif Mansour</button>
@@ -950,9 +952,15 @@
   function tryUnlock(){
     var val = document.getElementById("pw-input").value;
     if(!ENCRYPTED){ document.getElementById("pw-err").textContent = "Still loading, try again in a second."; return; }
+    var manual = !AUTO_UNLOCK, SYNC_P = null, STATE0 = null;
     decryptWith(val, ENCRYPTED).then(function(json){
       PW = val; sessSet(val);
-      return syncGet(val).then(function(sh){ initShared(sh); return json; });
+      // The team's shared storage (Google Apps Script) can take several seconds to answer:
+      // show the Hub straight away from this device's copy and load the team's changes in the background.
+      SYNC_WAIT = true;
+      SYNC_P = syncGet(val);
+      STATE0 = JSON.parse(JSON.stringify(state || {}));
+      return json;
     }).then(function(json){
       RAW_P = json.concat(mergeCustom("partner", loadCustom())); ALL = RAW_P;
       buildFilterOptions();
@@ -974,6 +982,7 @@
       renderCustomers();
       render();
       unlock();
+      if(manual) openWhoModal();   // ask who is signing in at every password sign-in
       return HELP_P.then(function(enc){ return enc ? decryptWith(val, enc) : []; }).then(function(h){
         RAW_H = h || []; ALL_HELP = RAW_H;
         buildHelpFilterOptions();
@@ -984,7 +993,24 @@
       }).then(function(){
         renderUpcoming();
         showView(currentView);
-        finishSync();
+        renderSyncPills();
+        return SYNC_P.then(function(sh){
+          // keep anything changed on this device while the team's data was loading
+          var local = {};
+          Object.keys(state || {}).forEach(function(id){
+            var a = state[id] || {}, b0 = (STATE0 || {})[id] || {}, set = null;
+            Object.keys(a).forEach(function(k){ if(JSON.stringify(a[k]) !== JSON.stringify(b0[k])){ set = set || {}; set[k] = a[k]; } });
+            if(set) local[id] = set;
+          });
+          SYNC_WAIT = false;
+          initShared(sh);
+          finishSync();
+          if(Object.keys(local).length){
+            Object.keys(local).forEach(function(id){ state[id] = Object.assign({}, state[id] || {}, local[id]); });
+            saveState(state); rerenderAll(); renderAllSugg();
+          }
+        });
+      }).then(function(){
         var w = me(); if(w) document.getElementById("who-label").textContent = w.name;
         maybeStartTour();
       });
@@ -3620,7 +3646,7 @@
   var CTITLE_KEY = "hk_titles_custom_v1";
   var SIGTXT_KEY = "hk_sig_text_v1";
   var SHARED = { state:{}, custom:{ partner:[], customer:[] }, history:[], outbox:[], applied:[], synced_at:null };
-  var SHARED_OK = false, PW = null, SYNC_READY = false, SNAP = {}, PRE_STATE = null;
+  var SHARED_OK = false, PW = null, SYNC_READY = false, SNAP = {}, PRE_STATE = null, SYNC_WAIT = false;
   var RAW_P = [], RAW_C = [], RAW_H = [];
   function lsGet(k, d){ try{ var v = localStorage.getItem(k); return v==null ? d : JSON.parse(v); }catch(e){ return d; } }
   function lsSet(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
@@ -3872,7 +3898,8 @@
   function renderSyncPills(){
     var pending = queue.length;
     var txt, cls;
-    if(!SHARED_OK){ txt = SYNC_ERR ? "⚠ Shared storage problem: " + SYNC_ERR : "⚠ Can't reach the shared storage right now — your changes are kept on this device and sent automatically when it's back"; cls = "warn"; }
+    if(SYNC_WAIT){ txt = "⏳ Loading the team's latest changes…"; cls = "warn"; }
+    else if(!SHARED_OK){ txt = SYNC_ERR ? "⚠ Shared storage problem: " + SYNC_ERR : "⚠ Can't reach the shared storage right now — your changes are kept on this device and sent automatically when it's back"; cls = "warn"; }
     else if(pending){ txt = "⏳ Saving " + pending + " change" + (pending>1?"s":"") + " for the team…"; cls = "warn"; }
     else { txt = "✓ In sync with the team" + (SHARED.synced_at ? " · updated " + String(SHARED.synced_at).slice(0,16).replace("T"," ") + " UTC" : ""); cls = "ok"; }
     document.querySelectorAll(".sync-pill").forEach(function(el){ el.textContent = txt; el.className = "sync-pill " + cls; });
@@ -4634,7 +4661,13 @@
 
   // ---- who is using the Hub ----
   var whoModal = document.getElementById("who-modal");
-  function openWhoModal(){ whoModal.classList.add("open"); }
+  function openWhoModal(){
+    var w = me();
+    whoModal.querySelectorAll(".who-pick[data-k]").forEach(function(b){ b.classList.toggle("who-last", !!(w && b.getAttribute("data-k")===w.key)); });
+    var note = document.getElementById("who-last-note");
+    if(note) note.textContent = w ? "Last signed in on this device: " + w.name + " — tap your name to continue." : "";
+    whoModal.classList.add("open");
+  }
   whoModal.addEventListener("click", function(e){
     var b = e.target.closest(".who-pick"); if(!b) return;
     var key = b.getAttribute("data-k"), name, title;
