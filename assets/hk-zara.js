@@ -135,7 +135,7 @@
     "#hkAiPanel .zr-lgrow{display:flex;align-items:center;gap:8px;padding:7px 12px;background:#EAF3F2;border-bottom:1px solid #D3E4E1;flex:none}" +
     "#hkAiPanel .zr-lgl{font-size:12.5px;font-weight:700;color:#173B44;white-space:nowrap;flex:none}" +
     "#hkAiPanel .zr-lg{display:flex;gap:6px;flex:1;min-width:0}" +
-    "#hkAiPanel .zr-lg button{flex:1;min-height:34px;background:#fff;color:#0B6B73;border:1.5px solid #0B6B73;border-radius:999px;padding:4px 8px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;line-height:1.1}" +
+    "#hkAiPanel .zr-lg button{flex:1;min-height:34px;background:#fff;color:#0B6B73;border:1.5px solid #0B6B73;border-radius:999px;padding:4px 6px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;line-height:1.1;white-space:nowrap}" +
     "#hkAiPanel .zr-lg button[aria-pressed=true]{background:#0B6B73;color:#fff}" +
     "#hkAiPanel .zr-lg button[aria-pressed=true]::before{content:'\\2713  '}" +
     "#hkAiPanel .zr-spk{background:transparent;border:1px solid rgba(255,255,255,.55);color:inherit;border-radius:50%;width:30px;height:30px;padding:0;cursor:pointer;font-size:14px;line-height:1}" +
@@ -143,6 +143,7 @@
     ".zr-in{position:relative}" +
     ".zr-in .zr-mic{background:#E3EFEE;color:#0B6B73;padding:0 12px;font-size:18px;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;transition:transform .15s ease}" +
     ".zr-in .zr-mic.on{background:#C0392B;color:#fff;transform:scale(1.25);box-shadow:0 0 0 6px rgba(192,57,43,.18);z-index:2}" +
+    ".zr-rec[hidden]{display:none!important}" +
     ".zr-rec{position:absolute;inset:8px 0 8px 10px;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #F1C9C4;border-radius:10px;padding:0 12px;font-size:14px;color:#173B44;z-index:1;right:auto;width:calc(100% - 130px)}" +
     "[dir=rtl] .zr-rec{inset:8px 10px 8px 0;left:auto}" +
     ".zr-rec .zr-dot{width:10px;height:10px;border-radius:50%;background:#C0392B;animation:zrp 1s infinite;flex:none}" +
@@ -442,11 +443,56 @@
     if (INTENT.human.test(t)) { bot(IT.human); chips(S.sent ? [[T.waBtn, "wa"]] : [[T.waBtn, "wa"], [T.yes, "lead"]]); return true; }
     return false;
   }
+  /* "I'm from the UK and need help": recognise where the visitor is and what kind of help, instead of
+     searching the pages for the words "UK" and "help". Country pages are linked only where they exist. */
+  var COUNTRY = [
+    { re: /\b(uk|u\.k\.?|united kingdom|great britain|britain|british|england|english from|london|manchester|birmingham|scotland|wales)\b|بريطانيا|المملكة المتحدة|انجلترا|إنجلترا|انكلترا|لندن|британ|великобритан|англи|лондон/i,
+      n: { en: "the UK", ar: "بريطانيا", ru: "Великобритании" }, c: { en: "United Kingdom", ar: "بريطانيا", ru: "Великобритания" }, u: { en: "/uk/", ar: "/uk/", ru: "/uk/" } },
+    { re: /\b(saudi|ksa|riyadh|jeddah|jedda|dammam|makkah|mecca|madinah|medina|khobar)\b|السعودي|السعودية|الرياض|جدة|جده|الدمام|مكة|المدينة|الخبر|саудов/i,
+      n: { en: "Saudi Arabia", ar: "السعودية", ru: "Саудовской Аравии" }, c: { en: "Saudi Arabia", ar: "السعودية", ru: "Саудовская Аравия" }, u: { en: "/saudi-arabia/", ar: "/ar/saudi-arabia/", ru: "/saudi-arabia/" } },
+    { re: /\b(uae|u\.a\.e\.?|emirates|dubai|abu dhabi|sharjah|ajman)\b|الإمارات|الامارات|دبي|أبوظبي|ابوظبي|أبو ظبي|الشارقة|оаэ|эмират|дубай/i,
+      n: { en: "the UAE", ar: "الإمارات", ru: "ОАЭ" }, c: { en: "UAE", ar: "الإمارات", ru: "ОАЭ" }, u: { en: "/uae/", ar: "/ar/uae/", ru: "/uae/" } },
+    { re: /\bkuwait\b|الكويت|кувейт/i, n: { en: "Kuwait", ar: "الكويت", ru: "Кувейта" }, c: { en: "Kuwait", ar: "الكويت", ru: "Кувейт" }, u: { en: "/kuwait/", ar: "/ar/kuwait/", ru: "/kuwait/" } },
+    { re: /\bqatar|doha\b|قطر|الدوحة|катар/i, n: { en: "Qatar", ar: "قطر", ru: "Катара" }, c: { en: "Qatar", ar: "قطر", ru: "Катар" } },
+    { re: /\bbahrain|manama\b|البحرين|бахрейн/i, n: { en: "Bahrain", ar: "البحرين", ru: "Бахрейна" }, c: { en: "Bahrain", ar: "البحرين", ru: "Бахрейн" } },
+    { re: /\boman|muscat\b|عُمان|عمان|مسقط|оман/i, n: { en: "Oman", ar: "عُمان", ru: "Омана" }, c: { en: "Oman", ar: "عُمان", ru: "Оман" } },
+    { re: /\b(russia|moscow)\b|روسيا|россия|росси|москв/i, n: { en: "Russia", ar: "روسيا", ru: "России" }, c: { en: "Russia", ar: "روسيا", ru: "Россия" }, u: { en: "/ru/", ar: "/ru/", ru: "/ru/" } }
+  ];
+  var HELP = /\b(help|assist|support|advice|plan|planning|info|information|need|looking for|interested)\b|مساعد|ساعدني|ساعدوني|أحتاج|احتاج|أبغى|ابغى|ابي|أبي|أريد|اريد|استفسار|помог|помощь|нужн|хочу|интерес/i;
+  var CW = {
+    en: { hi: "Welcome — happy to help you from {c}! 👋 Hayakkom coordinates your whole trip to Egypt: dental care, medical treatment and check-ups with licensed providers, plus holidays, stays and transport with registered tourism companies.",
+          what: "What would you like help with? Pick one below, or just tell me in your own words.", page: "Egypt from {c}",
+          help: "Of course, I'm here to help! 😊 I can answer questions about treatment and trips in Egypt, give indicative prices, or prepare a free personal plan with our team. What do you have in mind?",
+          lost: "I'm not sure I understood that. Could you tell me a little more — for example \"dental implants price\", \"a family holiday in Sharm\" or \"how do I pay\"? You can also pick a topic below, or I can pass your question to our team (they reply within 12 hours)." },
+    ar: { hi: "أهلًا وسهلًا بك من {c}! 👋 حياكم تنسّق رحلتك إلى مصر كاملة: علاج الأسنان والعلاج الطبي والفحوصات لدى جهات مرخّصة، إضافة إلى العطلات والإقامة والتنقل عبر شركات سياحة مسجّلة.",
+          what: "بماذا تودّ أن أساعدك؟ اختر من الأسفل، أو اكتب لي بكلماتك.", page: "مصر للقادمين من {c}",
+          help: "بكل سرور، أنا هنا لمساعدتك! 😊 أجيب عن أسئلتك حول العلاج والرحلات في مصر، وأعطيك أسعارًا تقديرية، أو أجهّز لك خطة شخصية مجانية مع فريقنا. بماذا تفكّر؟",
+          lost: "لم أفهم طلبك تمامًا. هل تخبرني أكثر قليلًا — مثل \"سعر زراعة الأسنان\" أو \"عطلة عائلية في شرم\" أو \"كيف أدفع\"؟ ويمكنك اختيار موضوع من الأسفل، أو أحوّل سؤالك إلى فريقنا (يردّون خلال 12 ساعة)." },
+    ru: { hi: "Добро пожаловать — рада помочь вам из {c}! 👋 Hayakkom организует всю поездку в Египет: стоматология, лечение и чекапы в лицензированных клиниках, а также отдых, проживание и трансфер через зарегистрированные туркомпании.",
+          what: "С чем вам помочь? Выберите ниже или напишите своими словами.", page: "Египет из {c}",
+          help: "Конечно, я здесь, чтобы помочь! 😊 Отвечу на вопросы о лечении и поездках в Египет, назову ориентировочные цены или подготовлю с командой бесплатный личный план. Что вас интересует?",
+          lost: "Я не совсем поняла. Расскажите чуть подробнее — например, «цена имплантов», «семейный отдых в Шарме» или «как оплатить»? Можно выбрать тему ниже или передать вопрос нашей команде (ответ в течение 12 часов)." }
+  };
+  function topics() { return T.opts.map(function (o) { return [o[1], o[0]]; }).concat([[T.waBtn, "wa"]]); }
+  function countryOf(q) { for (var i = 0; i < COUNTRY.length; i++) if (COUNTRY[i].re.test(q)) return COUNTRY[i]; return null; }
+  function stripCountry(q, c) { return q.replace(new RegExp(c.re.source, "gi"), " ").replace(/\b(i am|i'm|im|we are|we're|from|living in|live in|based in|and|need|help|please)\b|أنا|انا|من|نحن|وأحتاج|واحتاج|مساعدة|я|мы|из|нужна|помощь/gi, " ").replace(/\s+/g, " ").trim(); }
   function answer(q) {
     if (intent(q)) return;
+    var cw = CW[lang], ctry = countryOf(q);
     loadIdx().then(function () {
+      if (ctry) {
+        S.lead.country = S.lead.country || ctry.c[lang]; save();
+        var rest = stripCountry(q, ctry), hit2 = rest.length > 3 ? find(rest) : null, link = ctry.u && ctry.u[lang];
+        bot(null, esc(cw.hi.replace("{c}", ctry.n[lang])) + (link ? '<small><a href="' + esc(link) + '">' + esc(cw.page.replace("{c}", ctry.n[lang])) + " →</a></small>" : ""));
+        if (hit2) { typing(450, function () { var p2 = hit2.p; if (hit2.qa) bot(null, esc(hit2.qa[1]) + "<small>" + esc(T.from) + ': <a href="' + esc(p2.u) + '">' + esc(p2.h || p2.t) + "</a></small>"); else bot(null, esc(T.found) + "\n" + pageCard(p2)); chips(S.sent ? [[T.newQ, "ask"], [T.waBtn, "wa"]] : [[T.yes, "lead"], [T.newQ, "ask"], [T.waBtn, "wa"]]); }); }
+        else typing(450, function () { bot(cw.what); chips(topics()); });
+        return;
+      }
+      /* a bare "I need help" / "can you help me?" gets a welcome and topics, not a random page */
+      if (/^\W*(hi|hello|hey|please)?\W*((i|we)\s+)?(really\s+)?(need|want|would like|require)?\s*(some\s+|your\s+)?(help|assistance|support|advice|information|info)(\s+(me|please|us))?\W*$|^\W*(can|could)\s+you\s+help(\s+(me|us))?\W*$|^\W*help(\s+me)?\W*$|^[\s\W]*(أحتاج|احتاج|أبغى|ابغى|أبي|ابي|أريد|اريد)?\s*(مساعدة|مساعده)[\s\W]*$|^[\s\W]*(ساعدني|ساعدوني|ممكن تساعدني|ممكن مساعدة)[\s\W]*$|^[\s\W]*(мне\s+)?(нужна\s+)?помощь[\s\W]*$|^[\s\W]*помогите[\s\W]*$/i.test(q)) { bot(cw.help); chips(topics()); return; }
       var hit = find(q);
-      if (!hit) { S.pending = q; save(); bot(T.none); chips([[T.pass, "passq"], [T.newQ, "ask"], [T.waBtn, "wa"]]); return; }
+      if (!hit && HELP.test(q) && q.split(/\s+/).length <= 8) { bot(cw.help); chips(topics()); return; }
+      if (!hit) { S.pending = q; save(); bot(cw.lost); chips([[T.pass, "passq"]].concat(topics())); return; }
       var p = hit.p;
       if (hit.qa) bot(null, esc(hit.qa[1]) + "<small>" + esc(T.from) + ': <a href="' + esc(p.u) + '">' + esc(p.h || p.t) + "</a></small>");
       else bot(null, esc(T.found) + "\n" + pageCard(p));
