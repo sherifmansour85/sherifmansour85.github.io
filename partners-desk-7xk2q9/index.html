@@ -54,6 +54,12 @@
   .flag-opt{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:7px;font-size:12.5px;cursor:pointer;white-space:nowrap}
   .flag-opt:hover{background:var(--cream)}
   .archive-btn{color:#A33;border-color:#E9C3C3}
+  .ai-box{border:1px dashed #9fc9cc;background:#F2F8F8;border-radius:10px;padding:10px 12px;margin:6px 0 12px}
+  .ai-box label{display:block;font-weight:600;color:#0B6B73;margin-bottom:4px}
+  .ai-box textarea.ai-ask{width:100%;min-height:46px;box-sizing:border-box;font:inherit}
+  .ai-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
+  .ai-note{font-size:.9em;color:#4a5a5c}
+  .ai-note.err{color:#A33}
   .btn.wa-open{background:#1FA855;border-color:#1FA855;color:#fff;text-decoration:none}
   .btn.wa-open:hover{background:#178a45;border-color:#178a45}
   .archive-btn:hover{border-color:#A33}
@@ -525,6 +531,7 @@
       </div>
       <div class="field"><label>Subject</label><input type="text" id="an-subject"></div>
       <div class="field"><label>Message — use <code>{{name}}</code> where you want their name inserted</label><textarea id="an-body" style="min-height:140px"></textarea></div>
+      <div id="an-ai"></div>
     </div>
 
     <div class="toolbar">
@@ -623,6 +630,7 @@
     <div class="field"><label>To</label><input type="text" id="m-to"></div>
     <div class="field"><label>Subject</label><input type="text" id="m-subject"></div>
     <div class="field"><label>Message</label><textarea id="m-body"></textarea></div>
+    <div id="m-ai"></div>
 
     <div class="row2">
       <div class="field"><label>Sign as</label>
@@ -642,6 +650,21 @@
       <button class="btn" id="m-sigsetup" type="button">🖼 Set up logo signature</button>
     </div>
     <p class="copy-flash" id="copy-flash">Copied — paste into a new Outlook message.</p>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="wa-modal">
+  <div class="modal">
+    <button class="close-x" id="wa-close" aria-label="Close">×</button>
+    <h2 id="wa-title">WhatsApp message</h2>
+    <p class="sub" id="wa-sub"></p>
+    <div class="field"><label>Message — edit it here or ask the AI below</label><textarea id="wa-text" dir="auto" style="min-height:150px"></textarea></div>
+    <div id="wa-ai"></div>
+    <div class="modal-actions">
+      <a class="btn gold" id="wa-go" target="_blank" rel="noopener" href="#">💬 Open WhatsApp</a>
+      <button class="btn" id="wa-cancel" type="button">Cancel</button>
+    </div>
+    <p class="sd-note">WhatsApp opens with this text ready — check it and press Send there.</p>
   </div>
 </div>
 
@@ -671,6 +694,7 @@
     <div class="pv-conv-wrap" id="pv-conv-wrap"><h3 id="pv-conv-title">💬 Conversation so far</h3><div id="pv-conv" class="pv-conv"></div></div>
     <h3 class="pv-draft-title">✉️ The email you're approving</h3>
     <div class="pv-body" id="pv-body"></div>
+    <div id="pv-ai"></div>
     <div class="modal-actions">
       <button class="btn gold" id="pv-ok" type="button">✓ Approve &amp; send…</button>
       <button class="btn" id="pv-edit" type="button">✎ Edit first</button>
@@ -1104,13 +1128,95 @@
     var url = ph ? waLink(ph, waMessage(kind, r)) : "";
     return url ? '<a class="btn wa-open" target="_blank" rel="noopener" data-id="'+esc(r.id)+'" data-kind="'+kind+'" href="'+esc(url)+'" title="Opens WhatsApp with a ready message — check it, then press Send">💬 WhatsApp</a>' : '';
   }
+  var WA = null;
   document.addEventListener("click", function(e){
     var a = e.target.closest && e.target.closest(".wa-open"); if(!a) return;
+    e.preventDefault();
     var id = a.getAttribute("data-id"), f = findRec(id), rec = f ? f.rec : {};
-    markContacted(id);
-    act({ t:"log", kind: a.getAttribute("data-kind"), id: id, name: (state[id]&&state[id].name) || rec.name || id, what: "Opened WhatsApp with a ready message" });
-    setTimeout(rerenderAll, 400);
+    var href = a.getAttribute("href"), q = href.indexOf("?text=");
+    WA = { id: id, kind: a.getAttribute("data-kind"), rec: rec, base: q>=0 ? href.slice(0, q) : href,
+           name: (state[id]&&state[id].name) || rec.name || id };
+    document.getElementById("wa-title").textContent = "WhatsApp — " + WA.name;
+    document.getElementById("wa-sub").textContent = "To +" + WA.base.replace(/\D/g, "");
+    document.getElementById("wa-text").value = q>=0 ? decodeURIComponent(href.slice(q+6)) : "";
+    document.getElementById("wa-modal").classList.add("open");
   });
+  function waClose(){ document.getElementById("wa-modal").classList.remove("open"); }
+  document.getElementById("wa-close").addEventListener("click", waClose);
+  document.getElementById("wa-cancel").addEventListener("click", waClose);
+  document.getElementById("wa-go").addEventListener("click", function(){
+    if(!WA) return;
+    this.href = WA.base + "?text=" + encodeURIComponent(document.getElementById("wa-text").value);
+    markContacted(WA.id);
+    act({ t:"log", kind: WA.kind, id: WA.id, name: WA.name, what: "Sent a WhatsApp message from the Hub" });
+    waClose(); setTimeout(rerenderAll, 400);
+  });
+
+  // ---- ✨ Ask the AI to adjust any message being written (email, draft, bulk, WhatsApp) ----
+  // The AI only rewrites the text in the box; nothing is sent until a person presses Send.
+  var HUB_AI_URL = "https://zara.sherif-mansour-85.workers.dev/hub/rewrite", HUB_AI_KEY_P = null;
+  function hubAiKey(){
+    if(!HUB_AI_KEY_P) HUB_AI_KEY_P = fetch("config.enc.json", {cache:"no-store"}).then(function(r){ return r.json(); })
+      .then(function(enc){ return decryptWith(PW, enc); }).then(function(c){ return c.hub_ai_key; })
+      .catch(function(e){ HUB_AI_KEY_P = null; throw e; });
+    return HUB_AI_KEY_P;
+  }
+  function aiContextOf(rec){
+    if(!rec) return "";
+    var st = state[rec.id] || {}, out = [];
+    ["category","profession","enquiry_type","country","location","status"].forEach(function(k){ if(st[k]||rec[k]) out.push(k+": "+(st[k]||rec[k])); });
+    if(st.summary||rec.summary) out.push("Summary: "+(st.summary||rec.summary));
+    if(st.notes) out.push("Team notes: "+st.notes);
+    (rec.answers||[]).slice(0,20).forEach(function(a){ out.push("Q: "+a.question+" — A: "+String(a.answer).slice(0,300)); });
+    (rec.thread||[]).slice(-6).forEach(function(t){ out.push("["+(t.date||"")+"] "+(t.from||"")+": "+String(t.text||"").slice(0,700)); });
+    return out.join("\n");
+  }
+  function mountAi(holderId, o){
+    var box = document.getElementById(holderId); if(!box) return;
+    box.className = "ai-box";
+    box.innerHTML = '<label>✨ Ask the AI to adjust this message</label>'+
+      '<textarea class="ai-ask" dir="auto" placeholder="Type what you want, in English or Arabic, e.g. make it shorter · more formal · translate to Arabic · explain the visa steps · say we will call tomorrow"></textarea>'+
+      '<div class="ai-row"><button type="button" class="btn gold ai-go">✨ Adjust message</button>'+
+      '<button type="button" class="btn ai-undo" hidden>↶ Undo</button><span class="ai-note"></span></div>';
+    var ask = box.querySelector(".ai-ask"), go = box.querySelector(".ai-go"), undo = box.querySelector(".ai-undo"), note = box.querySelector(".ai-note"), prev = null;
+    function say(t, err){ note.textContent = t; note.className = "ai-note" + (err ? " err" : ""); }
+    function run(){
+      var instr = ask.value.trim(); if(!instr){ ask.focus(); return; }
+      var cur = o.get(), c = o.ctx ? o.ctx() : {};
+      go.disabled = true; say("Working on it… (about 10–20 seconds)");
+      hubAiKey().then(function(key){
+        return fetch(HUB_AI_URL, { method:"POST", headers:{ "content-type":"application/json", "x-hub-key": key },
+          body: JSON.stringify({ channel: o.channel, message: cur.message, subject: cur.subject || "", instruction: instr,
+            kind: c.kind || "", name: c.name || "", context: c.rec ? aiContextOf(c.rec) : (c.context || "") }) });
+      }).then(function(r){ return r.json(); }).then(function(res){
+        if(res.error){ say(res.detail || ("The AI couldn't do that (" + res.error + "). Try again or edit by hand."), true); return; }
+        prev = cur; o.set(res.message, res.subject); undo.hidden = false; ask.value = "";
+        say("✓ " + (res.note || "Updated.") + " Check it before sending.");
+        act({ t:"log", kind: c.kind || "note", id: c.rec ? c.rec.id : null, name: c.name || "message", what: "Adjusted a message with AI: “" + instr.slice(0,80) + "”" });
+      }).catch(function(){ say("Couldn't reach the AI. Check the connection and try again.", true); })
+        .then(function(){ go.disabled = false; });
+    }
+    go.addEventListener("click", run);
+    ask.addEventListener("keydown", function(e){ if(e.key==="Enter" && (e.ctrlKey||e.metaKey)) run(); });
+    undo.addEventListener("click", function(){ if(!prev) return; o.set(prev.message, prev.subject); prev = null; undo.hidden = true; say("Back to the previous version."); });
+  }
+  function recById(id){ var f = id ? findRec(id) : null; return f ? f.rec : null; }
+  mountAi("m-ai", { channel:"email",
+    get: function(){ return { message: document.getElementById("m-body").value, subject: document.getElementById("m-subject").value }; },
+    set: function(m, sj){ document.getElementById("m-body").value = m; if(sj) document.getElementById("m-subject").value = sj; },
+    ctx: function(){ var r = (current && !current.blank) ? (recById(current.id) || current) : null; return { kind: current && current.kind, name: current && current.name, rec: r }; } });
+  mountAi("pv-ai", { channel:"email",
+    get: function(){ return { message: PV.draft.body, subject: PV.draft.subject }; },
+    set: function(m, sj){ PV.draft = Object.assign({}, PV.draft, { body: m, subject: sj || PV.draft.subject }); openPreview(PV); },
+    ctx: function(){ return { kind: PV.kind, name: PV.rec ? PV.rec.name : PV.to, rec: PV.rec }; } });
+  mountAi("an-ai", { channel:"bulk",
+    get: function(){ return { message: document.getElementById("an-body").value, subject: document.getElementById("an-subject").value }; },
+    set: function(m, sj){ var b = document.getElementById("an-body"); b.value = m; if(sj) document.getElementById("an-subject").value = sj; b.dispatchEvent(new Event("input", {bubbles:true})); },
+    ctx: function(){ return { kind: "bulk", name: document.getElementById("an-audience").value.replace(/^.*: /, "") + " announcement" }; } });
+  mountAi("wa-ai", { channel:"whatsapp",
+    get: function(){ return { message: document.getElementById("wa-text").value, subject: "" }; },
+    set: function(m){ document.getElementById("wa-text").value = m; },
+    ctx: function(){ return WA ? { kind: WA.kind, name: WA.name, rec: WA.rec } : {}; } });
   function answerLookup(r, re){
     var a = (r.answers||[]).filter(function(x){ return re.test(x.question||""); })[0];
     var v = a ? String(a.answer||"").trim() : "";
