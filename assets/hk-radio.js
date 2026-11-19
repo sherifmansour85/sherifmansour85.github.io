@@ -357,7 +357,8 @@ function resume(){
 }
 var otherMedia=0,aiWas=false;
 /* the AI assistant panel (React .ai-panel on some pages, #hkAiPanel on the static ones) pauses the radio while it is open */
-function aiOpen(){try{if(document.querySelector(".ai-panel"))return true;var p=document.getElementById("hkAiPanel");return !!(p&&!p.hidden&&p.offsetParent!==null)}catch(e){return false}}
+/* (the panel is position:fixed, so offsetParent is always null for it: check its box and the body class instead) */
+function aiOpen(){try{if(document.querySelector(".ai-panel"))return true;if(document.body&&document.body.classList.contains("hk-ai-open"))return true;var p=document.getElementById("hkAiPanel");return !!(p&&!p.hidden&&p.getClientRects().length&&getComputedStyle(p).display!=="none")}catch(e){return false}}
 setInterval(function(){var o=aiOpen();if(o===aiWas)return;aiWas=o;if(o)suspend();else resume()},500);
 function preconnect(){try{var r=JSON.parse(sessionStorage.getItem("hkRadioResume")||"null"),i=(r&&typeof r.i==="number"&&CH[r.i])?r.i:0,h=new URL(CH[i].u).origin;
   if(document.querySelector('link[rel=preconnect][href="'+h+'"]'))return;var l=document.createElement("link");l.rel="preconnect";l.href=h;document.head.appendChild(l)}catch(e){}}
