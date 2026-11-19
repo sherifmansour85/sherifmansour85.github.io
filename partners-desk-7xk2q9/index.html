@@ -54,6 +54,8 @@
   .flag-opt{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:7px;font-size:12.5px;cursor:pointer;white-space:nowrap}
   .flag-opt:hover{background:var(--cream)}
   .archive-btn{color:#A33;border-color:#E9C3C3}
+  .btn.wa-open{background:#1FA855;border-color:#1FA855;color:#fff;text-decoration:none}
+  .btn.wa-open:hover{background:#178a45;border-color:#178a45}
   .archive-btn:hover{border-color:#A33}
   .sugg-wrap{background:linear-gradient(180deg,#FFFDF6,#fff);border:1px solid #E8D9AE;border-radius:14px;padding:14px 16px;margin-bottom:14px}
   .sugg-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start}
@@ -1051,6 +1053,64 @@
     if(!d || d.length < 9) return "";
     return "https://wa.me/" + d + (text ? "?text=" + encodeURIComponent(text) : "");
   }
+  // ---- WhatsApp button on every card: opens the chat with a ready message in their language ----
+  var AR_RE = /[؀-ۿ]/;
+  function recLang(r){
+    var bits = [r.name, r.summary, r.contact, r.subject].concat((r.answers||[]).map(function(a){ return a.answer; }))
+      .concat((r.thread||[]).filter(function(t){ return !/hayakkom|zara/i.test(t.from||""); }).map(function(t){ return t.text; }));
+    return AR_RE.test(bits.join(" ")) ? "ar" : "en";
+  }
+  // "Mohamed El-Far (محمد الفار)" → "Mohamed" in English, "محمد" in Arabic; placeholder names → "".
+  function waFirstName(str, lang){
+    var s = String(str||"").trim();
+    if(!s || /not given|no name|unnamed|\(no |^job applicant/i.test(s)) return "";
+    var m = s.match(/\(([^)]*)\)/);
+    if(m && lang==="ar" && AR_RE.test(m[1])) s = m[1];
+    else s = s.replace(/\([^)]*\)/g, "").trim();
+    s = s.replace(/^(dr\.?|د\.?)\s+/i, "");
+    return (s.split(/[\s,]+/)[0] || "").replace(/[^\p{L}'-]/gu, "");
+  }
+  var WA_TOPIC = {
+    en: { Trip:"a trip to Egypt", Dental:"dental treatment in Egypt", Medical:"medical treatment in Egypt", Study:"studying in Egypt", VIP:"a VIP stay in Egypt", Investor:"investing in Egypt" },
+    ar: { Trip:"رحلة إلى مصر", Dental:"علاج الأسنان في مصر", Medical:"العلاج في مصر", Study:"الدراسة في مصر", VIP:"إقامة VIP في مصر", Investor:"الاستثمار في مصر" }
+  };
+  function waMessage(kind, r){
+    var st = state[r.id] || {}, lang = recLang(r), who = myName();
+    if(who==="Someone") who = "";
+    var me_en = who ? "this is " + who + " from Hayakkom" : "this is the Hayakkom team";
+    var me_ar = who ? "معك " + who + " من حياكم" : "معك فريق حياكم";
+    if(kind==="partner"){
+      var nm = waFirstName(r.contact || "", lang);
+      return lang==="ar"
+        ? "مرحباً" + (nm ? " " + nm : "") + "، " + me_ar + ". شكراً لاهتمامكم بالشراكة معنا. للبدء، برجاء تعبئة نموذج الشركاء (حوالي 5 دقائق):\nhttps://form.jotform.com/263202563928055\nوبعدها نحدد مكالمة قصيرة."
+        : "Hello" + (nm ? " " + nm : "") + ", " + me_en + ". Thank you for your interest in partnering with us" + (st.name || r.name ? " (" + (st.name || r.name) + ")" : "") + ". To get started, please complete our partner form (about 5 minutes):\nhttps://form.jotform.com/263202563928055\nThen we can book a short call.";
+    }
+    var name = waFirstName(st.name || r.name, lang);
+    if(kind==="helper"){
+      var role = (r.profession && r.profession!=="Other") ? r.profession : "";
+      return lang==="ar"
+        ? "مرحباً" + (name ? " " + name : "") + "، " + me_ar + ". شكراً لاهتمامك بالعمل معنا. ممكن ترد علينا هنا بالأوقات المتاحة لك، والمناطق اللي تقدر تغطيها في مصر، واللغات اللي تتكلمها؟"
+        : "Hello" + (name ? " " + name : "") + ", " + me_en + ". Thank you for your interest in working with us" + (role ? " (" + role + ")" : "") + ". Could you reply here with your availability, the areas of Egypt you can cover and the languages you speak?";
+    }
+    var type = st.enquiry_type || r.enquiry_type;
+    var topic = (WA_TOPIC[lang]||{})[type] || (lang==="ar" ? "خدماتنا في مصر" : "our services in Egypt");
+    return lang==="ar"
+      ? "مرحباً" + (name ? " " + name : "") + "، " + me_ar + ". تواصلت معنا بخصوص " + topic + "، و" + (who ? "حبيت أتابع" : "حبينا نتابع") + " معك شخصياً: هل ما زلت تخطط لذلك؟ رد علينا هنا ونساعدك في الخطوات التالية."
+      : "Hello" + (name ? " " + name : "") + ", " + me_en + ". You got in touch with us about " + topic + " and " + (who ? "I" : "we") + " wanted to follow up personally: are you still planning it? Reply here and we'll help you with the next steps.";
+  }
+  function waButton(kind, r, phone){
+    var extra = (state[r.id]||{}).extraContacts || [];
+    var ph = phone || ((r.contacts||[]).concat(extra).filter(function(c){ return waLink(c.phone); })[0] || {}).phone;
+    var url = ph ? waLink(ph, waMessage(kind, r)) : "";
+    return url ? '<a class="btn wa-open" target="_blank" rel="noopener" data-id="'+esc(r.id)+'" data-kind="'+kind+'" href="'+esc(url)+'" title="Opens WhatsApp with a ready message — check it, then press Send">💬 WhatsApp</a>' : '';
+  }
+  document.addEventListener("click", function(e){
+    var a = e.target.closest && e.target.closest(".wa-open"); if(!a) return;
+    var id = a.getAttribute("data-id"), f = findRec(id), rec = f ? f.rec : {};
+    markContacted(id);
+    act({ t:"log", kind: a.getAttribute("data-kind"), id: id, name: (state[id]&&state[id].name) || rec.name || id, what: "Opened WhatsApp with a ready message" });
+    setTimeout(rerenderAll, 400);
+  });
   function answerLookup(r, re){
     var a = (r.answers||[]).filter(function(x){ return re.test(x.question||""); })[0];
     var v = a ? String(a.answer||"").trim() : "";
@@ -1461,7 +1521,7 @@
           '<textarea class="notes" placeholder="Add a note…">'+esc(st.notes||"")+'</textarea>'+
           '<div class="card-actions">'+
             (r.email ? '<button class="btn gold reply-btn">Reply</button>' : '')+
-            (wa ? '<a class="btn wa-btn" target="_blank" rel="noopener" href="'+esc(wa)+'">WhatsApp</a>' : '')+
+            waButton("helper", r, r.phone)+
             ((r.email_link || (r.thread && r.thread.length)) ? '<button type="button" class="btn full-email-btn" title="Read the whole email here in the Hub">📧 View email</button>' : '')+
             (atts.length ? '<button class="btn atts-toggle">📎 CV / attachments ('+atts.length+')</button>' : '')+
             '<select class="h-prio btn" aria-label="Priority">'+["High","Medium","Low"].map(function(x){ return '<option'+(x===p?' selected':'')+'>'+x+'</option>'; }).join("")+'</select>'+
@@ -1488,7 +1548,6 @@
       var rb = card.querySelector(".reply-btn"); if(rb) rb.addEventListener("click", function(){ openModal(effRow); });
       var ib = card.querySelector(".info-toggle"); if(ib) ib.addEventListener("click", function(){ openInfoModal(effRow, "helper"); });
       var ab = card.querySelector(".atts-toggle"); if(ab) ab.addEventListener("click", function(){ openAttsModal(effRow); });
-      var wb = card.querySelector(".wa-btn"); if(wb) wb.addEventListener("click", function(){ markContacted(id); setTimeout(rerenderAll, 400); });
       card.querySelector(".mark-contacted").addEventListener("click", function(){ if(askContacted(id)) rerenderAll(); });
       var fb = card.querySelector(".flag-btn"), fp = card.querySelector(".flag-picker");
       fb.addEventListener("click", function(e){
@@ -2295,6 +2354,7 @@
           '<textarea class="notes" placeholder="Add a note…">'+esc(notes)+'</textarea>'+
           '<div class="card-actions">'+
             (effEmail ? '<button class="btn gold reply-btn">Reply</button>' : '')+
+            waButton("partner", r, effPhone)+
             (r.thread && r.thread.length ? '<button class="btn chain-toggle" title="Every message with them, read here in the Hub">📧 View email</button>' : '')+
             ((!(r.thread && r.thread.length)) && (r.email_link || (r.answers && r.answers.length)) ? '<button type="button" class="btn full-email-btn" title="Read the whole email here in the Hub">📧 View email</button>' : '')+
             '<button class="btn remind-toggle">Set a reminder</button>'+
@@ -2795,6 +2855,7 @@
           '<textarea class="notes" placeholder="Add a note…">'+esc(notes)+'</textarea>'+
           '<div class="card-actions">'+
             (effEmail ? '<button class="btn gold reply-btn">Reply</button>' : '')+
+            waButton("customer", r, effPhone)+
             (r.thread && r.thread.length ? '<button class="btn chain-toggle" title="Their enquiry and every message since, read here in the Hub">📧 View enquiry</button>' : '')+
             ((!(r.thread && r.thread.length)) && (r.email_link || (r.answers && r.answers.length)) ? '<button type="button" class="btn full-email-btn" title="Read the whole email here in the Hub">📧 View email</button>' : '')+
             '<button class="btn remind-toggle">Set a reminder</button>'+
