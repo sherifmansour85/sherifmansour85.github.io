@@ -36,7 +36,10 @@
   .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px;transition:box-shadow .15s}
   .card:hover{box-shadow:0 4px 18px rgba(10,46,54,.08)}
   .card.done{opacity:.55}
-  .card.deleted{opacity:.6;border-color:#C44}
+  /* archived cards stay fully usable (edit, update, WhatsApp, Restore…) — just marked, not faded */
+  .card.deleted{border:2px dashed #C9A08E;background:#FFFBF8}
+  .card.deleted:before{content:"🗄 Archived — you can still edit everything here; press Restore to move it back to the open list";display:block;
+    margin:-4px 0 10px;padding:5px 10px;border-radius:8px;background:#F6E9E2;color:#7a3f2a;font-size:.85em;font-weight:600}
   .card.flag-new{border:2px solid #B8922A;box-shadow:0 0 0 3px rgba(184,146,42,.15)}
   .card.flag-urgent{border:2px solid #C0392B;box-shadow:0 0 0 3px rgba(192,57,43,.15)}
   .card.flag-waiting{border:2px solid #2E6DA4;box-shadow:0 0 0 3px rgba(46,109,164,.15)}
