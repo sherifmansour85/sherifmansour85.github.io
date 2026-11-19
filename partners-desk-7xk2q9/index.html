@@ -3776,16 +3776,39 @@
   var flushTimer = null, FLUSHING = false;
   function scheduleFlush(){ clearTimeout(flushTimer); flushTimer = setTimeout(flush, 800); }
   // Send every change not yet confirmed by the shared store; the answer is the new shared state.
+  // Send this device's queued changes to the team. If the script rejects a batch, send them one at a time,
+  // so one change it can't take never blocks everything after it; a change that fails on its own is set
+  // aside (listed in the status line) and the rest carry on. Failures retry by themselves every 30 seconds.
+  var FAIL_KEY = "hk_sync_failed_v1", ONE_BY_ONE = false, POST_ERR = "";
+  function postActions(list){
+    return fetch(SYNC_URL, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify({ t: SYNC_TOKEN, actions: list }) })
+      .then(function(r){ return r.text(); })
+      .then(function(t){ var j = null; try{ j = JSON.parse(t); }catch(e){} if(!j) throw new Error("the Google script answered with a page instead of data (" + t.slice(0, 80).replace(/\s+/g, " ") + ")"); return j; });
+  }
+  function retryLater(){ clearTimeout(flushTimer); flushTimer = setTimeout(flush, 30000); }
   function flush(){
     if(!PW || !SYNC_TOKEN || FLUSHING) return;
-    var due = queue.slice(0, 200).map(function(a){ var c = Object.assign({}, a); delete c.sent; return c; });
-    if(!due.length){ renderSyncPills(); return; }
+    var due = queue.slice(0, ONE_BY_ONE ? 1 : 200).map(function(a){ var c = Object.assign({}, a); delete c.sent; return c; });
+    if(!due.length){ ONE_BY_ONE = false; POST_ERR = ""; renderSyncPills(); return; }
     FLUSHING = true;
-    fetch(SYNC_URL, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify({ t: SYNC_TOKEN, actions: due }) })
-      .then(function(r){ return r.json(); })
-      .then(function(j){ FLUSHING = false; if(j && j.ok){ SYNC_ERR = ""; applyRemote(j); if(queue.length) scheduleFlush(); } else { SYNC_ERR = (j && j.error) || SYNC_ERR; renderSyncPills(); } })
-      .catch(function(){ FLUSHING = false; renderSyncPills(); clearTimeout(flushTimer); flushTimer = setTimeout(flush, 30000); });
+    postActions(due).then(function(j){
+      FLUSHING = false;
+      if(j && j.ok){ SYNC_ERR = ""; POST_ERR = ""; applyRemote(j); if(queue.length) scheduleFlush(); else ONE_BY_ONE = false; return; }
+      var msg = (j && j.error) || "unknown error";
+      if(msg === "unauthorized"){ SYNC_ERR = msg; POST_ERR = msg; renderSyncPills(); return; }
+      if(!ONE_BY_ONE && due.length > 1){ ONE_BY_ONE = true; POST_ERR = msg; renderSyncPills(); flush(); return; }
+      // this single change is refused: set it aside so the others can go through
+      var bad = queue.shift(); saveQueue();
+      var failed = lsGet(FAIL_KEY, []); failed.push({ at: new Date().toISOString(), error: msg, action: bad }); lsSet(FAIL_KEY, failed.slice(-50));
+      try{ console.error("Hub: the team storage refused a change", msg, bad); }catch(e){}
+      POST_ERR = msg; renderSyncPills();
+      if(queue.length) flush();
+    }).catch(function(err){
+      FLUSHING = false; POST_ERR = (err && err.message) || "no connection"; renderSyncPills(); retryLater();
+    });
   }
+  window.hkRetrySync = function(){ ONE_BY_ONE = false; POST_ERR = ""; flush(); };
+  document.addEventListener("click", function(e){ if(e.target.closest && e.target.closest(".sync-pill.warn")){ toast("Trying again to share your changes…"); window.hkRetrySync(); } });
   // Pull the team's latest changes every minute while the Hub is open.
   function pull(){
     if(!SYNC_TOKEN || document.hidden || FLUSHING) return;
@@ -3949,9 +3972,10 @@
     var txt, cls;
     if(SYNC_WAIT){ txt = "⏳ Loading the team's latest changes…"; cls = "warn"; }
     else if(!SHARED_OK){ txt = SYNC_ERR ? "⚠ Shared storage problem: " + SYNC_ERR : "⚠ Can't reach the shared storage right now — your changes are kept on this device and sent automatically when it's back"; cls = "warn"; }
-    else if(pending){ txt = "⏳ Saving " + pending + " change" + (pending>1?"s":"") + " for the team…"; cls = "warn"; }
+    else if(pending){ txt = "⏳ Saving " + pending + " change" + (pending>1?"s":"") + " for the team…" + (POST_ERR ? " (last try: " + POST_ERR + " — retrying)" : ""); cls = "warn"; }
+    else if(lsGet(FAIL_KEY, []).length){ var fl = lsGet(FAIL_KEY, []); txt = "⚠ " + fl.length + " change" + (fl.length>1?"s":"") + " couldn't be shared: " + (fl[fl.length-1].error || "") + " — tell Sherif"; cls = "warn"; }
     else { txt = "✓ In sync with the team" + (SHARED.synced_at ? " · updated " + String(SHARED.synced_at).slice(0,16).replace("T"," ") + " UTC" : ""); cls = "ok"; }
-    document.querySelectorAll(".sync-pill").forEach(function(el){ el.textContent = txt; el.className = "sync-pill " + cls; });
+    document.querySelectorAll(".sync-pill").forEach(function(el){ el.textContent = txt + (cls==="warn" ? " ↻" : ""); el.className = "sync-pill " + cls; el.title = cls==="warn" ? "Tap to try again now" : ""; el.style.cursor = cls==="warn" ? "pointer" : ""; });
   }
 
   // ---- suggested actions (AI drafts from the hourly job + rule-based drafts) ----
