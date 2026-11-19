@@ -132,9 +132,12 @@
     ".zr-typing span:nth-child(2){animation-delay:.15s}.zr-typing span:nth-child(3){animation-delay:.3s}" +
     "body.hk-ai-open #hkInst{display:none!important}" +
     "#hkAiPanel .zr-ctl{display:flex;gap:5px;align-items:center;flex:none}" +
-    "#hkAiPanel .zr-lg{display:flex;border:1px solid rgba(255,255,255,.55);border-radius:999px;overflow:hidden}" +
-    "#hkAiPanel .zr-lg button{background:transparent;color:inherit;border:0;padding:4px 7px;font:inherit;font-size:11px;font-weight:700;cursor:pointer;opacity:.8;line-height:1}" +
-    "#hkAiPanel .zr-lg button[aria-pressed=true]{background:#C9A43D;color:#0A2E36;opacity:1}" +
+    "#hkAiPanel .zr-lgrow{display:flex;align-items:center;gap:8px;padding:7px 12px;background:#EAF3F2;border-bottom:1px solid #D3E4E1;flex:none}" +
+    "#hkAiPanel .zr-lgl{font-size:12.5px;font-weight:700;color:#173B44;white-space:nowrap;flex:none}" +
+    "#hkAiPanel .zr-lg{display:flex;gap:6px;flex:1;min-width:0}" +
+    "#hkAiPanel .zr-lg button{flex:1;min-height:34px;background:#fff;color:#0B6B73;border:1.5px solid #0B6B73;border-radius:999px;padding:4px 8px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;line-height:1.1}" +
+    "#hkAiPanel .zr-lg button[aria-pressed=true]{background:#0B6B73;color:#fff}" +
+    "#hkAiPanel .zr-lg button[aria-pressed=true]::before{content:'\\2713  '}" +
     "#hkAiPanel .zr-spk{background:transparent;border:1px solid rgba(255,255,255,.55);color:inherit;border-radius:50%;width:30px;height:30px;padding:0;cursor:pointer;font-size:14px;line-height:1}" +
     "#hkAiPanel .zr-spk[aria-pressed=true]{background:#C9A43D;border-color:#C9A43D}" +
     ".zr-in{position:relative}" +
@@ -161,7 +164,11 @@
   }
   /* AR | EN | RU toggle and the read-aloud speaker, in the header next to the close button */
   var ctl = document.createElement("span"); ctl.className = "zr-ctl";
-  ctl.innerHTML = '<span class="zr-lg" role="group"><button type="button" data-l="ar">AR</button><button type="button" data-l="en">EN</button><button type="button" data-l="ru">RU</button></span><button type="button" class="zr-spk"></button>';
+  ctl.innerHTML = '<button type="button" class="zr-spk"></button>';
+  /* language switch: its own row under the header, full names, bilingual label, the chosen one filled with a tick */
+  var lgRow = document.createElement("div"); lgRow.className = "zr-lgrow";
+  lgRow.innerHTML = '<span class="zr-lgl">🌐 اللغة · Language</span><span class="zr-lg" role="group"><button type="button" data-l="ar" lang="ar">العربية</button><button type="button" data-l="en" lang="en">English</button><button type="button" data-l="ru" lang="ru">Русский</button></span>';
+  if (head && head.parentNode) head.parentNode.insertBefore(lgRow, head.nextSibling); else panel.insertBefore(lgRow, panel.firstChild);
   if (head) { var xb = document.getElementById("hkAiX"); if (xb && xb.parentNode === head) head.insertBefore(ctl, xb); else head.appendChild(ctl); }
   var spk = ctl.querySelector(".zr-spk");
   var body = panel.querySelector(".ai-own-body") || panel;
@@ -327,8 +334,8 @@
     if (ht2 && ht2.firstChild && ht2.lastChild) { ht2.firstChild.textContent = T.title; ht2.lastChild.textContent = T.sub; }
     input.placeholder = T.ph; input.setAttribute("aria-label", T.ph); sendBtn.textContent = T.send;
     body.querySelector(".zr-foot").textContent = T.note;
-    ctl.querySelector(".zr-lg").setAttribute("aria-label", VT[lang].lg);
-    Array.prototype.forEach.call(ctl.querySelectorAll(".zr-lg button"), function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-l") === lang ? "true" : "false"); });
+    lgRow.querySelector(".zr-lg").setAttribute("aria-label", VT[lang].lg);
+    Array.prototype.forEach.call(lgRow.querySelectorAll(".zr-lg button"), function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-l") === lang ? "true" : "false"); });
     setVoice(S.voice); if (SR) micUi(listening);
   }
   function setLang(l) {
@@ -337,7 +344,7 @@
     lang = l; T = TT[l]; IT = ITT[l]; S.lang = l; save(); paintLang();
     if (S.step) ask(S.step); else typing(300, greet);
   }
-  Array.prototype.forEach.call(ctl.querySelectorAll(".zr-lg button"), function (b) { b.addEventListener("click", function () { setLang(b.getAttribute("data-l")); }); });
+  Array.prototype.forEach.call(lgRow.querySelectorAll(".zr-lg button"), function (b) { b.addEventListener("click", function () { setLang(b.getAttribute("data-l")); }); });
 
   /* ---------- knowledge base: assets/search-index.json ---------- */
   var IDX = null, idxP = null;
