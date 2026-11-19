@@ -988,7 +988,9 @@
     ENCRYPTED = j;
     if(AUTO_UNLOCK){ document.getElementById("pw-input").value = sessGet() || ""; tryUnlock(); }
   });
-  fetch("customers.enc.json", {cache: "no-store"}).then(function(r){return r.json();}).then(function(j){ ENCRYPTED_CUST = j; }).catch(function(){ ENCRYPTED_CUST = null; });
+  // the customer list downloads in parallel; sign-in waits for it (it used to be read before it had arrived → 0 customers)
+  function fetchCust(){ return fetch("customers.enc.json", {cache: "no-store"}).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); }); }
+  var CUST_P = fetchCust().catch(function(){ return fetchCust(); }).then(function(j){ ENCRYPTED_CUST = j; return j; }, function(){ ENCRYPTED_CUST = null; return null; });
   document.getElementById("pw-submit").addEventListener("click", tryUnlock);
   document.getElementById("pw-input").addEventListener("keydown", function(e){ if(e.key==="Enter") tryUnlock(); });
   function decryptWith(password, enc){
@@ -1012,7 +1014,7 @@
       RAW_P = json.concat(mergeCustom("partner", loadCustom())); ALL = RAW_P;
       buildFilterOptions();
       render();
-      return ENCRYPTED_CUST ? decryptWith(val, ENCRYPTED_CUST) : [];
+      return CUST_P.then(function(enc){ return enc ? decryptWith(val, enc) : []; });
     }).then(function(custJson){
       RAW_C = (custJson||[]).concat(mergeCustom("customer", loadCustomCustomers())); ALL_CUST = RAW_C;
       ALL_CUST.forEach(function(c){
