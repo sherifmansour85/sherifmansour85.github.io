@@ -204,7 +204,18 @@
     "[dir=rtl]#hkAiPanel .zr-rec{inset:6px 6px 6px auto!important}" +
     "#hkAiPanel .zr-foot{background:transparent!important;text-align:center;font-size:10.5px!important;color:#6A8389!important;padding:2px 16px 10px!important}" +
     "#hkAiPanel .zr-ph img{border-radius:14px!important}" +
-    "@media (prefers-reduced-motion:reduce){#hkAiPanel .zr-row{animation:none}#hkAiPanel .zr-avw::after{animation:none}}";
+    "#hkAiPanel .zr-in .zr-mic{position:relative;overflow:visible}" +
+    "#hkAiPanel .zr-lock{position:absolute;left:50%;bottom:calc(100% + 12px);transform:translate(-50%,8px);display:flex;flex-direction:column;align-items:center;gap:2px;width:40px;padding:8px 0 6px;border-radius:999px;background:#fff;color:var(--zt2);box-shadow:0 8px 20px -6px rgba(7,42,49,.35);font-size:15px;line-height:1;opacity:0;pointer-events:none;transition:opacity .2s,transform .25s}" +
+    "#hkAiPanel .zr-lock .zr-ch{font-size:13px;animation:zrupb 1s ease-in-out infinite}@keyframes zrupb{50%{transform:translateY(-4px)}}" +
+    "#hkAiPanel .zr-recording:not(.zr-locked) .zr-lock{opacity:1;transform:translate(-50%,0)}" +
+    "#hkAiPanel .zr-up .zr-lock{transform:translate(-50%,-10px)!important;background:var(--zg);color:var(--zd)}" +
+    "#hkAiPanel .zr-trash{display:none;border:0;background:#FDECEA;color:#C0392B;width:32px;height:32px;border-radius:50%;font-size:15px;flex:none;cursor:pointer}" +
+    "#hkAiPanel .zr-locked .zr-trash{display:inline-flex;align-items:center;justify-content:center}" +
+    "#hkAiPanel .zr-in.zr-locked .zr-mic{display:none!important}" +
+    "#hkAiPanel .zr-in.zr-locked button[type=submit]{visibility:visible!important}" +
+    "#hkAiPanel .zr-in.zr-locked .zr-rec{width:calc(100% - 60px)!important}" +
+    "#hkAiPanel .zr-locked .zr-rec .zr-sl{color:var(--zt2);font-weight:600}" +
+    "@media (prefers-reduced-motion:reduce){#hkAiPanel .zr-row{animation:none}#hkAiPanel .zr-avw::after{animation:none}#hkAiPanel .zr-lock .zr-ch{animation:none}}";
   document.head.appendChild(css);
 
   panel.setAttribute("dir", RTL ? "rtl" : "ltr");
@@ -275,13 +286,13 @@
   var LOC = { ar: "ar-SA", en: "en-US", ru: "ru-RU" };
   var VT = {
     en: { mic: "Hold to talk, release to send", stop: "Recording — release to send", on: "Read answers aloud: on", off: "Read answers aloud: off", lg: "Language",
-          slide: "‹ Slide to cancel", hold: "Hold 🎙️ to record, release to send", none: "I didn't catch that — hold 🎙️ and speak a little longer.",
+          slide: "‹ Slide to cancel", lock: "Slide up to lock", locked: "Recording — tap ➤ to send", del: "Delete recording", hold: "Hold 🎙️ to record, release to send", none: "I didn't catch that — hold 🎙️ and speak a little longer.",
           den: "I can't hear you — please allow the microphone for this site in your browser settings, or type your message." },
     ar: { mic: "اضغط مطوّلًا للتحدث، وارفع إصبعك للإرسال", stop: "جارٍ التسجيل — ارفع إصبعك للإرسال", on: "قراءة الإجابات بصوت: مفعّلة", off: "قراءة الإجابات بصوت: متوقفة", lg: "اللغة",
-          slide: "اسحب للإلغاء ›", hold: "اضغط مطوّلًا على 🎙️ للتسجيل، وارفع إصبعك للإرسال", none: "لم أسمعك جيدًا — اضغط مطوّلًا على 🎙️ وتحدّث لفترة أطول قليلًا.",
+          slide: "اسحب للإلغاء ›", lock: "اسحب للأعلى للتثبيت", locked: "جارٍ التسجيل — اضغط ➤ للإرسال", del: "حذف التسجيل", hold: "اضغط مطوّلًا على 🎙️ للتسجيل، وارفع إصبعك للإرسال", none: "لم أسمعك جيدًا — اضغط مطوّلًا على 🎙️ وتحدّث لفترة أطول قليلًا.",
           den: "لا أستطيع سماعك — اسمح باستخدام الميكروفون لهذا الموقع من إعدادات المتصفح، أو اكتب رسالتك." },
     ru: { mic: "Удерживайте, чтобы говорить; отпустите, чтобы отправить", stop: "Запись — отпустите, чтобы отправить", on: "Читать ответы вслух: вкл.", off: "Читать ответы вслух: выкл.", lg: "Язык",
-          slide: "‹ Сдвиньте для отмены", hold: "Удерживайте 🎙️ для записи, отпустите для отправки", none: "Я не расслышала — удерживайте 🎙️ и говорите чуть дольше.",
+          slide: "‹ Сдвиньте для отмены", lock: "Сдвиньте вверх, чтобы закрепить", locked: "Запись — нажмите ➤, чтобы отправить", del: "Удалить запись", hold: "Удерживайте 🎙️ для записи, отпустите для отправки", none: "Я не расслышала — удерживайте 🎙️ и говорите чуть дольше.",
           den: "Я вас не слышу — разрешите доступ к микрофону для этого сайта или напишите сообщение." }
   };
   if (synth) { try { synth.getVoices(); synth.onvoiceschanged = function () { synth.getVoices(); }; } catch (e) { synth = null; } }
@@ -315,17 +326,22 @@
   /* Hold-to-talk, like a WhatsApp voice note: press and hold 🎙️ → "recording" bar with a timer;
      release → what was said is sent; slide away (toward the text box) → cancelled. A quick tap shows how to use it.
      Space/Enter held on the focused button does the same for keyboard users. */
-  var rec = null, listening = false, holding = false, cancelled = false, heard = "", interim = "", t0 = 0, tick = 0, sx = 0, gotSome = false;
+  var rec = null, listening = false, holding = false, locked = false, cancelled = false, heard = "", interim = "", t0 = 0, tick = 0, sx = 0, sy = 0, gotSome = false;
   var recBar = document.createElement("div"); recBar.className = "zr-rec"; recBar.hidden = true; recBar.setAttribute("aria-live", "polite");
-  recBar.innerHTML = '<span class="zr-dot"></span><span class="zr-tm">0:00</span><span class="zr-sl"></span>';
+  recBar.innerHTML = '<button type="button" class="zr-trash">🗑</button><span class="zr-dot"></span><span class="zr-tm">0:00</span><span class="zr-sl"></span>';
   form.insertBefore(recBar, form.firstChild);
+  /* WhatsApp lock: while holding, a 🔒 hint rises above the mic; slide up to it and recording continues hands-free */
+  var lockHint = document.createElement("span"); lockHint.className = "zr-lock"; lockHint.setAttribute("aria-hidden", "true");
+  lockHint.innerHTML = '<span class="zr-lk">🔒</span><span class="zr-ch">⌃</span>'; mic.appendChild(lockHint);
   function micUi(on) {
     listening = on; mic.classList.toggle("on", on); mic.setAttribute("aria-pressed", on ? "true" : "false");
     mic.title = VT[lang][on ? "stop" : "mic"]; mic.setAttribute("aria-label", mic.title);
     recBar.hidden = !on; form.classList.toggle("zr-recording", on);
-    if (on) { recBar.querySelector(".zr-sl").textContent = VT[lang].slide; recBar.classList.remove("zr-cx"); }
+    if (!on) { locked = false; form.classList.remove("zr-locked", "zr-up"); }
+    var tr = recBar.querySelector(".zr-trash"); tr.title = VT[lang].del; tr.setAttribute("aria-label", VT[lang].del);
+    if (on) { recBar.querySelector(".zr-sl").textContent = locked ? VT[lang].locked : VT[lang].slide; recBar.classList.remove("zr-cx"); }
   }
-  function clock() { var s = Math.floor((Date.now() - t0) / 1000); if (holding && s >= 60) { release(false); return; } recBar.querySelector(".zr-tm").textContent = Math.floor(s / 60) + ":" + ("0" + s % 60).slice(-2); }
+  function clock() { var s = Math.floor((Date.now() - t0) / 1000); if (holding && s >= 60) { release(false); return; } if (locked && s >= 180) { sendLocked(); return; } recBar.querySelector(".zr-tm").textContent = Math.floor(s / 60) + ":" + ("0" + s % 60).slice(-2); }
   function startRec() {
     rec = new SR(); rec.lang = LOC[lang]; rec.interimResults = true; rec.continuous = true; rec.maxAlternatives = 1;
     rec.onresult = function (e) {
@@ -337,14 +353,14 @@
       if (e.error === "not-allowed" || e.error === "service-not-allowed" || e.error === "audio-capture") { holding = false; cancelled = true; finishRec(); bot(VT[lang].den); }
     };
     rec.onend = function () {
-      if (holding && !cancelled) { try { startRec(); } catch (e) {} return; }  /* the browser stopped early: keep recording while the finger is down */
+      if ((holding || locked) && !cancelled) { try { startRec(); } catch (e) {} return; }  /* the browser stopped early: keep recording while the finger is down */
       finishRec();
     };
     rec.start();
   }
   function press(e) {
     if (!SR || listening) return;
-    if (e && e.pointerId != null) { try { mic.setPointerCapture(e.pointerId); } catch (x) {} sx = e.clientX; }
+    if (e && e.pointerId != null) { try { mic.setPointerCapture(e.pointerId); } catch (x) {} sx = e.clientX; sy = e.clientY; }
     if (e && e.preventDefault) e.preventDefault();
     hush(); if (!S.voice && synth) setVoice(true);   /* someone who talks usually wants to hear the answer */
     holding = true; cancelled = false; heard = ""; interim = ""; gotSome = false; t0 = Date.now();
@@ -361,6 +377,24 @@
     if (short && !cancel) { micUi(false); typing(200, function () { bot(VT[lang].hold); }); }
     /* safety net: some phones never report the end of listening — never leave the recording bar on screen */
     setTimeout(function () { if (listening && !holding) finishRec(); }, 2500);
+  }
+  function lockIt() {
+    if (!holding) return;
+    holding = false; locked = true; form.classList.add("zr-locked"); form.classList.remove("zr-up");
+    recBar.querySelector(".zr-sl").textContent = VT[lang].locked; recBar.classList.remove("zr-cx");
+    if (navigator.vibrate) try { navigator.vibrate([20, 40, 20]); } catch (x) {}
+  }
+  function sendLocked() {
+    if (!locked) return;
+    locked = false; cancelled = false; clearInterval(tick);
+    try { rec.stop(); } catch (x) { finishRec(); }
+    setTimeout(function () { if (listening && !holding && !locked) finishRec(); }, 2500);
+  }
+  function cancelLocked() {
+    if (!locked && !listening) return;
+    locked = false; holding = false; cancelled = true; clearInterval(tick);
+    try { rec.abort(); } catch (x) {}
+    finishRec();
   }
   function finishRec() {
     if (!listening) return;   /* already finished (each recording is sent at most once) */
@@ -380,9 +414,19 @@
     window.addEventListener("pointerup", function () { if (holding) release(false); }, true);
     window.addEventListener("blur", function () { if (holding) release(false); });
     document.addEventListener("visibilitychange", function () { if (document.hidden && holding) release(true); });
-    recBar.addEventListener("pointerdown", function (e) { e.preventDefault(); if (holding) release(true); else if (listening) { cancelled = true; finishRec(); } });
+    recBar.addEventListener("pointerdown", function (e) {
+      e.preventDefault();
+      if (holding) release(true);
+      else if (locked) { if (e.target.closest && e.target.closest(".zr-trash")) cancelLocked(); }
+      else if (listening) { cancelled = true; finishRec(); }
+    });
+    /* while locked, the ➤ button sends the recording instead of the text box */
+    form.addEventListener("submit", function (e) { if (locked && listening) { e.preventDefault(); e.stopImmediatePropagation(); sendLocked(); } }, true);
     mic.addEventListener("pointermove", function (e) {
       if (!holding) return;
+      var up = sy - e.clientY;                                  /* toward the 🔒 */
+      form.classList.toggle("zr-up", up > 25);
+      if (up > 70) { lockIt(); return; }
       var moved = RTL ? e.clientX - sx : sx - e.clientX;       /* toward the text box */
       recBar.classList.toggle("zr-cx", moved > 40);
       if (moved > 90) release(true);
@@ -406,7 +450,7 @@
   }
   function setLang(l) {
     if (l === lang || !TT[l]) return;
-    hush(); if (holding) release(true); else if (listening && rec) try { rec.abort(); } catch (e) {}
+    hush(); if (holding) release(true); else if (listening && rec) { locked = false; cancelled = true; try { rec.abort(); } catch (e) {} }
     lang = l; T = TT[l]; IT = ITT[l]; S.lang = l; save(); paintLang();
     if (S.step) ask(S.step); else typing(300, greet);
   }
@@ -695,7 +739,7 @@
   });
   /* the visitor closes the panel or leaves after giving a WhatsApp number but before the end: still send what we have */
   function partial() { if (!S.sent && S.lead.phone && !S.partialSent) { S.partialSent = true; save(); send(false).catch(function () {}); } }
-  var x = document.getElementById("hkAiX"); if (x) x.addEventListener("click", function () { partial(); hush(); if (holding) release(true); else if (listening && rec) try { rec.abort(); } catch (e) {} });
+  var x = document.getElementById("hkAiX"); if (x) x.addEventListener("click", function () { partial(); hush(); if (holding) release(true); else if (listening && rec) { locked = false; cancelled = true; try { rec.abort(); } catch (e) {} } });
   window.addEventListener("pagehide", partial);
 
   /* ---------- start ---------- */
