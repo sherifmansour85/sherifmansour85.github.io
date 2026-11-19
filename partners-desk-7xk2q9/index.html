@@ -54,6 +54,13 @@
   .flag-opt{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:7px;font-size:12.5px;cursor:pointer;white-space:nowrap}
   .flag-opt:hover{background:var(--cream)}
   .archive-btn{color:#A33;border-color:#E9C3C3}
+  .upd-box{margin:8px 0 4px;border:1px solid #E7D9A8;border-radius:10px;background:#FFFBEF;padding:10px 12px}
+  .upd-box label{font-weight:600;color:#7A5A00}
+  .upd-box textarea{width:100%;box-sizing:border-box;min-height:60px;font:inherit;margin:4px 0}
+  .upd-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .upd-row select{font:inherit;margin-left:4px}
+  .upd-latest{font-size:.9em;background:#FFFBEF;border-left:3px solid #D4AF4F;padding:4px 8px;margin:6px 0}
+  .upd-pending{font-size:.9em;font-weight:600;color:#a05a00;margin:4px 0}
   .ch-btn{}
   .card-hist{margin:8px 0 4px;border:1px solid var(--line);border-radius:10px;background:#FBFAF7;padding:10px 12px}
   .ch-brief{font-size:.88em;color:#4a5a5c;margin-bottom:6px}
@@ -446,6 +453,7 @@
     <select id="f-view">
       <option value="">Show: everything</option>
       <option value="oldagent">🤖 From old Zara agent (legacy chats)</option>
+      <option value="pending">⏳ All pending (hospital, tourism company, waiting for reply)</option>
       <option value="attention">🔥 Needs attention</option>
       <option value="awaiting">✉️ Sent us an email — awaiting our reply</option>
       <option value="emailed">✉️ Sent us an email (any)</option>
@@ -501,6 +509,7 @@
       <option value="phoneonly">Phone / WhatsApp only</option>
       <option value="legacy">From old (legacy) forms</option>
       <option value="oldagent">🤖 From old Zara agent (legacy chats)</option>
+      <option value="pending">⏳ All pending (hospital, tourism company, waiting for reply)</option>
     </select>
     <select id="fc-type"><option value="">All enquiry types</option></select>
     <select id="fc-status"><option value="">All statuses</option></select>
@@ -612,6 +621,7 @@
       <option value="urgent">Urgent</option>
       <option value="hascv">Sent a CV / attachment</option>
       <option value="oldagent">🤖 From old Zara agent (legacy chats)</option>
+      <option value="pending">⏳ All pending (hospital, tourism company, waiting for reply)</option>
     </select>
     <select id="fh-sort">
       <option value="priority">Sort: most valuable first</option>
@@ -1007,7 +1017,13 @@
   function saveCustomCustomers(c){ try{ localStorage.setItem(CUSTOM_CUST_KEY, JSON.stringify(c)); }catch(e){} queueCustomAdds("customer", c); }
   var ALL_CUST = [];
   var ENQUIRY_TYPE_OPTIONS = ["Trip","Dental","Medical","Study","VIP","Investor","General"];
-  var CUST_STATUS_OPTIONS = ["New Enquiry","Contacted","Quoted","Booked","Lost"];
+  // ⏳ "Pending" statuses: the daily pending email to support@ lists every card in one of these.
+  var PENDING_TOURISM = "Pending — tourism company", PENDING_HOSPITAL = "Pending — hospital / clinic",
+      PENDING_CUSTOMER = "Pending — waiting for customer reply", PENDING_PARTNER = "Pending — waiting for partner reply",
+      PENDING_APPLICANT = "Pending — waiting for applicant reply";
+  function isPending(st){ return /^Pending/.test(st||""); }
+  var CUST_STATUS_OPTIONS = ["New Enquiry","Contacted", PENDING_CUSTOMER, PENDING_HOSPITAL, PENDING_TOURISM, "Quoted","Booked","Lost"];
+  var HELPER_STATUS_OPTIONS = ["New Applicant","Contacted", PENDING_APPLICANT, "Shortlisted","Hired","Not suitable"];
   var FLAG_OPTIONS = [
     { key: "new", label: "New" },
     { key: "urgent", label: "Urgent" },
@@ -1597,6 +1613,7 @@
       if(view==="ready" && f!=="ready") return false;
       if(view==="urgent" && f!=="urgent") return false;
       if(view==="hascv" && !(r.attachments||[]).length) return false;
+      if(view==="pending" && !isPending(st.status || r.status)) return false;
       if(q){
         var hay = [r.name, r.email, r.phone, r.profession, r.role_detail, r.location, r.languages, r.experience, r.summary, st.notes, histSearchText(r)].join(" ").toLowerCase();
         if(hay.indexOf(q)===-1) return false;
@@ -2259,12 +2276,12 @@
   VIEWS.forEach(function(v){ document.getElementById("view-btn-"+v).addEventListener("click", function(){ showView(v); }); });
 
   function pillClass(kind, val){
-    if(kind==="status") return val==="Live Partner" ? "ok" : val==="Documents Received" ? "warn" : val==="Low Priority" ? "neu" : "crit";
+    if(kind==="status") return val==="Live Partner" ? "ok" : (val==="Documents Received" || isPending(val)) ? "warn" : val==="Low Priority" ? "neu" : "crit";
     return val==="High" ? "crit" : val==="Medium" ? "warn" : val==="Active" ? "ok" : "neu";
   }
   function esc(s){ return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
 
-  var STATUS_OPTIONS = ["New Inquiry","Documents Received","Live Partner","Low Priority"];
+  var STATUS_OPTIONS = ["New Inquiry", PENDING_PARTNER, PENDING_HOSPITAL, PENDING_TOURISM, "Documents Received","Live Partner","Low Priority"];
   var CATEGORY_OPTIONS = ["Hospital","Dental Clinic","Clinic (Other)","Wellness/Resort","Referral Agency","Tourism & Hospitality","Vendor/Low Priority"];
 
   var REMIND_OPTIONS = [
@@ -2319,7 +2336,7 @@
     var overrides = ALL.map(function(r){ return state[r.id] || {}; });
     fill("f-category", unique(ALL.map(function(r){return r.category}).concat(overrides.map(function(s){return s.category;}))).sort());
     fill("f-country", unique(ALL.map(function(r){return r.country}).concat(overrides.map(function(s){return s.country;}))).sort());
-    fill("f-status", unique(ALL.map(function(r){return r.status}).concat(overrides.map(function(s){return s.status;}))));
+    fill("f-status", unique(STATUS_OPTIONS.concat(ALL.map(function(r){return r.status})).concat(overrides.map(function(s){return s.status;}))));
     fill("f-priority", ["High","Medium","Low","Active"]);
   }
   function unique(arr){ var s={}; arr.forEach(function(v){ if(v) s[v]=1; }); return Object.keys(s); }
@@ -2376,6 +2393,7 @@
       if(view==="attention" && !partnerNeedsAttention(r)) return false;
       if(view==="awaiting" && (done || !awaitingReply(r))) return false;
       if(view==="emailed" && !lastInbound(r)) return false;
+      if(view==="pending" && !isPending((state[r.id]||{}).status || r.status)) return false;
       if(view==="urgent" && partnerFlagKey(r)!=="urgent") return false;
       if(view==="review" && partnerFlagKey(r)!=="review") return false;
       if(view==="notcontacted" && lastContacted(r)) return false;
@@ -2762,7 +2780,9 @@
         if(category!==row.category) state[id].category = category;
         var country = card.querySelector(".e-country").value.trim();
         if(country && country!==row.country) state[id].country = country;
-        state[id].status = card.querySelector(".e-status").value;
+        var newSt = card.querySelector(".e-status").value;
+        if(newSt !== ((state[id].status) || row.status)) state[id].statusAt = new Date().toISOString();
+        state[id].status = newSt;
         var priority = card.querySelector(".e-priority").value;
         if(priority!==row.priority) state[id].priority = priority;
         var contact = card.querySelector(".e-contact").value.trim();
@@ -2814,7 +2834,7 @@
 
   // ==== CUSTOMERS ====
   function custPillClass(kind, val){
-    if(kind==="status") return val==="Booked" ? "ok" : val==="Lost" ? "neu" : val==="Quoted" ? "warn" : "crit";
+    if(kind==="status") return val==="Booked" ? "ok" : val==="Lost" ? "neu" : (val==="Quoted" || isPending(val)) ? "warn" : "crit";
     return "neu";
   }
   function buildCustFilterOptions(){
@@ -2827,7 +2847,7 @@
     }
     var overrides = ALL_CUST.map(function(r){ return state[r.id] || {}; });
     fill("fc-type", unique(ALL_CUST.map(function(r){return r.enquiry_type}).concat(overrides.map(function(s){return s.enquiry_type;}))).sort());
-    fill("fc-status", unique(ALL_CUST.map(function(r){return r.status}).concat(overrides.map(function(s){return s.status;}))));
+    fill("fc-status", unique(CUST_STATUS_OPTIONS.concat(ALL_CUST.map(function(r){return r.status})).concat(overrides.map(function(s){return s.status;}))));
     fill("fc-country", unique(ALL_CUST.map(custCountry)).sort());
   }
   ["fc-search","fc-type","fc-status","fc-hide-done","fc-show-deleted","fc-view","fc-country","fc-sort"].forEach(function(id){
@@ -2886,6 +2906,7 @@
       if((view==="waiting"||view==="ready"||view==="review") && f!==view) return false;
       if(view==="hasemail" && !effEmail) return false;
       if(view==="phoneonly" && (effEmail || !effPhone)) return false;
+      if(view==="pending" && !isPending(effStatus)) return false;
       if(q){
         var effName = s.name || r.name;
         var effSummary = (s.summary!=null ? s.summary : r.summary) || "";
@@ -3142,7 +3163,9 @@
         if(name && name!==row.name) state[id].name = name;
         var type = card.querySelector(".e-type").value;
         if(type!==row.enquiry_type) state[id].enquiry_type = type;
-        state[id].status = card.querySelector(".e-status").value;
+        var newSt = card.querySelector(".e-status").value;
+        if(newSt !== ((state[id].status) || row.status)) state[id].statusAt = new Date().toISOString();
+        state[id].status = newSt;
         var email = card.querySelector(".e-email").value.trim();
         if(email!==(row.email||"")) state[id].email = email;
         var phone = card.querySelector(".e-phone").value.trim();
@@ -4315,6 +4338,71 @@
   var hb = document.getElementById("hist-btn-top"); if(hb) hb.addEventListener("click", function(){ openHistory("all"); });
 
 
+  // ---- 📝 Add update: a quick note + status on any card, saved for the team and shown in 🕘 History ----
+  var UPD_OPEN = {};
+  function statusListFor(kind){ return kind==="partner" ? STATUS_OPTIONS : kind==="customer" ? CUST_STATUS_OPTIONS : HELPER_STATUS_OPTIONS; }
+  function effStatusOf(r){ return (state[r.id]||{}).status || r.status || ""; }
+  function decorateUpdates(){
+    [["partners","partner"],["customers","customer"],["helpers","helper"]].forEach(function(v){
+      document.querySelectorAll("#view-" + v[0] + " .card[data-id]").forEach(function(card){
+        if(card.querySelector(".upd-btn")) return;
+        var acts = card.querySelector(".card-actions"); if(!acts) return;
+        var f = findRec(card.getAttribute("data-id")); if(!f) return;
+        var r = f.rec, st = state[r.id] || {}, cur = effStatusOf(r), lu = st.lastUpdate;
+        if(lu && lu.text){
+          var line = document.createElement("p"); line.className = "upd-latest";
+          line.innerHTML = '📝 <b>Latest update</b> · '+esc(String(lu.at||"").slice(0,10))+(lu.by ? ' · '+esc(lu.by) : '')+': '+esc(lu.text);
+          acts.parentNode.insertBefore(line, acts);
+        }
+        if(isPending(cur)){
+          var pl = document.createElement("p"); pl.className = "upd-pending";
+          pl.textContent = "⏳ " + cur + (st.statusAt ? " — since " + String(st.statusAt).slice(0,10) : "");
+          acts.parentNode.insertBefore(pl, acts);
+        }
+        var btn = document.createElement("button");
+        btn.type = "button"; btn.className = "btn upd-btn"; btn.textContent = "📝 Add update";
+        btn.title = "Write what happened or what we're waiting for, and set the status";
+        acts.insertBefore(btn, acts.firstChild);
+        var box = document.createElement("div"); box.className = "upd-box"; box.hidden = !UPD_OPEN[r.id];
+        var opts = statusListFor(v[1]).slice(); if(cur && opts.indexOf(cur) < 0) opts.unshift(cur);
+        box.innerHTML = '<label>📝 Update for '+esc(st.name || r.name)+'</label>'+
+          '<textarea class="upd-text" dir="auto" placeholder="What happened? e.g. called them, sent the quote, waiting for the hospital to confirm the date…"></textarea>'+
+          '<div class="upd-row"><label>Status <select class="upd-status">'+opts.map(function(o){ return '<option'+(o===cur?' selected':'')+'>'+esc(o)+'</option>'; }).join("")+'</select></label>'+
+          '<button type="button" class="btn gold upd-save">Save update</button><button type="button" class="btn upd-cancel">Cancel</button></div>';
+        box.setAttribute("data-kind", v[1]);
+        acts.parentNode.insertBefore(box, acts.nextSibling);
+      });
+    });
+  }
+  document.addEventListener("click", function(e){
+    if(!e.target.closest) return;
+    var card = e.target.closest(".card[data-id]"); if(!card) return;
+    var box = card.querySelector(".upd-box"); if(!box) return;
+    var f = findRec(card.getAttribute("data-id")); if(!f) return;
+    if(e.target.closest(".upd-btn")){ box.hidden = !box.hidden; UPD_OPEN[f.rec.id] = !box.hidden; if(!box.hidden) box.querySelector(".upd-text").focus(); return; }
+    if(e.target.closest(".upd-cancel")){ box.hidden = true; UPD_OPEN[f.rec.id] = false; return; }
+    if(!e.target.closest(".upd-save")) return;
+    var r = f.rec, kind = box.getAttribute("data-kind"), id = r.id;
+    var text = box.querySelector(".upd-text").value.trim(), ns = box.querySelector(".upd-status").value, old = effStatusOf(r);
+    if(!text && ns===old){ box.querySelector(".upd-text").focus(); return; }
+    state[id] = state[id] || {};
+    var now = new Date().toISOString(), who = myName();
+    if(ns !== old){ state[id].status = ns; state[id].statusAt = now; }
+    if(text) state[id].lastUpdate = { text: text.slice(0, 1000), at: now, by: who, status: ns };
+    saveState(state);
+    act({ t:"log", kind: kind, id: id, name: state[id].name || r.name,
+      what: (text ? "📝 Update: " + text.slice(0, 600) : "📝 Update") + (ns !== old ? " · Status → " + ns : "") });
+    UPD_OPEN[id] = false;
+    toast("Update saved for the team.");
+    rerenderAll();
+  });
+  var updQueued = false;
+  var updObs = new MutationObserver(function(){
+    if(updQueued) return; updQueued = true;
+    requestAnimationFrame(function(){ updQueued = false; decorateUpdates(); });
+  });
+  ["view-partners","view-customers","view-helpers"].forEach(function(v){ var el = document.getElementById(v); if(el) updObs.observe(el, { childList:true, subtree:true }); });
+
   // ---- 🕘 History box on every card: everything that happened with this person, with a search bar ----
   var HIST_OPEN = {};
   function cardTimeline(r){
@@ -4330,6 +4418,7 @@
       items.push({ t:"us", when: r.last_replied, who: "support@hayakkom.com", text: "We emailed them (seen in Sent Items)." });
     (SHARED.history||[]).concat(queue.filter(function(a){ return !a.silent && a.what; })).forEach(function(h){
       if(h.id !== r.id || !h.what) return;
+      if(/Edited (lastUpdate|statusAt)/.test(h.what)) return;   // the automatic copy of a 📝 update — the update itself is listed
       items.push({ t:"team", when: h.at || "", who: h.by || "", text: h.what });
     });
     var SS = state._sentSugg || {};
