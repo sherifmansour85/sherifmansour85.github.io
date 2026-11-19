@@ -54,6 +54,18 @@
   .flag-opt{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:7px;font-size:12.5px;cursor:pointer;white-space:nowrap}
   .flag-opt:hover{background:var(--cream)}
   .archive-btn{color:#A33;border-color:#E9C3C3}
+  .ch-btn{}
+  .card-hist{margin:8px 0 4px;border:1px solid var(--line);border-radius:10px;background:#FBFAF7;padding:10px 12px}
+  .ch-brief{font-size:.88em;color:#4a5a5c;margin-bottom:6px}
+  .ch-q{width:100%;box-sizing:border-box;margin-bottom:8px;font:inherit;padding:6px 10px;border:1px solid var(--line);border-radius:8px}
+  .ch-list{max-height:340px;overflow:auto}
+  .ch-item{border-left:3px solid #ccc;padding:4px 8px;margin:0 0 8px}
+  .ch-them{border-left-color:#2E6DA4}.ch-us{border-left-color:#1FA855}.ch-team{border-left-color:#D4AF4F}.ch-sugg{border-left-color:#8E6CC4}.ch-in{border-left-color:#0B6B73}
+  .ch-head{font-size:.85em;color:#555}
+  .ch-subj{font-weight:600;font-size:.9em}
+  .ch-text{white-space:pre-wrap;font-size:.92em}
+  .sugg-item.archived{background:#F6F6F4;border-style:dashed}
+  .arch-body summary{cursor:pointer;color:var(--teal);font-size:.9em;margin-top:4px}
   .sugg-item.sent{border:2px solid #1FA855;background:#F3FBF5}
   .sugg-sent-tag{flex-basis:100%;font-size:.88em;font-weight:600;color:#14783c}
   .sugg-count.sent{background:#E4F3E8;color:#1a7a3c}
@@ -1586,7 +1598,7 @@
       if(view==="urgent" && f!=="urgent") return false;
       if(view==="hascv" && !(r.attachments||[]).length) return false;
       if(q){
-        var hay = [r.name, r.email, r.phone, r.profession, r.role_detail, r.location, r.languages, r.experience, r.summary, st.notes].join(" ").toLowerCase();
+        var hay = [r.name, r.email, r.phone, r.profession, r.role_detail, r.location, r.languages, r.experience, r.summary, st.notes, histSearchText(r)].join(" ").toLowerCase();
         if(hay.indexOf(q)===-1) return false;
       }
       return true;
@@ -2385,7 +2397,7 @@
         var effEmail = (s.email!=null ? s.email : r.email);
         var effPhone = (s.phone!=null ? s.phone : r.phone) || "";
         var effSummary = (s.summary!=null ? s.summary : r.summary);
-        var hay = (effName+" "+effCategory+" "+effCountry+" "+effContact+" "+effEmail+" "+effPhone+" "+effSummary+" "+extraText).toLowerCase();
+        var hay = (effName+" "+effCategory+" "+effCountry+" "+effContact+" "+effEmail+" "+effPhone+" "+effSummary+" "+extraText+" "+histSearchText(r)).toLowerCase();
         if(hay.indexOf(q)===-1) return false;
       }
       return true;
@@ -2879,7 +2891,7 @@
         var effSummary = (s.summary!=null ? s.summary : r.summary) || "";
         var extra = s.extraContacts || [];
         var extraText = extra.map(function(c){ return (c.name||"")+" "+(c.role||"")+" "+(c.email||"")+" "+(c.phone||""); }).join(" ");
-        var hay = (effName+" "+effEmail+" "+effPhone+" "+effSummary+" "+effType+" "+country+" "+(r.source||"")+" "+extraText).toLowerCase();
+        var hay = (effName+" "+effEmail+" "+effPhone+" "+effSummary+" "+effType+" "+country+" "+(r.source||"")+" "+extraText+" "+histSearchText(r)).toLowerCase();
         if(hay.indexOf(q)===-1) return false;
       }
       return true;
@@ -3866,6 +3878,35 @@
     state._sentSugg[key] = { kind: kind, record_id: recId || null, to: to || "", subject: subject || "", body: String(body||"").slice(0, 6000),
       label: prev.label || "Sent", why: prev.why || "", at: new Date().toISOString().slice(0,10) };
   }
+  // 🗄 Archive: ✕ moves a suggestion (sent or not) to the archive, with a copy, so it can be read or restored later.
+  function archivedOn(key){ var c = (state._sentSugg||{})[key]; return c && c.archived ? c.archived : ""; }
+  function suggHidden(key){ return !!archivedOn(key) || dismissed(key); }
+  function archiveSugg(s){
+    state._sentSugg = state._sentSugg || {};
+    var c = state._sentSugg[s.key] || { kind: s.kind, record_id: s.rec ? s.rec.id : null, to: s.to || "", subject: s.draft.subject || "",
+      body: String(s.draft.body||"").slice(0, 6000), label: s.label || "", why: s.why || "", rank: s.rank, at: s.sent && s.sent!=="✓" ? s.sent : "" };
+    c.archived = new Date().toISOString().slice(0,10);
+    state._sentSugg[s.key] = c;
+    if(!s.sent){ decide(s.key, "dismissed"); } else saveState(state);   // unsent: the hourly job drops the draft; the copy stays here
+  }
+  function restoreSugg(key){
+    var all = state._sentSugg || {}, c = all[key]; if(!c) return;
+    var copy = Object.assign({}, c); delete copy.archived;
+    state._sentSugg = Object.assign({}, all); state._sentSugg[key] = copy;
+    if(!copy.at && state._decisions && state._decisions[key]){ state._decisions = Object.assign({}, state._decisions); delete state._decisions[key]; }
+    saveState(state);
+  }
+  function archivedFor(kind){
+    var list = kind==="partner" ? ALL : kind==="customer" ? ALL_CUST : ALL_HELP, out = [], seen = {};
+    var findR = function(id){ return id ? list.filter(function(x){ return x.id===id; })[0] || null : null; };
+    var SENT = state._sentSugg || {};
+    Object.keys(SENT).forEach(function(k){ var c = SENT[k]; if(!c || c.kind!==kind || !c.archived) return; seen[k] = 1;
+      out.push({ key:k, kind:kind, rec:findR(c.record_id), to:c.to, label:c.label || "Suggestion", why:c.why || "", draft:{ subject:c.subject, body:c.body }, sent:c.at || "", archived:c.archived }); });
+    AI_DRAFTS.concat(SHARED.outbox||[]).forEach(function(o){ if(o.kind!==kind || seen[o.id] || !dismissed(o.id)) return; seen[o.id] = 1;
+      out.push({ key:o.id, kind:kind, rec:findR(o.record_id), to:o.to, label:o.label || "Suggestion", why:o.reason || "", draft:{ subject:o.subject, body:o.body }, sent:"",
+        archived: String((state._decisions||{})[o.id]||"").replace(/^dismissed:/, ""), legacy:true }); });
+    return out.sort(function(a,b){ return String(b.archived).localeCompare(String(a.archived)); });
+  }
   function dismissed(key){ var d = (state._decisions || {})[key]; return /^dismissed:/.test(d||""); }
   function decide(key, how){ state._decisions = state._decisions || {}; state._decisions[key] = how + ":" + new Date().toISOString().slice(0,10); saveState(state); }
   var TYPE_ASK = {
@@ -3978,7 +4019,7 @@
     var out = [], byRec = {}, seenKey = {};
     // Sent (approved) suggestions stay on the list with a green border; only ✕ removes one.
     AI_DRAFTS.concat(SHARED.outbox||[]).forEach(function(o){
-      if(o.kind!==kind || seenKey[o.id] || dismissed(o.id) || o.status==="rejected") return;
+      if(o.kind!==kind || seenKey[o.id] || suggHidden(o.id) || o.status==="rejected") return;
       var sentOn = approvedOn(o.id) || ((o.status==="approved" || o.status==="sent") ? String(o.decided_at || o.created || "").slice(0,10) || "✓" : "");
       var r = o.record_id ? list.filter(function(x){ return x.id===o.record_id; })[0] : null;
       if(o.record_id && !r) return;
@@ -4001,23 +4042,26 @@
     var SENT = state._sentSugg || {};
     out.forEach(function(x){ var c = SENT[x.key]; if(x.sent && c){ x.draft = { subject: c.subject || x.draft.subject, body: c.body || x.draft.body }; x.sent = c.at || x.sent; } seenKey[x.key] = 1; });
     Object.keys(SENT).forEach(function(k){
-      var c = SENT[k]; if(!c || c.kind!==kind || seenKey[k] || dismissed(k)) return;
+      var c = SENT[k]; if(!c || c.kind!==kind || seenKey[k] || suggHidden(k)) return;
       var r = c.record_id ? list.filter(function(x){ return x.id===c.record_id; })[0] : null;
       if(c.record_id && !r) return;
-      out.push({ key:k, ai: /^ob-/.test(k), kind:kind, rec:r, to:c.to, rank:9, label:c.label || "Sent", why:c.why || "", plan:[],
-        draft:{ subject:c.subject, body:c.body }, sent: c.at || "✓" });
+      out.push({ key:k, ai: /^ob-/.test(k), kind:kind, rec:r, to:c.to, rank: c.at ? 9 : (c.rank!=null ? c.rank : 3), label:c.label || (c.at ? "Sent" : "Suggestion"), why:c.why || "", plan:[],
+        draft:{ subject:c.subject, body:c.body }, sent: c.at || "" });
       seenKey[k] = 1;
     });
     var sentRec = {}; out.forEach(function(x){ if(x.sent && x.rec) sentRec[x.rec.id] = 1; });
-    list.forEach(function(r){ if(byRec[r.id] || sentRec[r.id]) return; var s = ruleSugg(kind, r); if(s && seenKey[s.key]) return; if(!s || !s.to || dismissed(s.key)) return; s.sent = approvedOn(s.key); out.push(s); });
+    // archived suggestions also stop the quick template for that person (a new message brings a fresh Claude draft)
+    Object.keys(SENT).forEach(function(k){ var c = SENT[k]; if(c && c.archived && c.kind===kind && c.record_id) sentRec[c.record_id] = 1; });
+    list.forEach(function(r){ if(byRec[r.id] || sentRec[r.id]) return; var s = ruleSugg(kind, r); if(s && seenKey[s.key]) return; if(!s || !s.to || suggHidden(s.key)) return; s.sent = approvedOn(s.key); out.push(s); });
     // waiting ones first (by urgency), then the sent ones, newest first
     return out.sort(function(a,b){ return (a.sent?1:0) - (b.sent?1:0) || (a.sent && b.sent ? String(b.sent).localeCompare(String(a.sent)) : 0) || a.rank - b.rank || (b.ai?1:0) - (a.ai?1:0); });
   }
-  var SUGG = { partner:[], customer:[], helper:[] }, SUGG_OPEN = {};
+  var SUGG = { partner:[], customer:[], helper:[] }, SUGG_OPEN = {}, SUGG_ARCH = {}, ARCH = { partner:[], customer:[], helper:[] };
   var SUGG_EL = { partner:"sugg-partners", customer:"sugg-customers", helper:"sugg-helpers" };
   function renderSugg(kind){
     var el = document.getElementById(SUGG_EL[kind]); if(!el) return;
     var items = SUGG[kind] = suggestionsFor(kind);
+    var arch = ARCH[kind] = archivedFor(kind);
     var waiting = items.filter(function(x){ return !x.sent; }).length, sentN = items.length - waiting;
     var show = SUGG_OPEN[kind] ? items : items.slice(0, 4);
     var queued = queue.filter(function(a){ return a.t==="send" && a.kind===kind; }).length;
@@ -4025,7 +4069,15 @@
       '<div class="sugg-head"><div><b>✨ Suggested next actions</b> <span class="sugg-count">'+waiting+' waiting for your OK</span>'+(sentN ? ' <span class="sugg-count sent">✓ '+sentN+' sent</span>' : '')+
         (queued ? ' <span class="sugg-count q">📤 '+queued+' approved, sending at next update</span>' : '')+
         '<div class="sugg-sub">Best next step for each open case, with an email already written. Preview it, edit if needed, then approve — nothing is sent without your OK.</div></div>'+
-        '<div class="sugg-tools"><span class="sync-pill"></span><button type="button" class="btn hist-btn" data-kind="'+kind+'">🕘 History</button></div></div>'+
+        '<div class="sugg-tools"><span class="sync-pill"></span><button type="button" class="btn sugg-arch-btn">'+(SUGG_ARCH[kind] ? '← Back to suggestions' : '🗄 Archived ('+arch.length+')')+'</button><button type="button" class="btn hist-btn" data-kind="'+kind+'">🕘 History</button></div></div>'+
+      (SUGG_ARCH[kind] ? (arch.length ? '<div class="sugg-list">' + arch.map(function(a, i){
+        return '<div class="sugg-item archived" data-a="'+i+'"><div class="sugg-main"><div class="sugg-title"><span class="sugg-badge">🗄 Archived '+esc(a.archived||"")+'</span> '+
+          (a.rec ? '<b>'+esc(a.rec.name)+'</b>' : '<b>'+esc(a.to||"")+'</b>')+(a.sent ? ' <span class="sugg-count sent">✓ sent '+esc(a.sent)+'</span>' : ' <span class="sugg-count">not sent</span>')+'</div>'+
+          (a.why ? '<div class="sugg-why">'+esc(a.why)+'</div>' : '')+'<div class="sugg-subj">✉️ '+esc(a.draft.subject||"")+'</div>'+
+          '<details class="arch-body"><summary>Read the message</summary><div dir="auto" style="white-space:pre-wrap">'+esc(a.draft.body||"")+'</div></details></div>'+
+          '<div class="sugg-btns">'+(a.legacy ? '' : '<button type="button" class="btn sg-restore">↩ Restore</button>')+'</div></div>';
+      }).join("") + '</div>' : '<p class="sugg-empty">Nothing archived yet. Press 🗄 on a suggestion to archive it.</p>') :
+
       (items.length ? '<div class="sugg-list">' + show.map(function(s, i){
         return '<div class="sugg-item'+(s.sent?' sent':(s.rank===0?' hot':''))+'" data-i="'+items.indexOf(s)+'">'+
           (s.sent ? '<div class="sugg-sent-tag">✓ Approved'+(s.sent!=="✓" ? ' on '+esc(s.sent) : '')+' — sent (or sending at the next hourly update). Press ✕ to remove it from this list.</div>' : '')+
@@ -4035,9 +4087,9 @@
           (s.plan && s.plan.length ? '<ol class="sugg-plan">'+s.plan.map(function(p){ return '<li>'+esc(p)+'</li>'; }).join("")+'</ol>' : '')+
           '<div class="sugg-subj">✉️ '+esc(s.draft.subject)+'</div></div>'+
           '<div class="sugg-btns">'+(s.rec ? '<button type="button" class="btn sg-conv" title="See every message with them and what the team did">💬 Conversation</button>' : '')+'<button type="button" class="btn sg-prev">👁 Preview</button><button type="button" class="btn sg-edit">✎ Edit</button>'+
-          (s.sent ? '' : '<button type="button" class="btn gold sg-ok">✓ Approve</button>')+'<button type="button" class="btn sg-no" title="'+(s.sent?'Remove from this list':'Dismiss this suggestion')+'">✕</button></div></div>';
+          (s.sent ? '' : '<button type="button" class="btn gold sg-ok">✓ Approve</button>')+'<button type="button" class="btn sg-no" title="'+(s.sent?'Move to the archive':'Archive this suggestion')+'">🗄</button></div></div>';
       }).join("") + '</div>' + (items.length > 4 ? '<button type="button" class="btn sugg-more">'+(SUGG_OPEN[kind] ? 'Show fewer' : 'Show all '+items.length)+'</button>' : '')
-      : '<p class="sugg-empty">Nothing waiting — every open case has had its next step. 🎉</p>');
+      : '<p class="sugg-empty">Nothing waiting — every open case has had its next step. 🎉</p>'));
     renderSyncPills();
   }
   function renderAllSugg(){ ["partner","customer","helper"].forEach(renderSugg); }
@@ -4046,6 +4098,15 @@
     el.addEventListener("click", function(e){
       if(e.target.closest(".hist-btn")){ openHistory(kind); return; }
       if(e.target.closest(".sugg-more")){ SUGG_OPEN[kind] = !SUGG_OPEN[kind]; renderSugg(kind); return; }
+      if(e.target.closest(".sugg-arch-btn")){ SUGG_ARCH[kind] = !SUGG_ARCH[kind]; renderSugg(kind); return; }
+      var ai = e.target.closest(".sugg-item.archived");
+      if(ai){
+        if(e.target.closest(".sg-restore")){ var a = ARCH[kind][+ai.getAttribute("data-a")]; if(!a) return;
+          restoreSugg(a.key);
+          act({ t:"log", kind:kind, id: a.rec && a.rec.id, name: a.rec ? a.rec.name : a.to, what:"Restored suggestion from the archive: “" + (a.draft.subject||"") + "”" });
+          renderSugg(kind); }
+        return;
+      }
       var item = e.target.closest(".sugg-item"); if(!item) return;
       var s = SUGG[kind][+item.getAttribute("data-i")]; if(!s) return;
       if(e.target.closest(".sugg-name")){ if(s.rec) goToCard(kind, s.rec.id); return; }
@@ -4054,9 +4115,9 @@
       else if(e.target.closest(".sg-edit")) editSugg(s);
       else if(e.target.closest(".sg-ok")) openSend({ kind:kind, id: s.rec && s.rec.id, name: s.rec ? s.rec.name : s.to, to:s.to, subject:s.draft.subject, body:s.draft.body, key:s.key });
       else if(e.target.closest(".sg-no")){
-        if(!confirm((s.sent ? "Remove this sent suggestion for " : "Dismiss this suggestion for ") + (s.rec ? s.rec.name : s.to) + " from the list? Only ✕ removes suggestions — this can't be undone here.")) return;
-        decide(s.key, "dismissed");
-        act({ t:"log", kind:kind, id: s.rec && s.rec.id, name: s.rec ? s.rec.name : s.to, what:"Dismissed suggestion: " + s.label + " — “" + s.draft.subject + "”", key:s.key, decision:"dismissed" });
+        if(!confirm("Move this suggestion for " + (s.rec ? s.rec.name : s.to) + " to the archive? You can read or restore it from 🗄 Archived.")) return;
+        archiveSugg(s);
+        act({ t:"log", kind:kind, id: s.rec && s.rec.id, name: s.rec ? s.rec.name : s.to, what:"Archived suggestion: " + s.label + " — “" + s.draft.subject + "”", key:s.key, decision: s.sent ? null : "dismissed" });
         renderSugg(kind);
       }
     });
@@ -4252,6 +4313,100 @@
   });
   document.getElementById("hist-q").addEventListener("input", renderHistory);
   var hb = document.getElementById("hist-btn-top"); if(hb) hb.addEventListener("click", function(){ openHistory("all"); });
+
+
+  // ---- 🕘 History box on every card: everything that happened with this person, with a search bar ----
+  var HIST_OPEN = {};
+  function cardTimeline(r){
+    if(!r) return [];
+    var st = state[r.id] || {}, items = [];
+    var came = r.received_at || r.date || "";
+    if(came) items.push({ t:"in", when: came, who: r.source || "", text: "Came in" + (r.source ? " via " + r.source : "") + (r.summary ? " — " + r.summary : "") });
+    var thread = r.thread || [];
+    if(!thread.some(function(m){ return !isOurs(m.from); }) && (r.answers||[]).length)
+      items.push({ t:"them", when: came, who: r.name, text: r.answers.filter(function(a){ return a.answer && a.answer!=="{}"; }).map(function(a){ return a.question + ": " + a.answer; }).join("\n") });
+    thread.forEach(function(m){ items.push({ t: isOurs(m.from) ? "us" : "them", when: m.date || "", who: m.from || "", subject: m.subject || "", text: m.text || "" }); });
+    if(r.last_replied && !thread.some(function(m){ return isOurs(m.from) && (m.date||"") >= r.last_replied; }))
+      items.push({ t:"us", when: r.last_replied, who: "support@hayakkom.com", text: "We emailed them (seen in Sent Items)." });
+    (SHARED.history||[]).concat(queue.filter(function(a){ return !a.silent && a.what; })).forEach(function(h){
+      if(h.id !== r.id || !h.what) return;
+      items.push({ t:"team", when: h.at || "", who: h.by || "", text: h.what });
+    });
+    var SS = state._sentSugg || {};
+    Object.keys(SS).forEach(function(k){ var c = SS[k]; if(!c || c.record_id !== r.id) return;
+      if(c.at) items.push({ t:"sugg", when: c.at, who: "Suggested next action", subject: c.subject, text: "✓ Sent: " + (c.label || "") });
+      if(c.archived) items.push({ t:"sugg", when: c.archived, who: "Suggested next action", subject: c.subject, text: "🗄 Archived" + (c.at ? "" : " (not sent)") });
+    });
+    (st.docs||[]).forEach(function(d){ items.push({ t:"team", when: d.at || "", who: d.by || "", text: "📎 Added document: " + (d.name || d.type || "file") + (d.note ? " — " + d.note : "") }); });
+    if(st.lastContacted && !items.some(function(i){ return i.t==="team" && /contacted/i.test(i.text) && String(i.when).slice(0,10)===String(st.lastContacted).slice(0,10); }))
+      items.push({ t:"team", when: st.lastContacted, who: "", text: "Marked contacted" });
+    // drop exact repeats (the same action can arrive from both the queue and the synced history)
+    var seen = {};
+    items = items.filter(function(i){ var k = i.t + "|" + String(i.when).slice(0,16) + "|" + i.text.slice(0,80); if(seen[k]) return false; seen[k] = 1; return true; });
+    return items.sort(function(a,b){ return String(b.when).localeCompare(String(a.when)); });
+  }
+  function histSearchText(r){
+    var st = state[r.id] || {};
+    return cardTimeline(r).map(function(i){ return i.who + " " + (i.subject||"") + " " + i.text; }).join(" ") + " " + (st.notes||"");
+  }
+  function histBrief(r, items){
+    var n = function(t){ return items.filter(function(i){ return i.t===t; }).length; };
+    var first = items.length ? String(items[items.length-1].when).slice(0,10) : "";
+    var last = items.length ? items[0] : null;
+    var bits = [];
+    if(first) bits.push("First seen " + first);
+    bits.push("📩 " + n("them") + " from them", "📤 " + n("us") + " from us", "✓ " + n("team") + " team actions");
+    var sg = n("sugg"); if(sg) bits.push("✨ " + sg + " suggestion events");
+    if(last) bits.push("Last activity " + String(last.when).slice(0,10) + (last.who && last.t==="team" ? " by " + last.who : ""));
+    return bits.join(" · ");
+  }
+  var HIST_ICON = { in:"📥", them:"📩", us:"📤", team:"✓", sugg:"✨" };
+  function histListHtml(items, q){
+    q = (q||"").trim().toLowerCase();
+    var rows = items.filter(function(i){ return !q || (i.who + " " + (i.subject||"") + " " + i.text).toLowerCase().indexOf(q) >= 0; });
+    if(!rows.length) return '<p class="sugg-empty">' + (q ? "Nothing matches “" + esc(q) + "”." : "Nothing recorded yet.") + '</p>';
+    return rows.map(function(i){
+      return '<div class="ch-item ch-'+i.t+'"><div class="ch-head">'+HIST_ICON[i.t]+' <b>'+esc(String(i.when).slice(0,16).replace("T"," "))+'</b>'+(i.who ? ' · '+esc(i.who) : '')+'</div>'+
+        (i.subject ? '<div class="ch-subj">'+esc(i.subject)+'</div>' : '')+'<div class="ch-text" dir="auto">'+esc(i.text.length > 600 ? i.text.slice(0,600) + "…" : i.text)+'</div></div>';
+    }).join("");
+  }
+  function decorateHistory(){
+    ["partners","customers","helpers"].forEach(function(view){
+      document.querySelectorAll("#view-" + view + " .card[data-id]").forEach(function(card){
+        if(card.querySelector(".ch-btn")) return;
+        var acts = card.querySelector(".card-actions"); if(!acts) return;
+        var f = findRec(card.getAttribute("data-id")); if(!f) return;
+        var items = cardTimeline(f.rec);
+        var btn = document.createElement("button");
+        btn.type = "button"; btn.className = "btn ch-btn"; btn.textContent = "🕘 History (" + items.length + ")";
+        btn.title = "Everything that happened with this card — messages, replies, team actions and suggestions";
+        acts.insertBefore(btn, acts.firstChild ? acts.firstChild.nextSibling : null);
+        var box = document.createElement("div"); box.className = "card-hist"; box.hidden = !HIST_OPEN[f.rec.id];
+        box.innerHTML = '<div class="ch-brief">'+esc(histBrief(f.rec, items))+'</div>'+
+          '<input type="search" class="ch-q" placeholder="Search this card’s history (a word, a name, a date like 2026-11)…">'+
+          '<div class="ch-list">'+(HIST_OPEN[f.rec.id] ? histListHtml(items, "") : "")+'</div>';
+        acts.parentNode.insertBefore(box, acts.nextSibling);
+      });
+    });
+  }
+  document.addEventListener("click", function(e){
+    var b = e.target.closest && e.target.closest(".ch-btn"); if(!b) return;
+    var card = b.closest(".card[data-id]"), f = card && findRec(card.getAttribute("data-id")); if(!f) return;
+    var box = card.querySelector(".card-hist"); if(!box) return;
+    box.hidden = !box.hidden; HIST_OPEN[f.rec.id] = !box.hidden;
+    if(!box.hidden){ box.querySelector(".ch-list").innerHTML = histListHtml(cardTimeline(f.rec), box.querySelector(".ch-q").value); box.querySelector(".ch-q").focus(); }
+  });
+  document.addEventListener("input", function(e){
+    if(!e.target.classList || !e.target.classList.contains("ch-q")) return;
+    var card = e.target.closest(".card[data-id]"), f = card && findRec(card.getAttribute("data-id")); if(!f) return;
+    card.querySelector(".ch-list").innerHTML = histListHtml(cardTimeline(f.rec), e.target.value);
+  });
+  var histQueued = false;
+  var histObs = new MutationObserver(function(){
+    if(histQueued) return; histQueued = true;
+    requestAnimationFrame(function(){ histQueued = false; decorateHistory(); });
+  });
+  ["view-partners","view-customers","view-helpers"].forEach(function(v){ var el = document.getElementById(v); if(el) histObs.observe(el, { childList:true, subtree:true }); });
 
   // ---- 📎 Documents on partner and customer cards (saved to Google Drive by the Apps Script) ----
   var docModal = document.getElementById("doc-modal"), DOC_FOR = null;
