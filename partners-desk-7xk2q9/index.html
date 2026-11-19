@@ -421,6 +421,7 @@
     <input type="search" id="f-search" placeholder="Search by name, hospital, clinic or tourism company…">
     <select id="f-view">
       <option value="">Show: everything</option>
+      <option value="oldagent">🤖 From old Zara agent (legacy chats)</option>
       <option value="attention">🔥 Needs attention</option>
       <option value="awaiting">✉️ Sent us an email — awaiting our reply</option>
       <option value="emailed">✉️ Sent us an email (any)</option>
@@ -475,6 +476,7 @@
       <option value="hasemail">Has email</option>
       <option value="phoneonly">Phone / WhatsApp only</option>
       <option value="legacy">From old (legacy) forms</option>
+      <option value="oldagent">🤖 From old Zara agent (legacy chats)</option>
     </select>
     <select id="fc-type"><option value="">All enquiry types</option></select>
     <select id="fc-status"><option value="">All statuses</option></select>
@@ -584,6 +586,7 @@
       <option value="ready">Shortlisted</option>
       <option value="urgent">Urgent</option>
       <option value="hascv">Sent a CV / attachment</option>
+      <option value="oldagent">🤖 From old Zara agent (legacy chats)</option>
     </select>
     <select id="fh-sort">
       <option value="priority">Sort: most valuable first</option>
@@ -1398,8 +1401,11 @@
     var rows = ALL_HELP.filter(function(r){
       var st = state[r.id] || {};
       var done = !!st.done, deleted = !!st.deleted, f = helperFlagKey(r), p = prioOf(r);
-      if(deleted && !showDeleted) return false;
-      if(!deleted && showDeleted) return false;
+      if(view==="oldagent"){ if(!isOldAgent(r)) return false; }
+      else {
+        if(deleted && !showDeleted) return false;
+        if(!deleted && showDeleted) return false;
+      }
       if(hideDone && done) return false;
       if(prof && r.profession!==prof) return false;
       if(prio && p!==prio) return false;
@@ -1442,6 +1448,7 @@
               '<span class="pill flag-'+flag+'">'+esc(flagOpt.label)+'</span>'+
               '<span class="pill '+pillClass("priority",p)+'">'+esc(p)+' value</span>'+
               '<span class="pill neu">'+esc(r.profession||"Other")+'</span>'+
+              (isOldAgent(r) ? oldAgentPill() : '')+
               (r.location ? '<span class="pill neu">📍 '+esc(r.location)+'</span>' : '')+
             '</div></div>'+
             '<label class="done-toggle"><input type="checkbox" class="done-check" '+(done?'checked':'')+'> Done</label>'+
@@ -2179,8 +2186,11 @@
     var rows = ALL.filter(function(r){
       var done = !!(state[r.id] && state[r.id].done);
       var deleted = !!(state[r.id] && state[r.id].deleted);
-      if(deleted && !showDeleted) return false;
-      if(!deleted && showDeleted) return false;
+      if(view==="oldagent"){ if(!isOldAgent(r)) return false; }
+      else {
+        if(deleted && !showDeleted) return false;
+        if(!deleted && showDeleted) return false;
+      }
       if(hideDone && done) return false;
       if(view==="attention" && !partnerNeedsAttention(r)) return false;
       if(view==="awaiting" && (done || !awaitingReply(r))) return false;
@@ -2260,6 +2270,7 @@
               '<span class="pill neu">'+esc(effCategory)+'</span>'+
               '<span class="pill neu">'+esc(effCountry)+'</span>'+
               (r.custom ? '<span class="pill neu">Added manually</span>' : '')+
+              (isOldAgent(r) ? oldAgentPill() : '')+
             '</div></div>'+
             '<label class="done-toggle"><input type="checkbox" class="done-check" '+(done?'checked':'')+'> Done</label>'+
           '</div>'+
@@ -2642,6 +2653,10 @@
     document.getElementById(id).addEventListener("change", renderCustomers);
   });
 
+  // Cards imported from the old Jotform "Zara" agent's chat archive (or matched to it).
+  function isOldAgent(r){ return !!r.old_agent || /old zara agent/i.test(r.source||""); }
+  function oldAgentPill(){ return '<span class="pill neu" title="Imported from the old Zara agent chat archive">🤖 Old Zara agent</span>'; }
+
   function isCustArchived(r){
     var st = state[r.id];
     return (st && st.deleted!=null) ? !!st.deleted : !!r.archived_default;
@@ -2663,6 +2678,7 @@
       var legacy = /legacy/i.test(r.source||"");
       // "From old forms" shows the archive too, without having to tick Show archived.
       if(view==="legacy"){ if(!legacy) return false; }
+      else if(view==="oldagent"){ if(!isOldAgent(r)) return false; }
       else {
         if(deleted && !showDeleted) return false;
         if(!deleted && showDeleted) return false;
@@ -2757,6 +2773,7 @@
               (cCountry ? '<span class="pill neu">🌍 '+esc(cCountry)+'</span>' : '')+
               (/legacy/i.test(r.source||"") ? '<span class="pill neu">Old form</span>' : '')+
               (r.custom ? '<span class="pill neu">Added manually</span>' : '')+
+              (isOldAgent(r) ? oldAgentPill() : '')+
             '</div></div>'+
             '<label class="done-toggle"><input type="checkbox" class="done-check" '+(done?'checked':'')+'> Done</label>'+
           '</div>'+
