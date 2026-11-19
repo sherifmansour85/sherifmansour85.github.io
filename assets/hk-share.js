@@ -10,12 +10,19 @@
     var nb=b.cloneNode(true);b.parentNode.replaceChild(nb,b);b=nb;
     var lt=document.getElementById("hkAiLoadText");if(lt&&/^ar/.test(document.documentElement.lang||""))lt.textContent="جارٍ فتح زارا…";
     var loaded=false;
-    function load(){if(loaded)return;loaded=true;var s=document.createElement("script");s.src="/assets/hk-zara.js?v=14";s.async=true;document.head.appendChild(s);}
+    function load(){if(loaded)return;loaded=true;var s=document.createElement("script");s.src="/assets/hk-zara.js?v=15";s.async=true;document.head.appendChild(s);}
     ["pointerenter","touchstart","focus"].forEach(function(ev){b.addEventListener(ev,load,{once:true,passive:true});});
     b.addEventListener("click",function(){
       load();var opening=p.hidden;p.hidden=!opening;document.body.classList.toggle("hk-ai-open",opening);
       if(opening&&window.innerWidth>640)setTimeout(function(){var i=p.querySelector(".zr-in input");if(i)try{i.focus({preventScroll:true});}catch(e){}},700);
     });
+    /* the shareable link www.hayakkom.com/zara/ (?zara=1, optional &ref=<name>) opens the chat straight away;
+       the name goes with the chat so the Hub shows who the link was sent to */
+    try{var qp=new URLSearchParams(location.search);if(qp.has("zara")){
+      sessionStorage.setItem("hk-zara-via",(qp.get("ref")||"").replace(/[^\p{L}\p{N} .'@+-]/gu,"").slice(0,60)||"link");
+      try{sessionStorage.setItem("hk-zinv-off","1");}catch(e){}
+      setTimeout(function(){if(p.hidden)b.click();},900);
+    }}catch(e){}
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();

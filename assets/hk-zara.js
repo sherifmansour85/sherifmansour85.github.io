@@ -608,20 +608,24 @@
     }).join("") + "</span>" + (list[0] && list[0].caption ? "<small>" + esc(list[0].caption) + "</small>" : "");
     var m = { text: list.map(function (i) { return i.caption || ""; }).join(" · "), html: html, pics: 1 }; S.log.push(m); save(); render(m);
   }
+  /* chats opened from the shareable link (www.hayakkom.com/zara/?ref=<name>) are marked for the Hub */
+  function zaraVia() { var v = ""; try { v = sessionStorage.getItem("hk-zara-via") || ""; } catch (e) {} return v ? " [Zara link" + (v !== "link" ? ": " + v : "") + "]" : ""; }
   /* first message of an AI chat: tell Zara which page the visitor is reading, so she can answer about it */
   function pageContext() {
     var h = document.querySelector("main h1, h1"), md = document.querySelector('meta[name="description"]');
     var t = ((h && h.textContent) || document.title || "").replace(/\s+/g, " ").trim().slice(0, 140);
     var d = ((md && md.getAttribute("content")) || "").replace(/\s+/g, " ").trim().slice(0, 300);
-    if (!t && !d) return "";
-    return "[The visitor is reading the page \u201c" + t + "\u201d (" + location.pathname + ")" + (d ? ": " + d : "") + ". Questions like \u201cthis page\u201d refer to it.]\n";
+    var via = ""; try { via = sessionStorage.getItem("hk-zara-via") || ""; } catch (e) {}
+    var viaTxt = via ? "[The visitor opened this chat from a link the Hayakkom team sent them" + (via !== "link" ? " (sent to: " + via + ")" : "") + ".]\n" : "";
+    if (!t && !d) return viaTxt;
+    return viaTxt + "[The visitor is reading the page \u201c" + t + "\u201d (" + location.pathname + ")" + (d ? ": " + d : "") + ". Questions like \u201cthis page\u201d refer to it.]\n";
   }
   var aiBusy = false;
   function aiAnswer(q) {
     if (aiBusy) return; aiBusy = true;
     var stop = waiting(), ctl2 = window.AbortController ? new AbortController() : null, timer = setTimeout(function () { if (ctl2) ctl2.abort(); }, 100000);
     fetch(AI_URL, { method: "POST", headers: { "content-type": "application/json" }, signal: ctl2 ? ctl2.signal : undefined,
-      body: JSON.stringify({ session_id: S.ai || "", text: (S.ai ? "" : pageContext()) + q, lang: lang, channel: S.voice ? "voice" : "web_chat", page: location.pathname, transcript: transcript(), contact: S.aiContact || {} }) })
+      body: JSON.stringify({ session_id: S.ai || "", text: (S.ai ? "" : pageContext()) + q, lang: lang, channel: S.voice ? "voice" : "web_chat", page: location.pathname + zaraVia(), transcript: transcript(), contact: S.aiContact || {} }) })
       .then(function (r) { return r.json().then(function (d) { if (!r.ok || d.error && !(d.replies && d.replies.length)) throw new Error(d.error || r.status); return d; }); })
       .then(function (d) {
         clearTimeout(timer); stop(); aiBusy = false;
