@@ -16,6 +16,9 @@
   var AV = "https://images.weserv.nl/?url=le-de.cdn-website.com%2F570f220f41214a5784b09af2ac39327a%2Fdms3rep%2Fmulti%2Fopt%2FCapture-dccf701f-1920w.PNG&w=180&h=180&fit=cover&a=top&q=82&output=webp";
   var AV2 = "https://le-de.cdn-website.com/570f220f41214a5784b09af2ac39327a/dms3rep/multi/opt/Capture-dccf701f-1920w.PNG";
   var WA = "201031567949";
+  /* The AI Zara (Claude Managed Agents) through Hayakkom's Cloudflare relay, which holds the key. Empty = the built-in
+     assistant below answers everything. If the relay fails or times out, the built-in assistant answers that message. */
+  var AI_URL = "";
   /* Zara's picture: resized copy first, then the original, then the Hayakkom logo */
   function zaraImg(im) { im.src = AV; im.alt = ""; im.onerror = function () { if (this.src !== AV2 && this.dataset.f !== "1") { this.dataset.f = "1"; this.src = AV2; } else { this.onerror = null; this.src = "/assets/ai-avatar.png"; } }; return im; }
   var L = document.documentElement.lang || "";
@@ -144,6 +147,7 @@
     ".zr-in .zr-mic{background:#E3EFEE;color:#0B6B73;padding:0 12px;font-size:18px;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;transition:transform .15s ease}" +
     ".zr-in .zr-mic.on{background:#C0392B;color:#fff;transform:scale(1.25);box-shadow:0 0 0 6px rgba(192,57,43,.18);z-index:2}" +
     ".zr-rec[hidden]{display:none!important}" +
+    ".zr-ph{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin:-2px -4px 0}.zr-ph a{display:block}.zr-ph img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;display:block;background:#E3EFEE}" +
     ".zr-rec{position:absolute;inset:8px 0 8px 10px;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #F1C9C4;border-radius:10px;padding:0 12px;font-size:14px;color:#173B44;z-index:1;right:auto;width:calc(100% - 130px)}" +
     "[dir=rtl] .zr-rec{inset:8px 10px 8px 0;left:auto}" +
     ".zr-rec .zr-dot{width:10px;height:10px;border-radius:50%;background:#C0392B;animation:zrp 1s infinite;flex:none}" +
@@ -476,7 +480,47 @@
   function topics() { return T.opts.map(function (o) { return [o[1], o[0]]; }).concat([[T.waBtn, "wa"]]); }
   function countryOf(q) { for (var i = 0; i < COUNTRY.length; i++) if (COUNTRY[i].re.test(q)) return COUNTRY[i]; return null; }
   function stripCountry(q, c) { return q.replace(new RegExp(c.re.source, "gi"), " ").replace(/\b(i am|i'm|im|we are|we're|from|living in|live in|based in|and|need|help|please)\b|أنا|انا|من|نحن|وأحتاج|واحتاج|مساعدة|я|мы|из|нужна|помощь/gi, " ").replace(/\s+/g, " ").trim(); }
+  /* ---------- AI Zara ---------- */
+  function md(t) {   /* the agent writes light markdown: bold, links, bare https links */
+    return esc(t).replace(/\*\*([^*\n]+)\*\*/g, "<b>$1</b>")
+      .replace(/\[([^\]\n]{1,120})\]\((https:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+      .replace(/(^|[\s(])(https:\/\/[^\s<)]+)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
+  }
+  function waiting() {
+    var row = document.createElement("div"); row.className = "zr-row"; row.appendChild(avatar());
+    var b = document.createElement("div"); b.className = "zr-b zr-typing"; b.setAttribute("aria-hidden", "true");
+    b.innerHTML = "<span></span><span></span><span></span>"; row.appendChild(b); box.appendChild(row); box.scrollTop = box.scrollHeight;
+    return function () { row.remove(); };
+  }
+  function photos(list) {
+    var html = '<span class="zr-ph">' + list.map(function (im) {
+      return '<a href="' + esc(im.url) + '" target="_blank" rel="noopener"><img src="' + esc(im.url) + '" alt="' + esc(im.caption || "") + '" loading="lazy"></a>';
+    }).join("") + "</span>" + (list[0] && list[0].caption ? "<small>" + esc(list[0].caption) + "</small>" : "");
+    var m = { text: list.map(function (i) { return i.caption || ""; }).join(" · "), html: html, pics: 1 }; S.log.push(m); save(); render(m);
+  }
+  var aiBusy = false;
+  function aiAnswer(q) {
+    if (aiBusy) return; aiBusy = true;
+    var stop = waiting(), ctl2 = window.AbortController ? new AbortController() : null, timer = setTimeout(function () { if (ctl2) ctl2.abort(); }, 100000);
+    fetch(AI_URL, { method: "POST", headers: { "content-type": "application/json" }, signal: ctl2 ? ctl2.signal : undefined,
+      body: JSON.stringify({ session_id: S.ai || "", text: q, lang: lang, channel: S.voice ? "voice" : "web_chat", page: location.pathname, transcript: transcript(), contact: S.aiContact || {} }) })
+      .then(function (r) { return r.json().then(function (d) { if (!r.ok || d.error && !(d.replies && d.replies.length)) throw new Error(d.error || r.status); return d; }); })
+      .then(function (d) {
+        clearTimeout(timer); stop(); aiBusy = false;
+        S.ai = d.session_id || S.ai; if (d.contact && d.contact.name) S.aiContact = d.contact; save();
+        if (!d.replies.length && !(d.images && d.images.length)) throw new Error("empty");
+        d.replies.forEach(function (t) { bot(t, md(t)); });
+        if (d.images && d.images.length) photos(d.images);
+        if (d.contact && (d.contact.phone || d.contact.email)) { S.lead.phone = S.lead.phone || d.contact.phone; S.sent = true; save(); }
+        chips(d.handoff ? [[T.waBtn, "wa"]] : [[T.waBtn, "wa"]]);
+      })
+      .catch(function () { clearTimeout(timer); stop(); aiBusy = false; ruleAnswer(q); });
+  }
   function answer(q) {
+    if (AI_URL) { aiAnswer(q); return; }
+    ruleAnswer(q);
+  }
+  function ruleAnswer(q) {
     if (intent(q)) return;
     var cw = CW[lang], ctry = countryOf(q);
     loadIdx().then(function () {
@@ -565,6 +609,7 @@
     if (k === "lead") { startLead(); return; }
     if (k === "ask") { S.step = null; save(); chips([]); typing(300, function () { bot(T.askQ); try { input.focus({ preventScroll: true }); } catch (e) {} }); return; }
     if (k === "passq") { S.need = S.need || T.needs.ask; S.lead.details = S.pending || ""; save(); startLead(); return; }
+    if (AI_URL && T.needs[k]) { typing(200, function () { aiAnswer(label); }); return; }
     if (T.needs[k]) {
       S.need = T.needs[k]; save();
       loadIdx().then(function () {
