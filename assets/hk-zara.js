@@ -274,7 +274,7 @@
     recBar.hidden = !on; form.classList.toggle("zr-recording", on);
     if (on) { recBar.querySelector(".zr-sl").textContent = VT[lang].slide; recBar.classList.remove("zr-cx"); }
   }
-  function clock() { var s = Math.floor((Date.now() - t0) / 1000); recBar.querySelector(".zr-tm").textContent = Math.floor(s / 60) + ":" + ("0" + s % 60).slice(-2); }
+  function clock() { var s = Math.floor((Date.now() - t0) / 1000); if (holding && s >= 60) { release(false); return; } recBar.querySelector(".zr-tm").textContent = Math.floor(s / 60) + ":" + ("0" + s % 60).slice(-2); }
   function startRec() {
     rec = new SR(); rec.lang = LOC[lang]; rec.interimResults = true; rec.continuous = true; rec.maxAlternatives = 1;
     rec.onresult = function (e) {
@@ -282,7 +282,9 @@
       for (var i = e.resultIndex; i < e.results.length; i++) { if (e.results[i].isFinal) heard += e.results[i][0].transcript + " "; else interim += e.results[i][0].transcript; }
       gotSome = true;
     };
-    rec.onerror = function (e) { if (e.error === "not-allowed" || e.error === "service-not-allowed") { holding = false; cancelled = true; bot(VT[lang].den); } };
+    rec.onerror = function (e) {
+      if (e.error === "not-allowed" || e.error === "service-not-allowed" || e.error === "audio-capture") { holding = false; cancelled = true; finishRec(); bot(VT[lang].den); }
+    };
     rec.onend = function () {
       if (holding && !cancelled) { try { startRec(); } catch (e) {} return; }  /* the browser stopped early: keep recording while the finger is down */
       finishRec();
@@ -306,8 +308,11 @@
     if (short && !cancel) { cancelled = true; }
     try { if (cancelled) rec.abort(); else rec.stop(); } catch (x) { finishRec(); }
     if (short && !cancel) { micUi(false); typing(200, function () { bot(VT[lang].hold); }); }
+    /* safety net: some phones never report the end of listening — never leave the recording bar on screen */
+    setTimeout(function () { if (listening && !holding) finishRec(); }, 2500);
   }
   function finishRec() {
+    if (!listening) return;   /* already finished (each recording is sent at most once) */
     var said = (heard + " " + interim).replace(/\s+/g, " ").trim(), wasCancelled = cancelled;
     clearInterval(tick); micUi(false); heard = ""; interim = "";
     if (wasCancelled) return;
@@ -320,6 +325,11 @@
     mic.addEventListener("pointerdown", press);
     mic.addEventListener("pointerup", function () { release(false); });
     mic.addEventListener("pointercancel", function () { release(true); });
+    /* the finger can lift somewhere else — e.g. on the microphone-permission popup the first time — so listen everywhere */
+    window.addEventListener("pointerup", function () { if (holding) release(false); }, true);
+    window.addEventListener("blur", function () { if (holding) release(false); });
+    document.addEventListener("visibilitychange", function () { if (document.hidden && holding) release(true); });
+    recBar.addEventListener("pointerdown", function (e) { e.preventDefault(); if (holding) release(true); else if (listening) { cancelled = true; finishRec(); } });
     mic.addEventListener("pointermove", function (e) {
       if (!holding) return;
       var moved = RTL ? e.clientX - sx : sx - e.clientX;       /* toward the text box */
