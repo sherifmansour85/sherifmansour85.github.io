@@ -210,17 +210,23 @@
     qt.forEach(function (w) { if (t.indexOf(" " + w) >= 0) s += w.length > 5 ? 2 : 1; });
     return s;
   }
+  function hits(qt, text) { var t = " " + norm(text) + " ", n = 0, seen = {}; qt.forEach(function (w) { if (!seen[w] && t.indexOf(" " + w) >= 0) { seen[w] = 1; n++; } }); return n; }
   function find(q) {
     var qt = toks(q); if (!qt.length || !IDX) return null;
+    var uniq = qt.filter(function (w, i) { return qt.indexOf(w) === i; });
+    var need = uniq.length >= 2 ? 2 : 1;   /* one stray shared word ("session", "test") is not a match */
     var best = null;
     IDX.forEach(function (p) {
       var lb = p.l === lang ? 1.5 : (lang === "ru" && p.l === "en" ? 0.6 : 0);
       if (!lb) return;
       var ps = score(qt, (p.t || "") + " " + (p.h || "") + " " + (p.k || ""));
+      var pageText = (p.t || "") + " " + (p.h || "") + " " + (p.k || "") + " " + (p.d || "");
       (p.q || []).forEach(function (qa) {
+        if (hits(uniq, qa[0] + " " + pageText) < need) return;
         var s = (score(qt, qa[0]) * 2 + score(qt, qa[1]) * 0.5 + ps * 0.3) * lb;
         if (!best || s > best.s) best = { s: s, p: p, qa: qa };
       });
+      if (hits(uniq, pageText) < need) return;
       var s2 = (ps * 1.2 + score(qt, p.d || "") * 0.6) * lb;
       if (!best || s2 > best.s) best = { s: s2, p: p, qa: null };
     });
@@ -233,7 +239,42 @@
   function pageCard(p) {
     return "<b>" + esc(p.h || p.t) + "</b>\n" + esc(p.d || "") + (p.p ? "\n" + esc(priceLine(p)) : "") + '<small><a href="' + esc(p.u) + '">' + esc(T.open) + " →</a></small>";
   }
+  /* questions about Zara herself, answered before the knowledge search */
+  var INTENT = {
+    voice: /(voice|speak|talk to you|call me|audio|صوت|صوتي|مكالمة|اتصال|أكلم|اكلم|كلمني|голос|позвон)/i,
+    human: /(human|real person|agent|someone|staff|coordinator|موظف|شخص|إنسان|انسان|منسق|مسؤول|человек|оператор)/i,
+    hello: /^(hi|hello|hey|salam|مرحبا|مرحبًا|هلا|اهلا|أهلا|السلام عليكم|السلام|привет|здравствуйте)[\s!.؟?]*$/i,
+    trust: /(accredit|jci|licen[cs]ed|is it safe|safety|trust|معتمد|اعتماد|مرخص|ترخيص|آمن|امان|أمان|موثوق|аккредит|лиценз|безопас)/i,
+    thanks: /^(thanks|thank you|shukran|شكرا|شكرًا|مشكور|يعطيك العافية|спасибо)[\s!.]*$/i
+  };
+  var IT = {
+    en: { voice: "Voice chat with me is coming soon. For now you can send a voice note on WhatsApp — a coordinator listens and replies, usually within a few hours.",
+          human: "Of course — a Hayakkom coordinator can take over. Message us on WhatsApp, or leave your details and we'll contact you within 12 hours.",
+          thanks: "You're very welcome! Anything else I can help with?",
+          trust: "Treatment is always delivered by licensed Egyptian medical institutions — never by Hayakkom. Our hospital partners include Dar Al Fouad Hospital (6th of October — the first hospital in Egypt with Joint Commission International accreditation — and Nasr City) and As-Salam International Hospital (Maadi and New Cairo), both JCI-accredited. Your doctor reviews your case before you travel, and you get a written itemised estimate before paying.",
+          trustLink: "/how-to-choose/", trustLabel: "How to choose a medical coordinator" },
+    ar: { voice: "المحادثة الصوتية معي قادمة قريبًا. حاليًا يمكنك إرسال رسالة صوتية على واتساب، ويستمع لها منسّق ويرد عليك عادةً خلال ساعات قليلة.",
+          human: "بكل سرور — يمكن لمنسّق من حياكم أن يتابع معك. راسلنا على واتساب، أو اترك بياناتك ونتواصل معك خلال 12 ساعة.",
+          thanks: "العفو، حياك الله! هل أساعدك في شيء آخر؟",
+          trust: "العلاج تقدّمه دائمًا منشآت طبية مصرية مرخّصة — وليس حياكم. من شركائنا مستشفى دار الفؤاد (6 أكتوبر — أول مستشفى في مصر يحصل على اعتماد اللجنة الدولية المشتركة JCI — ومدينة نصر) ومستشفى السلام الدولي (المعادي والقاهرة الجديدة)، وكلاهما معتمد من JCI. يراجع الطبيب حالتك قبل السفر، وتحصل على تقدير مكتوب ومفصّل قبل الدفع.",
+          trustLink: "/ar/how-to-choose/", trustLabel: "كيف تختار منسّق رحلتك العلاجية" },
+    ru: { voice: "Голосовой чат скоро появится. Пока можно отправить голосовое сообщение в WhatsApp — координатор ответит в течение нескольких часов.",
+          human: "Конечно — координатор Hayakkom может продолжить. Напишите нам в WhatsApp или оставьте контакты, и мы свяжемся в течение 12 часов.",
+          thanks: "Пожалуйста! Чем ещё могу помочь?",
+          trust: "Лечение всегда проводят лицензированные медицинские учреждения Египта, а не Hayakkom. Среди наших партнёров — больница Dar Al Fouad и международная больница As-Salam, аккредитованные Joint Commission International (JCI). Врач изучает ваш случай до поездки, а до оплаты вы получаете письменную смету.",
+          trustLink: "/how-to-choose/", trustLabel: "How to choose a medical coordinator" }
+  }[lang];
+  function intent(q) {
+    var t = q.trim();
+    if (INTENT.hello.test(t)) { greet(); return true; }
+    if (INTENT.thanks.test(t)) { bot(IT.thanks); chips([[T.newQ, "ask"], [T.waBtn, "wa"]]); return true; }
+    if (INTENT.trust.test(t)) { bot(null, esc(IT.trust) + '<small><a href="' + esc(IT.trustLink) + '">' + esc(IT.trustLabel) + " →</a></small>"); chips(S.sent ? [[T.newQ, "ask"], [T.waBtn, "wa"]] : [[T.yes, "lead"], [T.newQ, "ask"], [T.waBtn, "wa"]]); return true; }
+    if (INTENT.voice.test(t)) { bot(IT.voice); chips([[T.waBtn, "wa"], [T.newQ, "ask"]]); return true; }
+    if (INTENT.human.test(t)) { bot(IT.human); chips(S.sent ? [[T.waBtn, "wa"]] : [[T.waBtn, "wa"], [T.yes, "lead"]]); return true; }
+    return false;
+  }
   function answer(q) {
+    if (intent(q)) return;
     loadIdx().then(function () {
       var hit = find(q);
       if (!hit) { S.pending = q; save(); bot(T.none); chips([[T.pass, "passq"], [T.newQ, "ask"], [T.waBtn, "wa"]]); return; }
