@@ -5137,9 +5137,12 @@
   function respContacts(pid){
     var f = pid && findRec(pid); if(!f) return null;
     var p = f.rec, pr = profOf(pid);
+    var cl = function(re){ return (p.contacts || []).filter(function(c){ return re.test(c.label || ""); })[0] || {}; };
+    var esc0 = cl(/escalat/i), day0 = cl(/day-to-day|patient/i), prim0 = cl(/primary|main/i);
     return { id: pid, name: p.name, cat: p.category || "",
-      pcName: pr.pcName || p.patient_contact_name || p.contact || "", pcPhone: pr.pcPhone || p.patient_contact_phone || p.phone || "",
-      escName: pr.escName || p.escalation_name || "", escPhone: pr.escPhone || p.escalation_phone || "", escHours: pr.escHours || p.escalation_hours || "" };
+      pcName: pr.pcName || p.patient_contact_name || [day0.name || prim0.name, day0.role || prim0.role].filter(Boolean).join(", ") || p.contact || "",
+      pcPhone: pr.pcPhone || p.patient_contact_phone || day0.phone || prim0.phone || p.phone || "",
+      escName: pr.escName || p.escalation_name || [esc0.name, esc0.role].filter(Boolean).join(", "), escPhone: pr.escPhone || p.escalation_phone || esc0.phone || "", escHours: pr.escHours || p.escalation_hours || "" };
   }
   function telA(ph, label, cls){ var d = String(ph || "").replace(/[^\d+]/g, ""); return d ? '<a class="rs-tel' + (cls ? " " + cls : "") + '" href="tel:' + esc(d) + '">📞 ' + esc(label || ph) + '</a>' : ""; }
   function respOf(id){ var st = state[id] || {}, r = Object.assign({}, st.resp || {}); if(!r.medical && st.consult && st.consult.partner) r.medical = st.consult.partner; return r; }
