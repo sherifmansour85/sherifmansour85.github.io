@@ -615,6 +615,10 @@
   .ag-tab.has-new{box-shadow:0 0 0 2px #C9A23A,var(--shadow)!important}.ag-tab em{font-style:normal;font-size:11px;font-weight:800;color:#8F701D}
   .ag-nav-new{display:inline-block;min-width:18px;padding:0 5px;margin-inline-start:6px;border-radius:999px;background:#C2392B;color:#fff;font-size:11px;line-height:18px;text-align:center}
   .an-table .tag.ok{background:#E5F5EA;color:#1D7A43}
+  .ag-files{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0}.ag-files[hidden]{display:none}
+  .ag-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 6px 4px 10px;border-radius:999px;background:#EEF6F6;border:1px solid #DCECEC;font-size:12.5px;max-width:100%}
+  .ag-chip small{color:var(--sub)}.ag-chip-x{border:0;background:#fff;border-radius:50%;width:20px;height:20px;cursor:pointer;line-height:18px;font-size:14px}
+  .ag-attach{cursor:pointer}.ag-att{margin-top:6px;font-size:12px;opacity:.85}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -5201,7 +5205,7 @@
     var m = agMsgs(k), a = AGENT_LIST.filter(function(x){ return x.key === k; })[0];
     log.innerHTML = m.length ? m.map(function(x){
       var me = x.role !== "agent";
-      return '<div class="ag-m ' + (me ? "me" : "it") + '"><div class="ag-b" dir="auto">' + (me ? esc(x.text).replace(/\n/g, "<br>") : agMd(x.text)) + '</div><small>' + esc(me ? (x.by || "Team") : a.name) + " · " + esc(String(x.at || "").slice(0, 16).replace("T", " ")) + '</small></div>';
+      return '<div class="ag-m ' + (me ? "me" : "it") + '"><div class="ag-b" dir="auto">' + (me ? esc(x.text).replace(/\n/g, "<br>") : agMd(x.text)) + (x.files && x.files.length ? '<div class="ag-att">📎 ' + x.files.map(esc).join(" · ") + '</div>' : '') + '</div><small>' + esc(me ? (x.by || "Team") : a.name) + " · " + esc(String(x.at || "").slice(0, 16).replace("T", " ")) + '</small></div>';
     }).join("") : '<p class="ag-empty">Say hello to ' + esc(a.name) + '. ' + esc(a.hint) + '</p>';
     if(AG_BUSY[k]) log.insertAdjacentHTML("beforeend", '<div class="ag-m it"><div class="ag-b ag-typing"><span></span><span></span><span></span></div></div>');
     log.scrollTop = log.scrollHeight;
@@ -5218,27 +5222,63 @@
       panel.innerHTML = '<div class="ag-top"><span class="ag-ic big">' + a.icon + '</span><div><b>' + esc(a.name) + '</b> — ' + esc(a.role) + '<br><small>' + esc(a.hint) + '</small></div></div>' +
         '<div class="ag-log" id="ag-log"></div>' +
         '<textarea class="ag-in" dir="auto" placeholder="Write to ' + esc(a.name) + ' — or hold 🎙 below and speak"></textarea>' +
-        '<div class="upd-row"><button type="button" class="btn gold ag-send">Send to ' + esc(a.name) + '</button><span class="ag-note"></span></div>';
+        '<div class="ag-files" hidden></div>' +
+        '<div class="upd-row"><button type="button" class="btn gold ag-send">Send to ' + esc(a.name) + '</button>' +
+        '<label class="btn ag-attach" title="Attach photos, PDFs or text files (up to 4, 15 MB each)">📎 Attach<input type="file" class="ag-file" multiple accept="image/png,image/jpeg,image/gif,image/webp,application/pdf,.txt,.csv,.json,.md,text/plain,text/csv" hidden></label>' +
+        '<span class="ag-note"></span></div>';
     }
     agRenderLog(AG_CUR);
-    agBadgeNav();
+    agBadgeNav(); agFilesRender();
   }
+  /* 📎 files for the agent: photos and PDFs go to the AI as they are; text files as text. Word/Excel: save as PDF first. */
+  var AG_FILES = {};
+  function agFilesRender(){
+    var panel = document.getElementById("ag-panel"); if(!panel) return; var box = panel.querySelector(".ag-files"); if(!box) return;
+    var list = AG_FILES[AG_CUR] || [];
+    box.hidden = !list.length;
+    box.innerHTML = list.map(function(f, i){ return '<span class="ag-chip">' + (/^image\//.test(f.type) ? "🖼" : /pdf/.test(f.type) ? "📄" : "📝") + ' ' + esc(f.name) + ' <small>' + Math.max(1, Math.round(f.size / 1024)) + ' KB</small><button type="button" class="ag-chip-x" data-i="' + i + '" aria-label="Remove">×</button></span>'; }).join("");
+  }
+  function agReadFile(f){ return new Promise(function(res, rej){ var r = new FileReader(); r.onload = function(){ res(String(r.result).split(",")[1] || ""); }; r.onerror = function(){ rej(r.error); }; r.readAsDataURL(f); }); }
+  document.addEventListener("change", function(e){
+    if(!e.target.classList || !e.target.classList.contains("ag-file")) return;
+    var note = document.querySelector("#ag-panel .ag-note"), list = AG_FILES[AG_CUR] = AG_FILES[AG_CUR] || [], bad = [];
+    Array.prototype.forEach.call(e.target.files || [], function(f){
+      var ok = /^image\/(png|jpe?g|gif|webp)$/.test(f.type) || f.type === "application/pdf" || /^text\//.test(f.type) || /\.(txt|csv|json|md)$/i.test(f.name);
+      if(!ok){ bad.push(f.name + " (save Word/Excel files as PDF first)"); return; }
+      if(f.size > 15 * 1024 * 1024){ bad.push(f.name + " (over 15 MB)"); return; }
+      if(list.length >= 4){ bad.push(f.name + " (4 files at a time)"); return; }
+      list.push(f);
+    });
+    e.target.value = ""; agFilesRender();
+    if(note) note.textContent = bad.length ? "⚠ Not attached: " + bad.join(", ") : "";
+  });
+  document.addEventListener("click", function(e){
+    var x = e.target.closest && e.target.closest(".ag-chip-x"); if(!x) return;
+    (AG_FILES[AG_CUR] || []).splice(+x.getAttribute("data-i"), 1); agFilesRender();
+  });
   function agSend(){
     var k = AG_CUR, panel = document.getElementById("ag-panel"), ta = panel.querySelector(".ag-in"), note = panel.querySelector(".ag-note");
-    var text = ta.value.trim(); if(!text || AG_BUSY[k]) return;
+    var files = (AG_FILES[k] || []).slice();
+    var text = ta.value.trim(); if((!text && !files.length) || AG_BUSY[k]) return;
+    if(!text) text = "Please look at the attached file" + (files.length > 1 ? "s" : "") + " and tell me what matters for Hayakkom.";
     var a = AGENT_LIST.filter(function(x){ return x.key === k; })[0];
-    var list = agMsgs(k).concat([{ role: "user", by: myName(), text: text.slice(0, 4000), at: new Date().toISOString() }]);
-    agSave(k, list); ta.value = ""; AG_BUSY[k] = true; agRenderLog(k); note.textContent = "";
-    act({ t: "log", kind: "agent", id: null, name: a.name, what: myName() + " → " + a.name + ": “" + text.slice(0, 140) + "”" });
-    hubAiKey().then(function(key){
-      return fetch(HUB_AGENT_URL, { method: "POST", headers: { "content-type": "application/json", "x-hub-key": key },
-        body: JSON.stringify({ agent: k, messages: list.slice(-24), context: agContext() }) });
+    var msg = { role: "user", by: myName(), text: text.slice(0, 4000), at: new Date().toISOString() };
+    if(files.length) msg.files = files.map(function(f){ return f.name; });
+    var list = agMsgs(k).concat([msg]);
+    agSave(k, list); ta.value = ""; AG_FILES[k] = []; agFilesRender(); AG_BUSY[k] = true; agRenderLog(k); note.textContent = files.length ? "Uploading " + files.length + " file" + (files.length > 1 ? "s" : "") + "…" : "";
+    act({ t: "log", kind: "agent", id: null, name: a.name, what: myName() + " → " + a.name + ": “" + text.slice(0, 140) + "”" + (files.length ? " · 📎 " + msg.files.join(", ") : "") });
+    Promise.all(files.map(function(f){ return agReadFile(f).then(function(d){ return { name: f.name, type: f.type || (/\.csv$/i.test(f.name) ? "text/csv" : "text/plain"), data: d }; }); })).then(function(fileData){
+      return hubAiKey().then(function(key){
+        var sendList = list.slice(-24).map(function(m){ return m.files ? Object.assign({}, m, { text: m.text + "\n[Attached: " + m.files.join(", ") + "]" }) : m; });
+        return fetch(HUB_AGENT_URL, { method: "POST", headers: { "content-type": "application/json", "x-hub-key": key },
+          body: JSON.stringify({ agent: k, messages: sendList, context: agContext(), files: fileData }) });
+      });
     }).then(function(r){ return r.json(); }).then(function(res){
-      AG_BUSY[k] = false;
+      AG_BUSY[k] = false; note.textContent = "";
       if(res.reply){
         var l2 = agMsgs(k).concat([{ role: "agent", text: res.reply.slice(0, 6000), at: new Date().toISOString() }]); agSave(k, l2);
         act({ t: "log", kind: "agent", id: null, name: a.name, what: a.name + " replied: “" + res.reply.replace(/\s+/g, " ").slice(0, 140) + "”" });
-      } else note.textContent = res.error === "no_credit" ? "⚠ " + a.name + " can't answer yet — the AI account needs credit (console.anthropic.com → Billing). Your message is saved." : "⚠ " + a.name + " couldn't answer (" + (res.error || "error") + "). Try again.";
+      } else note.textContent = res.error === "files_too_big" ? "⚠ The files are too big together — send fewer or smaller files. Your message is saved." : res.error === "no_credit" ? "⚠ " + a.name + " can't answer yet — the AI account needs credit (console.anthropic.com → Billing). Your message is saved." : "⚠ " + a.name + " couldn't answer (" + (res.error || "error") + "). Try again.";
       if(AG_CUR === k) agRenderLog(k); renderAgentTabsOnly();
     }).catch(function(){ AG_BUSY[k] = false; note.textContent = "⚠ Couldn't reach the agent. Check the connection and try again."; if(AG_CUR === k) agRenderLog(k); });
   }
