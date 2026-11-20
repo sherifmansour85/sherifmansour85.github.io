@@ -81,6 +81,22 @@
   .cs-box{margin:8px 0 4px;border:1px solid #CFE3E5;border-radius:10px;background:#F7FBFB;padding:10px 12px;display:grid;gap:8px}
   .cs-box select,.cs-box input:not([type=checkbox]){font:inherit;padding:7px 9px;border:1px solid #CFE3E5;border-radius:8px;width:100%;box-sizing:border-box;background:#fff}
   .cs-meet{display:grid;grid-template-columns:1fr 1fr;gap:8px}.cs-who{font-size:.86em;color:#2e4a50;margin:0;background:#fff;border:1px dashed #CFE3E5;border-radius:8px;padding:6px 8px}
+  .ag-head h2{margin:0 0 4px}.ag-head p{margin:0 0 12px;color:#4a5a5c;font-size:.92em}
+  .ag-tabs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:12px}
+  .ag-tab{position:relative;display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:8px;align-items:center;text-align:left;font:inherit;padding:10px 12px;border-radius:14px;border:1px solid #CFE3E5;background:linear-gradient(180deg,#fff,#F4F9F9);cursor:pointer;transition:transform .15s,box-shadow .15s}
+  .ag-tab:hover{transform:translateY(-1px);box-shadow:0 6px 16px -8px rgba(14,124,134,.35)}
+  .ag-tab.on{border-color:#0E7C86;box-shadow:0 0 0 2px rgba(14,124,134,.25);background:linear-gradient(180deg,#F2FBFB,#E3F2F2)}
+  .ag-tab .ag-ic{grid-row:1/3;font-size:22px}.ag-tab small{color:#4a5a5c;font-size:.78em}.ag-tab i{position:absolute;top:6px;right:8px;font-style:normal;font-size:.72em;background:#0E7C86;color:#fff;border-radius:999px;padding:1px 7px}
+  .ag-panel{border:1px solid #CFE3E5;border-radius:16px;background:#fff;padding:12px;display:grid;gap:8px}
+  .ag-top{display:flex;gap:10px;align-items:center;padding-bottom:8px;border-bottom:1px solid #EDF3F3}.ag-top small{color:#4a5a5c}.ag-ic.big{font-size:30px}
+  .ag-log{min-height:220px;max-height:52vh;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:6px 2px}
+  .ag-m{display:flex;flex-direction:column;max-width:86%}.ag-m.me{align-self:flex-end;align-items:flex-end}.ag-m small{color:#7a8c8f;font-size:.72em;margin-top:2px}
+  .ag-b{padding:9px 12px;border-radius:14px;line-height:1.45;white-space:normal;word-break:break-word}
+  .ag-m.it .ag-b{background:#F2F8F8;border:1px solid #E1EEEE;border-bottom-left-radius:4px}.ag-m.me .ag-b{background:#0E7C86;color:#fff;border-bottom-right-radius:4px}
+  .ag-empty{color:#7a8c8f;text-align:center;margin:40px 0}
+  .ag-typing span{display:inline-block;width:6px;height:6px;margin:0 2px;border-radius:50%;background:#9DB2B6;animation:agb 1s infinite}.ag-typing span:nth-child(2){animation-delay:.15s}.ag-typing span:nth-child(3){animation-delay:.3s}@keyframes agb{50%{transform:translateY(-4px);opacity:.5}}
+  .ag-in{font:inherit;min-height:64px;padding:10px 12px;border:1px solid #CFE3E5;border-radius:12px;resize:vertical;width:100%;box-sizing:border-box}
+  .ag-note{font-size:.86em;color:#A0522D}
   .qa-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0 4px}
   .qa-l{font-size:.95em;opacity:.7}
   .qa-b{font:inherit;font-size:.82em;padding:6px 11px;border-radius:999px;border:1px solid #CFE3E5;background:linear-gradient(180deg,#fff,#F2F8F8);color:#0B5960;cursor:pointer;transition:transform .12s,box-shadow .12s}
@@ -434,6 +450,7 @@
     <button class="view-btn" id="view-btn-calendar" type="button">📅 Calendar</button>
     <button class="view-btn" id="view-btn-announce" type="button">📢 Announce</button>
     <button class="view-btn" id="view-btn-forms" type="button">📄 Forms</button>
+    <button class="view-btn" id="view-btn-agents" type="button">🤖 Agents</button>
     <span class="tab-actions">
       <span class="who-chip">👤 <span id="who-label">—</span> · <a id="who-switch">switch</a></span>
       <button class="btn" id="hist-btn-top" type="button">🕘 History</button>
@@ -692,6 +709,11 @@
   <div id="list-helpers"></div>
   </div>
 
+  <div id="view-agents" style="display:none">
+    <div class="ag-head"><h2>🤖 Your AI team</h2><p>Talk to each agent by text or 🎙 voice. Sherif and Reham see the same conversations, and every exchange is kept in History. Agents explain, plan and draft — nothing goes to a customer, partner or doctor until Reham approves it.</p></div>
+    <div class="ag-tabs" id="ag-tabs"></div>
+    <div class="ag-panel" id="ag-panel"></div>
+  </div>
   <div id="view-forms" style="display:none">
     <p class="lede" style="margin-top:0">Every live Hayakkom form — customer enquiry forms (copy the Arabic or English link and send it straight to a customer) and the partner-facing form (send its one link to any hospital, clinic or tourism company). Each one below has a short note on what it's for.</p>
     <div id="forms-list"></div>
@@ -2461,7 +2483,7 @@
   }
 
   // ---- view toggle ----
-  var VIEWS = ["dashboard","partners","customers","helpers","calendar","announce","forms"];
+  var VIEWS = ["dashboard","partners","customers","helpers","calendar","announce","forms","agents"];
   var currentView = (function(){ var h = (location.hash||"").slice(1); return VIEWS.indexOf(h) >= 0 ? h : "dashboard"; })();
   var NAV_POP = false;
   function showView(name){
@@ -2476,6 +2498,7 @@
     if(name==="announce"){ renderBrief("an-brief", "announce"); if(!announceRendered){ renderAnnounceRecipients(); announceRendered = true; } }
     if(name==="dashboard") renderDashboard();
     if(name==="calendar") renderCalendar();
+    if(name==="agents") renderAgents();
     renderUpcoming();
   }
   VIEWS.forEach(function(v){ document.getElementById("view-btn-"+v).addEventListener("click", function(){ showView(v); }); });
@@ -4719,7 +4742,7 @@
   //      Hold 🎙 and speak → release: the words go into the box. Slide left = cancel. Slide up to 🔒 = keep recording
   //      hands-free, then ✓ puts the words in or 🗑 deletes them. A quick tap shows how. EN / ع switches the language.
   var VC_SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  var VC_SEL = "#m-body, #wa-text, #an-body, #a-summary, #ac-summary, textarea.ai-ask, textarea.upd-text, textarea.notes, textarea.pf-doctors";
+  var VC_SEL = "textarea.ag-in, #m-body, #wa-text, #an-body, #a-summary, #ac-summary, textarea.ai-ask, textarea.upd-text, textarea.notes, textarea.pf-doctors";
   var VC_LANG_KEY = "hk_voice_lang_v1";
   var VC_T = {
     en: { slide: "‹ Slide to cancel · slide up to lock 🔒", locked: "Recording — ✓ to insert, 🗑 to delete", hold: "Hold 🎙 to record, release to insert. Slide up to 🔒 lock.", none: "I didn't catch that — hold 🎙 and speak a little longer.", den: "Allow the microphone for this site to use voice." },
@@ -4816,6 +4839,97 @@
   new MutationObserver(function(){ if(vcQueued) return; vcQueued = true; requestAnimationFrame(function(){ vcQueued = false; decorateVoice(); }); })
     .observe(document.body, { childList:true, subtree:true });
   decorateVoice();
+
+  // ---- 🤖 Agents: a chat with each AI agent for Sherif and Reham. Conversations are kept in the team's shared Hub
+  //      data (state._agent_<key>), so both see them on every device; each exchange is also written to History.
+  //      The agents talk, plan and draft; anything sent to people is still approved by Reham in the Hub. ----
+  var HUB_AGENT_URL = "https://zara.sherif-mansour-85.workers.dev/hub/agent";
+  var AGENT_LIST = [
+    { key: "zara",  icon: "👩🏻‍💼", name: "Zara",  role: "Website & WhatsApp coordinator", hint: "Ask what visitors asked today, or how to answer a lead." },
+    { key: "ali",   icon: "🗂", name: "Ali",   role: "Reham's assistant", hint: "“What should I do first today?” · “Who is waiting for a reply?”" },
+    { key: "jisr",  icon: "🌉", name: "Jisr",  role: "Doctors & quotes", hint: "“Which partners still owe written prices?” · “Draft a quote request for an implant case.”" },
+    { key: "rafiq", icon: "🧳", name: "Rafiq", role: "Traveller's companion", hint: "“Prepare a pre-trip checklist for a dental family trip.”" },
+    { key: "amin",  icon: "💼", name: "Amin",  role: "Finance & collections", hint: "“What commissions do we expect?” · “Draft a polite deposit reminder.”" },
+    { key: "rawaj", icon: "📣", name: "Rawaj", role: "Marketing", hint: "“Which clinics should we pitch our marketing services to?” · “Write a pitch for a dental clinic.”" }
+  ];
+  var AG_CUR = lsGet("hk_agent_cur_v1", "ali"), AG_BUSY = {};
+  function agMsgs(k){ return ((state["_agent_" + k] || {}).msgs) || []; }
+  function agSave(k, list){ state["_agent_" + k] = { msgs: list.slice(-80) }; saveState(state); }
+  function agContext(){
+    var L = [], today = new Date().toISOString().slice(0, 10);
+    var cust = (ALL_CUST || []).filter(function(c){ var st = state[c.id] || {}; return !st.removed && !st.deleted && !c.archived_default; });
+    L.push("CUSTOMERS (" + cust.length + " open):");
+    cust.slice(0, 40).forEach(function(c){
+      var st = state[c.id] || {}, th = c.thread || [], last = th[th.length - 1];
+      L.push("- " + c.name + " | " + (c.enquiry_type || "") + " | " + (c.country || "") + " | status " + effStatusOf(c) + " | received " + (c.date || "") +
+        " | last contacted " + String(st.lastContacted || c.last_replied || "never").slice(0, 10) + (last ? " | newest message " + last.date + " from " + String(last.from || "").replace(/<.*>/, "").trim() : "") +
+        (st.lastUpdate && st.lastUpdate.text ? " | update: " + String(st.lastUpdate.text).slice(0, 120) : "") + (c.summary ? " | " + String(c.summary).slice(0, 140) : ""));
+    });
+    var part = (ALL || []).filter(function(p){ var st = state[p.id] || {}; return !st.removed && !st.deleted; });
+    L.push("PARTNERS (" + part.length + "):");
+    part.slice(0, 60).forEach(function(p){ var pr = profOf(p.id);
+      L.push("- " + p.name + " | " + (p.category || "") + " | " + (p.country || "") + " | " + effStatusOf(p) + " | " + (pr.verified ? "verified" : "not verified") + " | " + (pr.writtenPrices ? "written prices" + (pr.pricesUntil ? " until " + pr.pricesUntil : "") : "NO written prices") +
+        (pr.responseHrs ? " | replies ~" + pr.responseHrs + "h" : "") + (pr.specialities || p.specialities ? " | " + (pr.specialities || p.specialities) : "") + " | last contacted " + String((state[p.id]||{}).lastContacted || p.last_replied || "never").slice(0, 10)); });
+    var helpers = (ALL_HELP || []).filter(function(h){ var st = state[h.id] || {}; return !st.removed && !st.deleted; });
+    L.push("HELPERS / APPLICANTS: " + helpers.length + " (" + helpers.filter(function(h){ return h.priority === "High"; }).map(function(h){ return h.name + " — " + (h.profession || ""); }).slice(0, 12).join("; ") + ")");
+    var dec = state._decisions || {}, waiting = (AI_DRAFTS || []).filter(function(d){ return !dec[d.id]; });
+    L.push("SUGGESTED EMAILS WAITING FOR APPROVAL: " + waiting.length + (waiting.length ? " — " + waiting.slice(0, 12).map(function(d){ var f = findRec(d.record_id); return (f ? f.rec.name : d.record_id) + " (" + (d.label || "") + ")"; }).join("; ") : ""));
+    L.push("Today: " + today + ". Team: Sherif Mansour (founder), Reham Mobasher (approves). Signed-in now: " + myName() + ".");
+    return L.join("\n").slice(0, 14000);
+  }
+  function agRenderLog(k){
+    var log = document.getElementById("ag-log"); if(!log) return;
+    var m = agMsgs(k), a = AGENT_LIST.filter(function(x){ return x.key === k; })[0];
+    log.innerHTML = m.length ? m.map(function(x){
+      var me = x.role !== "agent";
+      return '<div class="ag-m ' + (me ? "me" : "it") + '"><div class="ag-b" dir="auto">' + esc(x.text).replace(/\n/g, "<br>") + '</div><small>' + esc(me ? (x.by || "Team") : a.name) + " · " + esc(String(x.at || "").slice(0, 16).replace("T", " ")) + '</small></div>';
+    }).join("") : '<p class="ag-empty">Say hello to ' + esc(a.name) + '. ' + esc(a.hint) + '</p>';
+    if(AG_BUSY[k]) log.insertAdjacentHTML("beforeend", '<div class="ag-m it"><div class="ag-b ag-typing"><span></span><span></span><span></span></div></div>');
+    log.scrollTop = log.scrollHeight;
+  }
+  function renderAgents(){
+    var tabs = document.getElementById("ag-tabs"), panel = document.getElementById("ag-panel"); if(!tabs || !panel) return;
+    if(!AGENT_LIST.some(function(a){ return a.key === AG_CUR; })) AG_CUR = "ali";
+    tabs.innerHTML = AGENT_LIST.map(function(a){ var n = agMsgs(a.key).length;
+      return '<button type="button" class="ag-tab' + (a.key === AG_CUR ? " on" : "") + '" data-ag="' + a.key + '"><span class="ag-ic">' + a.icon + '</span><b>' + esc(a.name) + '</b><small>' + esc(a.role) + '</small>' + (n ? '<i>' + n + '</i>' : '') + '</button>'; }).join("");
+    var a = AGENT_LIST.filter(function(x){ return x.key === AG_CUR; })[0];
+    if(!panel.querySelector(".ag-in") || panel.getAttribute("data-ag") !== AG_CUR){
+      panel.setAttribute("data-ag", AG_CUR);
+      panel.innerHTML = '<div class="ag-top"><span class="ag-ic big">' + a.icon + '</span><div><b>' + esc(a.name) + '</b> — ' + esc(a.role) + '<br><small>' + esc(a.hint) + '</small></div></div>' +
+        '<div class="ag-log" id="ag-log"></div>' +
+        '<textarea class="ag-in" dir="auto" placeholder="Write to ' + esc(a.name) + ' — or hold 🎙 below and speak"></textarea>' +
+        '<div class="upd-row"><button type="button" class="btn gold ag-send">Send to ' + esc(a.name) + '</button><span class="ag-note"></span></div>';
+    }
+    agRenderLog(AG_CUR);
+  }
+  function agSend(){
+    var k = AG_CUR, panel = document.getElementById("ag-panel"), ta = panel.querySelector(".ag-in"), note = panel.querySelector(".ag-note");
+    var text = ta.value.trim(); if(!text || AG_BUSY[k]) return;
+    var a = AGENT_LIST.filter(function(x){ return x.key === k; })[0];
+    var list = agMsgs(k).concat([{ role: "user", by: myName(), text: text.slice(0, 4000), at: new Date().toISOString() }]);
+    agSave(k, list); ta.value = ""; AG_BUSY[k] = true; agRenderLog(k); note.textContent = "";
+    act({ t: "log", kind: "agent", id: null, name: a.name, what: myName() + " → " + a.name + ": “" + text.slice(0, 140) + "”" });
+    hubAiKey().then(function(key){
+      return fetch(HUB_AGENT_URL, { method: "POST", headers: { "content-type": "application/json", "x-hub-key": key },
+        body: JSON.stringify({ agent: k, messages: list.slice(-24), context: agContext() }) });
+    }).then(function(r){ return r.json(); }).then(function(res){
+      AG_BUSY[k] = false;
+      if(res.reply){
+        var l2 = agMsgs(k).concat([{ role: "agent", text: res.reply.slice(0, 6000), at: new Date().toISOString() }]); agSave(k, l2);
+        act({ t: "log", kind: "agent", id: null, name: a.name, what: a.name + " replied: “" + res.reply.replace(/\s+/g, " ").slice(0, 140) + "”" });
+      } else note.textContent = res.error === "no_credit" ? "⚠ " + a.name + " can't answer yet — the AI account needs credit (console.anthropic.com → Billing). Your message is saved." : "⚠ " + a.name + " couldn't answer (" + (res.error || "error") + "). Try again.";
+      if(AG_CUR === k) agRenderLog(k); renderAgentTabsOnly();
+    }).catch(function(){ AG_BUSY[k] = false; note.textContent = "⚠ Couldn't reach the agent. Check the connection and try again."; if(AG_CUR === k) agRenderLog(k); });
+  }
+  function renderAgentTabsOnly(){ var tabs = document.getElementById("ag-tabs"); if(tabs && document.getElementById("view-agents").style.display !== "none"){ var cur = document.getElementById("ag-panel").getAttribute("data-ag"); renderAgents(); } }
+  document.addEventListener("click", function(e){
+    if(!e.target.closest) return;
+    var t = e.target.closest(".ag-tab"); if(t){ AG_CUR = t.getAttribute("data-ag"); lsSet("hk_agent_cur_v1", AG_CUR); renderAgents(); return; }
+    if(e.target.closest(".ag-send")) agSend();
+  });
+  document.addEventListener("keydown", function(e){ if(e.target.classList && e.target.classList.contains("ag-in") && e.key === "Enter" && (e.ctrlKey || e.metaKey)) agSend(); });
+  // show messages from the other team member as they arrive (the shared state refreshes every minute)
+  setInterval(function(){ var v = document.getElementById("view-agents"); if(v && v.style.display !== "none"){ var log = document.getElementById("ag-log"); var n = log ? log.querySelectorAll(".ag-m").length - log.querySelectorAll(".ag-typing").length : 0; if(n !== agMsgs(AG_CUR).length) renderAgents(); } }, 4000);
 
   // ---- ⚡ Quick actions on every card: one tap opens a ready-to-check email (nothing is sent until it is approved
   //      in the normal Reply window), shares Zara's link, or marks a customer as booked. ----
