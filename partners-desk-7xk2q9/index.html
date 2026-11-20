@@ -579,6 +579,15 @@
   .wa-m.cu{align-self:flex-start;background:#F1F4F4}.wa-m.ag{align-self:flex-end;background:#E3F6F0}
   .wa-m small{display:block;font-size:10.5px;color:#6c7f82;margin-bottom:2px}
   .wa-empty{color:var(--sub);font-size:13px}
+  .hk-alert-bar{position:fixed;left:16px;right:16px;bottom:16px;max-width:900px;margin:0 auto;z-index:45;padding:12px 16px;border-radius:16px;background:linear-gradient(135deg,#D64535,#A8281B);color:#fff;
+    box-shadow:0 14px 30px -12px rgba(168,40,27,.7);display:flex;gap:12px;align-items:center;flex-wrap:wrap;animation:hkPulse 1.6s ease-in-out infinite}
+  .hk-alert-bar[hidden]{display:none}
+  .hk-alert-bar b{font-size:14px}.hk-alert-bar span{flex:1 1 240px;min-width:0;font-size:13px;opacity:.95}
+  .hk-alert-bar button{border:0;border-radius:10px;padding:7px 12px;font-weight:700;cursor:pointer;background:#fff;color:#A8281B}
+  @keyframes hkPulse{0%,100%{box-shadow:0 14px 30px -12px rgba(168,40,27,.7)}50%{box-shadow:0 0 0 6px rgba(214,69,53,.25),0 14px 30px -12px rgba(168,40,27,.7)}}
+  #alert-btn.on{background:#E9F7EF;border-color:#9AD3B0}
+  .al-list{display:flex;flex-direction:column;gap:8px;margin:10px 0}.al-item{padding:10px 12px;border-radius:12px;background:#FFF3F1;border:1px solid #F3C9C2;font-size:13px}
+  .al-item.normal{background:#F3F7F7;border-color:#DDE7E7}.al-item small{color:#6c7f82;display:block;margin-top:3px}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -595,6 +604,7 @@
 </div>
 <div id="app-content" style="display:none">
 <div class="wrap">
+<div id="hk-alert-bar" class="hk-alert-bar" role="alert" hidden></div>
   <header class="top">
     <div class="brand"><img class="brand-logo" src="https://www.hayakkom.com/assets/logo.png" alt="Hayakkom" width="168" height="40"><span class="brand-sep"></span><h1>Hub</h1></div>
     <span class="badge">Internal — not for public sharing</span>
@@ -615,6 +625,7 @@
       <button class="btn" id="hist-btn-top" type="button">🕘 History</button>
       <button class="btn" id="lock-btn" type="button" title="Lock the Hub (asks for the password again)">🔒 Lock</button>
       <button class="btn" id="tour-btn" type="button">🎓 Tour</button>
+      <button class="btn" id="alert-btn" type="button" title="Urgent alerts: ring and pop-up">🔔 Alerts</button>
       <button class="btn gold" id="new-email-btn" type="button">✉️ New email</button>
       <button class="btn" id="share-zara-btn" type="button" title="A link that opens Zara, our AI coordination specialist — plus our WhatsApp and phone numbers">🔗 Share Zara</button>
     </span>
@@ -1158,6 +1169,14 @@
     <h2 id="atts-title">Attachments</h2>
     <p class="sub" id="atts-sub"></p>
     <div class="atts-modal-list" id="atts-body"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="al-modal">
+  <div class="modal">
+    <button class="close-x" id="al-modal-close" aria-label="Close">×</button>
+    <h2 id="al-title">🔔 Urgent alerts</h2>
+    <div id="al-body"></div>
   </div>
 </div>
 
@@ -5109,6 +5128,67 @@
   }
   document.addEventListener("click", function(e){ if(e.target.closest && e.target.closest("#wa-refresh")) waLoad(); });
   setInterval(function(){ var v = document.getElementById("view-agents"); if(v && v.style.display !== "none" && !document.hidden) waLoad(); }, 60000);
+
+  /* ---- Urgent alerts: ring + pop-up + red banner while the Hub is open ---- */
+  var HUB_ALERTS_URL = "https://zara.sherif-mansour-85.workers.dev/hub/alerts", AL_SEEN_KEY = "hk_alert_seen_v1", AL_ON_KEY = "hk_alert_on_v1", AL_LAST = [];
+  function alOn(){ return lsGet(AL_ON_KEY) === "1"; }
+  function alRing(){
+    try{ var C = window.AudioContext || window.webkitAudioContext; if(!C) return; var ctx = alRing.ctx || (alRing.ctx = new C()); if(ctx.state === "suspended") ctx.resume();
+      [0, .45, .9, 1.8, 2.25, 2.7].forEach(function(t){ var o = ctx.createOscillator(), g = ctx.createGain(); o.type = "sine"; o.frequency.value = (t % .9 < .1) ? 988 : 1319;
+        g.gain.setValueAtTime(0.0001, ctx.currentTime + t); g.gain.exponentialRampToValueAtTime(0.5, ctx.currentTime + t + .02); g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + t + .38);
+        o.connect(g); g.connect(ctx.destination); o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + .4); }); }catch(e){}
+    try{ navigator.vibrate && navigator.vibrate([400,150,400,150,400]); }catch(e){}
+  }
+  function alShowBar(a){
+    var bar = document.getElementById("hk-alert-bar"); if(!bar) return;
+    bar.innerHTML = '<b>🚨 ' + esc(a.title) + '</b><span dir="auto">' + esc(a.text) + '</span><button type="button" id="al-ok">Got it</button>';
+    bar.hidden = false;
+  }
+  function alCheck(first){
+    hubAiKey().then(function(key){ return fetch(HUB_ALERTS_URL, { method:"POST", headers:{ "content-type":"application/json", "x-hub-key": key }, body:"{}" }); })
+    .then(function(r){ return r.json(); }).then(function(res){
+      AL_LAST = res.alerts || []; var seen = lsGet(AL_SEEN_KEY) || "";
+      if(!seen){ if(AL_LAST[0]) lsSet(AL_SEEN_KEY, AL_LAST[0].at); return; }   // first time on this device: start from now
+      var fresh = AL_LAST.filter(function(a){ return a.at > seen && a.level === "urgent"; });
+      if(!fresh.length) return;
+      var a = fresh[0]; alShowBar(a);
+      if(alOn()){ alRing();
+        try{ if(window.Notification && Notification.permission === "granted"){ var n = new Notification("🚨 " + a.title, { body: a.text, tag: "hk-" + a.id, requireInteraction: true }); n.onclick = function(){ window.focus(); n.close(); }; } }catch(e){} }
+      if(!document.getElementById("hk-alert-bar").hidden) document.title = "🚨 " + (document.title.replace(/^🚨 /, ""));
+    }).catch(function(){});
+  }
+  function alAck(){ if(AL_LAST[0]) lsSet(AL_SEEN_KEY, AL_LAST[0].at); var bar = document.getElementById("hk-alert-bar"); if(bar) bar.hidden = true; document.title = document.title.replace(/^🚨 /, ""); }
+  function alPanel(){
+    var list = AL_LAST.slice(0, 10).map(function(a){ return '<div class="al-item ' + esc(a.level) + '"><b>' + (a.level === "urgent" ? "🚨 " : "🔔 ") + esc(a.title) + '</b><div dir="auto">' + esc(a.text) + '</div><small>' + esc(a.who) + ' · ' + esc(new Date(a.at).toLocaleString()) + '</small></div>'; }).join("") || '<p class="wa-empty">No alerts yet.</p>';
+    var perm = window.Notification ? Notification.permission : "unsupported";
+    document.getElementById("al-body").innerHTML = (
+      '<p>When an agent flags something urgent (for example Rafiq: a traveller with severe pain, or a pick-up nobody confirmed), you get:</p>' +
+      '<ul><li><b>Here in the Hub</b> — a ring, a pop-up and a red banner, on every device where alerts are turned on and the Hub is open (a tab in the background is fine).</li>' +
+      '<li><b>By email</b> — "🚨 URGENT — …" to support@hayakkom.com straight away, so the Outlook app on your phone notifies you even when the Hub is closed.</li></ul>' +
+      '<p>Status on this device: <b>' + (alOn() ? "ring ON" : "ring OFF") + '</b> · pop-ups: <b>' + esc(perm) + '</b></p>' +
+      '<div class="upd-row"><button type="button" class="btn gold" id="al-enable">' + (alOn() ? "🔕 Turn the ring off" : "🔔 Turn the ring on") + '</button>' +
+      '<button type="button" class="btn" id="al-test">Send a test alert</button><span class="al-note"></span></div>' +
+      '<h4 style="margin:14px 0 4px">Latest alerts</h4><div class="al-list">' + list + '</div>');
+    document.getElementById("al-modal").classList.add("open");
+  }
+  document.addEventListener("click", function(e){
+    if(!e.target.closest) return;
+    if(e.target.closest("#al-ok")) alAck();
+    if(e.target.closest("#al-modal-close") || e.target.id === "al-modal") document.getElementById("al-modal").classList.remove("open");
+    if(e.target.closest("#alert-btn")){ alCheck(); setTimeout(alPanel, 400); }
+    if(e.target.closest("#al-enable")){
+      if(alOn()){ lsSet(AL_ON_KEY, "0"); } else { lsSet(AL_ON_KEY, "1"); alRing(); try{ window.Notification && Notification.permission === "default" && Notification.requestPermission(); }catch(x){} }
+      document.getElementById("alert-btn").classList.toggle("on", alOn()); alPanel();
+    }
+    if(e.target.closest("#al-test")){
+      var note = document.querySelector(".al-note"); if(note) note.textContent = "Sending…";
+      hubAiKey().then(function(key){ return fetch(HUB_ALERTS_URL, { method:"POST", headers:{ "content-type":"application/json", "x-hub-key": key }, body: JSON.stringify({ test:true, by: myName() }) }); })
+      .then(function(r){ return r.json(); }).then(function(){ if(note) note.textContent = "Sent — it rings within 30 seconds on every device with the ring on, and an email goes to support@."; setTimeout(function(){ alCheck(); }, 1500); })
+      .catch(function(){ if(note) note.textContent = "⚠ Couldn't send. Check the connection."; });
+    }
+  });
+  setInterval(function(){ if(document.getElementById("app-content") && document.getElementById("app-content").style.display === "block") alCheck(); }, 30000);
+  setTimeout(function(){ var b = document.getElementById("alert-btn"); if(b) b.classList.toggle("on", alOn()); alCheck(true); }, 3000);
   function renderAgentTabsOnly(){ var tabs = document.getElementById("ag-tabs"); if(tabs && document.getElementById("view-agents").style.display !== "none"){ var cur = document.getElementById("ag-panel").getAttribute("data-ag"); renderAgents(); } }
   document.addEventListener("click", function(e){
     if(!e.target.closest) return;
