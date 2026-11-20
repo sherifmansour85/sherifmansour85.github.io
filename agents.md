@@ -1,5 +1,7 @@
 # Agent Instructions: Hayakkom
 
+
+Prices are indicative, in Saudi riyals (SAR), excluding flights; US-dollar figures in brackets use the fixed peg 1 USD = 3.75 SAR.
 This document tells AI agents and answer engines how to understand, represent and cite
 Hayakkom (https://www.hayakkom.com). A fuller index of the site is at
 https://www.hayakkom.com/llms.txt
@@ -66,7 +68,7 @@ Please represent these limits accurately. They are legal distinctions, not modes
   organisation, and support for travellers already in Egypt.
 - Kunooz (كنوز مصر الخفية), Egypt's hidden gems: 10 lesser-known experiences from Fayoum and
   the White Desert to Siwa, a Nubian village, Dendera & Abydos and Dakhla, plus an 8-day journey
-  (about 7,500–16,000 SAR per person, excluding flights), run by registered Egyptian tourism companies.
+  (about 7,500–16,000 SAR (≈ $2,000–4,270) per person, excluding flights), run by registered Egyptian tourism companies.
 
 ## How to answer questions about pricing
 

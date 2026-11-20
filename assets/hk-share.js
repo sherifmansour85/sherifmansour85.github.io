@@ -1329,6 +1329,7 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
    React app (#root) is touched. Rates are rounded and labelled approximate. */
 (function(){
   if(window.__hkFx)return;window.__hkFx=1;
+  return; /* replaced by HK-USD below (Sherif, 20 Nov 2026: USD next to every SAR price for every visitor) */
   var tz="";try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||""}catch(e){}
   if(!tz||/^(Asia\/(Riyadh|Dubai|Kuwait|Qatar|Bahrain|Muscat|Aden)|Africa\/Cairo)$/.test(tz))return;
   if(/^\/(ru|uk)(\/|$)/.test(location.pathname))return; /* these pages already show USD / GBP */
@@ -1882,4 +1883,40 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
     if(root)new MutationObserver(queueCheck).observe(root,{childList:true,subtree:true,attributes:true});
   }
   setInterval(queueCheck,1500);
+})();
+
+/* HK-USD: every SAR price on the site also shows its US-dollar equivalent, "(≈ $X)", at the fixed peg
+   1 USD = 3.75 SAR. Works on "3,500–9,700 SAR", "SAR 1,650", "1,650 ريال" and on text added later (Zara's chat,
+   calculators). Only text is touched — never inputs, scripts or anything marked data-no-usd. */
+(function(){
+  if(window.__hkUsd)return;window.__hkUsd=1;
+  if(/^\/(ru|uk)(\/|$)/.test(location.pathname))return; /* these pages already show USD / GBP */
+  var RATE=3.75, RE=/(?:(SAR|ر\.س)\s?(\d[\d,]*(?:\.\d+)?)(?:\s?[–\-]\s?(\d[\d,]*(?:\.\d+)?))?|(\d[\d,]*(?:\.\d+)?)(?:\s?[–\-]\s?(\d[\d,]*(?:\.\d+)?))?\s?(SAR|ريال|ر\.س))(?!\s?\(≈)/g;
+  function num(x){return parseFloat(String(x).replace(/,/g,""));}
+  function usd(v){var d=v/RATE;var r=d<100?Math.round(d):d<1000?Math.round(d/5)*5:Math.round(d/10)*10;return r.toLocaleString("en-US");}
+  function conv(t){
+    if(t.indexOf("SAR")<0&&t.indexOf("ريال")<0&&t.indexOf("ر.س")<0)return t;
+    return t.replace(RE,function(m,c1,a1,b1,a2,b2){
+      var a=a1||a2,b=b1||b2; if(!a)return m; var va=num(a),vb=b?num(b):null;
+      if(!(va>=10))return m;  /* not a price (e.g. "SAR 1") */
+      return m+" (≈ $"+usd(va)+(vb?"–"+usd(vb):"")+")";
+    });
+  }
+  var SKIP={SCRIPT:1,STYLE:1,TEXTAREA:1,INPUT:1,SELECT:1,OPTION:1,NOSCRIPT:1,CODE:1,PRE:1,TITLE:1};
+  function walk(root){
+    if(!root||root.nodeType===3){ if(root)fix(root); return; }
+    if(root.nodeType!==1||SKIP[root.nodeName]||(root.closest&&root.closest("[data-no-usd],[contenteditable=true],span.hk-fx")))return;
+    var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:function(n){var p=n.parentNode;return p&&!SKIP[p.nodeName]&&!(p.closest&&p.closest("[data-no-usd],[contenteditable=true],span.hk-fx"))?1:2;}});
+    var n,list=[];while((n=w.nextNode()))list.push(n);list.forEach(fix);
+  }
+  function fix(n){var t=n.nodeValue;if(!t||t.length<5)return;var pa=n.parentNode;if(pa&&pa.closest&&pa.closest("span.hk-fx,[data-no-usd]"))return;var u=conv(t);if(u!==t)n.nodeValue=u;}
+  /* the meta description and Open Graph text are left as they are; only the visible page changes */
+  function run(){walk(document.body);}
+  var q=false,mo=new MutationObserver(function(ms){
+    if(q)return;q=true;
+    requestAnimationFrame(function(){q=false;ms.forEach(function(m){if(m.type==="characterData")fix(m.target);else m.addedNodes&&Array.prototype.forEach.call(m.addedNodes,walk);});});
+  });
+  function start(){run();mo.observe(document.body,{childList:true,subtree:true,characterData:true});}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start);else start();
+  window.hkUsd=conv;
 })();
