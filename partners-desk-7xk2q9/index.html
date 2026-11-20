@@ -1263,15 +1263,26 @@
   }
   function sessSet(v){
     try{ if(v) sessionStorage.setItem(SESSION_PW, v); else sessionStorage.removeItem(SESSION_PW); }catch(e){}
-    try{ if(v) localStorage.setItem(STAY_KEY, JSON.stringify({ pw: v, until: Date.now() + STAY_MS })); else localStorage.removeItem(STAY_KEY); }catch(e){}
+    var rec = JSON.stringify({ pw: v, until: Date.now() + STAY_MS });
+    try{ if(v) localStorage.setItem(STAY_KEY, rec); else localStorage.removeItem(STAY_KEY); }
+    catch(e){ /* storage full: drop the work-in-progress copy and the failed-sync log, then try again */
+      try{ localStorage.removeItem("hk_work_v1"); localStorage.removeItem("hk_sync_failed_v1"); if(v) localStorage.setItem(STAY_KEY, rec); }catch(e2){} }
+    idbStay(v ? rec : null);
   }
-  var AUTO_UNLOCK = false;
+  /* a second copy of "stay signed in" in the browser's database, which survives when normal storage is cleared or full */
+  function idbOpen(){ return new Promise(function(res, rej){ try{ var r = indexedDB.open("hk_hub", 1); r.onupgradeneeded = function(){ r.result.createObjectStore("kv"); }; r.onsuccess = function(){ res(r.result); }; r.onerror = function(){ rej(r.error); }; }catch(e){ rej(e); } }); }
+  function idbStay(val){ idbOpen().then(function(db){ var t = db.transaction("kv", "readwrite"); if(val) t.objectStore("kv").put(val, "stay"); else t.objectStore("kv").delete("stay"); }).catch(function(){}); }
+  function idbStayGet(){ return idbOpen().then(function(db){ return new Promise(function(res){ var q = db.transaction("kv").objectStore("kv").get("stay"); q.onsuccess = function(){ res(q.result || null); }; q.onerror = function(){ res(null); }; }); }).catch(function(){ return null; }); }
+  var AUTO_UNLOCK = false, STAY_READY = Promise.resolve();
   if(sessGet()){ AUTO_UNLOCK = true; document.getElementById("pw-err").textContent = "Opening the Hub…"; }
+  else STAY_READY = idbStayGet().then(function(raw){
+    try{ var o = JSON.parse(raw || "null"); if(o && o.pw && o.until > Date.now()){ sessSet(o.pw); AUTO_UNLOCK = true; document.getElementById("pw-err").textContent = "Opening the Hub…"; } }catch(e){}
+  });
   // retry the download if the connection drops (a failed download used to leave you at the password box)
   (function loadData(n){
     fetch("data.enc.json", {cache: "no-store"}).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); }).then(function(j){
       ENCRYPTED = j;
-      if(AUTO_UNLOCK){ document.getElementById("pw-input").value = sessGet() || ""; tryUnlock(); }
+      STAY_READY.then(function(){ if(AUTO_UNLOCK){ document.getElementById("pw-input").value = sessGet() || ""; tryUnlock(); } });
     }).catch(function(){
       if(n < 6) setTimeout(function(){ loadData(n + 1); }, 1000 * (n + 1));
       else document.getElementById("pw-err").textContent = "No connection — check the internet and reload the page.";
@@ -1372,7 +1383,16 @@
         } else document.getElementById("pw-err").textContent = "Couldn't open the Hub — check the internet connection, then reload the page (you stay signed in).";
         return;
       }
-      if(AUTO_UNLOCK){ AUTO_UNLOCK = false; sessSet(null); document.getElementById("pw-input").value = ""; document.getElementById("pw-err").textContent = "Please enter the password."; return; }
+      if(AUTO_UNLOCK){
+        var wrong = err && (err.name === "OperationError" || /decrypt/i.test(err.message || ""));
+        UNLOCK_TRIES++;
+        if(!wrong && UNLOCK_TRIES > 6){ document.getElementById("pw-err").textContent = "Couldn't open the Hub. Check the internet connection, then reload the page (you stay signed in)."; return; }
+        if(!wrong || UNLOCK_TRIES <= 2){   // a hiccup (or a data file mid-update): fetch the data again and retry, keep the saved sign-in
+          document.getElementById("pw-err").textContent = "Opening the Hub… (trying again)";
+          setTimeout(function(){ fetch("data.enc.json", {cache:"no-store"}).then(function(r){ return r.json(); }).then(function(j){ ENCRYPTED = j; }).catch(function(){}).then(function(){ document.getElementById("pw-input").value = val; tryUnlock(); }); }, 1500 * UNLOCK_TRIES);
+          return;
+        }
+        AUTO_UNLOCK = false; sessSet(null); document.getElementById("pw-input").value = ""; document.getElementById("pw-err").textContent = "Please enter the password."; return; }
       document.getElementById("pw-err").textContent = "Incorrect password.";
     });
   }
@@ -2485,7 +2505,7 @@
     { view: "dashboard", sel: "#view-btn-dashboard", title: "📊 Dashboard — your home screen", text: "One page that shows where every partner, customer and job applicant stands. On a phone, swipe the menu bar sideways to see every tab." },
     { view: "dashboard", sel: "#dash-brief", title: "Where things stand", text: "Your to-do list. Red = act now (a customer past the 12-hour reply promise), amber = someone is waiting on us. Click any tile to jump straight to those cards." },
     { view: "dashboard", sel: "#dash-stats", title: "The headline numbers", text: "Partners, open enquiries, applicants, how many people we've contacted, bookings and what's next on the calendar. Hover the charts below for exact numbers." },
-    { sel: "#alert-btn", title: "🔔 Urgent alerts — turn the ring on", text: "When an agent flags something urgent (a patient in pain, a missed airport pick-up) the Hub rings, shows a red banner with who is responsible and 📞 Call buttons, and emails support@hayakkom.com. Press 🔔 Alerts → 'Turn the ring on' once on each device, and send a test alert. 'Who handles what' sets who is responsible and the backup." },
+    { sel: "#alert-btn", title: "🔔 Urgent alerts — turn the ring on", text: "When an agent flags something urgent (a patient in pain, a missed airport pick-up) the Hub rings, shows a red banner with who is responsible and 📞 Call buttons, and emails support@hayakkom.com. The ring is on by default; allow notifications in 🔔 Alerts and send a test alert. An alert stays on screen for everyone until someone presses 'Got it — I'm handling it'. 'Who handles what' sets who is responsible and the backup." },
     { view: "partners", sel: "#view-btn-partners", title: "🤝 Partners", text: "Every hospital, clinic, hotel and tourism company. Urgent ones and anyone waiting for our reply sit at the top." },
     { view: "partners", sel: "#sugg-partners", title: "✨ Suggested next actions", text: "The best next step for every open case, with the email already written (🤖 = drafted by Claude from the whole thread). 👁 Preview, ✎ Edit, ✓ Approve or ✕ dismiss. Nothing is sent until you approve." },
     { view: "partners", sel: "#list .card .prof-btn", title: "🩺 Provider profile", text: "Verified, official written prices (and until when), doctors, response time, rating, available dates — and the partner's day-to-day and 🚨 escalation contacts. We only quote families prices a partner confirmed in writing." },
@@ -2506,7 +2526,7 @@
     { sel: "#share-zara-btn", title: "🔗 Share Zara", text: "Send a customer a link to chat with Zara, our AI coordinator, any time. The Hub knows who you sent it to." },
     { sel: "#hist-btn-top", title: "🕘 History", text: "Who did what and when: approvals, sends, announcements, archive and delete, status changes, agent chats. Deleted something by mistake? Undo it here." },
     { sel: "#lock-btn", title: "🔒 Signed in for 30 days", text: "The Hub keeps you signed in on this device and keeps any half-written work if you leave the page. On a shared computer, press 🔒 Lock when you go." },
-    { sel: "#tour-btn", title: "You're ready 🎉", text: "Daily routine: turn the 🔔 ring on, clear the red tiles, approve the suggested emails, assign who is responsible on new customers, and check the WhatsApp conversations. The golden rule: nothing leaves Hayakkom without a person approving it." }
+    { sel: "#tour-btn", title: "You're ready 🎉", text: "Daily routine: handle any 🚨 alert, clear the red tiles, approve the suggested emails, assign who is responsible on new customers, and check the WhatsApp conversations. The golden rule: nothing leaves Hayakkom without a person approving it." }
   ];
   var tourIdx = -1, tourEls = null;
   function startTour(){
@@ -5306,7 +5326,7 @@
   function alCallHtml(c){ if(!c || !c.owner_name) return "";
     return '<div class="al-call">👤 Responsible: <b>' + esc(c.owner_name) + '</b> <a class="al-tel" href="' + alTel(c.owner_phone) + '">📞 Call ' + esc(c.owner_name.split(" ")[0]) + '</a>' +
       (c.backup_name ? '<span class="al-bk">No answer in ' + esc(c.after) + ' min → <a class="al-tel ghost" href="' + alTel(c.backup_phone) + '">📞 ' + esc(c.backup_name.split(" ")[0]) + '</a></span>' : "") + '</div>'; }
-  function alOn(){ return lsGet(AL_ON_KEY) === "1"; }
+  function alOn(){ return lsGet(AL_ON_KEY) !== "0"; }
   function alRing(){
     try{ var C = window.AudioContext || window.webkitAudioContext; if(!C) return; var ctx = alRing.ctx || (alRing.ctx = new C()); if(ctx.state === "suspended") ctx.resume();
       [0, .45, .9, 1.8, 2.25, 2.7].forEach(function(t){ var o = ctx.createOscillator(), g = ctx.createGain(); o.type = "sine"; o.frequency.value = (t % .9 < .1) ? 988 : 1319;
@@ -5314,7 +5334,7 @@
         o.connect(g); g.connect(ctx.destination); o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + .4); }); }catch(e){}
     try{ navigator.vibrate && navigator.vibrate([400,150,400,150,400]); }catch(e){}
   }
-  function alShowBar(a){
+  function alShowBar(a, more){
     var bar = document.getElementById("hk-alert-bar"); if(!bar) return;
     var emerg = /rafiq|zara/i.test(a.who || "") ? '<div class="al-call">🚑 If health or safety is at risk in Egypt: ambulance <a class="al-tel ghost" href="tel:123">123</a> · police <a class="al-tel ghost" href="tel:122">122</a></div>' : "";
     var cu = a.phone && typeof custByPhone === "function" ? custByPhone(a.phone) : null;
@@ -5322,25 +5342,40 @@
     var phHtml = cpd ? '<div class="al-call">📱 Customer: <b dir="ltr">' + esc(cph) + '</b> <a class="al-tel" href="tel:' + esc(cpd) + '">📞 Call</a> <a class="al-tel ghost" target="_blank" rel="noopener" href="https://wa.me/' + esc(cpd.replace(/^\+/, "")) + '">WhatsApp</a></div>' : "";
     var cuHtml = (cu ? '<div class="al-cust"><b>Customer: ' + esc(cu.name || "") + '</b>' + respHtml(cu.id, true) + '</div>' : "") + phHtml +
       (a.partnerEmails && a.partnerEmails.length ? '<div class="al-call">✉ Emailed automatically: ' + esc(a.partnerEmails.join(", ")) + '</div>' : "");
-    bar.innerHTML = '<div class="al-main"><b>🚨 ' + esc(a.title) + '</b><span dir="auto">' + esc(a.text) + '</span>' + alCallHtml(a.call) + cuHtml + emerg + '</div><button type="button" id="al-ok">Got it</button>';
+    bar.innerHTML = '<div class="al-main"><b>🚨 ' + esc(a.title) + '</b><span dir="auto">' + esc(a.text) + '</span>' + alCallHtml(a.call) + cuHtml + emerg + (more ? '<div class="al-call">⚠ ' + more + ' more urgent alert' + (more > 1 ? 's' : '') + ' waiting — they show after this one.</div>' : '') + '</div><button type="button" id="al-ok" title="Mark it handled for the whole team">Got it — I\'m handling it</button>';
     bar.hidden = false;
   }
+  /* show every urgent alert from the last 12 hours that nobody has handled yet; ring once per alert on this device */
+  var AL_RUNG_KEY = "hk_alert_rung_v1", AL_SHOWN = null;
+  function alOpen(){ var cut = new Date(Date.now() - 12 * 3600 * 1000).toISOString();
+    return AL_LAST.filter(function(a){ return a.level === "urgent" && !a.ack && a.at > cut && !/^Test/.test(a.who || ""); }); }
   function alCheck(first){
     hubAiKey().then(function(key){ return fetch(HUB_ALERTS_URL, { method:"POST", headers:{ "content-type":"application/json", "x-hub-key": key }, body:"{}" }); })
     .then(function(r){ return r.json(); }).then(function(res){
-      AL_LAST = res.alerts || []; if(res.roster) AL_ROSTER = res.roster; var seen = lsGet(AL_SEEN_KEY) || "";
-      if(!seen){ if(AL_LAST[0]) lsSet(AL_SEEN_KEY, AL_LAST[0].at); return; }   // first time on this device: start from now
-      var fresh = AL_LAST.filter(function(a){ return a.at > seen && a.level === "urgent"; });
-      if(!fresh.length) return;
-      var a = fresh[0]; alShowBar(a);
-      if(alOn()){ alRing();
-        try{ if(window.Notification && Notification.permission === "granted"){ var n = new Notification("🚨 " + a.title, { body: a.text, tag: "hk-" + a.id, requireInteraction: true }); n.onclick = function(){ window.focus(); n.close(); }; } }catch(e){} }
-      if(!document.getElementById("hk-alert-bar").hidden) document.title = "🚨 " + (document.title.replace(/^🚨 /, ""));
+      AL_LAST = res.alerts || []; if(res.roster) AL_ROSTER = res.roster;
+      // a test alert shows on the device that sent it (and rings), real ones on every device
+      var open = alOpen().concat(AL_LAST.filter(function(a){ return /^Test/.test(a.who || "") && !a.ack && a.at > new Date(Date.now() - 600000).toISOString(); }));
+      var bar = document.getElementById("hk-alert-bar");
+      if(!open.length){ if(bar && !bar.hidden){ bar.hidden = true; document.title = document.title.replace(/^🚨 /, ""); } return; }
+      var a = open[0]; AL_SHOWN = a; alShowBar(a, open.length - 1);
+      document.title = "🚨 " + document.title.replace(/^🚨 /, "");
+      var rung = lsGet(AL_RUNG_KEY, []) || [];
+      if(rung.indexOf(a.id) < 0){
+        rung.push(a.id); lsSet(AL_RUNG_KEY, rung.slice(-50));
+        if(alOn()){ alRing();
+          try{ if(window.Notification && Notification.permission === "granted"){ var n = new Notification("🚨 " + a.title, { body: a.text, tag: "hk-" + a.id, requireInteraction: true }); n.onclick = function(){ window.focus(); n.close(); }; } }catch(e){} }
+      }
     }).catch(function(){});
   }
-  function alAck(){ if(AL_LAST[0]) lsSet(AL_SEEN_KEY, AL_LAST[0].at); var bar = document.getElementById("hk-alert-bar"); if(bar) bar.hidden = true; document.title = document.title.replace(/^🚨 /, ""); }
+  function alAck(){
+    var a = AL_SHOWN, bar = document.getElementById("hk-alert-bar"); if(bar) bar.hidden = true; document.title = document.title.replace(/^🚨 /, "");
+    if(!a) return; a.ack = { by: myName(), at: new Date().toISOString() };
+    act({ t:"log", kind:"agent", id:null, name:"Alerts", what: myName() + " handled the urgent alert: “" + a.title + "” — " + String(a.text || "").slice(0, 120) });
+    hubAiKey().then(function(key){ return fetch(HUB_ALERTS_URL, { method:"POST", headers:{ "content-type":"application/json", "x-hub-key": key }, body: JSON.stringify({ ack: a.id, by: myName() }) }); })
+      .then(function(){ setTimeout(alCheck, 800); }).catch(function(){});
+  }
   function alPanel(){
-    var list = AL_LAST.slice(0, 10).map(function(a){ return '<div class="al-item ' + esc(a.level) + '"><b>' + (a.level === "urgent" ? "🚨 " : "🔔 ") + esc(a.title) + '</b><div dir="auto">' + esc(a.text) + '</div>' + alCallHtml(a.call) + '<small>' + esc(a.who) + ' · ' + esc(new Date(a.at).toLocaleString()) + '</small></div>'; }).join("") || '<p class="wa-empty">No alerts yet.</p>';
+    var list = AL_LAST.slice(0, 10).map(function(a){ return '<div class="al-item ' + esc(a.level) + '"><b>' + (a.level === "urgent" ? "🚨 " : "🔔 ") + esc(a.title) + '</b><div dir="auto">' + esc(a.text) + '</div>' + alCallHtml(a.call) + '<small>' + esc(a.who) + ' · ' + esc(new Date(a.at).toLocaleString()) + (a.ack ? ' · ✓ Handled by ' + esc(a.ack.by) + ' ' + esc(new Date(a.ack.at).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"})) : (a.level === "urgent" ? ' · <b>not handled yet</b>' : '')) + '</small></div>'; }).join("") || '<p class="wa-empty">No alerts yet.</p>';
     var R = AL_ROSTER, roster = "";
     if(R && R.people){
       var pk = Object.keys(R.people), opt = function(sel){ return pk.map(function(k){ return '<option value="' + esc(k) + '"' + (k === sel ? " selected" : "") + '>' + esc(R.people[k].name) + '</option>'; }).join(""); };
