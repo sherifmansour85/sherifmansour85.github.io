@@ -599,6 +599,13 @@
   .al-roster{width:100%;border-collapse:collapse;font-size:13px;margin:4px 0}.al-roster th,.al-roster td{padding:6px 4px;text-align:start;border-bottom:1px solid var(--line)}
   .al-roster select{width:100%}
   .ag-head-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .rs-box{margin:8px 0 6px;padding:10px 12px;border-radius:14px;background:rgba(240,248,248,.85);border:1px solid #DCECEC;font-size:12.5px}
+  .rs-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}.rs-head .btn{padding:4px 10px;font-size:12px}
+  .rs-row{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;padding:4px 0;border-top:1px dashed #E1EEEE}.rs-row:first-of-type{border-top:0}
+  .rs-row.muted{color:var(--sub)}.rs-k{color:var(--sub);min-width:120px}.rs-c{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}.rs-c.warn{color:#9a5b00}
+  .rs-tel{display:inline-block;padding:2px 9px;border-radius:999px;background:#0E8A93;color:#fff;font-weight:700;text-decoration:none;font-size:12px}
+  .rs-tel.red{background:#C2392B}.rs-edit{margin-top:8px}.rs-hint{color:var(--sub);font-size:11.5px;margin:4px 0}
+  .al-cust{margin-top:6px;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.14)}.al-cust .rs-row{border-color:rgba(255,255,255,.25)}.al-cust .rs-k{color:rgba(255,255,255,.8)}.al-cust .rs-c.warn{color:#FFE2A8}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -4210,7 +4217,7 @@
   }
 
   // ---- state diff → patch actions ----
-  var FIELD_WORDS = { consult:"Consultation requested", prof:"Updated provider profile", notes:"Edited notes", reminder:"Updated reminder", extraContacts:"Updated contacts" };
+  var FIELD_WORDS = { resp:"Updated who is responsible", consult:"Consultation requested", prof:"Updated provider profile", notes:"Edited notes", reminder:"Updated reminder", extraContacts:"Updated contacts" };
   function describePatch(p){
     var out = [];
     Object.keys(p).forEach(function(k){
@@ -4864,7 +4871,12 @@
     ["responseHrs", "Replies to a quote request within (hours)", "e.g. 24"],
     ["rating", "Rating (1–5)", "e.g. 4.7"],
     ["ratingSource", "Rating source", "e.g. Google, 210 reviews"],
-    ["availability", "Available dates / closed dates", "e.g. open all Dec; closed 1–5 Jan"]
+    ["availability", "Available dates / closed dates", "e.g. open all Dec; closed 1–5 Jan"],
+    ["pcName", "👤 Day-to-day contact for our patients — name & role", "e.g. Mona Ali, international patients coordinator"],
+    ["pcPhone", "👤 Their phone / WhatsApp", "e.g. +20 100 000 0000"],
+    ["escName", "🚨 Escalation contact — name & role", "e.g. Dr Karim, medical director / hotel duty manager"],
+    ["escPhone", "🚨 Escalation phone (24/7 if possible)", "e.g. +20 122 000 0000"],
+    ["escHours", "🚨 When to reach them", "e.g. 24/7 · or 9am–10pm, then the hospital ER +20 2 0000 0000"]
   ];
   function profOf(id){ return (state[id] && state[id].prof) || {}; }
   function profLine(pr){
@@ -5119,6 +5131,80 @@
     }).catch(function(){ AG_BUSY[k] = false; note.textContent = "⚠ Couldn't reach the agent. Check the connection and try again."; if(AG_CUR === k) agRenderLog(k); });
   }
 
+
+  /* ---- 🧭 Who is responsible for this customer: Hayakkom person + the medical partner + the travel partner, with who to call ---- */
+  var RESP_OPEN = {};
+  function respContacts(pid){
+    var f = pid && findRec(pid); if(!f) return null;
+    var p = f.rec, pr = profOf(pid);
+    return { id: pid, name: p.name, cat: p.category || "",
+      pcName: pr.pcName || p.patient_contact_name || p.contact || "", pcPhone: pr.pcPhone || p.patient_contact_phone || p.phone || "",
+      escName: pr.escName || p.escalation_name || "", escPhone: pr.escPhone || p.escalation_phone || "", escHours: pr.escHours || p.escalation_hours || "" };
+  }
+  function telA(ph, label, cls){ var d = String(ph || "").replace(/[^\d+]/g, ""); return d ? '<a class="rs-tel' + (cls ? " " + cls : "") + '" href="tel:' + esc(d) + '">📞 ' + esc(label || ph) + '</a>' : ""; }
+  function respOf(id){ var st = state[id] || {}, r = Object.assign({}, st.resp || {}); if(!r.medical && st.consult && st.consult.partner) r.medical = st.consult.partner; return r; }
+  function teamPerson(k){ var R = (typeof AL_ROSTER !== "undefined" && AL_ROSTER) || null; var p = R && R.people && R.people[k]; return p ? { name: p.name, phone: p.phone } : { name: k === "sherif" ? "Sherif Mansour" : "Reham Mobasher", phone: "" }; }
+  function respHtml(id, compact){
+    var r = respOf(id), out = [];
+    var tp = teamPerson(r.team || "reham");
+    out.push('<div class="rs-row"><span class="rs-k">🧭 Hayakkom</span><b>' + esc(tp.name) + '</b>' + telA(tp.phone, "Call") + '</div>');
+    [["medical","🏥 Medical partner"],["travel","🚐 Travel partner"]].forEach(function(x){
+      var c = respContacts(r[x[0]]); if(!c){ if(!compact) out.push('<div class="rs-row muted"><span class="rs-k">' + x[1] + '</span>not assigned yet</div>'); return; }
+      out.push('<div class="rs-row"><span class="rs-k">' + x[1] + '</span><b>' + esc(c.name) + '</b>' +
+        (c.pcName || c.pcPhone ? '<span class="rs-c">👤 ' + esc(c.pcName || "Contact") + ' ' + telA(c.pcPhone, "Call") + '</span>' : '') +
+        (c.escPhone ? '<span class="rs-c esc">🚨 Escalation: ' + esc(c.escName || "") + ' ' + telA(c.escPhone, "Call", "red") + (c.escHours ? ' <small>' + esc(c.escHours) + '</small>' : '') + '</span>'
+          : '<span class="rs-c warn">⚠ No escalation contact — add it in their 🩺 Provider profile</span>') + '</div>');
+    });
+    if(r.note) out.push('<div class="rs-row muted">📝 ' + esc(r.note) + '</div>');
+    return out.join("");
+  }
+  function respEditor(id){
+    var r = respOf(id), R = (typeof AL_ROSTER !== "undefined" && AL_ROSTER) || { people: { reham: { name: "Reham Mobasher" }, sherif: { name: "Sherif Mansour" } } };
+    var parts = (RAW_P || []).filter(function(p){ var st = state[p.id] || {}; return !st.deleted && !st.removed; }).sort(function(a, b){ return String(a.name).localeCompare(String(b.name)); });
+    var isTravel = function(p){ return /touris|travel|hotel|resort|transport|cruise|nile|limo|car|سياح|فندق|نقل/i.test((p.category || "") + " " + (p.summary || "")); };
+    var opts = function(sel, travel){ var a = parts.filter(function(p){ return travel ? isTravel(p) : !isTravel(p); }), b = parts.filter(function(p){ return a.indexOf(p) < 0; });
+      var o = function(p){ var pr = profOf(p.id); return '<option value="' + esc(p.id) + '"' + (p.id === sel ? " selected" : "") + '>' + esc(p.name) + (pr.escPhone ? " 🚨" : "") + (p.category ? " — " + esc(p.category) : "") + '</option>'; };
+      return '<option value="">— not assigned —</option><optgroup label="' + (travel ? "Tourism, hotels & transport" : "Hospitals, clinics & doctors") + '">' + a.map(o).join("") + '</optgroup><optgroup label="Other partners">' + b.map(o).join("") + '</optgroup>'; };
+    return '<div class="rs-edit"><label class="prof-f"><span>🧭 Responsible at Hayakkom</span><select class="rs-team">' +
+      Object.keys(R.people).map(function(k){ return '<option value="' + esc(k) + '"' + ((r.team || "reham") === k ? " selected" : "") + '>' + esc(R.people[k].name) + '</option>'; }).join("") + '</select></label>' +
+      '<label class="prof-f"><span>🏥 Medical partner (hospital / clinic / doctor)</span><select class="rs-med">' + opts(r.medical, false) + '</select></label>' +
+      '<label class="prof-f"><span>🚐 Travel partner (tourism company / hotel / transport)</span><select class="rs-trv">' + opts(r.travel, true) + '</select></label>' +
+      '<label class="prof-f"><span>📝 Note (optional)</span><input class="rs-note" dir="auto" value="' + esc(r.note || "") + '" placeholder="e.g. surgery 3 Dec, driver from the hotel"></label>' +
+      '<p class="rs-hint">🚨 = the partner has an escalation contact. The partner\'s contacts come from their 🩺 Provider profile (or the partner form).</p>' +
+      '<div class="upd-row"><button type="button" class="btn gold rs-save">Save</button><button type="button" class="btn rs-cancel">Close</button></div></div>';
+  }
+  function decorateResp(){
+    document.querySelectorAll("#view-customers .card[data-id]").forEach(function(card){
+      var id = card.getAttribute("data-id"), acts = card.querySelector(".card-actions"); if(!acts) return;
+      var box = card.querySelector(".rs-box");
+      var html = '<div class="rs-head"><b>Who is responsible</b><button type="button" class="btn rs-btn">' + (RESP_OPEN[id] ? "Close" : "✎ Assign") + '</button></div>' + respHtml(id) + (RESP_OPEN[id] ? respEditor(id) : "");
+      if(box){ if(box.getAttribute("data-h") !== String(html.length) + (RESP_OPEN[id] ? "o" : "")){ box.innerHTML = html; box.setAttribute("data-h", String(html.length) + (RESP_OPEN[id] ? "o" : "")); } return; }
+      box = document.createElement("div"); box.className = "rs-box"; box.innerHTML = html; box.setAttribute("data-h", String(html.length) + (RESP_OPEN[id] ? "o" : ""));
+      acts.parentNode.insertBefore(box, acts);
+    });
+  }
+  document.addEventListener("click", function(e){
+    if(!e.target.closest) return;
+    var box = e.target.closest(".rs-box"); if(!box) return;
+    var card = box.closest(".card[data-id]"), id = card && card.getAttribute("data-id"); if(!id) return;
+    if(e.target.closest(".rs-btn") || e.target.closest(".rs-cancel")){ RESP_OPEN[id] = !RESP_OPEN[id]; decorateResp(); return; }
+    if(e.target.closest(".rs-save")){
+      var r = { team: box.querySelector(".rs-team").value, medical: box.querySelector(".rs-med").value, travel: box.querySelector(".rs-trv").value,
+        note: box.querySelector(".rs-note").value.trim(), at: new Date().toISOString(), by: myName() };
+      state[id] = state[id] || {}; state[id].resp = r; saveState(state);
+      var f = findRec(id), mp = respContacts(r.medical), tp = respContacts(r.travel);
+      act({ t:"log", kind:"customer", id:id, name: f ? f.rec.name : id, what: "Responsible: " + teamPerson(r.team).name + (mp ? " · medical: " + mp.name : "") + (tp ? " · travel: " + tp.name : "") });
+      RESP_OPEN[id] = false; toast("Saved who is responsible."); decorateResp();
+    }
+  });
+  var rsQueued = false;
+  var rsObs = new MutationObserver(function(){ if(rsQueued) return; rsQueued = true; requestAnimationFrame(function(){ rsQueued = false; decorateResp(); }); });
+  (function(){ var el = document.getElementById("view-customers"); if(el) rsObs.observe(el, { childList:true, subtree:true }); })();
+  /* alerts: find the customer by WhatsApp number and show who is responsible for them */
+  function custByPhone(ph){
+    var d = String(ph || "").replace(/\D/g, "").replace(/^00/, ""); if(d.length < 7) return null;
+    return (RAW_C || []).filter(function(c){ var x = String(c.phone || "").replace(/\D/g, "").replace(/^00/, ""); return x && (x.slice(-9) === d.slice(-9)); })[0] || null;
+  }
   /* ---- WhatsApp conversations (one number, several agents) ---- */
   var HUB_WA_URL = "https://zara.sherif-mansour-85.workers.dev/hub/wa", WA_NAMES = { zara:"Zara", rafiq:"Rafiq", jisr:"Jisr", amin:"Amin", rawaj:"Rawaj" }, WA_BUSY = false, WA_OPEN = {};
   function waLoad(){
@@ -5160,7 +5246,9 @@
   function alShowBar(a){
     var bar = document.getElementById("hk-alert-bar"); if(!bar) return;
     var emerg = /rafiq|zara/i.test(a.who || "") ? '<div class="al-call">🚑 If health or safety is at risk in Egypt: ambulance <a class="al-tel ghost" href="tel:123">123</a> · police <a class="al-tel ghost" href="tel:122">122</a></div>' : "";
-    bar.innerHTML = '<div class="al-main"><b>🚨 ' + esc(a.title) + '</b><span dir="auto">' + esc(a.text) + '</span>' + alCallHtml(a.call) + emerg + '</div><button type="button" id="al-ok">Got it</button>';
+    var cu = a.phone && typeof custByPhone === "function" ? custByPhone(a.phone) : null;
+    var cuHtml = cu ? '<div class="al-cust"><b>Customer: ' + esc(cu.name || "") + '</b>' + respHtml(cu.id, true) + '</div>' : "";
+    bar.innerHTML = '<div class="al-main"><b>🚨 ' + esc(a.title) + '</b><span dir="auto">' + esc(a.text) + '</span>' + alCallHtml(a.call) + cuHtml + emerg + '</div><button type="button" id="al-ok">Got it</button>';
     bar.hidden = false;
   }
   function alCheck(first){
