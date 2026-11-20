@@ -1,12 +1,12 @@
-/* HK-ZARA stub: the assistant button (#hkAi, Zara's picture) opens the assistant chosen by ENGINE below: the
-   Jotform AI Agent (default) or Hayakkom's own assistant (assets/hk-zara.js). With "own": Each page's inline script still points the panel at the
+/* HK-ZARA stub: the assistant button (#hkAi, Zara's picture) opens the assistant chosen by ENGINE below:
+   Hayakkom's new Zara (assets/hk-zara.js, the default) or the older Jotform AI Agent. With "own": Each page's inline script still points the panel at the
    Jotform agent, so this removes that frame, swaps the button for a clean copy (dropping those listeners) and loads
    hk-zara.js on first hover, touch or focus. Runs first in this file so later blocks find the new button. */
 (function(){
   if(window.__hkZaraStub)return;window.__hkZaraStub=1;
-  /* Which assistant answers: "jotform" = the Jotform AI Agent (included in the Jotform plan; Sherif's choice since
-     20 Nov 2026), "own" = Hayakkom's own assistant in assets/hk-zara.js (runs on the paid Anthropic API). */
-  var ENGINE="jotform";
+  /* Which assistant answers: "own" = Hayakkom's new Zara (assets/hk-zara.js) — Sherif's choice, keep it;
+     "jotform" = the older Jotform AI Agent each page still embeds (only as a fallback option). */
+  var ENGINE="own";
   function init(){
     var b=document.getElementById("hkAi"),p=document.getElementById("hkAiPanel");if(!b||!p)return;
     if(ENGINE==="jotform"){
