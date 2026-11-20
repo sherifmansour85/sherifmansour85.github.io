@@ -287,13 +287,25 @@
   var VT = {
     en: { mic: "Hold to talk, release to send", stop: "Recording — release to send", on: "Read answers aloud: on", off: "Read answers aloud: off", lg: "Language",
           slide: "‹ Slide to cancel", lock: "Slide up to lock", locked: "Recording — tap ➤ to send", del: "Delete recording", hold: "Hold 🎙️ to record, release to send", none: "I didn't catch that — hold 🎙️ and speak a little longer.",
-          den: "I can't hear you — please allow the microphone for this site in your browser settings, or type your message." },
+          den: "I can't hear you — please allow the microphone for this site in your browser settings, or type your message.",
+          denIos: "I can't hear you. On iPhone: Settings → Safari → Microphone → Allow, and Settings → Siri → turn on Dictation (Apple needs it for voice). Or tap the 🎤 on your keyboard and speak — that always works.",
+          noneIos: "I didn't catch that. Hold 🎙️ a little longer — or tap the text box and use the 🎤 on your iPhone keyboard to speak.",
+          net: "Voice needs an internet connection to work. Please check it, or type your message.",
+          noSr: "On this browser, tap the 🎤 on your keyboard to speak — your words appear in the box, then press ➤. (In Safari you can also hold 🎙️ here.)" },
     ar: { mic: "اضغط مطوّلًا للتحدث، وارفع إصبعك للإرسال", stop: "جارٍ التسجيل — ارفع إصبعك للإرسال", on: "قراءة الإجابات بصوت: مفعّلة", off: "قراءة الإجابات بصوت: متوقفة", lg: "اللغة",
           slide: "اسحب للإلغاء ›", lock: "اسحب للأعلى للتثبيت", locked: "جارٍ التسجيل — اضغط ➤ للإرسال", del: "حذف التسجيل", hold: "اضغط مطوّلًا على 🎙️ للتسجيل، وارفع إصبعك للإرسال", none: "لم أسمعك جيدًا — اضغط مطوّلًا على 🎙️ وتحدّث لفترة أطول قليلًا.",
-          den: "لا أستطيع سماعك — اسمح باستخدام الميكروفون لهذا الموقع من إعدادات المتصفح، أو اكتب رسالتك." },
+          den: "لا أستطيع سماعك — اسمح باستخدام الميكروفون لهذا الموقع من إعدادات المتصفح، أو اكتب رسالتك.",
+          denIos: "لا أستطيع سماعك. على الآيفون: الإعدادات ← Safari ← الميكروفون ← سماح، والإعدادات ← Siri ← فعّل الإملاء (تحتاجه Apple للصوت). أو اضغط 🎤 في لوحة المفاتيح وتحدّث — وهذه تعمل دائمًا.",
+          noneIos: "لم أسمعك جيدًا. اضغط مطوّلًا على 🎙️ لمدة أطول — أو اضغط على مربع الكتابة واستخدم 🎤 في لوحة مفاتيح الآيفون للتحدث.",
+          net: "يحتاج الصوت إلى اتصال بالإنترنت. تحقّق من الاتصال أو اكتب رسالتك.",
+          noSr: "في هذا المتصفح اضغط 🎤 في لوحة المفاتيح وتحدّث — يظهر كلامك في المربع، ثم اضغط ➤. (في Safari يمكنك أيضًا الضغط مطوّلًا على 🎙️ هنا.)" },
     ru: { mic: "Удерживайте, чтобы говорить; отпустите, чтобы отправить", stop: "Запись — отпустите, чтобы отправить", on: "Читать ответы вслух: вкл.", off: "Читать ответы вслух: выкл.", lg: "Язык",
           slide: "‹ Сдвиньте для отмены", lock: "Сдвиньте вверх, чтобы закрепить", locked: "Запись — нажмите ➤, чтобы отправить", del: "Удалить запись", hold: "Удерживайте 🎙️ для записи, отпустите для отправки", none: "Я не расслышала — удерживайте 🎙️ и говорите чуть дольше.",
-          den: "Я вас не слышу — разрешите доступ к микрофону для этого сайта или напишите сообщение." }
+          den: "Я вас не слышу — разрешите доступ к микрофону для этого сайта или напишите сообщение.",
+          denIos: "Я вас не слышу. На iPhone: Настройки → Safari → Микрофон → Разрешить и Настройки → Siri → включите Диктовку. Или нажмите 🎤 на клавиатуре и говорите.",
+          noneIos: "Я не расслышала. Удерживайте 🎙️ подольше — или нажмите на поле ввода и используйте 🎤 на клавиатуре iPhone.",
+          net: "Для голосового ввода нужен интернет. Проверьте подключение или напишите сообщение.",
+          noSr: "В этом браузере нажмите 🎤 на клавиатуре и говорите — текст появится в поле, затем нажмите ➤." }
   };
   if (synth) { try { synth.getVoices(); synth.onvoiceschanged = function () { synth.getVoices(); }; } catch (e) { synth = null; } }
   function pickVoice() {
@@ -326,7 +338,8 @@
   /* Hold-to-talk, like a WhatsApp voice note: press and hold 🎙️ → "recording" bar with a timer;
      release → what was said is sent; slide away (toward the text box) → cancelled. A quick tap shows how to use it.
      Space/Enter held on the focused button does the same for keyboard users. */
-  var rec = null, listening = false, holding = false, locked = false, cancelled = false, heard = "", interim = "", t0 = 0, tick = 0, sx = 0, sy = 0, gotSome = false;
+  var rec = null, listening = false, holding = false, locked = false, cancelled = false, heard = "", interim = "", t0 = 0, tick = 0, sx = 0, sy = 0, gotSome = false, restarts = 0;
+  var IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   var recBar = document.createElement("div"); recBar.className = "zr-rec"; recBar.hidden = true; recBar.setAttribute("aria-live", "polite");
   recBar.innerHTML = '<button type="button" class="zr-trash">🗑</button><span class="zr-dot"></span><span class="zr-tm">0:00</span><span class="zr-sl"></span>';
   form.insertBefore(recBar, form.firstChild);
@@ -343,17 +356,26 @@
   }
   function clock() { var s = Math.floor((Date.now() - t0) / 1000); if (holding && s >= 60) { release(false); return; } if (locked && s >= 180) { sendLocked(); return; } recBar.querySelector(".zr-tm").textContent = Math.floor(s / 60) + ":" + ("0" + s % 60).slice(-2); }
   function startRec() {
-    rec = new SR(); rec.lang = LOC[lang]; rec.interimResults = true; rec.continuous = true; rec.maxAlternatives = 1;
+    /* everything heard in earlier sessions of this recording is kept in "heard"; this session's text is rebuilt from
+       all its results each time — iPhone Safari rarely marks results final and sometimes repeats them */
+    rec = new SR(); rec.lang = LOC[lang]; rec.interimResults = true; rec.continuous = !IOS; rec.maxAlternatives = 1;
     rec.onresult = function (e) {
-      interim = "";
-      for (var i = e.resultIndex; i < e.results.length; i++) { if (e.results[i].isFinal) heard += e.results[i][0].transcript + " "; else interim += e.results[i][0].transcript; }
-      gotSome = true;
+      var all = "";
+      for (var i = 0; i < e.results.length; i++) all += e.results[i][0].transcript + (IOS ? "" : " ");
+      interim = all.replace(/\s+/g, " ").trim(); gotSome = true;
     };
     rec.onerror = function (e) {
-      if (e.error === "not-allowed" || e.error === "service-not-allowed" || e.error === "audio-capture") { holding = false; cancelled = true; finishRec(); bot(VT[lang].den); }
+      var er = e && e.error;
+      if (restarts > 0 && (heard || interim) && er !== "aborted") { if (interim) { heard += interim + " "; interim = ""; } holding = false; locked = false; clearInterval(tick); cancelled = false; finishRec(); return; }   /* a restart was refused: send what we have */
+      if (er === "not-allowed" || er === "service-not-allowed" || er === "audio-capture") { holding = false; locked = false; cancelled = true; finishRec(); bot(IOS ? VT[lang].denIos : VT[lang].den); }
+      else if (er === "network" && !interim && !heard) { holding = false; locked = false; cancelled = true; finishRec(); bot(VT[lang].net); }
     };
     rec.onend = function () {
-      if ((holding || locked) && !cancelled) { try { startRec(); } catch (e) {} return; }  /* the browser stopped early: keep recording while the finger is down */
+      if (interim) { heard += interim + " "; interim = ""; }
+      if ((holding || locked) && !cancelled) {   /* the browser stopped early: keep recording while the finger is down */
+        if (++restarts <= 20) { try { startRec(); return; } catch (e) {} }
+        if (holding || locked) { holding = false; locked = false; clearInterval(tick); }   /* can't listen again (iPhone): send what we have */
+      }
       finishRec();
     };
     rec.start();
@@ -363,7 +385,7 @@
     if (e && e.pointerId != null) { try { mic.setPointerCapture(e.pointerId); } catch (x) {} sx = e.clientX; sy = e.clientY; }
     if (e && e.preventDefault) e.preventDefault();
     hush(); if (!S.voice && synth) setVoice(true);   /* someone who talks usually wants to hear the answer */
-    holding = true; cancelled = false; heard = ""; interim = ""; gotSome = false; t0 = Date.now();
+    holding = true; cancelled = false; heard = ""; interim = ""; gotSome = false; restarts = 0; t0 = Date.now();
     try { startRec(); } catch (x) { holding = false; return; }
     micUi(true); clock(); tick = setInterval(clock, 250);
     if (navigator.vibrate) try { navigator.vibrate(30); } catch (x) {}
@@ -401,9 +423,13 @@
     var said = (heard + " " + interim).replace(/\s+/g, " ").trim(), wasCancelled = cancelled;
     clearInterval(tick); micUi(false); heard = ""; interim = "";
     if (wasCancelled) return;
-    if (!said) { bot(VT[lang].none); return; }
+    if (!said) { bot(IOS ? VT[lang].noneIos : VT[lang].none); return; }
     input.value = said;
     if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event("submit", { cancelable: true }));
+  }
+  if (!SR && mic) {
+    mic.hidden = false; mic.title = VT[lang].noSr; mic.setAttribute("aria-label", mic.title);
+    mic.addEventListener("click", function (e) { e.preventDefault(); try { input.focus(); } catch (x) {} if (!S.noSrTold) { S.noSrTold = 1; save(); bot(VT[lang].noSr); } });
   }
   if (SR) {
     mic.hidden = false; micUi(false);

@@ -5056,11 +5056,20 @@
   function vcClock(){ if(!VC) return; var s = Math.floor((Date.now() - VC.t0) / 1000);
     if(VC.holding && s >= 120){ vcRelease(false); return; } if(VC.locked && s >= 300){ vcFinish(false); return; }
     VC.bar.querySelector(".vc-tm").textContent = Math.floor(s / 60) + ":" + ("0" + s % 60).slice(-2); }
+  var VC_IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   function vcStartRec(v){
-    var rec = new VC_SR(); v.rec = rec; rec.lang = v.lang === "ar" ? "ar-SA" : "en-US"; rec.interimResults = true; rec.continuous = true;
-    rec.onresult = function(e){ v.interim = ""; for(var i = e.resultIndex; i < e.results.length; i++){ if(e.results[i].isFinal) v.heard += e.results[i][0].transcript + " "; else v.interim += e.results[i][0].transcript; } };
-    rec.onerror = function(e){ if(/not-allowed|service-not-allowed|audio-capture/.test(e.error)){ v.cancelled = true; toast(VC_T[v.lang].den); vcEnd(v); } };
-    rec.onend = function(){ if((v.holding || v.locked) && !v.cancelled){ try{ vcStartRec(v); }catch(x){} return; } vcEnd(v); };
+    /* this session's words are rebuilt from all its results (iPhone rarely marks them final and repeats them); earlier sessions are kept in v.heard */
+    var rec = new VC_SR(); v.rec = rec; rec.lang = v.lang === "ar" ? "ar-SA" : "en-US"; rec.interimResults = true; rec.continuous = !VC_IOS;
+    rec.onresult = function(e){ var all = ""; for(var i = 0; i < e.results.length; i++) all += e.results[i][0].transcript + (VC_IOS ? "" : " "); v.interim = all.replace(/\s+/g, " ").trim(); };
+    rec.onerror = function(e){
+      if((v.restarts || 0) > 0 && (v.heard || v.interim) && e.error !== "aborted"){ if(v.interim){ v.heard += v.interim + " "; v.interim = ""; } v.holding = false; v.locked = false; vcEnd(v); return; }
+      if(/not-allowed|service-not-allowed|audio-capture/.test(e.error)){ v.cancelled = true; toast(VC_IOS ? (v.lang === "ar" ? "على الآيفون: الإعدادات ← Safari ← الميكروفون ← سماح، وفعّل الإملاء من الإعدادات ← Siri. أو استخدم 🎤 في لوحة المفاتيح." : "On iPhone: Settings → Safari → Microphone → Allow, and turn on Dictation in Settings → Siri. Or use the 🎤 on your keyboard.") : VC_T[v.lang].den); vcEnd(v); }
+    };
+    rec.onend = function(){
+      if(v.interim){ v.heard += v.interim + " "; v.interim = ""; }
+      if((v.holding || v.locked) && !v.cancelled){ v.restarts = (v.restarts || 0) + 1; if(v.restarts <= 20){ try{ vcStartRec(v); return; }catch(x){} } v.holding = false; v.locked = false; }
+      vcEnd(v);
+    };
     rec.start();
   }
   function vcPress(e, mic){
