@@ -553,6 +553,11 @@
   .cols .col i{background:linear-gradient(180deg,#14B3BC,#0B6E76)!important;border-radius:6px 6px 2px 2px;transition:filter .2s}
   .cols .col:hover i{filter:brightness(1.15) drop-shadow(0 4px 8px rgba(14,138,147,.4))}
   .hb .hb-bar{background:linear-gradient(90deg,#0B6E76,#14B3BC)!important;border-radius:0 6px 6px 0}
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand-logo{height:40px;width:auto;display:block;filter:drop-shadow(0 2px 6px rgba(11,42,49,.12))}
+  .brand-sep{width:1px;height:30px;background:linear-gradient(180deg,transparent,rgba(11,42,49,.25),transparent)}
+  .brand h1{margin:0}
+  @media (max-width:560px){.brand-logo{height:30px}.brand{gap:10px}.brand-sep{height:24px}}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -570,7 +575,7 @@
 <div id="app-content" style="display:none">
 <div class="wrap">
   <header class="top">
-    <h1>Hayakkom Hub</h1>
+    <div class="brand"><img class="brand-logo" src="https://www.hayakkom.com/assets/logo.png" alt="Hayakkom" width="168" height="40"><span class="brand-sep"></span><h1>Hub</h1></div>
     <span class="badge">Internal — not for public sharing</span>
   </header>
   <p class="lede">Every partner and every customer who has contacted Hayakkom, in one searchable place — built for Reham to track, reply to and keep moving.</p>
@@ -4983,7 +4988,7 @@
     { key: "jisr",  icon: "🌉", name: "Jisr",  role: "Doctors & quotes", hint: "“Which partners still owe written prices?” · “Draft a quote request for an implant case.”" },
     { key: "rafiq", icon: "🧳", name: "Rafiq", role: "Traveller's companion", hint: "“Prepare a pre-trip checklist for a dental family trip.”" },
     { key: "amin",  icon: "💼", name: "Amin",  role: "Finance & collections", hint: "“What commissions do we expect?” · “Draft a polite deposit reminder.”" },
-    { key: "rawaj", icon: "📣", name: "Rawaj", role: "Marketing", hint: "“Which clinics should we pitch our marketing services to?” · “Write a pitch for a dental clinic.”" }
+    { key: "rawaj", icon: "📣", name: "Rawaj", role: "Sells our marketing services", hint: "Sells Hayakkom’s marketing services (websites, Google & AI visibility, Google Ads, WhatsApp set-up, content) to clinics, hospitals and tourism companies. Try: “Which partners should we pitch our marketing services to?” · “Write a pitch for a dental clinic.”" }
   ];
   var AG_CUR = lsGet("hk_agent_cur_v1", "ali"), AG_BUSY = {};
   function agMsgs(k){ return ((state["_agent_" + k] || {}).msgs) || []; }
