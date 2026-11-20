@@ -614,6 +614,7 @@
   .ag-b hr{border:0;border-top:1px solid rgba(11,42,49,.12);margin:6px 0}.ag-b .ag-sp{height:6px}.ag-b code{background:rgba(11,42,49,.06);padding:0 4px;border-radius:4px}
   .ag-tab.has-new{box-shadow:0 0 0 2px #C9A23A,var(--shadow)!important}.ag-tab em{font-style:normal;font-size:11px;font-weight:800;color:#8F701D}
   .ag-nav-new{display:inline-block;min-width:18px;padding:0 5px;margin-inline-start:6px;border-radius:999px;background:#C2392B;color:#fff;font-size:11px;line-height:18px;text-align:center}
+  .an-table .tag.ok{background:#E5F5EA;color:#1D7A43}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -834,6 +835,18 @@
       </select>
       <input type="search" id="an-search" placeholder="Search by name, email, phone, country or type…">
       <select id="an-country"><option value="">All countries</option></select>
+      <select id="an-sector" title="Medical, tourism & hospitality, or professional & business">
+        <option value="">All sectors</option>
+        <option value="medical">🩺 Medical</option>
+        <option value="tourism">🏖 Tourism &amp; hospitality</option>
+        <option value="professional">💼 Professional &amp; business</option>
+      </select>
+      <select id="an-rel" title="Already working with us, in progress, or new">
+        <option value="">Everyone (partners and new)</option>
+        <option value="current">✅ Already partners</option>
+        <option value="progress">⏳ In progress</option>
+        <option value="new">🆕 New — not yet partners</option>
+      </select>
       <select id="an-type"><option value="">All types</option></select>
       <select id="an-reach">
         <option value="">Email or WhatsApp</option>
@@ -1900,6 +1913,34 @@
 
   // ---- announce: audience pool, sortable table, email + WhatsApp output ----
   var anSelected = {};
+  /* sector: medical · tourism & hospitality · professional & business — for partners, customers and applicants */
+  function anSector(aud, type, r){
+    var t = (type + " " + (aud === "partners" ? (r.domains || "") + " " + (r.specialities || "") : "")).toLowerCase();
+    if(aud === "customers"){
+      if(/dental|medical|treatment|check|surgery|ivf|hair|cosmetic|weight|eye|physio/.test(t)) return "medical";
+      if(/trip|vip|holiday|tour|travel|cruise|wellness|honeymoon/.test(t)) return "tourism";
+      return "professional";
+    }
+    if(aud === "helpers"){
+      if(/doctor|nurse|patient coordinator/.test(t)) return "medical";
+      if(/driver|tour guide/.test(t)) return "tourism";
+      return "professional";
+    }
+    if(/touris|hotel|resort|wellness|hospitality|transport|cruise|nile|travel/.test(t)) return "tourism";
+    if(/dental|clinic|hospital|medical|doctor|ivf|lab|surgery|derma|pharma/.test(t)) return "medical";
+    return "professional";
+  }
+  /* relationship: already working with us · in progress · new */
+  function anRel(aud, status){
+    var s0 = String(status || "");
+    if(aud === "partners") return /live|active|approved/i.test(s0) ? "current" : /documents|pending|discussion|contract/i.test(s0) ? "progress" : "new";
+    if(aud === "customers") return /booked/i.test(s0) ? "current" : /quoted|pending|contacted/i.test(s0) ? "progress" : "new";
+    return /hired|shortlist/i.test(s0) ? "current" : /pending|contacted/i.test(s0) ? "progress" : "new";
+  }
+  var AN_SECTOR_ICON = { medical: "🩺", tourism: "🏖", professional: "💼" }, AN_REL_LABEL = {
+    partners: { "": "Everyone (partners and new)", current: "✅ Already partners", progress: "⏳ In progress (documents / pending)", "new": "🆕 New — not yet partners" },
+    customers: { "": "Everyone (customers and new)", current: "✅ Booked customers", progress: "⏳ Quoted / in progress", "new": "🆕 New enquiries" },
+    helpers: { "": "Everyone (team and new)", current: "✅ Hired / shortlisted", progress: "⏳ Contacted / pending", "new": "🆕 New applicants" } };
   function announcePool(){
     var aud = document.getElementById("an-audience").value;
     var incArch = document.getElementById("an-archived").checked;
@@ -1915,8 +1956,10 @@
         : helperCountry(r);
       var type = aud==="customers" ? (st.enquiry_type || r.enquiry_type)
         : aud==="partners" ? (st.category || r.category) : r.profession;
+      var status = st.status || r.status || "";
       return { id: r.id, name: st.name || r.name || "(no name)", email: email, phone: phone, wa: waLink(phone),
         country: country || "", type: type || "", archived: archived, legacy: /legacy/i.test(r.source||""),
+        sector: anSector(aud, type || "", r), rel: anRel(aud, status),
         last: lastContacted(r), date: recDate(r).slice(0,10) };
     }).filter(function(x){
       if(x.archived && !incArch) return false;
@@ -1938,11 +1981,16 @@
     var q = document.getElementById("an-search").value.trim().toLowerCase();
     var country = document.getElementById("an-country").value;
     var type = document.getElementById("an-type").value;
+    var sector = document.getElementById("an-sector").value, rel = document.getElementById("an-rel").value;
+    var aud0 = document.getElementById("an-audience").value, relSel = document.getElementById("an-rel"), L = AN_REL_LABEL[aud0] || AN_REL_LABEL.partners;
+    Array.prototype.forEach.call(relSel.options, function(o){ o.textContent = L[o.value] || o.textContent; });
     var reach = document.getElementById("an-reach").value;
     var sort = document.getElementById("an-sort").value;
     var rows = pool.filter(function(x){
       if(country && x.country!==country) return false;
       if(type && x.type!==type) return false;
+      if(sector && x.sector!==sector) return false;
+      if(rel && x.rel!==rel) return false;
       if(reach==="email" && !x.email) return false;
       if(reach==="phone" && x.email) return false;
       if(q && (x.name+" "+x.email+" "+x.phone+" "+x.country+" "+x.type).toLowerCase().indexOf(q)===-1) return false;
@@ -1967,12 +2015,12 @@
         '<td>'+esc(x.name)+(x.legacy?'<span class="tag">old form</span>':(x.archived?'<span class="tag">archived</span>':''))+'</td>'+
         '<td>'+(x.email ? esc(x.email) : '<span class="sub2">WhatsApp '+esc(x.phone)+'</span>')+'</td>'+
         '<td>'+esc(x.country||"—")+'</td>'+
-        '<td>'+esc(x.type||"—")+'</td>'+
+        '<td>'+(AN_SECTOR_ICON[x.sector]||"")+' '+esc(x.type||"—")+(x.rel==="current"?' <span class="tag ok">'+(document.getElementById("an-audience").value==="customers"?"booked":document.getElementById("an-audience").value==="helpers"?"team":"partner")+'</span>':x.rel==="new"?' <span class="tag">new</span>':'')+'</td>'+
         '<td>'+(x.last ? esc(x.last) : '<span style="color:var(--crit-fg);font-weight:600">Never</span><span class="sub2">enquired '+esc(x.date||"—")+'</span>')+'</td>'+
       '</tr>';
     }).join("");
   }
-  ["an-search","an-country","an-type","an-reach","an-sort","an-archived"].forEach(function(id){
+  ["an-search","an-country","an-type","an-sector","an-rel","an-reach","an-sort","an-archived"].forEach(function(id){
     document.getElementById(id).addEventListener("input", renderAnnounceRecipients);
     document.getElementById(id).addEventListener("change", renderAnnounceRecipients);
   });
@@ -1980,6 +2028,7 @@
     anSelected = {};
     document.getElementById("an-country").value = "";
     document.getElementById("an-type").value = "";
+    document.getElementById("an-sector").value = ""; document.getElementById("an-rel").value = "";
     document.getElementById("an-output").innerHTML = "";
     renderAnnounceRecipients();
   });
