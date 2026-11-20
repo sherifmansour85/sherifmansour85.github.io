@@ -5213,12 +5213,37 @@
       state[id] = state[id] || {}; state[id].resp = r; saveState(state);
       var f = findRec(id), mp = respContacts(r.medical), tp = respContacts(r.travel);
       act({ t:"log", kind:"customer", id:id, name: f ? f.rec.name : id, what: "Responsible: " + teamPerson(r.team).name + (mp ? " · medical: " + mp.name : "") + (tp ? " · travel: " + tp.name : "") });
-      RESP_OPEN[id] = false; toast("Saved who is responsible."); decorateResp();
+      RESP_OPEN[id] = false; toast("Saved who is responsible."); decorateResp(); setTimeout(dirPush, 500);
     }
   });
   var rsQueued = false;
   var rsObs = new MutationObserver(function(){ if(rsQueued) return; rsQueued = true; requestAnimationFrame(function(){ rsQueued = false; decorateResp(); }); });
   (function(){ var el = document.getElementById("view-customers"); if(el) rsObs.observe(el, { childList:true, subtree:true }); })();
+
+  /* push "customer number → responsible partners" to the relay, so an urgent WhatsApp alert can email the right partner straight away */
+  var DIR_SENT = "";
+  function dirEntries(){
+    var out = {};
+    (RAW_C || []).forEach(function(c){
+      var st = state[c.id] || {}; if(st.deleted || st.removed) return;
+      var r = respOf(c.id); if(!r.medical && !r.travel) return;
+      var d = String(c.phone || "").replace(/\D/g, "").replace(/^00/, ""); if(d.length < 7) return;
+      var parts = [];
+      [["medical","Medical partner"],["travel","Travel partner"]].forEach(function(x){
+        var pc = respContacts(r[x[0]]); if(!pc) return; var f = findRec(r[x[0]]), rec = f ? f.rec : {};
+        parts.push({ role: x[1], name: pc.name, email: rec.email || (rec.emails || [])[0] || "", escName: pc.escName, escPhone: pc.escPhone, pcName: pc.pcName, pcPhone: pc.pcPhone });
+      });
+      if(parts.length) out[d.slice(-9)] = { customer: c.name || "", phone: c.phone || "", team: r.team || "reham", partners: parts };
+    });
+    return out;
+  }
+  function dirPush(){
+    if(typeof RAW_C === "undefined" || !RAW_C || !RAW_C.length) return;
+    var dir = dirEntries(), sig = JSON.stringify(dir); if(sig === DIR_SENT) return;
+    hubAiKey().then(function(key){ return fetch(HUB_ALERTS_URL, { method:"POST", headers:{ "content-type":"application/json", "x-hub-key": key }, body: JSON.stringify({ directory: dir }) }); })
+      .then(function(r){ if(r.ok) DIR_SENT = sig; }).catch(function(){});
+  }
+  setInterval(dirPush, 60000); setTimeout(dirPush, 8000);
   /* alerts: find the customer by WhatsApp number and show who is responsible for them */
   function custByPhone(ph){
     var d = String(ph || "").replace(/\D/g, "").replace(/^00/, ""); if(d.length < 7) return null;
@@ -5266,7 +5291,10 @@
     var bar = document.getElementById("hk-alert-bar"); if(!bar) return;
     var emerg = /rafiq|zara/i.test(a.who || "") ? '<div class="al-call">🚑 If health or safety is at risk in Egypt: ambulance <a class="al-tel ghost" href="tel:123">123</a> · police <a class="al-tel ghost" href="tel:122">122</a></div>' : "";
     var cu = a.phone && typeof custByPhone === "function" ? custByPhone(a.phone) : null;
-    var cuHtml = cu ? '<div class="al-cust"><b>Customer: ' + esc(cu.name || "") + '</b>' + respHtml(cu.id, true) + '</div>' : "";
+    var cph = (cu && cu.phone) || a.phone || "", cpd = String(cph).replace(/[^\d+]/g, "");
+    var phHtml = cpd ? '<div class="al-call">📱 Customer: <b dir="ltr">' + esc(cph) + '</b> <a class="al-tel" href="tel:' + esc(cpd) + '">📞 Call</a> <a class="al-tel ghost" target="_blank" rel="noopener" href="https://wa.me/' + esc(cpd.replace(/^\+/, "")) + '">WhatsApp</a></div>' : "";
+    var cuHtml = (cu ? '<div class="al-cust"><b>Customer: ' + esc(cu.name || "") + '</b>' + respHtml(cu.id, true) + '</div>' : "") + phHtml +
+      (a.partnerEmails && a.partnerEmails.length ? '<div class="al-call">✉ Emailed automatically: ' + esc(a.partnerEmails.join(", ")) + '</div>' : "");
     bar.innerHTML = '<div class="al-main"><b>🚨 ' + esc(a.title) + '</b><span dir="auto">' + esc(a.text) + '</span>' + alCallHtml(a.call) + cuHtml + emerg + '</div><button type="button" id="al-ok">Got it</button>';
     bar.hidden = false;
   }
@@ -5294,6 +5322,7 @@
         '<table class="al-roster"><thead><tr><th>Alerts from</th><th>Responsible</th><th>Backup</th></tr></thead><tbody>' +
         AL_AGENTS.map(function(x){ var m = R.by_agent[x[0]] || {}; return '<tr><td>' + esc(x[1]) + '</td><td><select class="al-own" data-a="' + x[0] + '">' + opt(m.owner) + '</select></td><td><select class="al-bak" data-a="' + x[0] + '">' + opt(m.backup) + '</select></td></tr>'; }).join("") +
         '</tbody></table><p class="wa-empty">Call the backup if there\'s no answer within <input type="number" id="al-after" min="5" max="120" value="' + esc(R.backup_after_min || 15) + '" style="width:64px"> minutes.</p>' +
+        '<label class="prof-chk"><input type="checkbox" id="al-pauto"' + (R.partner_auto !== false ? " checked" : "") + '> ✉ On an urgent alert, email the customer\'s responsible partners straight away (the problem, the customer\'s name and number, and who to call at Hayakkom — copied to support@)</label>' +
         '<div class="upd-row"><button type="button" class="btn gold" id="al-save-roster">Save who handles what</button><span class="al-rnote"></span></div>';
     }
     var perm = window.Notification ? Notification.permission : "unsupported";
@@ -5322,6 +5351,7 @@
       document.querySelectorAll(".al-own").forEach(function(i){ R.by_agent[i.getAttribute("data-a")] = R.by_agent[i.getAttribute("data-a")] || {}; R.by_agent[i.getAttribute("data-a")].owner = i.value; });
       document.querySelectorAll(".al-bak").forEach(function(i){ R.by_agent[i.getAttribute("data-a")].backup = i.value; });
       R.backup_after_min = parseInt((document.getElementById("al-after") || {}).value, 10) || 15;
+      var pa = document.getElementById("al-pauto"); if(pa) R.partner_auto = pa.checked;
       if(rn) rn.textContent = "Saving…";
       hubAiKey().then(function(key){ return fetch(HUB_ALERTS_URL, { method:"POST", headers:{ "content-type":"application/json", "x-hub-key": key }, body: JSON.stringify({ roster: R }) }); })
       .then(function(r){ return r.json(); }).then(function(res){ if(res.roster){ AL_ROSTER = res.roster; if(rn) rn.textContent = "✓ Saved — new alerts use it."; act({ t:"log", kind:"agent", id:null, name:"Alerts", what: myName() + " updated who handles urgent alerts" }); } else if(rn) rn.textContent = "⚠ Couldn't save (" + (res.error || "error") + ")."; })
