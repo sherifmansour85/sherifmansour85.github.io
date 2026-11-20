@@ -269,7 +269,7 @@
   .stat .s-num{font-family:Georgia,serif;font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink)}
   .stat .s-lbl{font-size:11.5px;color:var(--sub);margin-top:2px}
   .stat .s-sub{font-size:11.5px;color:var(--sub);margin-top:6px}
-  .dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px}
+  .dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:14px}
   .chart-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
   .chart-card.wide{grid-column:1/-1}
   .chart-card h3{font-family:Georgia,serif;font-size:15px;margin:0 0 2px;color:var(--ink)}
@@ -301,9 +301,9 @@
   .cal-legend{display:flex;flex-wrap:wrap;gap:12px;font-size:11.5px;color:var(--sub);margin-inline-start:8px}
   .cal-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:5px;vertical-align:-1px}
   .k-meeting{background:#2a78d6}.k-call{background:#1baf7a}.k-reminder{background:#eda100}.k-overdue{background:#d03b3b}
-  .cal-layout{display:grid;grid-template-columns:1fr 290px;gap:14px;align-items:start}
-  @media (max-width:900px){ .cal-layout{grid-template-columns:1fr} }
-  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .cal-layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:14px;align-items:start}
+  @media (max-width:900px){ .cal-layout{grid-template-columns:minmax(0,1fr)} }
+  .cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
   .cal-dow{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.04em;padding:8px;background:var(--cream);border-bottom:1px solid var(--line)}
   .cal-day{min-height:96px;padding:6px;border-top:1px solid var(--line);border-inline-start:1px solid var(--line);font-size:12px;overflow:hidden}
   .cal-day:nth-child(7n+1){border-inline-start:none}
@@ -558,6 +558,12 @@
   .brand-sep{width:1px;height:30px;background:linear-gradient(180deg,transparent,rgba(11,42,49,.25),transparent)}
   .brand h1{margin:0}
   @media (max-width:560px){.brand-logo{height:30px}.brand{gap:10px}.brand-sep{height:24px}}
+  /* phones: a dropdown never wider than the screen (long options were pushing the page sideways) */
+  select,input,textarea{max-width:100%;min-width:0;text-overflow:ellipsis}
+  .toolbar > *{max-width:100%}
+  .cols{min-width:0}.chart-card{min-width:0;overflow:hidden}
+  @media (max-width:560px){.cal-day{padding:3px;font-size:10.5px}}
+  @media (max-width:560px){.toolbar select{flex:1 1 calc(50% - 8px)}.toolbar select#f-view,.toolbar input[type=search]{flex-basis:100%}}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
