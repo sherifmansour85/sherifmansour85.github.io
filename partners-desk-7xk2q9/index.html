@@ -62,6 +62,10 @@
   .upd-box textarea{width:100%;box-sizing:border-box;min-height:60px;font:inherit;margin:4px 0}
   .upd-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
   .upd-row select{font:inherit;margin-left:4px}
+  .qa-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0 4px}
+  .qa-l{font-size:.95em;opacity:.7}
+  .qa-b{font:inherit;font-size:.82em;padding:6px 11px;border-radius:999px;border:1px solid #CFE3E5;background:linear-gradient(180deg,#fff,#F2F8F8);color:#0B5960;cursor:pointer;transition:transform .12s,box-shadow .12s}
+  .qa-b:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(14,124,134,.15)}
   .prof-line{font-size:.88em;background:#F2F8F8;border-left:3px solid #9fc9cc;padding:4px 8px;margin:6px 0;color:#2e4a50}
   .prof-line.ok{border-left-color:#1B8A5A;background:#EEF8F2}
   .prof-box{margin:8px 0 4px;border:1px solid #CFE3E5;border-radius:10px;background:#F7FBFB;padding:10px 12px;display:grid;gap:8px}
@@ -4685,6 +4689,102 @@
     requestAnimationFrame(function(){ profQueued = false; decorateProfiles(); });
   });
   (function(){ var el = document.getElementById("view-partners"); if(el) profObs.observe(el, { childList:true, subtree:true }); })();
+
+  // ---- ⚡ Quick actions on every card: one tap opens a ready-to-check email (nothing is sent until it is approved
+  //      in the normal Reply window), shares Zara's link, or marks a customer as booked. ----
+  var QA = {
+    partner: [
+      ["prices", "💰 Ask for written prices"], ["quote", "📋 Request a quote"], ["call", "📞 Book a call"]
+    ],
+    customer: [
+      ["follow", "🔔 Follow up"], ["zara", "🤖 Send Zara link"], ["booked", "✅ Mark booked"]
+    ],
+    helper: [
+      ["invite", "📅 Invite to a call"], ["decline", "🙏 Not suitable"]
+    ]
+  };
+  function qaOpen(row, subject, body){
+    openModal(row);
+    document.getElementById("m-subject").value = subject;
+    document.getElementById("m-body").value = body;
+    try{ document.getElementById("m-body").dispatchEvent(new Event("input", { bubbles:true })); }catch(e){}
+  }
+  function firstName(n){ return String(n||"").replace(/\(.*?\)/g, "").trim().split(/\s+/)[0] || ""; }
+  function zaraUrl(r, ar){ return "https://www.hayakkom.com/" + (ar ? "ar/" : "") + "zara/?ref=" + encodeURIComponent(String(r.name||"").replace(/\(.*?\)/g, "").trim()); }
+  // a neutral reference for partners: HK- + a short code from the card id, which never contains the name
+  function caseRef(id){ var h = 5381; for(var i = 0; i < id.length; i++) h = ((h << 5) + h + id.charCodeAt(i)) >>> 0; return "HK-" + h.toString(36).toUpperCase().slice(0, 6); }
+  function caseFor(c){   // what a partner needs to quote — never the patient's name, phone or email
+    var A = function(re){ return answerLookup(c, re); };
+    var lines = [];
+    lines.push("• Treatment / service: " + (c.enquiry_type || "") + (c.summary ? " — " + String(c.summary).replace(new RegExp(String(c.name||"").replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"), "the patient").slice(0, 220) : ""));
+    var ctry = c.country || A(/country|nationality|الدولة|الجنسية/i); if(ctry) lines.push("• Coming from: " + ctry);
+    var dt = A(/date|when|travel|موعد|تاريخ/i); if(dt) lines.push("• Preferred dates: " + dt);
+    var ppl = A(/people|persons|travellers|travelers|عدد/i); if(ppl) lines.push("• Number of people: " + ppl);
+    return lines.join("\n");
+  }
+  function qaRun(act, kind, r){
+    var row = Object.assign({}, r, { kind: kind }), ar = recLang(r) === "ar";
+    if(kind === "partner"){
+      if(act === "prices"){ var t = ANNOUNCE_TEMPLATES[ar ? "partner_pricing_ar" : "partner_pricing_en"]; qaOpen(row, t.subject, t.body.replace(/\{\{name\}\}/g, r.name)); return; }
+      if(act === "call"){ var t2 = ANNOUNCE_TEMPLATES.partner_call_en; qaOpen(row, t2.subject, t2.body.replace(/\{\{name\}\}/g, r.name)); return; }
+      if(act === "quote"){
+        var open = (ALL_CUST || []).filter(function(c){ var st = effStatusOf(c); return !(state[c.id]||{}).deleted && !/Booked|Lost/.test(st); });
+        if(!open.length){ toast("No open customers to quote for."); return; }
+        var list = open.slice(0, 40).map(function(c, i){ return (i+1) + ". " + c.name + " — " + (c.enquiry_type||"") ; }).join("\n");
+        var pick = prompt("Request a quote from " + r.name + " for which customer? Type the number:\n\n" + list + "\n\nThe email never includes the patient's name, phone or email. Only send medical details the patient agreed to share.");
+        var c = open[(parseInt(pick, 10) || 0) - 1]; if(!c) return;
+        qaOpen(row, "Quotation request — " + (c.enquiry_type || "patient") + " (Hayakkom ref " + caseRef(c.id) + ")",
+          "Dear " + r.name + " team,\n\nWe are coordinating a patient from the Gulf and would like your official written quotation:\n\n" + caseFor(c) +
+          "\n\nPlease reply with:\n• your recommended treatment plan and what the price includes,\n• the price in writing (on your letterhead, or signed and stamped) and how long it is valid,\n• the earliest available appointment and how many days the patient should stay,\n• the doctor's speciality and experience.\n\nThe patient has agreed that we share these details. Please do not contact the patient directly — we coordinate all communication.\n\nThank you.");
+        return;
+      }
+    }
+    if(kind === "customer"){
+      if(act === "zara"){
+        qaOpen(row, ar ? "زارا من حياكم — إجابات فورية في أي وقت" : "Zara from Hayakkom — answers any time",
+          ar ? "مرحبًا " + firstName(r.name) + "،\n\nيمكنك التحدث مع زارا، منسّقتنا الذكية، في أي وقت ليلًا أو نهارًا — اسأل عن العلاج أو الرحلة أو الإقامة واحصل على إجابة خلال ثوانٍ:\n" + zaraUrl(r, true) + "\n\nأو راسلنا على واتساب ‎+20 103 156 7949، أو اتصل على ‎+20 100 010 0529."
+             : "Hi " + firstName(r.name) + ",\n\nYou can chat with Zara, our AI coordination specialist, any time, day or night — ask about treatment, your trip or your stay and get answers in seconds:\n" + zaraUrl(r, false) + "\n\nOr message us on WhatsApp +20 103 156 7949, or call +20 100 010 0529.");
+        return;
+      }
+      if(act === "follow"){
+        qaOpen(row, ar ? "متابعة طلبك مع حياكم" : "Following up on your enquiry with Hayakkom",
+          ar ? "مرحبًا " + firstName(r.name) + "،\n\nنتواصل معك للاطمئنان على طلبك بخصوص " + (r.enquiry_type || "رحلتك") + ". هل لديك أي أسئلة، أو تودّ أن نكمل الخطوة التالية؟ يسعدنا ترتيب مكالمة قصيرة في الوقت الذي يناسبك.\n\nللإجابات السريعة في أي وقت: " + zaraUrl(r, true) + "\nواتساب: ‎+20 103 156 7949"
+             : "Hi " + firstName(r.name) + ",\n\nJust checking in on your " + (r.enquiry_type ? r.enquiry_type.toLowerCase() + " " : "") + "enquiry. Do you have any questions, or would you like us to go ahead with the next step? We're happy to arrange a short call at a time that suits you.\n\nFor quick answers any time: " + zaraUrl(r, false) + "\nWhatsApp: +20 103 156 7949");
+        return;
+      }
+      if(act === "booked"){
+        if(!confirm("Mark " + r.name + " as Booked?")) return;
+        state[r.id] = state[r.id] || {}; state[r.id].status = "Booked"; state[r.id].statusAt = new Date().toISOString();
+        saveState(state); toast(r.name + " marked as Booked."); rerenderAll(); return;
+      }
+    }
+    if(kind === "helper"){
+      if(act === "invite"){ qaOpen(row, "A short call about working with Hayakkom", "Hi " + firstName(r.name) + ",\n\nThank you for your application. We'd like to have a short call (about 15 minutes) to learn more about your experience and availability.\n\nCould you reply with two or three times that suit you this week or next? A WhatsApp call is fine.\n\nKind regards."); return; }
+      if(act === "decline"){ qaOpen(row, "Your application to Hayakkom", "Hi " + firstName(r.name) + ",\n\nThank you for your interest in working with Hayakkom and for the time you took to apply. We don't have a suitable role for your profile at the moment, but we'll keep your details on file and contact you if that changes.\n\nWe wish you every success."); return; }
+    }
+  }
+  function decorateQuick(){
+    [["partners","partner"],["customers","customer"],["helpers","helper"]].forEach(function(v){
+      document.querySelectorAll("#view-" + v[0] + " .card[data-id]").forEach(function(card){
+        if(card.querySelector(".qa-row")) return;
+        var acts = card.querySelector(".card-actions"); if(!acts) return;
+        var row = document.createElement("div"); row.className = "qa-row"; row.setAttribute("data-kind", v[1]);
+        row.innerHTML = '<span class="qa-l">⚡</span>' + QA[v[1]].map(function(a){ return '<button type="button" class="qa-b" data-qa="' + a[0] + '">' + a[1] + '</button>'; }).join("");
+        acts.parentNode.insertBefore(row, acts);
+      });
+    });
+  }
+  document.addEventListener("click", function(e){
+    var b = e.target.closest && e.target.closest(".qa-b"); if(!b) return;
+    var card = b.closest(".card[data-id]"), f = card && findRec(card.getAttribute("data-id")); if(!f) return;
+    qaRun(b.getAttribute("data-qa"), b.closest(".qa-row").getAttribute("data-kind"), f.rec);
+  });
+  var qaQueued = false;
+  var qaObs = new MutationObserver(function(){
+    if(qaQueued) return; qaQueued = true;
+    requestAnimationFrame(function(){ qaQueued = false; decorateQuick(); });
+  });
+  ["view-partners","view-customers","view-helpers"].forEach(function(v){ var el = document.getElementById(v); if(el) qaObs.observe(el, { childList:true, subtree:true }); });
 
   // ---- 🔗 Share Zara: a link that opens the AI chat; ?ref=<name> tells the Hub who it was sent to ----
   var szModal = document.getElementById("sz-modal");
