@@ -62,6 +62,13 @@
   .upd-box textarea{width:100%;box-sizing:border-box;min-height:60px;font:inherit;margin:4px 0}
   .upd-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
   .upd-row select{font:inherit;margin-left:4px}
+  .prof-line{font-size:.88em;background:#F2F8F8;border-left:3px solid #9fc9cc;padding:4px 8px;margin:6px 0;color:#2e4a50}
+  .prof-line.ok{border-left-color:#1B8A5A;background:#EEF8F2}
+  .prof-box{margin:8px 0 4px;border:1px solid #CFE3E5;border-radius:10px;background:#F7FBFB;padding:10px 12px;display:grid;gap:8px}
+  .prof-chk{display:flex;gap:8px;align-items:center;font-weight:600;color:#0B6B73}
+  .prof-f{display:grid;gap:3px;font-size:.9em}.prof-f span{color:#4a5a5c;font-weight:600}
+  .prof-f input,.prof-f textarea{font:inherit;padding:7px 9px;border:1px solid #CFE3E5;border-radius:8px;width:100%;box-sizing:border-box}
+  .prof-f textarea{min-height:64px}
   .upd-latest{font-size:.9em;background:#FFFBEF;border-left:3px solid #D4AF4F;padding:4px 8px;margin:6px 0}
   .upd-pending{font-size:.9em;font-weight:600;color:#a05a00;margin:4px 0}
   .who-pick.who-last{outline:3px solid #1FA855;outline-offset:2px}
@@ -560,6 +567,8 @@
             <option value="followup_ar">تواصل / عرض جديد (Arabic)</option>
             <option value="helper_thanks_en">Helpers: thanks for applying (English)</option>
             <option value="partner_profile_en">Partners: please update your profile (English)</option>
+            <option value="partner_pricing_en">Partners: send us your official written price list (English)</option>
+            <option value="partner_pricing_ar">الشركاء: قائمة الأسعار الرسمية المكتوبة (Arabic)</option>
             <option value="partner_welcome_en">Partners: welcome to the network — next steps (English)</option>
             <option value="partner_checkin_en">Partners: quarterly check-in — prices &amp; availability (English)</option>
             <option value="partner_season_en">Partners: busy season ahead — are you ready for GCC families? (English)</option>
@@ -1189,16 +1198,24 @@
   };
   ANNOUNCE_TEMPLATES.partner_profile_en = {
     subject: "Please update your Hayakkom partner profile",
-    body: "Dear {{name}} team,\n\nTo route Gulf families to you faster and quote them accurately the first time, we're updating our partner directory.\n\nCould you take about 5 minutes to complete your profile here:\nhttps://form.jotform.com/263202563928055\n\nIt covers your contacts, accreditation, facility photos, logo and social links. Thank you for working with us.\n\nKind regards."
+    body: "Dear {{name}} team,\n\nTo route Gulf families to you faster and quote them accurately the first time, we're updating our partner directory.\n\nCould you take about 5 minutes to complete your profile here:\nhttps://form.jotform.com/263202563928055\n\nIt covers your contacts, accreditation, facility photos, logo, price list and social links.\n\nFor your profile, please also send us:\n• your doctors (full name, speciality, years of experience) and the specialities you cover,\n• your official price list — written, on your letterhead or signed and stamped, with prices valid until a stated date (we can only share prices you have confirmed in writing),\n• how quickly you can usually reply to a quotation request,\n• your available appointment dates over the next 4–8 weeks, and any dates you're closed,\n• any patient reviews or ratings you publish (Google, Vezeeta, etc.).\n\nThank you for working with us.\n\nKind regards."
   };
 
+  ANNOUNCE_TEMPLATES.partner_pricing_en = {
+    subject: "Your official written price list for Hayakkom",
+    body: "Dear {{name}} team,\n\nTo quote families from the Gulf accurately and fairly, Hayakkom only shares prices that our partners have confirmed in writing.\n\nCould you please send us your official price list:\n• on your letterhead, or signed and stamped,\n• in Egyptian pounds or US dollars, for each main treatment or service,\n• with what each price includes (consultation, tests, follow-up visits, materials),\n• and the date it is valid until.\n\nWhile you're at it, please also tell us:\n• your doctors (full name, speciality, years of experience),\n• how quickly you usually reply to a quotation request,\n• your available appointment dates over the next 4–8 weeks.\n\nYou can reply to this email with a PDF or photo, or upload it in our partner form (the price list upload is optional there):\nhttps://form.jotform.com/263202563928055\n\nThank you — this helps us send you well-prepared families."
+  };
+  ANNOUNCE_TEMPLATES.partner_pricing_ar = {
+    subject: "قائمة الأسعار الرسمية المكتوبة — حياكم",
+    body: "السادة فريق {{name}}،\n\nحتى نقدّم للعائلات القادمة من الخليج أسعارًا دقيقة وعادلة، لا تشارك حياكم إلا الأسعار التي يؤكدها شركاؤنا كتابيًا.\n\nنرجو التكرم بإرسال قائمة أسعاركم الرسمية:\n• على ورق الشركة الرسمي، أو موقّعة ومختومة،\n• بالجنيه المصري أو الدولار الأمريكي لكل علاج أو خدمة رئيسية،\n• مع توضيح ما يشمله كل سعر (الكشف، الفحوصات، المتابعة، المواد)،\n• وتاريخ صلاحية الأسعار.\n\nونرجو أيضًا إفادتنا بـ:\n• أسماء الأطباء وتخصصاتهم وسنوات خبرتهم،\n• المدة المعتادة للرد على طلب عرض سعر،\n• المواعيد المتاحة خلال الأسابيع الأربعة إلى الثمانية القادمة.\n\nيمكنكم الرد على هذه الرسالة بملف PDF أو صورة، أو رفعها في نموذج الشركاء (رفع قائمة الأسعار اختياري):\nhttps://form.jotform.com/263202563928055\n\nشكرًا لكم — هذا يساعدنا على إرسال عائلات مستعدة جيدًا إليكم."
+  };
   ANNOUNCE_TEMPLATES.partner_welcome_en = {
     subject: "Welcome to the Hayakkom partner network — next steps",
-    body: "Dear {{name}} team,\n\nThank you for joining the Hayakkom partner network. We coordinate treatment and stays in Egypt for families from Saudi Arabia, the UAE and Kuwait, and we're glad to have you with us.\n\nTo start receiving enquiries, here's what we need from you:\n\n1. Your completed partner profile (about 5 minutes):\nhttps://form.jotform.com/263202563928055\n2. Your licence or accreditation, a few photos of your facility and your logo (you can upload them in the same form).\n3. One contact person and a WhatsApp number we can reach quickly when a family is waiting.\n\nOnce your profile is in, we'll confirm your listing and share how referrals reach you.\n\nWe look forward to working together."
+    body: "Dear {{name}} team,\n\nThank you for joining the Hayakkom partner network. We coordinate treatment and stays in Egypt for families from Saudi Arabia, the UAE and Kuwait, and we're glad to have you with us.\n\nTo start receiving enquiries, here's what we need from you:\n\n1. Your completed partner profile (about 5 minutes):\nhttps://form.jotform.com/263202563928055\n2. Your licence or accreditation, a few photos of your facility and your logo (you can upload them in the same form).\n3. One contact person and a WhatsApp number we can reach quickly when a family is waiting.\n4. Your official written price list — on your letterhead, or signed and stamped, with the date it is valid until. We only quote families prices you have confirmed in writing.\n5. Your doctors and specialities, how quickly you can reply to a quotation request, and your available dates over the next 4–8 weeks.\n\nOnce your profile is in, we'll confirm your listing and share how referrals reach you.\n\nWe look forward to working together."
   };
   ANNOUNCE_TEMPLATES.partner_checkin_en = {
     subject: "Quick check-in from Hayakkom — prices and availability",
-    body: "Dear {{name}} team,\n\nWe hope all is well. We're updating the information we share with families from the Gulf, so they get accurate answers the first time.\n\nCould you reply with any changes on your side:\n• your current indicative prices for your main treatments or services (a range is fine),\n• any new services, doctors or packages,\n• your availability over the coming weeks, and any dates you're closed,\n• the best contact person and WhatsApp number for referrals.\n\nIf nothing has changed, a short reply saying so is perfect.\n\nThank you for being part of the network."
+    body: "Dear {{name}} team,\n\nWe hope all is well. We're updating the information we share with families from the Gulf, so they get accurate answers the first time.\n\nCould you reply with any changes on your side:\n• your current official price list, in writing (on your letterhead, or signed and stamped, with a valid-until date) — we only quote families prices you have confirmed in writing,\n• any new services, doctors or packages,\n• your availability over the coming weeks, and any dates you're closed,\n• the best contact person and WhatsApp number for referrals,\n• how quickly you can usually reply to a quotation request.\n\nIf nothing has changed, a short reply saying so is perfect.\n\nThank you for being part of the network."
   };
   ANNOUNCE_TEMPLATES.partner_season_en = {
     subject: "Busy season ahead for families from the Gulf",
@@ -3951,7 +3968,7 @@
   }
 
   // ---- state diff → patch actions ----
-  var FIELD_WORDS = { notes:"Edited notes", reminder:"Updated reminder", extraContacts:"Updated contacts" };
+  var FIELD_WORDS = { prof:"Updated provider profile", notes:"Edited notes", reminder:"Updated reminder", extraContacts:"Updated contacts" };
   function describePatch(p){
     var out = [];
     Object.keys(p).forEach(function(k){
@@ -4592,6 +4609,82 @@
     requestAnimationFrame(function(){ updQueued = false; decorateUpdates(); });
   });
   ["view-partners","view-customers","view-helpers"].forEach(function(v){ var el = document.getElementById(v); if(el) updObs.observe(el, { childList:true, subtree:true }); });
+
+  // ---- 🩺 Provider profile on partner cards: verified, doctors, specialities, official written prices, quote response
+  //      time, rating and available dates. Saved in the team's shared state (state[id].prof), visible to everyone. ----
+  var PROF_OPEN = {};
+  var PROF_FIELDS = [
+    ["specialities", "Specialities", "e.g. implants, veneers, orthodontics"],
+    ["doctors", "Doctors", "One per line: full name — speciality — years of experience"],
+    ["pricesUntil", "Written prices valid until", "YYYY-MM-DD"],
+    ["priceNote", "Prices (summary)", "e.g. implant 18,000–25,000 EGP incl. crown"],
+    ["responseHrs", "Replies to a quote request within (hours)", "e.g. 24"],
+    ["rating", "Rating (1–5)", "e.g. 4.7"],
+    ["ratingSource", "Rating source", "e.g. Google, 210 reviews"],
+    ["availability", "Available dates / closed dates", "e.g. open all Dec; closed 1–5 Jan"]
+  ];
+  function profOf(id){ return (state[id] && state[id].prof) || {}; }
+  function profLine(pr){
+    var bits = [];
+    if(pr.verified) bits.push("✓ Verified" + (pr.verifiedAt ? " " + String(pr.verifiedAt).slice(0,10) : ""));
+    if(pr.writtenPrices) bits.push("💰 Written prices" + (pr.pricesUntil ? " until " + pr.pricesUntil : ""));
+    else bits.push("⚠ No written prices yet");
+    if(pr.pricesUntil && pr.pricesUntil < new Date().toISOString().slice(0,10)) bits.push("⏰ prices expired");
+    if(pr.responseHrs) bits.push("⏱ replies in ~" + pr.responseHrs + "h");
+    if(pr.rating) bits.push("★ " + pr.rating + (pr.ratingSource ? " (" + pr.ratingSource + ")" : ""));
+    if(pr.specialities) bits.push("🩺 " + pr.specialities);
+    return bits.join(" · ");
+  }
+  function decorateProfiles(){
+    document.querySelectorAll("#view-partners .card[data-id]").forEach(function(card){
+      if(card.querySelector(".prof-btn")) return;
+      var acts = card.querySelector(".card-actions"); if(!acts) return;
+      var f = findRec(card.getAttribute("data-id")); if(!f) return;
+      var id = f.rec.id, pr = profOf(id);
+      var line = document.createElement("p"); line.className = "prof-line" + (pr.verified ? " ok" : "");
+      line.textContent = profLine(pr); acts.parentNode.insertBefore(line, acts);
+      var btn = document.createElement("button"); btn.type = "button"; btn.className = "btn prof-btn"; btn.textContent = "🩺 Provider profile";
+      btn.title = "Doctors, specialities, official written prices, response time, rating and available dates";
+      acts.insertBefore(btn, acts.firstChild);
+      var box = document.createElement("div"); box.className = "prof-box"; box.hidden = !PROF_OPEN[id];
+      box.innerHTML = '<label class="prof-chk"><input type="checkbox" class="pf-verified"'+(pr.verified?' checked':'')+'> ✓ Verified partner (licence / accreditation checked)</label>'+
+        '<label class="prof-chk"><input type="checkbox" class="pf-writtenPrices"'+(pr.writtenPrices?' checked':'')+'> 💰 Official written price list received (letterhead or signed &amp; stamped)</label>'+
+        PROF_FIELDS.map(function(fd){
+          var v = pr[fd[0]] || "", tall = fd[0]==="doctors";
+          return '<label class="prof-f"><span>'+esc(fd[1])+'</span>'+(tall ? '<textarea class="pf-'+fd[0]+'" dir="auto" placeholder="'+esc(fd[2])+'">'+esc(v)+'</textarea>' : '<input class="pf-'+fd[0]+'" dir="auto" placeholder="'+esc(fd[2])+'" value="'+esc(v)+'">')+'</label>';
+        }).join("")+
+        '<div class="upd-row"><button type="button" class="btn gold prof-save">Save profile</button><button type="button" class="btn prof-cancel">Close</button>'+
+        '<small>Ask for written prices with the template “Partners: send us your official written price list”.</small></div>';
+      acts.parentNode.insertBefore(box, acts.nextSibling);
+    });
+  }
+  document.addEventListener("click", function(e){
+    if(!e.target.closest) return;
+    var card = e.target.closest("#view-partners .card[data-id]"); if(!card) return;
+    var box = card.querySelector(".prof-box"); if(!box) return;
+    var f = findRec(card.getAttribute("data-id")); if(!f) return;
+    var id = f.rec.id;
+    if(e.target.closest(".prof-btn")){ box.hidden = !box.hidden; PROF_OPEN[id] = !box.hidden; return; }
+    if(e.target.closest(".prof-cancel")){ box.hidden = true; PROF_OPEN[id] = false; return; }
+    if(!e.target.closest(".prof-save")) return;
+    var old = profOf(id), pr = {};
+    PROF_FIELDS.forEach(function(fd){ var el = box.querySelector(".pf-" + fd[0]); var v = el ? el.value.trim() : ""; if(v) pr[fd[0]] = v; });
+    pr.verified = box.querySelector(".pf-verified").checked;
+    pr.writtenPrices = box.querySelector(".pf-writtenPrices").checked;
+    if(pr.verified) pr.verifiedAt = old.verified ? (old.verifiedAt || new Date().toISOString()) : new Date().toISOString();
+    pr.updatedAt = new Date().toISOString(); pr.updatedBy = myName();
+    state[id] = state[id] || {}; state[id].prof = pr;
+    saveState(state);
+    PROF_OPEN[id] = false;
+    toast("Provider profile saved for the team.");
+    rerenderAll();
+  });
+  var profQueued = false;
+  var profObs = new MutationObserver(function(){
+    if(profQueued) return; profQueued = true;
+    requestAnimationFrame(function(){ profQueued = false; decorateProfiles(); });
+  });
+  (function(){ var el = document.getElementById("view-partners"); if(el) profObs.observe(el, { childList:true, subtree:true }); })();
 
   // ---- 🔗 Share Zara: a link that opens the AI chat; ?ref=<name> tells the Hub who it was sent to ----
   var szModal = document.getElementById("sz-modal");
