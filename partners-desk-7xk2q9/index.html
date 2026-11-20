@@ -606,6 +606,10 @@
   .rs-tel{display:inline-block;padding:2px 9px;border-radius:999px;background:#0E8A93;color:#fff;font-weight:700;text-decoration:none;font-size:12px}
   .rs-tel.red{background:#C2392B}.rs-edit{margin-top:8px}.rs-hint{color:var(--sub);font-size:11.5px;margin:4px 0}
   .al-cust{margin-top:6px;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.14)}.al-cust .rs-row{border-color:rgba(255,255,255,.25)}.al-cust .rs-k{color:rgba(255,255,255,.8)}.al-cust .rs-c.warn{color:#FFE2A8}
+  .hist-agents{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:0 0 8px}.hist-agents[hidden]{display:none}
+  .ha-l{font-size:12px;color:var(--sub);font-weight:600}
+  .ha-chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 11px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--ink)}
+  .ha-chip i{font-style:normal;color:var(--sub);font-weight:500;margin-inline-start:2px}.ha-chip.on{background:#0B2A31;color:#fff;border-color:#0B2A31}.ha-chip.on i{color:#cfe}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -1058,6 +1062,7 @@
       <button type="button" class="btn hist-tab" data-k="agent">🤖 Agents</button>
       <input type="search" id="hist-q" placeholder="Search history…">
     </div>
+    <div class="hist-agents" id="hist-agents" hidden></div>
     <div id="hist-list" class="hist-list"></div>
   </div>
 </div>
@@ -4762,7 +4767,7 @@
   }
 
   // ---- history ----
-  var histModal = document.getElementById("hist-modal"), HIST_KIND = "all";
+  var histModal = document.getElementById("hist-modal"), HIST_KIND = "all", HIST_AGENT = "all";
   function histRows(){
     var rows = (SHARED.history||[]).map(function(h){ return Object.assign({ synced:true }, h); });
     queue.forEach(function(a){ if(!a.silent) rows.push({ uid:a.uid, at:a.at, by:a.by, kind:a.kind, id:a.id, name:a.name, what:a.what, synced:false }); });
@@ -4772,9 +4777,19 @@
     var q = document.getElementById("hist-q").value.trim().toLowerCase();
     var rows = histRows().filter(function(h){
       if(HIST_KIND!=="all" && h.kind!==HIST_KIND) return false;
+      if(HIST_KIND==="agent" && HIST_AGENT!=="all" && String(h.name||"").toLowerCase()!==HIST_AGENT) return false;
       return !q || [h.name, h.what, h.by].join(" ").toLowerCase().indexOf(q) >= 0;
     });
     document.querySelectorAll(".hist-tab").forEach(function(b){ b.classList.toggle("active", b.getAttribute("data-k")===HIST_KIND); });
+    var ha = document.getElementById("hist-agents");
+    if(ha){ ha.hidden = HIST_KIND!=="agent";
+      if(HIST_KIND==="agent"){
+        var names = ["Zara","Ali","Jisr","Rafiq","Amin","Rawaj"]; histRows().forEach(function(h){ if(h.kind==="agent" && h.name && names.indexOf(h.name) < 0) names.push(h.name); });
+        var cnt = function(n){ return histRows().filter(function(h){ return h.kind==="agent" && (n==="all" || String(h.name||"").toLowerCase()===n); }).length; };
+        ha.innerHTML = '<span class="ha-l">Agent:</span>' + [["all","All agents"]].concat(names.map(function(n){ return [n.toLowerCase(), n]; })).map(function(x){
+          return '<button type="button" class="ha-chip' + (HIST_AGENT===x[0] ? " on" : "") + '" data-a="' + esc(x[0]) + '">' + esc(x[1]) + ' <i>' + cnt(x[0]) + '</i></button>'; }).join("");
+      }
+    }
     document.getElementById("hist-list").innerHTML = rows.length ? rows.slice(0, 400).map(function(h){
       var canUndo = h.id && state[h.id] && state[h.id].removed && /Deleted/.test(h.what||"");
       return '<div class="hist-row"><div class="hist-when">'+esc(String(h.at||"").slice(0,16).replace("T"," "))+'<br><span>'+esc(h.by||"")+'</span></div>'+
@@ -4782,17 +4797,18 @@
         '<div class="hist-st">'+(h.synced ? '✓' : '⏳')+(canUndo ? '<br><button type="button" class="btn hist-undo" data-id="'+esc(h.id)+'">Undo delete</button>' : '')+'</div></div>';
     }).join("") : '<p class="sugg-empty">Nothing recorded yet for this section. From now on every email, archive, delete and status change is logged here for the whole team.</p>';
   }
-  function openHistory(kind){ HIST_KIND = kind || "all"; document.getElementById("hist-q").value = ""; renderHistory(); histModal.classList.add("open"); }
+  function openHistory(kind, agent){ HIST_KIND = kind || "all"; HIST_AGENT = agent || "all"; document.getElementById("hist-q").value = ""; renderHistory(); histModal.classList.add("open"); }
   document.getElementById("hist-close").addEventListener("click", function(){ histModal.classList.remove("open"); });
   histModal.addEventListener("click", function(e){
     if(e.target===histModal){ histModal.classList.remove("open"); return; }
-    var t = e.target.closest(".hist-tab"); if(t){ HIST_KIND = t.getAttribute("data-k"); renderHistory(); return; }
+    var t = e.target.closest(".hist-tab"); if(t){ HIST_KIND = t.getAttribute("data-k"); HIST_AGENT = "all"; renderHistory(); return; }
+    var ac = e.target.closest(".ha-chip"); if(ac){ HIST_AGENT = ac.getAttribute("data-a"); renderHistory(); return; }
     var u = e.target.closest(".hist-undo");
     if(u){ var id = u.getAttribute("data-id"); state[id] = state[id] || {}; delete state[id].removed; saveState(state); applyRemoved(); rerenderAll(); renderAllSugg(); renderHistory(); }
   });
   document.getElementById("hist-q").addEventListener("input", renderHistory);
   var hb = document.getElementById("hist-btn-top"); if(hb) hb.addEventListener("click", function(){ openHistory("all"); });
-  var agh = document.getElementById("ag-hist-btn"); if(agh) agh.addEventListener("click", function(){ openHistory("agent"); });
+  var agh = document.getElementById("ag-hist-btn"); if(agh) agh.addEventListener("click", function(){ openHistory("agent", (typeof AG_CUR !== "undefined" && AG_CUR) || "all"); });
 
 
   // ---- 📝 Add update: a quick note + status on any card, saved for the team and shown in 🕘 History ----
