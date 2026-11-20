@@ -582,12 +582,22 @@
   .hk-alert-bar{position:fixed;left:16px;right:16px;bottom:16px;max-width:900px;margin:0 auto;z-index:45;padding:12px 16px;border-radius:16px;background:linear-gradient(135deg,#D64535,#A8281B);color:#fff;
     box-shadow:0 14px 30px -12px rgba(168,40,27,.7);display:flex;gap:12px;align-items:center;flex-wrap:wrap;animation:hkPulse 1.6s ease-in-out infinite}
   .hk-alert-bar[hidden]{display:none}
-  .hk-alert-bar b{font-size:14px}.hk-alert-bar span{flex:1 1 240px;min-width:0;font-size:13px;opacity:.95}
+  .hk-alert-bar b{font-size:14px}.hk-alert-bar .al-main>span{font-size:13px;opacity:.95}.hk-alert-bar{align-items:flex-start;max-height:70vh;overflow:auto}
   .hk-alert-bar button{border:0;border-radius:10px;padding:7px 12px;font-weight:700;cursor:pointer;background:#fff;color:#A8281B}
   @keyframes hkPulse{0%,100%{box-shadow:0 14px 30px -12px rgba(168,40,27,.7)}50%{box-shadow:0 0 0 6px rgba(214,69,53,.25),0 14px 30px -12px rgba(168,40,27,.7)}}
   #alert-btn.on{background:#E9F7EF;border-color:#9AD3B0}
   .al-list{display:flex;flex-direction:column;gap:8px;margin:10px 0}.al-item{padding:10px 12px;border-radius:12px;background:#FFF3F1;border:1px solid #F3C9C2;font-size:13px}
   .al-item.normal{background:#F3F7F7;border-color:#DDE7E7}.al-item small{color:#6c7f82;display:block;margin-top:3px}
+  .al-main{flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:4px}
+  .al-call{font-size:12.5px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:4px}
+  .al-tel{display:inline-block;padding:4px 10px;border-radius:999px;background:#fff;color:#A8281B;font-weight:800;text-decoration:none}
+  .al-tel.ghost{background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.5)}
+  .al-item .al-tel{background:#A8281B;color:#fff}.al-item .al-tel.ghost{background:#fff;color:#A8281B;border:1px solid #F3C9C2}
+  .al-people{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-bottom:8px}
+  .al-person{display:flex;flex-direction:column;gap:3px;padding:10px;border-radius:12px;background:#F6FAFA;border:1px solid #E1EEEE}
+  .al-person small{color:var(--sub);font-size:11.5px}
+  .al-roster{width:100%;border-collapse:collapse;font-size:13px;margin:4px 0}.al-roster th,.al-roster td{padding:6px 4px;text-align:start;border-bottom:1px solid var(--line)}
+  .al-roster select{width:100%}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -5130,7 +5140,12 @@
   setInterval(function(){ var v = document.getElementById("view-agents"); if(v && v.style.display !== "none" && !document.hidden) waLoad(); }, 60000);
 
   /* ---- Urgent alerts: ring + pop-up + red banner while the Hub is open ---- */
-  var HUB_ALERTS_URL = "https://zara.sherif-mansour-85.workers.dev/hub/alerts", AL_SEEN_KEY = "hk_alert_seen_v1", AL_ON_KEY = "hk_alert_on_v1", AL_LAST = [];
+  var HUB_ALERTS_URL = "https://zara.sherif-mansour-85.workers.dev/hub/alerts", AL_SEEN_KEY = "hk_alert_seen_v1", AL_ON_KEY = "hk_alert_on_v1", AL_LAST = [], AL_ROSTER = null;
+  var AL_AGENTS = [["zara","Zara — new enquiries"],["rafiq","Rafiq — travellers in Egypt"],["jisr","Jisr — doctors, clinics, hotels"],["amin","Amin — payments"],["rawaj","Rawaj — marketing leads"]];
+  function alTel(ph){ return "tel:" + String(ph || "").replace(/[^\d+]/g, ""); }
+  function alCallHtml(c){ if(!c || !c.owner_name) return "";
+    return '<div class="al-call">👤 Responsible: <b>' + esc(c.owner_name) + '</b> <a class="al-tel" href="' + alTel(c.owner_phone) + '">📞 Call ' + esc(c.owner_name.split(" ")[0]) + '</a>' +
+      (c.backup_name ? '<span class="al-bk">No answer in ' + esc(c.after) + ' min → <a class="al-tel ghost" href="' + alTel(c.backup_phone) + '">📞 ' + esc(c.backup_name.split(" ")[0]) + '</a></span>' : "") + '</div>'; }
   function alOn(){ return lsGet(AL_ON_KEY) === "1"; }
   function alRing(){
     try{ var C = window.AudioContext || window.webkitAudioContext; if(!C) return; var ctx = alRing.ctx || (alRing.ctx = new C()); if(ctx.state === "suspended") ctx.resume();
@@ -5141,13 +5156,14 @@
   }
   function alShowBar(a){
     var bar = document.getElementById("hk-alert-bar"); if(!bar) return;
-    bar.innerHTML = '<b>🚨 ' + esc(a.title) + '</b><span dir="auto">' + esc(a.text) + '</span><button type="button" id="al-ok">Got it</button>';
+    var emerg = /rafiq|zara/i.test(a.who || "") ? '<div class="al-call">🚑 If health or safety is at risk in Egypt: ambulance <a class="al-tel ghost" href="tel:123">123</a> · police <a class="al-tel ghost" href="tel:122">122</a></div>' : "";
+    bar.innerHTML = '<div class="al-main"><b>🚨 ' + esc(a.title) + '</b><span dir="auto">' + esc(a.text) + '</span>' + alCallHtml(a.call) + emerg + '</div><button type="button" id="al-ok">Got it</button>';
     bar.hidden = false;
   }
   function alCheck(first){
     hubAiKey().then(function(key){ return fetch(HUB_ALERTS_URL, { method:"POST", headers:{ "content-type":"application/json", "x-hub-key": key }, body:"{}" }); })
     .then(function(r){ return r.json(); }).then(function(res){
-      AL_LAST = res.alerts || []; var seen = lsGet(AL_SEEN_KEY) || "";
+      AL_LAST = res.alerts || []; if(res.roster) AL_ROSTER = res.roster; var seen = lsGet(AL_SEEN_KEY) || "";
       if(!seen){ if(AL_LAST[0]) lsSet(AL_SEEN_KEY, AL_LAST[0].at); return; }   // first time on this device: start from now
       var fresh = AL_LAST.filter(function(a){ return a.at > seen && a.level === "urgent"; });
       if(!fresh.length) return;
@@ -5159,7 +5175,17 @@
   }
   function alAck(){ if(AL_LAST[0]) lsSet(AL_SEEN_KEY, AL_LAST[0].at); var bar = document.getElementById("hk-alert-bar"); if(bar) bar.hidden = true; document.title = document.title.replace(/^🚨 /, ""); }
   function alPanel(){
-    var list = AL_LAST.slice(0, 10).map(function(a){ return '<div class="al-item ' + esc(a.level) + '"><b>' + (a.level === "urgent" ? "🚨 " : "🔔 ") + esc(a.title) + '</b><div dir="auto">' + esc(a.text) + '</div><small>' + esc(a.who) + ' · ' + esc(new Date(a.at).toLocaleString()) + '</small></div>'; }).join("") || '<p class="wa-empty">No alerts yet.</p>';
+    var list = AL_LAST.slice(0, 10).map(function(a){ return '<div class="al-item ' + esc(a.level) + '"><b>' + (a.level === "urgent" ? "🚨 " : "🔔 ") + esc(a.title) + '</b><div dir="auto">' + esc(a.text) + '</div>' + alCallHtml(a.call) + '<small>' + esc(a.who) + ' · ' + esc(new Date(a.at).toLocaleString()) + '</small></div>'; }).join("") || '<p class="wa-empty">No alerts yet.</p>';
+    var R = AL_ROSTER, roster = "";
+    if(R && R.people){
+      var pk = Object.keys(R.people), opt = function(sel){ return pk.map(function(k){ return '<option value="' + esc(k) + '"' + (k === sel ? " selected" : "") + '>' + esc(R.people[k].name) + '</option>'; }).join(""); };
+      roster = '<h4 style="margin:16px 0 4px">👥 Who handles what</h4><p class="wa-empty" style="margin:0 0 8px">Every alert says who is responsible and who to call. If the responsible person doesn\'t answer in time, call the backup.</p>' +
+        '<div class="al-people">' + pk.map(function(k){ var p = R.people[k]; return '<label class="al-person"><b>' + esc(p.name) + '</b><small>' + esc(p.role || "") + '</small><input type="tel" class="al-ph" data-p="' + esc(k) + '" value="' + esc(p.phone) + '" dir="ltr"></label>'; }).join("") + '</div>' +
+        '<table class="al-roster"><thead><tr><th>Alerts from</th><th>Responsible</th><th>Backup</th></tr></thead><tbody>' +
+        AL_AGENTS.map(function(x){ var m = R.by_agent[x[0]] || {}; return '<tr><td>' + esc(x[1]) + '</td><td><select class="al-own" data-a="' + x[0] + '">' + opt(m.owner) + '</select></td><td><select class="al-bak" data-a="' + x[0] + '">' + opt(m.backup) + '</select></td></tr>'; }).join("") +
+        '</tbody></table><p class="wa-empty">Call the backup if there\'s no answer within <input type="number" id="al-after" min="5" max="120" value="' + esc(R.backup_after_min || 15) + '" style="width:64px"> minutes.</p>' +
+        '<div class="upd-row"><button type="button" class="btn gold" id="al-save-roster">Save who handles what</button><span class="al-rnote"></span></div>';
+    }
     var perm = window.Notification ? Notification.permission : "unsupported";
     document.getElementById("al-body").innerHTML = (
       '<p>When an agent flags something urgent (for example Rafiq: a traveller with severe pain, or a pick-up nobody confirmed), you get:</p>' +
@@ -5168,7 +5194,7 @@
       '<p>Status on this device: <b>' + (alOn() ? "ring ON" : "ring OFF") + '</b> · pop-ups: <b>' + esc(perm) + '</b></p>' +
       '<div class="upd-row"><button type="button" class="btn gold" id="al-enable">' + (alOn() ? "🔕 Turn the ring off" : "🔔 Turn the ring on") + '</button>' +
       '<button type="button" class="btn" id="al-test">Send a test alert</button><span class="al-note"></span></div>' +
-      '<h4 style="margin:14px 0 4px">Latest alerts</h4><div class="al-list">' + list + '</div>');
+      roster + '<h4 style="margin:14px 0 4px">Latest alerts</h4><div class="al-list">' + list + '</div>');
     document.getElementById("al-modal").classList.add("open");
   }
   document.addEventListener("click", function(e){
@@ -5179,6 +5205,17 @@
     if(e.target.closest("#al-enable")){
       if(alOn()){ lsSet(AL_ON_KEY, "0"); } else { lsSet(AL_ON_KEY, "1"); alRing(); try{ window.Notification && Notification.permission === "default" && Notification.requestPermission(); }catch(x){} }
       document.getElementById("alert-btn").classList.toggle("on", alOn()); alPanel();
+    }
+    if(e.target.closest("#al-save-roster")){
+      var R = JSON.parse(JSON.stringify(AL_ROSTER || {})), rn = document.querySelector(".al-rnote");
+      document.querySelectorAll(".al-ph").forEach(function(i){ if(R.people[i.getAttribute("data-p")]) R.people[i.getAttribute("data-p")].phone = i.value.trim(); });
+      document.querySelectorAll(".al-own").forEach(function(i){ R.by_agent[i.getAttribute("data-a")] = R.by_agent[i.getAttribute("data-a")] || {}; R.by_agent[i.getAttribute("data-a")].owner = i.value; });
+      document.querySelectorAll(".al-bak").forEach(function(i){ R.by_agent[i.getAttribute("data-a")].backup = i.value; });
+      R.backup_after_min = parseInt((document.getElementById("al-after") || {}).value, 10) || 15;
+      if(rn) rn.textContent = "Saving…";
+      hubAiKey().then(function(key){ return fetch(HUB_ALERTS_URL, { method:"POST", headers:{ "content-type":"application/json", "x-hub-key": key }, body: JSON.stringify({ roster: R }) }); })
+      .then(function(r){ return r.json(); }).then(function(res){ if(res.roster){ AL_ROSTER = res.roster; if(rn) rn.textContent = "✓ Saved — new alerts use it."; act({ t:"log", kind:"agent", id:null, name:"Alerts", what: myName() + " updated who handles urgent alerts" }); } else if(rn) rn.textContent = "⚠ Couldn't save (" + (res.error || "error") + ")."; })
+      .catch(function(){ if(rn) rn.textContent = "⚠ Couldn't save. Check the connection."; });
     }
     if(e.target.closest("#al-test")){
       var note = document.querySelector(".al-note"); if(note) note.textContent = "Sending…";
