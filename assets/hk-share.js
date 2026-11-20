@@ -1,11 +1,24 @@
-/* HK-ZARA stub: the assistant button (#hkAi, Zara's picture) now opens Hayakkom's own assistant
-   (assets/hk-zara.js) instead of the Jotform AI agent. Each page's inline script still points the panel at the
+/* HK-ZARA stub: the assistant button (#hkAi, Zara's picture) opens the assistant chosen by ENGINE below: the
+   Jotform AI Agent (default) or Hayakkom's own assistant (assets/hk-zara.js). With "own": Each page's inline script still points the panel at the
    Jotform agent, so this removes that frame, swaps the button for a clean copy (dropping those listeners) and loads
    hk-zara.js on first hover, touch or focus. Runs first in this file so later blocks find the new button. */
 (function(){
   if(window.__hkZaraStub)return;window.__hkZaraStub=1;
+  /* Which assistant answers: "jotform" = the Jotform AI Agent (included in the Jotform plan; Sherif's choice since
+     20 Nov 2026), "own" = Hayakkom's own assistant in assets/hk-zara.js (runs on the paid Anthropic API). */
+  var ENGINE="jotform";
   function init(){
     var b=document.getElementById("hkAi"),p=document.getElementById("hkAiPanel");if(!b||!p)return;
+    if(ENGINE==="jotform"){
+      /* nothing (app-install prompt, cookie bar) may cover the chat while it is open */
+      try{var st0=document.createElement("style");st0.textContent="body.hk-ai-open #hkInst,body.hk-ai-open #hkCc{display:none!important}";document.head.appendChild(st0);}catch(e){}
+      /* keep each page's own Jotform panel; the shareable link www.hayakkom.com/zara/ (?zara=1) still opens it */
+      try{var q0=new URLSearchParams(location.search);if(q0.has("zara")){
+        try{sessionStorage.setItem("hk-zinv-off","1");}catch(e){}
+        setTimeout(function(){if(p.hidden)b.click();},900);
+      }}catch(e){}
+      return;
+    }
     var fr=document.getElementById("hkAiFrame");if(fr)fr.remove();
     var nb=b.cloneNode(true);b.parentNode.replaceChild(nb,b);b=nb;
     var lt=document.getElementById("hkAiLoadText");if(lt&&/^ar/.test(document.documentElement.lang||""))lt.textContent="جارٍ فتح زارا…";
