@@ -5921,7 +5921,7 @@
 
   // ---- 📦 Partner kit: Drive folder (Clinics › name) with the kit, then a ready email to approve ----
   var PARTNER_FORM = "https://form.jotform.com/263202563928055";
-  function kitEmail(r, folderUrl){
+  function kitEmail(r, folderUrl, contracts){
     var greet = r.contact ? firstName(r.contact) : (r.name + " team");
     return "Dear " + greet + ",\n\n" +
       "Thank you for partnering with Hayakkom. To make things easy for your team, we've prepared a partner kit and a shared folder for " + r.name + ":\n" +
@@ -5930,7 +5930,8 @@
       "• hayakkom-logo.png — the official Hayakkom logo, for a Partners or International patients page.\n" +
       "• hayakkom-partner-badge.png / .svg — a \"Partner of Hayakkom\" badge for your website footer or international-patients page.\n" +
       "• hayakkom-partner-snippet.txt — ready-to-paste website code that shows the badge and links it to hayakkom.com.\n" +
-      "• README-Hayakkom-partner-kit.txt — how to use each file, plus a short description of the partnership in English and Arabic.\n\n" +
+      "• README-Hayakkom-partner-kit.txt — how to use each file, plus a short description of the partnership in English and Arabic.\n" +
+      (contracts && contracts.length ? contracts.map(function(c){ return "• " + c.name + " — the Hayakkom partnership contract prepared for " + r.name + ". Please review it and send it back signed and stamped:\n  " + c.url; }).join("\n") + "\n" : "") + "\n" +
       "One step from your side — please complete our partner form:\n" + PARTNER_FORM + "\n\n" + FORM_STEPS + "\n\n" +
       "Everything you send through the form is filed in your folder, so we always present " + r.name + " accurately to the families we coordinate from Saudi Arabia and the Gulf.\n\n" +
       "Kind regards.";
@@ -5943,7 +5944,8 @@
     var name = st.name || r.name, email = (st.email!=null ? st.email : r.email) || "";
     if(!SYNC_TOKEN){ alert("The shared Google Drive storage isn't connected yet, so the folder can't be created. Open the Hub again in a moment, or ask Sherif to finish the Google Drive set-up."); return; }
     b.disabled = true; var old = b.textContent; b.textContent = "Creating folder…";
-    scriptPost({ t: SYNC_TOKEN, op:"partnerKit", partner:{ id: r.id, name: name, email: email } })
+    var medical = anSector("partners", (st.category || r.category || ""), r) === "medical";
+    scriptPost({ t: SYNC_TOKEN, op:"partnerKit", partner:{ id: r.id, name: name, email: email, medical: medical } })
       .then(function(k){
         b.disabled = false; b.textContent = old;
         if(!k || !k.ok || !k.folder_url){ alert("Couldn't create the folder" + (k && k.error ? ": " + k.error : "") + ". If this keeps happening, the Google script needs updating to the latest version."); return; }
@@ -5955,7 +5957,9 @@
         document.getElementById("modal-sub").textContent = "Folder created: Hayakom Info Center › Contracts › Clinics › " + k.folder_name + " (view-only link). Check the email, then press ✓ Approve & send.";
         document.getElementById("m-to").value = email;
         document.getElementById("m-subject").value = "Your Hayakkom partner kit — " + name;
-        document.getElementById("m-body").value = kitEmail(Object.assign({}, r, { name:name }), k.folder_url);
+        document.getElementById("m-body").value = kitEmail(Object.assign({}, r, { name:name }), k.folder_url, k.contracts || []);
+        if(medical && k.contract_template_empty) alert("Note: this is a medical partner, but the folder “Hayakom Contract template” in Google Drive is empty, so no contract was added. Put the contract file in that folder and press 📦 Partner kit again.");
+        else if(medical && !k.contracts) alert("Note: the Google script is an older version, so the contract wasn't added. Ask Sherif to update the Hub's Google script, then press 📦 Partner kit again.");
       })
       .catch(function(err){ b.disabled = false; b.textContent = old; alert("Couldn't create the folder: " + err.message + "."); });
   });
