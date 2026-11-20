@@ -291,6 +291,8 @@
           denIos: "I can't hear you. On iPhone: Settings → Safari → Microphone → Allow, and Settings → Siri → turn on Dictation (Apple needs it for voice). Or tap the 🎤 on your keyboard and speak — that always works.",
           noneIos: "I didn't catch that. Hold 🎙️ a little longer — or tap the text box and use the 🎤 on your iPhone keyboard to speak.",
           net: "Voice needs an internet connection to work. Please check it, or type your message.",
+          micIos: "I can't use the microphone. On iPhone: Settings → (Safari or Chrome) → Microphone → Allow, then tap 🎙️ again. Or tap the 🎤 on your keyboard.",
+          noneRec: "I didn't catch that — tap 🎙️, speak a full sentence, then tap ➤.", wait: "Listening to your voice note…",
           noSr: "On this browser, tap the 🎤 on your keyboard to speak — your words appear in the box, then press ➤. (In Safari you can also tap 🎙️ here.)" },
     ar: { mic: "اضغط مطوّلًا للتحدث، وارفع إصبعك للإرسال", stop: "جارٍ التسجيل — ارفع إصبعك للإرسال", on: "قراءة الإجابات بصوت: مفعّلة", off: "قراءة الإجابات بصوت: متوقفة", lg: "اللغة",
           tapIos: "جارٍ التسجيل — اضغط ➤ للإرسال أو 🗑 للحذف", slide: "اسحب للإلغاء ›", lock: "اسحب للأعلى للتثبيت", locked: "جارٍ التسجيل — اضغط ➤ للإرسال", del: "حذف التسجيل", hold: "اضغط مطوّلًا على 🎙️ للتسجيل، وارفع إصبعك للإرسال", none: "لم أسمعك جيدًا — اضغط مطوّلًا على 🎙️ وتحدّث لفترة أطول قليلًا.",
@@ -298,6 +300,8 @@
           denIos: "لا أستطيع سماعك. على الآيفون: الإعدادات ← Safari ← الميكروفون ← سماح، والإعدادات ← Siri ← فعّل الإملاء (تحتاجه Apple للصوت). أو اضغط 🎤 في لوحة المفاتيح وتحدّث — وهذه تعمل دائمًا.",
           noneIos: "لم أسمعك جيدًا. اضغط مطوّلًا على 🎙️ لمدة أطول — أو اضغط على مربع الكتابة واستخدم 🎤 في لوحة مفاتيح الآيفون للتحدث.",
           net: "يحتاج الصوت إلى اتصال بالإنترنت. تحقّق من الاتصال أو اكتب رسالتك.",
+          micIos: "لا أستطيع استخدام الميكروفون. على الآيفون: الإعدادات ← (Safari أو Chrome) ← الميكروفون ← سماح، ثم اضغط 🎙️ مرة أخرى. أو اضغط 🎤 في لوحة المفاتيح.",
+          noneRec: "لم أسمعك جيدًا — اضغط 🎙️ وقل جملة كاملة، ثم اضغط ➤.", wait: "أستمع إلى رسالتك الصوتية…",
           noSr: "في هذا المتصفح اضغط 🎤 في لوحة المفاتيح وتحدّث — يظهر كلامك في المربع، ثم اضغط ➤. (في Safari يمكنك أيضًا الضغط على 🎙️ هنا.)" },
     ru: { mic: "Удерживайте, чтобы говорить; отпустите, чтобы отправить", stop: "Запись — отпустите, чтобы отправить", on: "Читать ответы вслух: вкл.", off: "Читать ответы вслух: выкл.", lg: "Язык",
           tapIos: "Запись — нажмите ➤, чтобы отправить, 🗑 — удалить", slide: "‹ Сдвиньте для отмены", lock: "Сдвиньте вверх, чтобы закрепить", locked: "Запись — нажмите ➤, чтобы отправить", del: "Удалить запись", hold: "Удерживайте 🎙️ для записи, отпустите для отправки", none: "Я не расслышала — удерживайте 🎙️ и говорите чуть дольше.",
@@ -305,6 +309,8 @@
           denIos: "Я вас не слышу. На iPhone: Настройки → Safari → Микрофон → Разрешить и Настройки → Siri → включите Диктовку. Или нажмите 🎤 на клавиатуре и говорите.",
           noneIos: "Я не расслышала. Удерживайте 🎙️ подольше — или нажмите на поле ввода и используйте 🎤 на клавиатуре iPhone.",
           net: "Для голосового ввода нужен интернет. Проверьте подключение или напишите сообщение.",
+          micIos: "Нет доступа к микрофону. На iPhone: Настройки → (Safari или Chrome) → Микрофон → Разрешить, затем снова нажмите 🎙️.",
+          noneRec: "Я не расслышала — нажмите 🎙️, скажите фразу целиком и нажмите ➤.", wait: "Слушаю ваше голосовое сообщение…",
           noSr: "В этом браузере нажмите 🎤 на клавиатуре и говорите — текст появится в поле, затем нажмите ➤." }
   };
   if (synth) { try { synth.getVoices(); synth.onvoiceschanged = function () { synth.getVoices(); }; } catch (e) { synth = null; } }
@@ -340,6 +346,11 @@
      Space/Enter held on the focused button does the same for keyboard users. */
   var rec = null, listening = false, holding = false, locked = false, cancelled = false, heard = "", interim = "", t0 = 0, tick = 0, sx = 0, sy = 0, gotSome = false, restarts = 0;
   var IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  /* Recorder mode: on every iPhone browser (Safari's own recognition is unreliable; Chrome/WhatsApp on iPhone have none)
+     and on any browser without speech recognition, record a short voice note and let the relay turn it into text
+     (Cloudflare Workers AI · Whisper). Tap 🎙️ → speak → tap ➤. */
+  var CAN_REC = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+  var RMODE = CAN_REC && (IOS || !SR), RM = { mr: null, stream: null, chunks: [] };
   var recBar = document.createElement("div"); recBar.className = "zr-rec"; recBar.hidden = true; recBar.setAttribute("aria-live", "polite");
   recBar.innerHTML = '<button type="button" class="zr-trash">🗑</button><span class="zr-dot"></span><span class="zr-tm">0:00</span><span class="zr-sl"></span>';
   form.insertBefore(recBar, form.firstChild);
@@ -354,7 +365,7 @@
     var tr = recBar.querySelector(".zr-trash"); tr.title = VT[lang].del; tr.setAttribute("aria-label", VT[lang].del);
     if (on) { recBar.querySelector(".zr-sl").textContent = locked ? VT[lang].locked : VT[lang].slide; recBar.classList.remove("zr-cx"); }
   }
-  function clock() { var s = Math.floor((Date.now() - t0) / 1000); if (holding && s >= 60) { release(false); return; } if (locked && s >= 180) { sendLocked(); return; } recBar.querySelector(".zr-tm").textContent = Math.floor(s / 60) + ":" + ("0" + s % 60).slice(-2); }
+  function clock() { var s = Math.floor((Date.now() - t0) / 1000); if (holding && s >= 60) { release(false); return; } if (locked && s >= (RM.mr ? 120 : 180)) { sendLocked(); return; } recBar.querySelector(".zr-tm").textContent = Math.floor(s / 60) + ":" + ("0" + s % 60).slice(-2); }
   var VTRACE = [];
   function vlog(k, d) { try { VTRACE.push([Date.now() - (t0 || Date.now()), k, d == null ? "" : String(d).slice(0, 40)]); if (VTRACE.length > 60) VTRACE.shift(); } catch (x) {} }
   function vreport(outcome) {
@@ -422,16 +433,77 @@
     if (navigator.vibrate) try { navigator.vibrate([20, 40, 20]); } catch (x) {}
   }
   function sendLocked() {
+    if (RM.mr) { rmStop(true); return; }
     if (!locked) return;
     locked = false; cancelled = false; clearInterval(tick);
     try { rec.stop(); } catch (x) { finishRec(); }
     setTimeout(function () { if (listening && !holding && !locked) finishRec(); }, 2500);
   }
   function cancelLocked() {
+    if (RM.mr) { rmStop(false); return; }
     if (!locked && !listening) return;
     locked = false; holding = false; cancelled = true; clearInterval(tick);
     try { rec.abort(); } catch (x) {}
     finishRec();
+  }
+
+  function rmStart() {
+    vlog("rec-tap");
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function (st) {
+      var mt = "";
+      try { mt = MediaRecorder.isTypeSupported("audio/mp4") ? "audio/mp4" : MediaRecorder.isTypeSupported("audio/webm;codecs=opus") ? "audio/webm;codecs=opus" : ""; } catch (x) {}
+      RM.stream = st; RM.chunks = []; RM.mr = mt ? new MediaRecorder(st, { mimeType: mt }) : new MediaRecorder(st);
+      RM.mr.ondataavailable = function (e) { if (e.data && e.data.size) RM.chunks.push(e.data); };
+      RM.mr.start(250); hush(); t0 = Date.now(); cancelled = false; holding = false; locked = true;
+      micUi(true); form.classList.add("zr-locked"); recBar.querySelector(".zr-sl").textContent = IOS ? VT[lang].tapIos : VT[lang].locked;
+      clock(); tick = setInterval(clock, 250); vlog("rec-start", mt);
+      if (navigator.vibrate) try { navigator.vibrate(30); } catch (x) {}
+    }).catch(function (err) {
+      var n = err && (err.name || err.message); vlog("gum-error", n); vreport("mic-denied:" + n);
+      bot((IOS ? VT[lang].micIos : VT[lang].den) + " (" + n + ")");
+    });
+  }
+  function rmStop(send) {
+    var mr = RM.mr; if (!mr) return; RM.mr = null; clearInterval(tick); locked = false;
+    mr.onstop = function () {
+      try { RM.stream.getTracks().forEach(function (t) { t.stop(); }); } catch (x) {}
+      var blob = new Blob(RM.chunks, { type: mr.mimeType || "audio/mp4" }); micUi(false);
+      if (!send) { vreport("cancelled"); return; }
+      if (blob.size < 1200 || Date.now() - t0 < 600) { vreport("too-short"); bot(VT[lang].noneRec); return; }
+      var ph = input.placeholder; input.placeholder = VT[lang].wait; input.disabled = true;
+      var done = function () { input.disabled = false; input.placeholder = ph; };
+      vlog("upload", blob.size);
+      toWav(blob).catch(function () { return blob; }).then(function (body) {
+        return fetch(AI_URL + "stt", { method: "POST", headers: { "content-type": body.type || "audio/wav", "x-lang": lang }, body: body });
+      }).then(function (r) { return r.json(); }).then(function (j) {
+        done(); var said = String((j && j.text) || "").trim();
+        if (/^(you|thank you|thanks|thanks for watching|bye|okay|oh|so|hmm+|شكرا|شكرًا|اشترك في القناة|ترجمة نانسي قنقر)[.!…]*$/i.test(said)) said = "";   /* what speech engines "hear" in silence or noise */
+        if (!said || !/[\p{L}\p{N}]/u.test(said)) { vreport("stt-empty:" + ((j && j.error) || "")); bot(VT[lang].noneRec); return; }
+        vreport("stt-ok:" + said.length);
+        input.value = said;
+        if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event("submit", { cancelable: true }));
+      }).catch(function (e) { done(); vreport("stt-error:" + (e && e.message)); bot(VT[lang].net); });
+    };
+    try { mr.stop(); } catch (x) { micUi(false); }
+  }
+  /* any recording → 16 kHz mono WAV (small, and every speech engine reads it) */
+  function toWav(blob) {
+    return blob.arrayBuffer().then(function (ab) {
+      var C = window.AudioContext || window.webkitAudioContext, ctx = new C();
+      return new Promise(function (res, rej) { ctx.decodeAudioData(ab, res, rej); }).then(function (buf) {
+        try { ctx.close(); } catch (x) {}
+        var rate = 16000, len = Math.ceil(buf.duration * rate), off = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(1, len, rate);
+        var src = off.createBufferSource(); src.buffer = buf; src.connect(off.destination); src.start(0);
+        return off.startRendering ? new Promise(function (res) { var pr = off.startRendering(); if (pr && pr.then) pr.then(res); else off.oncomplete = function (e) { res(e.renderedBuffer); }; }) : null;
+      }).then(function (out) {
+        var d = out.getChannelData(0), n = d.length, v = new DataView(new ArrayBuffer(44 + n * 2));
+        function ws(o, t) { for (var i = 0; i < t.length; i++) v.setUint8(o + i, t.charCodeAt(i)); }
+        ws(0, "RIFF"); v.setUint32(4, 36 + n * 2, true); ws(8, "WAVE"); ws(12, "fmt "); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+        v.setUint32(24, 16000, true); v.setUint32(28, 32000, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); ws(36, "data"); v.setUint32(40, n * 2, true);
+        for (var i = 0, o = 44; i < n; i++, o += 2) { var x = Math.max(-1, Math.min(1, d[i])); v.setInt16(o, x < 0 ? x * 0x8000 : x * 0x7fff, true); }
+        return new Blob([v], { type: "audio/wav" });
+      });
+    });
   }
   function finishRec() {
     if (!listening) return;   /* already finished (each recording is sent at most once) */
@@ -443,26 +515,27 @@
     input.value = said;
     if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event("submit", { cancelable: true }));
   }
-  if (!SR && mic) {
+  if (!SR && !RMODE && mic) {
     mic.hidden = false; mic.title = VT[lang].noSr; mic.setAttribute("aria-label", mic.title);
     mic.addEventListener("click", function (e) { e.preventDefault(); try { input.focus(); } catch (x) {} if (!S.noSrTold) { S.noSrTold = 1; save(); bot(VT[lang].noSr); } });
   }
-  if (SR) {
+  if (SR || RMODE) {
     mic.hidden = false; micUi(false);
-    if (IOS) {
-      /* iPhone Safari only lets voice start from a completed tap: tap 🎙️ → records hands-free → ➤ sends, 🗑 deletes */
+    if (IOS || RMODE) {
+      /* tap 🎙️ → records hands-free → ➤ sends, 🗑 deletes (iPhone, and browsers without built-in voice recognition) */
       mic.addEventListener("click", function (e) {
         e.preventDefault();
         if (listening) { if (locked) sendLocked(); return; }
         vlog("tap");
+        if (RMODE) { rmStart(); return; }
         try { press(null); } catch (x) {}
         if (holding) lockIt();
       });
     } else
     mic.addEventListener("pointerdown", press);
-    if (!IOS) { mic.addEventListener("pointerup", function () { release(false); }); mic.addEventListener("pointercancel", function () { release(true); }); }
+    if (!IOS && !RMODE) { mic.addEventListener("pointerup", function () { release(false); }); mic.addEventListener("pointercancel", function () { release(true); }); }
     /* the finger can lift somewhere else — e.g. on the microphone-permission popup the first time — so listen everywhere */
-    if (!IOS) window.addEventListener("pointerup", function () { if (holding) release(false); }, true);
+    if (!IOS && !RMODE) window.addEventListener("pointerup", function () { if (holding) release(false); }, true);
     window.addEventListener("blur", function () { if (holding) release(false); });
     document.addEventListener("visibilitychange", function () { if (document.hidden && holding) release(true); });
     recBar.addEventListener("pointerdown", function (e) {
@@ -483,7 +556,7 @@
       if (moved > 90) release(true);
     });
     mic.addEventListener("contextmenu", function (e) { e.preventDefault(); });
-    if (!IOS) mic.addEventListener("click", function (e) { e.preventDefault(); });
+    if (!IOS && !RMODE) mic.addEventListener("click", function (e) { e.preventDefault(); });
     mic.addEventListener("keydown", function (e) { if ((e.key === " " || e.key === "Enter") && !e.repeat) { e.preventDefault(); press(null); } else if (e.key === "Escape") release(true); });
     mic.addEventListener("keyup", function (e) { if (e.key === " " || e.key === "Enter") { e.preventDefault(); release(false); } });
   }
