@@ -62,6 +62,13 @@
   .upd-box textarea{width:100%;box-sizing:border-box;min-height:60px;font:inherit;margin:4px 0}
   .upd-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
   .upd-row select{font:inherit;margin-left:4px}
+  .vc-bar{display:flex;justify-content:flex-end;gap:6px;margin:4px 0 2px}
+  .vc-bar button{font:inherit;font-size:.85em;border:1px solid #CFE3E5;background:#fff;border-radius:999px;padding:4px 10px;cursor:pointer;color:#0B5960}
+  .vc-mic{min-width:40px}
+  .vc-mic.on{background:#C0392B;color:#fff;border-color:#C0392B;animation:vcPulse 1.2s infinite}
+  @keyframes vcPulse{0%{box-shadow:0 0 0 0 rgba(192,57,43,.45)}70%{box-shadow:0 0 0 10px rgba(192,57,43,0)}100%{box-shadow:0 0 0 0 rgba(192,57,43,0)}}
+  .cs-box{margin:8px 0 4px;border:1px solid #CFE3E5;border-radius:10px;background:#F7FBFB;padding:10px 12px;display:grid;gap:8px}
+  .cs-box select,.cs-box input:not([type=checkbox]){font:inherit;padding:7px 9px;border:1px solid #CFE3E5;border-radius:8px;width:100%;box-sizing:border-box;background:#fff}
   .qa-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0 4px}
   .qa-l{font-size:.95em;opacity:.7}
   .qa-b{font:inherit;font-size:.82em;padding:6px 11px;border-radius:999px;border:1px solid #CFE3E5;background:linear-gradient(180deg,#fff,#F2F8F8);color:#0B5960;cursor:pointer;transition:transform .12s,box-shadow .12s}
@@ -3972,7 +3979,7 @@
   }
 
   // ---- state diff → patch actions ----
-  var FIELD_WORDS = { prof:"Updated provider profile", notes:"Edited notes", reminder:"Updated reminder", extraContacts:"Updated contacts" };
+  var FIELD_WORDS = { consult:"Consultation requested", prof:"Updated provider profile", notes:"Edited notes", reminder:"Updated reminder", extraContacts:"Updated contacts" };
   function describePatch(p){
     var out = [];
     Object.keys(p).forEach(function(k){
@@ -4690,6 +4697,69 @@
   });
   (function(){ var el = document.getElementById("view-partners"); if(el) profObs.observe(el, { childList:true, subtree:true }); })();
 
+  // ---- 🎙 Voice typing in every message box (email, WhatsApp, announcements, AI requests, updates, notes) ----
+  //      Tap 🎙 and speak; tap again to stop. EN / ع switches English ↔ Arabic. Uses the browser's own speech
+  //      recognition (Chrome, Edge, Safari); the button is hidden where the browser can't do it.
+  var VC_SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var VC_SEL = "#m-body, #wa-text, #an-body, #a-summary, #ac-summary, textarea.ai-ask, textarea.upd-text, textarea.notes, textarea.pf-doctors";
+  var VC_LANG_KEY = "hk_voice_lang_v1", VC_ACTIVE = null;
+  function vcLang(ta){
+    var saved = lsGet(VC_LANG_KEY, null); if(saved) return saved;
+    return /[؀-ۿ]/.test(ta.value || "") ? "ar" : "en";
+  }
+  function vcStop(){ if(VC_ACTIVE){ try{ VC_ACTIVE.rec.stop(); }catch(e){} } }
+  function vcStart(ta, btn){
+    if(VC_ACTIVE){ var same = VC_ACTIVE.ta === ta; vcStop(); if(same) return; }
+    var rec = new VC_SR(), lang = btn.parentNode.querySelector(".vc-lang").getAttribute("data-l");
+    rec.lang = lang === "ar" ? "ar-SA" : "en-US"; rec.interimResults = true; rec.continuous = true;
+    var start = ta.selectionStart != null ? ta.selectionStart : ta.value.length, before = ta.value.slice(0, start), after = ta.value.slice(start), finalTxt = "";
+    if(before && !/\s$/.test(before)) before += " ";
+    VC_ACTIVE = { rec: rec, ta: ta, btn: btn };
+    btn.classList.add("on"); btn.textContent = "⏹"; btn.title = "Stop";
+    rec.onresult = function(ev){
+      var interim = "";
+      for(var i = ev.resultIndex; i < ev.results.length; i++){
+        if(ev.results[i].isFinal) finalTxt += ev.results[i][0].transcript + " "; else interim += ev.results[i][0].transcript;
+      }
+      ta.value = before + finalTxt + interim + after;
+      try{ ta.dispatchEvent(new Event("input", { bubbles:true })); }catch(e){}
+    };
+    rec.onerror = function(ev){ if(ev.error === "not-allowed" || ev.error === "service-not-allowed") toast("Allow the microphone for this site to use voice typing."); };
+    rec.onend = function(){
+      btn.classList.remove("on"); btn.textContent = "🎙"; btn.title = "Speak instead of typing";
+      ta.value = before + finalTxt.replace(/\s+$/, "") + (after && !/^\s/.test(after) ? " " : "") + after;
+      try{ ta.dispatchEvent(new Event("input", { bubbles:true })); ta.dispatchEvent(new Event("change", { bubbles:true })); }catch(e){}
+      if(VC_ACTIVE && VC_ACTIVE.rec === rec) VC_ACTIVE = null;
+    };
+    try{ rec.start(); }catch(e){ VC_ACTIVE = null; btn.classList.remove("on"); btn.textContent = "🎙"; }
+  }
+  function decorateVoice(){
+    if(!VC_SR) return;
+    document.querySelectorAll(VC_SEL).forEach(function(ta){
+      if(ta.dataset.vc) return; ta.dataset.vc = "1";
+      var bar = document.createElement("div"); bar.className = "vc-bar";
+      var l = vcLang(ta);
+      bar.innerHTML = '<button type="button" class="vc-lang" data-l="'+l+'" title="Voice language: tap to switch English / Arabic">'+(l === "ar" ? "ع" : "EN")+'</button>'+
+        '<button type="button" class="vc-mic" title="Speak instead of typing">🎙</button>';
+      ta.insertAdjacentElement("afterend", bar);
+    });
+  }
+  document.addEventListener("click", function(e){
+    if(!e.target.closest) return;
+    var lb = e.target.closest(".vc-lang");
+    if(lb){ var nl = lb.getAttribute("data-l") === "ar" ? "en" : "ar"; lb.setAttribute("data-l", nl); lb.textContent = nl === "ar" ? "ع" : "EN"; lsSet(VC_LANG_KEY, nl);
+      document.querySelectorAll(".vc-lang").forEach(function(x){ x.setAttribute("data-l", nl); x.textContent = nl === "ar" ? "ع" : "EN"; }); return; }
+    var mb = e.target.closest(".vc-mic"); if(!mb) return;
+    var ta = mb.parentNode.previousElementSibling; if(!ta || ta.tagName !== "TEXTAREA") return;
+    ta.focus(); vcStart(ta, mb);
+  });
+  // stop listening when a window closes or the page is hidden
+  document.addEventListener("visibilitychange", function(){ if(document.hidden) vcStop(); });
+  var vcQueued = false;
+  new MutationObserver(function(){ if(vcQueued) return; vcQueued = true; requestAnimationFrame(function(){ vcQueued = false; decorateVoice(); }); })
+    .observe(document.body, { childList:true, subtree:true });
+  decorateVoice();
+
   // ---- ⚡ Quick actions on every card: one tap opens a ready-to-check email (nothing is sent until it is approved
   //      in the normal Reply window), shares Zara's link, or marks a customer as booked. ----
   var QA = {
@@ -4697,7 +4767,7 @@
       ["prices", "💰 Ask for written prices"], ["quote", "📋 Request a quote"], ["call", "📞 Book a call"]
     ],
     customer: [
-      ["follow", "🔔 Follow up"], ["zara", "🤖 Send Zara link"], ["booked", "✅ Mark booked"]
+      ["consult", "📅 Book a consultation"], ["follow", "🔔 Follow up"], ["zara", "🤖 Send Zara link"], ["booked", "✅ Mark booked"]
     ],
     helper: [
       ["invite", "📅 Invite to a call"], ["decline", "🙏 Not suitable"]
@@ -4752,6 +4822,7 @@
              : "Hi " + firstName(r.name) + ",\n\nJust checking in on your " + (r.enquiry_type ? r.enquiry_type.toLowerCase() + " " : "") + "enquiry. Do you have any questions, or would you like us to go ahead with the next step? We're happy to arrange a short call at a time that suits you.\n\nFor quick answers any time: " + zaraUrl(r, false) + "\nWhatsApp: +20 103 156 7949");
         return;
       }
+      if(act === "consult"){ consultPanel(r); return; }
       if(act === "booked"){
         if(!confirm("Mark " + r.name + " as Booked?")) return;
         state[r.id] = state[r.id] || {}; state[r.id].status = "Booked"; state[r.id].statusAt = new Date().toISOString();
@@ -4763,6 +4834,58 @@
       if(act === "decline"){ qaOpen(row, "Your application to Hayakkom", "Hi " + firstName(r.name) + ",\n\nThank you for your interest in working with Hayakkom and for the time you took to apply. We don't have a suitable role for your profile at the moment, but we'll keep your details on file and contact you if that changes.\n\nWe wish you every success."); return; }
     }
   }
+  // 📅 Book a consultation (before the visit): pick a partner — best matches first — then prepare the email that
+  // informs the partner (anonymised case, preferred times, video or in person). Nothing is sent until approved.
+  function partnerScore(p, c){
+    if(!p || (state[p.id]||{}).deleted || (state[p.id]||{}).removed) return -1;
+    if(/Low Priority|Vendor/i.test((p.category||"") + " " + (p.priority||"") + " " + effStatusOf(p))) return -1;
+    if(p.country && !/egypt|مصر/i.test(p.country)) return -1;
+    var need = ((c.enquiry_type||"") + " " + (c.summary||"") + " " + (c.answers||[]).map(function(a){ return a.answer; }).join(" ")).toLowerCase();
+    var pr = profOf(p.id), hay = ((p.category||"") + " " + (p.summary||"") + " " + (pr.specialities||"")).toLowerCase(), sc = 0;
+    if(/dental|teeth|tooth|implant|veneer|smile|أسنان|زراعة/.test(need) && /dental|dentist|أسنان/.test(hay)) sc += 5;
+    if(/ivf|fertil|icsi|pregnan|خصوبة|حمل|أطفال أنابيب/.test(need) && /ivf|fertil|women|obstet|gyn/.test(hay)) sc += 5;
+    if(/check.?up|medical|surgery|hospital|فحص|عملية|مستشفى/.test(need) && /hospital|clinic|medical/.test(hay)) sc += 2;
+    if(/hair|شعر|زراعة شعر/.test(need) && /hair|derma|cosmetic/.test(hay)) sc += 4;
+    if(/cosmetic|plastic|liposuction|تجميل|شفط/.test(need) && /cosmetic|plastic|aesthetic/.test(hay)) sc += 4;
+    if(/weight|bariatric|sleeve|bypass|تكميم|سمنة|تحويل/.test(need) && /bariatric|obesity|weight|gastro|hospital/.test(hay)) sc += 3;
+    need.split(/\W+/).filter(function(w){ return w.length > 4; }).forEach(function(w){ if(hay.indexOf(w) >= 0) sc += 1; });
+    if(pr.verified) sc += 2; if(pr.writtenPrices) sc += 1;
+    if(/Live Partner|Active/i.test(effStatusOf(p))) sc += 2;
+    return sc;
+  }
+  function consultPanel(c){
+    var card = document.querySelector('#view-customers .card[data-id="' + (window.CSS && CSS.escape ? CSS.escape(c.id) : c.id) + '"]'); if(!card) return;
+    var old = card.querySelector(".cs-box"); if(old){ old.remove(); return; }
+    var ranked = (ALL || []).map(function(p){ return { p: p, s: partnerScore(p, c) }; }).filter(function(x){ return x.s >= 0; })
+      .sort(function(a, b){ return b.s - a.s || String(a.p.name).localeCompare(String(b.p.name)); });
+    var sug = ranked.filter(function(x){ return x.s >= 3; }).slice(0, 5), rest = ranked.filter(function(x){ return sug.indexOf(x) < 0; });
+    var opt = function(x){ var pr = profOf(x.p.id); return '<option value="'+esc(x.p.id)+'">'+esc(x.p.name)+(pr.verified ? " ✓" : "")+(x.p.category ? " — " + esc(x.p.category) : "")+'</option>'; };
+    var box = document.createElement("div"); box.className = "cs-box";
+    box.innerHTML = '<label>📅 Book a consultation before the visit — for '+esc(c.name)+'</label>'+
+      '<label class="prof-f"><span>Inform which partner?</span><select class="cs-p">'+
+        (sug.length ? '<optgroup label="⭐ Suggested for this case">'+sug.map(opt).join("")+'</optgroup>' : '')+
+        '<optgroup label="All partners">'+rest.map(opt).join("")+'</optgroup></select></label>'+
+      '<label class="prof-f"><span>Type</span><select class="cs-t"><option>Video consultation</option><option>Phone consultation</option><option>In-person consultation on arrival</option></select></label>'+
+      '<label class="prof-f"><span>Preferred times (the patient\'s)</span><input class="cs-w" dir="auto" placeholder="e.g. Sun–Tue after 6 pm Saudi time"></label>'+
+      '<label class="prof-chk"><input type="checkbox" class="cs-ok"> The patient agreed that we share their case with this partner</label>'+
+      '<div class="upd-row"><button type="button" class="btn gold cs-go">Prepare email to the partner</button><button type="button" class="btn cs-x">Cancel</button></div>';
+    card.querySelector(".qa-row").insertAdjacentElement("afterend", box);
+    box.querySelector(".cs-x").addEventListener("click", function(){ box.remove(); });
+    box.querySelector(".cs-go").addEventListener("click", function(){
+      if(!box.querySelector(".cs-ok").checked){ toast("Please confirm the patient agreed to share their case first."); return; }
+      var p = findRec(box.querySelector(".cs-p").value); if(!p) return; p = p.rec;
+      var type = box.querySelector(".cs-t").value, when = box.querySelector(".cs-w").value.trim();
+      state[c.id] = state[c.id] || {}; state[c.id].consult = { partner: p.id, partnerName: p.name, type: type, when: when, at: new Date().toISOString(), by: myName() };
+      saveState(state);
+      var row = Object.assign({}, p, { kind: "partner" });
+      qaOpen(row, "Consultation request — " + type + " (Hayakkom ref " + caseRef(c.id) + ")",
+        "Dear " + p.name + " team,\n\nWe are coordinating a patient from the Gulf who would like a " + type.toLowerCase() + " with your team before travelling to Egypt:\n\n" + caseFor(c) +
+        (when ? "\n• Preferred times: " + when : "") +
+        "\n\nCould you reply with:\n• two or three available slots (with the time zone),\n• the doctor's speciality, and whether the consultation is free or has a fee,\n• anything the patient should prepare or send beforehand (reports, X-rays, photos).\n\nThe patient has agreed that we share these details. We will confirm the slot with the patient and send you their contact details only once they agree. Please don't contact the patient directly — we coordinate all communication.\n\nThank you.");
+      box.remove();
+      toast("Email prepared — check it, then approve or send.");
+    });
+  }
   function decorateQuick(){
     [["partners","partner"],["customers","customer"],["helpers","helper"]].forEach(function(v){
       document.querySelectorAll("#view-" + v[0] + " .card[data-id]").forEach(function(card){
@@ -4771,6 +4894,8 @@
         var row = document.createElement("div"); row.className = "qa-row"; row.setAttribute("data-kind", v[1]);
         row.innerHTML = '<span class="qa-l">⚡</span>' + QA[v[1]].map(function(a){ return '<button type="button" class="qa-b" data-qa="' + a[0] + '">' + a[1] + '</button>'; }).join("");
         acts.parentNode.insertBefore(row, acts);
+        var cs = v[1] === "customer" && (state[card.getAttribute("data-id")]||{}).consult;
+        if(cs){ var cl = document.createElement("p"); cl.className = "prof-line ok"; cl.textContent = "📅 " + cs.type + " requested with " + cs.partnerName + " on " + String(cs.at).slice(0,10) + (cs.when ? " · patient prefers " + cs.when : ""); row.insertAdjacentElement("beforebegin", cl); }
       });
     });
   }
