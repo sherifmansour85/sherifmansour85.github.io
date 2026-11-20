@@ -598,6 +598,7 @@
   .al-person small{color:var(--sub);font-size:11.5px}
   .al-roster{width:100%;border-collapse:collapse;font-size:13px;margin:4px 0}.al-roster th,.al-roster td{padding:6px 4px;text-align:start;border-bottom:1px solid var(--line)}
   .al-roster select{width:100%}
+  .ag-head-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -890,7 +891,7 @@
   </div>
 
   <div id="view-agents" style="display:none">
-    <div class="ag-head"><h2>🤖 Your AI team</h2><p>Talk to each agent by text or 🎙 voice. Sherif and Reham see the same conversations, and every exchange is kept in History. Agents explain, plan and draft — nothing goes to a customer, partner or doctor until Reham approves it.</p></div>
+    <div class="ag-head"><div class="ag-head-row"><h2>🤖 Your AI team</h2><button type="button" class="btn" id="ag-hist-btn">🕘 Agents history</button></div><p>Talk to each agent by text or 🎙 voice. Sherif and Reham see the same conversations, and every exchange is kept in History. Agents explain, plan and draft — nothing goes to a customer, partner or doctor until Reham approves it.</p></div>
     <div class="ag-tabs" id="ag-tabs"></div>
     <div class="ag-panel" id="ag-panel"></div>
     <section class="wa-box" id="wa-box">
@@ -1047,6 +1048,7 @@
       <button type="button" class="btn hist-tab" data-k="customer">🧳 Customers</button>
       <button type="button" class="btn hist-tab" data-k="helper">🧰 Helpers</button>
       <button type="button" class="btn hist-tab" data-k="announce">📢 Announcements</button>
+      <button type="button" class="btn hist-tab" data-k="agent">🤖 Agents</button>
       <input type="search" id="hist-q" placeholder="Search history…">
     </div>
     <div id="hist-list" class="hist-list"></div>
@@ -4783,6 +4785,7 @@
   });
   document.getElementById("hist-q").addEventListener("input", renderHistory);
   var hb = document.getElementById("hist-btn-top"); if(hb) hb.addEventListener("click", function(){ openHistory("all"); });
+  var agh = document.getElementById("ag-hist-btn"); if(agh) agh.addEventListener("click", function(){ openHistory("agent"); });
 
 
   // ---- 📝 Add update: a quick note + status on any card, saved for the team and shown in 🕘 History ----
