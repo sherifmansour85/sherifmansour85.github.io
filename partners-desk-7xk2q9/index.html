@@ -564,6 +564,21 @@
   .cols{min-width:0}.chart-card{min-width:0;overflow:hidden}
   @media (max-width:560px){.cal-day{padding:3px;font-size:10.5px}}
   @media (max-width:560px){.toolbar select{flex:1 1 calc(50% - 8px)}.toolbar select#f-view,.toolbar input[type=search]{flex-basis:100%}}
+  .wa-box{margin-top:18px;padding:18px 20px;border-radius:20px;background:var(--glass);border:1px solid rgba(255,255,255,.75);box-shadow:var(--shadow);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+  .wa-head{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
+  .wa-head h3{margin:0 0 4px;font-weight:800;letter-spacing:-.02em}.wa-head h3 small{font-weight:500;color:var(--sub);font-size:.7em;margin-inline-start:6px}
+  .wa-head p{margin:0 0 10px;color:var(--sub);font-size:12.5px;max-width:760px}
+  .wa-conv{border:1px solid rgba(11,42,49,.08);border-radius:14px;background:rgba(255,255,255,.85);margin:8px 0;overflow:hidden}
+  .wa-conv summary{cursor:pointer;padding:10px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;list-style:none}
+  .wa-conv summary::-webkit-details-marker{display:none}
+  .wa-conv summary b{font-variant-numeric:tabular-nums}.wa-conv summary .wa-last{color:var(--sub);font-size:12.5px;flex:1 1 220px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .wa-tag{font-size:11px;font-weight:700;border-radius:999px;padding:2px 9px;background:#E6F4F5;color:#0B6E76}
+  .wa-tag.rafiq{background:#FFF1DC;color:#8A5A00}.wa-tag.jisr{background:#EDE7FB;color:#5A3FA0}.wa-tag.amin{background:#E5F5EA;color:#1D7A43}.wa-tag.rawaj{background:#FCE8EF;color:#A0335A}
+  .wa-msgs{padding:4px 14px 14px;display:flex;flex-direction:column;gap:7px}
+  .wa-m{max-width:88%;padding:8px 11px;border-radius:12px;font-size:13px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
+  .wa-m.cu{align-self:flex-start;background:#F1F4F4}.wa-m.ag{align-self:flex-end;background:#E3F6F0}
+  .wa-m small{display:block;font-size:10.5px;color:#6c7f82;margin-bottom:2px}
+  .wa-empty{color:var(--sub);font-size:13px}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -857,6 +872,12 @@
     <div class="ag-head"><h2>🤖 Your AI team</h2><p>Talk to each agent by text or 🎙 voice. Sherif and Reham see the same conversations, and every exchange is kept in History. Agents explain, plan and draft — nothing goes to a customer, partner or doctor until Reham approves it.</p></div>
     <div class="ag-tabs" id="ag-tabs"></div>
     <div class="ag-panel" id="ag-panel"></div>
+    <section class="wa-box" id="wa-box">
+      <div class="wa-head"><div><h3>💬 WhatsApp conversations <small>+20 103 156 7949</small></h3>
+        <p>One number, several agents: each question goes to the right agent, who introduces themselves when they take over. Zara answers new enquiries, Rafiq travellers, Jisr doctors, clinics and hotels, Amin payments, Rawaj marketing. When the team must act, the agent sends you an enquiry that lands on the person's card.</p></div>
+        <button type="button" class="btn" id="wa-refresh">↻ Refresh</button></div>
+      <div id="wa-list"><p class="wa-empty">Open this tab to load the conversations.</p></div>
+    </section>
   </div>
   <div id="view-forms" style="display:none">
     <p class="lede" style="margin-top:0">Every live Hayakkom form — customer enquiry forms (copy the Arabic or English link and send it straight to a customer) and the partner-facing form (send its one link to any hospital, clinic or tourism company). Each one below has a short note on what it's for.</p>
@@ -2642,7 +2663,7 @@
     if(name==="announce"){ renderBrief("an-brief", "announce"); if(!announceRendered){ renderAnnounceRecipients(); announceRendered = true; } }
     if(name==="dashboard") renderDashboard();
     if(name==="calendar") renderCalendar();
-    if(name==="agents") renderAgents();
+    if(name==="agents"){ renderAgents(); waLoad(); }
     renderUpcoming();
   }
   VIEWS.forEach(function(v){ document.getElementById("view-btn-"+v).addEventListener("click", function(){ showView(v); }); });
@@ -5065,6 +5086,29 @@
       if(AG_CUR === k) agRenderLog(k); renderAgentTabsOnly();
     }).catch(function(){ AG_BUSY[k] = false; note.textContent = "⚠ Couldn't reach the agent. Check the connection and try again."; if(AG_CUR === k) agRenderLog(k); });
   }
+
+  /* ---- WhatsApp conversations (one number, several agents) ---- */
+  var HUB_WA_URL = "https://zara.sherif-mansour-85.workers.dev/hub/wa", WA_NAMES = { zara:"Zara", rafiq:"Rafiq", jisr:"Jisr", amin:"Amin", rawaj:"Rawaj" }, WA_BUSY = false, WA_OPEN = {};
+  function waLoad(){
+    var box = document.getElementById("wa-list"); if(!box || WA_BUSY) return; WA_BUSY = true;
+    box.querySelectorAll("details[open]").forEach(function(d){ WA_OPEN[d.getAttribute("data-id")] = 1; });
+    hubAiKey().then(function(key){ return fetch(HUB_WA_URL, { method:"POST", headers:{ "content-type":"application/json", "x-hub-key": key }, body:"{}" }); })
+    .then(function(r){ return r.json(); }).then(function(res){
+      WA_BUSY = false; var cs = res.conversations || [];
+      if(!cs.length){ box.innerHTML = '<p class="wa-empty">No WhatsApp conversations in the last 14 days yet.</p>'; return; }
+      box.innerHTML = cs.map(function(c){
+        var last = c.hist[c.hist.length - 1] || {}, when = c.updated ? new Date(c.updated).toLocaleString() : "";
+        var used = []; c.hist.forEach(function(h){ if(h.who !== "customer" && used.indexOf(h.who) < 0) used.push(h.who); });
+        return '<details class="wa-conv" data-id="' + esc(c.id) + '"' + (WA_OPEN[c.id] ? " open" : "") + '><summary><b>📱 ' + esc(c.phone || "WhatsApp contact") + '</b>' +
+          used.map(function(a){ return '<span class="wa-tag ' + esc(a) + '">' + esc(WA_NAMES[a] || a) + '</span>'; }).join("") +
+          '<span class="wa-last" dir="auto">' + esc((last.who === "customer" ? "" : (WA_NAMES[last.who] || "") + ": ") + String(last.t || "").slice(0, 120)) + '</span><small>' + esc(when) + '</small></summary><div class="wa-msgs">' +
+          c.hist.map(function(h){ var cu = h.who === "customer";
+            return '<div class="wa-m ' + (cu ? "cu" : "ag") + '" dir="auto"><small>' + (cu ? "Customer" : "🤖 " + esc(WA_NAMES[h.who] || h.who)) + (h.at ? " · " + esc(new Date(h.at).toLocaleString()) : "") + '</small>' + esc(h.t) + '</div>'; }).join("") +
+          '</div></details>'; }).join("");
+    }).catch(function(){ WA_BUSY = false; box.innerHTML = '<p class="wa-empty">⚠ Couldn\'t load the WhatsApp conversations. Check the connection and press Refresh.</p>'; });
+  }
+  document.addEventListener("click", function(e){ if(e.target.closest && e.target.closest("#wa-refresh")) waLoad(); });
+  setInterval(function(){ var v = document.getElementById("view-agents"); if(v && v.style.display !== "none" && !document.hidden) waLoad(); }, 60000);
   function renderAgentTabsOnly(){ var tabs = document.getElementById("ag-tabs"); if(tabs && document.getElementById("view-agents").style.display !== "none"){ var cur = document.getElementById("ag-panel").getAttribute("data-ag"); renderAgents(); } }
   document.addEventListener("click", function(e){
     if(!e.target.closest) return;
