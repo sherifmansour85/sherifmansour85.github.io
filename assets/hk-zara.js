@@ -37,10 +37,10 @@
       qDetails: "Tell me a little more: which treatment, places or experience do you have in mind?",
       qDates: "When would you like to come? (a month or dates is fine)", qPeople: "How many people are travelling?",
       qName: "What's your full name?", qPhone: "Your WhatsApp number, with country code (e.g. +966 5…)?",
-      qEmail: "Your email address? (optional)", skip: "Skip", qCountry: "Which country are you in?",
+      qEmail: "Your email address? We send your plan and written quotes there.", skip: "Skip", qCountry: "Which country are you in?",
       countries: ["Saudi Arabia", "UAE", "Kuwait", "Qatar", "Bahrain", "Oman", "Other"],
       badPhone: "That number looks incomplete — please include the country code, e.g. +966 5X XXX XXXX.",
-      badEmail: "That email doesn't look right — type it again, or press Skip.",
+      badEmail: "That email doesn't look right — please type it again (e.g. name@gmail.com).",
       done: "Thank you, {n}! ✅ Your request is with our team. A Hayakkom coordinator will contact you on WhatsApp within 12 hours with your personal plan.",
       fail: "I couldn't send that just now. Please message us on WhatsApp so nothing gets lost:",
       more: "Anything else I can help with?", newQ: "Ask another question", waBtn: "Chat on WhatsApp", start: "Start again",
@@ -61,10 +61,10 @@
       qDetails: "أخبرني أكثر قليلًا: أي علاج أو أماكن أو تجربة تفكّر بها؟",
       qDates: "متى تودّ القدوم؟ (يكفي الشهر أو التواريخ)", qPeople: "كم عدد المسافرين؟",
       qName: "ما اسمك الكامل؟", qPhone: "رقم واتساب مع رمز الدولة (مثل ‎+966 5…)؟",
-      qEmail: "بريدك الإلكتروني؟ (اختياري)", skip: "تخطّي", qCountry: "في أي دولة أنت؟",
+      qEmail: "بريدك الإلكتروني؟ نرسل عليه خطتك وعروض الأسعار المكتوبة.", skip: "تخطّي", qCountry: "في أي دولة أنت؟",
       countries: ["السعودية", "الإمارات", "الكويت", "قطر", "البحرين", "عُمان", "أخرى"],
       badPhone: "يبدو الرقم ناقصًا — يرجى كتابته مع رمز الدولة، مثل ‎+966 5X XXX XXXX.",
-      badEmail: "يبدو البريد غير صحيح — اكتبه مرة أخرى أو اضغط تخطّي.",
+      badEmail: "يبدو البريد غير صحيح — اكتبه مرة أخرى من فضلك (مثل name@gmail.com).",
       done: "شكرًا لك يا {n}! ✅ وصل طلبك إلى فريقنا. سيتواصل معك منسّق من حياكم عبر واتساب خلال 12 ساعة بخطتك الشخصية.",
       fail: "تعذّر الإرسال الآن. يرجى مراسلتنا على واتساب حتى لا يضيع طلبك:",
       more: "هل أساعدك في شيء آخر؟", newQ: "سؤال آخر", waBtn: "تواصل عبر واتساب", start: "ابدأ من جديد",
@@ -85,9 +85,9 @@
       qDetails: "Расскажите подробнее: какое лечение, места или впечатления вас интересуют?",
       qDates: "Когда вы хотели бы приехать? (месяц или даты)", qPeople: "Сколько человек поедет?",
       qName: "Как вас зовут (полное имя)?", qPhone: "Ваш номер WhatsApp с кодом страны?",
-      qEmail: "Ваш email? (необязательно)", skip: "Пропустить", qCountry: "В какой стране вы находитесь?",
+      qEmail: "Ваш email? Мы пришлём на него план и письменные расчёты.", skip: "Пропустить", qCountry: "В какой стране вы находитесь?",
       countries: ["Россия", "Казахстан", "Украина", "ОАЭ", "Другая"],
-      badPhone: "Номер выглядит неполным — укажите код страны.", badEmail: "Email выглядит неверно — введите снова или нажмите «Пропустить».",
+      badPhone: "Номер выглядит неполным — укажите код страны.", badEmail: "Email выглядит неверно — введите его ещё раз (например, name@gmail.com).",
       done: "Спасибо, {n}! ✅ Ваша заявка у нашей команды. Координатор Hayakkom свяжется с вами в WhatsApp в течение 12 часов.",
       fail: "Не удалось отправить. Напишите нам в WhatsApp, чтобы ничего не потерялось:",
       more: "Чем ещё могу помочь?", newQ: "Задать другой вопрос", waBtn: "Написать в WhatsApp", start: "Начать заново",
@@ -706,7 +706,7 @@
     var t = { details: T.qDetails, dates: T.qDates, people: T.qPeople, name: T.qName, phone: T.qPhone, email: T.qEmail, country: T.qCountry }[step];
     typing(450, function () {
       bot(t);
-      if (step === "email") chips([[T.skip, "skip"]]);
+      if (step === "email") chips([]);
       else if (step === "country") chips(T.countries.map(function (c) { return [c, "c:" + c]; }));
       else if (step === "people") chips([["1", "n:1"], ["2", "n:2"], ["3–4", "n:3–4"], ["5+", "n:5+"]]);
       else chips([]);
@@ -723,7 +723,7 @@
       if (d.replace(/\D/g, "").length < 8) { bot(T.badPhone); return; }
       S.lead.phone = d;
     } else if (st === "email") {
-      if (v && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) { bot(T.badEmail); chips([[T.skip, "skip"]]); return; }
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) { bot(T.badEmail); return; }   /* the email is required: written quotes and plans go there */
       S.lead.email = v;
     } else S.lead[st] = v;
     save(); nextStep();
@@ -779,7 +779,7 @@
   function greet() { bot(T.hi); chips(T.opts.map(function (o) { return [o[1], o[0]]; })); }
   form.addEventListener("submit", function (e) {
     e.preventDefault();
-    var v = input.value.trim(); if (!v && S.step !== "email") return;
+    var v = input.value.trim(); if (!v) return;
     input.value = ""; me(v || T.skip); chips([]);
     if (S.step) { takeAnswer(v); return; }
     typing(500, function () { answer(v); });
