@@ -610,6 +610,10 @@
   .ha-l{font-size:12px;color:var(--sub);font-weight:600}
   .ha-chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 11px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--ink)}
   .ha-chip i{font-style:normal;color:var(--sub);font-weight:500;margin-inline-start:2px}.ha-chip.on{background:#0B2A31;color:#fff;border-color:#0B2A31}.ha-chip.on i{color:#cfe}
+  .ag-b .ag-h{font-weight:800;font-size:1.05em;margin:4px 0 2px}.ag-b ul,.ag-b ol{margin:2px 0 2px 18px;padding:0}.ag-b li{margin:1px 0}
+  .ag-b hr{border:0;border-top:1px solid rgba(11,42,49,.12);margin:6px 0}.ag-b .ag-sp{height:6px}.ag-b code{background:rgba(11,42,49,.06);padding:0 4px;border-radius:4px}
+  .ag-tab.has-new{box-shadow:0 0 0 2px #C9A23A,var(--shadow)!important}.ag-tab em{font-style:normal;font-size:11px;font-weight:800;color:#8F701D}
+  .ag-nav-new{display:inline-block;min-width:18px;padding:0 5px;margin-inline-start:6px;border-radius:999px;background:#C2392B;color:#fff;font-size:11px;line-height:18px;text-align:center}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -2477,37 +2481,32 @@
 
   // ---- guided training tour ----
   var TOUR = [
-    { title: "Welcome to the Hayakkom Hub 👋", text: "A two-minute tour of everything the Hub does. Use Next and Back (or the → ← keys). You can replay it any time with the 🎓 Tour button at the top." },
-    { view: "dashboard", sel: "#view-btn-dashboard", title: "📊 Dashboard — your home screen", text: "Open the Hub and you land here: one page that shows where every partner, customer and job applicant stands." },
-    { view: "dashboard", sel: "#dash-brief", title: "Where things stand", text: "These tiles are your to-do list. Red means act now (customers past the 12-hour reply promise), amber means someone is waiting on us. Click any tile to jump straight to those cards." },
-    { view: "dashboard", sel: "#dash-stats", title: "The headline numbers", text: "Partners, open enquiries, job applicants, how many people we have contacted at least once, bookings with estimated commission, and what's next on the calendar." },
-    { view: "dashboard", sel: "#dash-charts", title: "Charts", text: "Hover any bar or column for the exact number: enquiries per month, the customer pipeline, response health, countries, partner categories and applicants. In 'Latest activity', click a name to open that card." },
-    { view: "partners", sel: "#view-btn-partners", title: "🤝 Partners", text: "Every hospital, clinic and tourism company that contacted us. Urgent ones and anyone waiting for our reply sit at the top automatically." },
-    { view: "partners", sel: "#sugg-partners", title: "✨ Suggested next actions", text: "The best next step for every open case, with the email already written — some by the automatic rules, some (🤖) drafted by Claude from the full email thread. 👁 Preview shows exactly what will go out, ✎ Edit lets you change it, ✓ Approve sends it, ✕ dismisses it. 💬 Conversation shows every message with that person so you can decide without opening Outlook, and clicking a name jumps to their card. Nothing is ever sent without your OK. The same box is on Customers and Helpers." },
-    { view: "partners", sel: "#sugg-partners .sync-pill", title: "Shared with the whole team", text: "Everything you do here — approvals, archive, delete, contact dates, flags, notes — is shared with everyone who uses the Hub. Changes reach everyone within about a minute. ✓ means you're in sync, ⏳ means yours are still being saved, and ⚠ means Google Drive couldn't be reached (your changes wait on your device and go when it's back)." },
-    { view: "partners", sel: "#hist-btn-top", title: "🕘 History", text: "A log of everything the team has done: emails approved and sent, bulk announcements, archive and delete, status changes — with who did it and when. Deleted something by mistake? Undo it from here." },
-    { view: "partners", sel: "#f-view", title: "Show filter", text: "'Needs attention' = urgent, to review, or waiting for our reply. 'Sent us an email — awaiting our reply' is your partner inbox to-do list." },
-    { view: "partners", sel: "#f-sort", title: "Sorting", text: "Urgent first by default. Switch to newest, oldest, longest since contact, name or country whenever you need a different view." },
-    { view: "partners", sel: "#list .card", title: "A partner card", text: "Flag, status and priority at the top, then the summary, contact details and the next action. A red-tinted card is urgent." },
-    { view: "partners", sel: "#list .card .info-toggle", title: "Contact popup", text: "Click the email address to see every contact detail in one box and why they are in the system." },
-    { view: "partners", sel: "#list .card .mark-contacted", title: "Mark contacted", text: "Replied by WhatsApp or phone? Click this and enter the date. The card stops showing as 'awaiting our reply'. Replies sent through the Hub are recorded for you." },
-    { view: "partners", sel: "#list .card .card-actions", title: "Card buttons", text: "Reply (write an email, then approve it) · 📎 Add document · 📧 View email (the whole conversation, inside the Hub) · Set a reminder · Book a meeting (adds it to the Outlook/Teams calendar) · Add contact · Edit · colour flag · Archive (hide, keep in archive) · 🗑 Delete (remove for everyone; undo from History)." },
-    { view: "partners", sel: "#list .card .flag-btn", title: "Colour flags", text: "Gold = New, red = Urgent, blue = Waiting on partner, green = Live/active, purple = Needs review (a new card the system wasn't sure about — check it isn't a duplicate)." },
-    { view: "partners", sel: "#list .card .doc-btn", title: "📎 Add document", text: "Attach an invoice, quotation, contract or any file. It's saved to Google Drive (partners: Contracts › Clinics › <name> › Documents; customers: Hub Customers › <name>) and listed on the card for the whole team." },
-    { view: "partners", sel: "#list .card .kit-btn", title: "📦 Partner kit", text: "Partners only. Creates the partner's view-only Google Drive folder with our logo, partner badge and website snippet, then opens an email explaining the files, with the partner form link and steps. Check it and approve — the files are saved in the folder, never attached." },
-    { view: "customers", sel: "#view-btn-customers", title: "🧳 Customers", text: "Every enquiry from the website forms, added automatically every hour. Our promise is a reply within 12 hours — past that, the card turns red and jumps to the top." },
-    { view: "customers", sel: "#fc-view", title: "Customer filters", text: "Needs attention, over 12 hours, new in the last 12 hours, contacted, waiting, ready to book, phone-only, and 'From old forms' — the 80 people from our previous forms." },
-    { view: "customers", sel: "#fc-country", title: "Country", text: "Filter by country — taken from their answer, or from the country code of their phone number." },
-    { view: "helpers", sel: "#view-btn-helpers", title: "🧰 Helpers", text: "Job applicants: coordinators, tour guides, drivers, interpreters and more, ranked by how useful the role is to Hayakkom. Filter by profession, reply, WhatsApp or shortlist them." },
-    { view: "calendar", sel: "#view-btn-calendar", title: "📅 Calendar", text: "Your Outlook meetings (synced every hour), calls booked from the Hub, your follow-up reminders and today's overdue replies — together in one month view. Click any item to open it." },
-    { view: "calendar", sel: "#cal-agenda", title: "Next up", text: "The next three weeks at a glance. 'Open Outlook calendar' opens the full Outlook calendar in a new tab." },
-    { view: "announce", sel: "#an-brief", title: "📢 Announce — start here", text: "The same 'where you stand' summary, so you know who needs a message before you write one." },
-    { view: "announce", sel: "#an-audience", title: "Choose who", text: "Customers (including the old-form archive), helpers or partners. Filter by country or type, sort by who we haven't contacted the longest, then tick people one by one or all at once." },
-    { view: "announce", sel: "#an-generate", title: "Generate — nothing sends on its own", text: "You get one Outlook draft per person (or one BCC email), plus a WhatsApp link for anyone without email. You check each one and press Send yourself." },
-    { view: "forms", sel: "#view-btn-forms", title: "📄 Forms", text: "Copy the right English or Arabic form link for a customer, or the partner onboarding form for a hospital, clinic or tourism company." },
-    { sel: "#new-email-btn", title: "✉️ New email", text: "Write a fresh email from support@hayakkom.com with your signature already added." },
-    { sel: "#lock-btn", title: "🔒 Lock, refresh and Back", text: "The Hub stays signed in on this device for 12 hours, even when you refresh. The browser's Back button closes a window or returns to the tab you were on, without leaving the Hub. On a shared computer, press 🔒 Lock when you step away." },
-    { sel: "#tour-btn", title: "You're ready 🎉", text: "Your daily routine: open the Dashboard, clear the red tiles first, reply to everyone waiting, and mark people contacted. Replay this tour any time from here." }
+    { title: "Welcome to the new Hayakkom Hub 👋", text: "A 3-minute tour of everything the Hub does — including the new AI team, WhatsApp agents, urgent alerts and who-is-responsible. Use Next and Back (or the → ← keys). Replay it any time with 🎓 Tour." },
+    { view: "dashboard", sel: "#view-btn-dashboard", title: "📊 Dashboard — your home screen", text: "One page that shows where every partner, customer and job applicant stands. On a phone, swipe the menu bar sideways to see every tab." },
+    { view: "dashboard", sel: "#dash-brief", title: "Where things stand", text: "Your to-do list. Red = act now (a customer past the 12-hour reply promise), amber = someone is waiting on us. Click any tile to jump straight to those cards." },
+    { view: "dashboard", sel: "#dash-stats", title: "The headline numbers", text: "Partners, open enquiries, applicants, how many people we've contacted, bookings and what's next on the calendar. Hover the charts below for exact numbers." },
+    { sel: "#alert-btn", title: "🔔 Urgent alerts — turn the ring on", text: "When an agent flags something urgent (a patient in pain, a missed airport pick-up) the Hub rings, shows a red banner with who is responsible and 📞 Call buttons, and emails support@hayakkom.com. Press 🔔 Alerts → 'Turn the ring on' once on each device, and send a test alert. 'Who handles what' sets who is responsible and the backup." },
+    { view: "partners", sel: "#view-btn-partners", title: "🤝 Partners", text: "Every hospital, clinic, hotel and tourism company. Urgent ones and anyone waiting for our reply sit at the top." },
+    { view: "partners", sel: "#sugg-partners", title: "✨ Suggested next actions", text: "The best next step for every open case, with the email already written (🤖 = drafted by Claude from the whole thread). 👁 Preview, ✎ Edit, ✓ Approve or ✕ dismiss. Nothing is sent until you approve." },
+    { view: "partners", sel: "#list .card .prof-btn", title: "🩺 Provider profile", text: "Verified, official written prices (and until when), doctors, response time, rating, available dates — and the partner's day-to-day and 🚨 escalation contacts. We only quote families prices a partner confirmed in writing." },
+    { view: "partners", sel: "#list .card .qa-row", title: "⚡ Quick actions", text: "One tap to prepare the usual email: ask for written prices, send an anonymised case for a quote (HK- reference, never the patient's name), or book a call. You still review and approve it." },
+    { view: "partners", sel: "#list .card .card-actions", title: "Card buttons", text: "Reply · 📝 Add update (status + note, e.g. 'Pending hospital') · 📎 Add document · 📧 View email · reminder · Book a meeting · 📦 Partner kit · colour flag · Archive · 🗑 Delete (undo from History)." },
+    { view: "customers", sel: "#view-btn-customers", title: "🧳 Customers", text: "Every enquiry from the website, Zara chat and WhatsApp, added automatically every hour. Reply within 12 hours — after that the card turns red and jumps to the top." },
+    { view: "customers", sel: "#list-customers .card .rs-box", title: "🧭 Who is responsible", text: "For each customer: who at Hayakkom owns the case, the medical partner and the travel partner — with their day-to-day and escalation contacts and 📞 Call buttons. Press ✎ Assign to choose the partners. Urgent alerts use this to email the right partner." },
+    { view: "customers", sel: "#list-customers .card .qa-row", title: "⚡ Quick actions for customers", text: "📅 Book a consultation (suggested partners, preferred times, and a real Teams meeting with the partner's meeting email and the patient), 🔔 Follow up, 🤖 Send the Zara link, ✅ Mark booked." },
+    { view: "helpers", sel: "#view-btn-helpers", title: "🧰 Helpers", text: "Job applicants ranked by how useful the role is. Invite the good ones to a call or send a polite decline with one tap." },
+    { view: "agents", sel: "#view-btn-agents", title: "🤖 Your AI team", text: "Six agents you and Reham can talk to: Zara (website & WhatsApp), Ali (Reham's assistant), Jisr (doctors & quotes), Rafiq (traveller companion), Amin (finance), Rawaj (sells our marketing services). They explain, plan and draft — they never send anything themselves." },
+    { view: "agents", sel: "#ag-panel", title: "Chat by text or 🎙 voice", text: "Pick an agent and write, or hold 🎙 and speak (slide up to lock, left to cancel; EN/ع switches the language). Sherif and Reham see the same conversation." },
+    { view: "agents", sel: "#ag-hist-btn", title: "🕘 Agents history", text: "Every message to and from the agents, with who sent it and when. Filter by agent (Zara, Ali, Jisr, Rafiq, Amin, Rawaj)." },
+    { view: "agents", sel: "#wa-box", title: "💬 WhatsApp conversations", text: "One WhatsApp number, several agents: each question goes to the right agent, who introduces themselves when they take over. Every conversation is here, and anything the team must act on lands on the person's card." },
+    { view: "calendar", sel: "#view-btn-calendar", title: "📅 Calendar", text: "Outlook meetings, calls booked from the Hub, follow-up reminders and overdue replies in one month view." },
+    { view: "announce", sel: "#an-audience", title: "📢 Announce", text: "One message to many people: choose customers, helpers or partners, filter, tick, pick a template and Generate. Contact only people who agreed to hear from us, and always include how to opt out." },
+    { view: "forms", sel: "#view-btn-forms", title: "📄 Forms", text: "Copy the right customer form link (English or Arabic), or the partner form — it now also asks for the partner's contacts for our patients and a 24/7 escalation contact." },
+    { sel: "#new-email-btn", title: "✉️ New email · ✨ AI · 🎙 voice", text: "Every email and WhatsApp window has ✨ 'Ask AI to adjust' (choose Arabic or English with 🌐) and a 🎙 voice button, so you can say what you want and let the AI write it." },
+    { sel: "#share-zara-btn", title: "🔗 Share Zara", text: "Send a customer a link to chat with Zara, our AI coordinator, any time. The Hub knows who you sent it to." },
+    { sel: "#hist-btn-top", title: "🕘 History", text: "Who did what and when: approvals, sends, announcements, archive and delete, status changes, agent chats. Deleted something by mistake? Undo it here." },
+    { sel: "#lock-btn", title: "🔒 Signed in for 30 days", text: "The Hub keeps you signed in on this device and keeps any half-written work if you leave the page. On a shared computer, press 🔒 Lock when you go." },
+    { sel: "#tour-btn", title: "You're ready 🎉", text: "Daily routine: turn the 🔔 ring on, clear the red tiles, approve the suggested emails, assign who is responsible on new customers, and check the WhatsApp conversations. The golden rule: nothing leaves Hayakkom without a person approving it." }
   ];
   var tourIdx = -1, tourEls = null;
   function startTour(){
@@ -2538,7 +2537,7 @@
   function endTour(){
     if(tourEls){ ["shade","spot","pop"].forEach(function(k){ tourEls[k].remove(); }); }
     tourEls = null; tourIdx = -1;
-    try{ localStorage.setItem("hk_tour_done_v2", "1"); }catch(e){}
+    try{ localStorage.setItem("hk_tour_done_v3", "1"); }catch(e){}
     showView("dashboard");
     window.scrollTo({ top: 0 });
   }
@@ -2586,7 +2585,7 @@
   window.addEventListener("resize", function(){ if(tourEls) showTourStep(); });
   function maybeStartTour(){
     var done = false;
-    try{ done = !!localStorage.getItem("hk_tour_done_v2"); }catch(e){}
+    try{ done = !!localStorage.getItem("hk_tour_done_v3"); }catch(e){}
     if(!done) setTimeout(startTour, 700);
   }
   document.getElementById("tour-btn").addEventListener("click", startTour);
@@ -2706,7 +2705,7 @@
     if(name==="announce"){ renderBrief("an-brief", "announce"); if(!announceRendered){ renderAnnounceRecipients(); announceRendered = true; } }
     if(name==="dashboard") renderDashboard();
     if(name==="calendar") renderCalendar();
-    if(name==="agents"){ renderAgents(); waLoad(); }
+    if(name==="agents"){ renderAgents(); waLoad(); try{ pull(); }catch(e){} agBadgeNav(); }
     renderUpcoming();
   }
   VIEWS.forEach(function(v){ document.getElementById("view-btn-"+v).addEventListener("click", function(){ showView(v); }); });
@@ -4198,6 +4197,7 @@
       var typing = document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && !document.activeElement.closest(".modal");
       if(!typing && !document.querySelector(".modal-backdrop.open")){ applyRemoved(); rerenderAll(); }
       else { renderAllSugg(); }
+      try{ if(typeof agBadgeNav === "function"){ agBadgeNav(); var va = document.getElementById("view-agents"); if(va && va.style.display !== "none" && !(document.activeElement && document.activeElement.classList.contains("ag-in"))) renderAgents(); } }catch(e){}
     }
     renderSyncPills();
   }
@@ -5102,12 +5102,37 @@
     L.push("Today: " + today + ". Team: Sherif Mansour (founder), Reham Mobasher (approves). Signed-in now: " + myName() + ".");
     return L.join("\n").slice(0, 14000);
   }
+  /* agents write simple Markdown: show it formatted (headings, bold, italic, lists, rules), safely escaped */
+  function agMd(t){
+    var lines = esc(String(t || "")).split("\n"), out = [], list = null;
+    var inline = function(x){ return x.replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,!?:;]|$)/g, "$1<i>$2</i>").replace(/`([^`]+)`/g, "<code>$1</code>"); };
+    var close = function(){ if(list){ out.push("</" + list + ">"); list = null; } };
+    lines.forEach(function(l){
+      var m;
+      if(/^\s*(-{3,}|\*{3,})\s*$/.test(l)){ close(); out.push("<hr>"); }
+      else if((m = l.match(/^\s*#{1,6}\s+(.*)$/))){ close(); out.push('<div class="ag-h">' + inline(m[1]) + "</div>"); }
+      else if((m = l.match(/^\s*[-•*]\s+(.*)$/))){ if(list !== "ul"){ close(); out.push("<ul>"); list = "ul"; } out.push("<li>" + inline(m[1]) + "</li>"); }
+      else if((m = l.match(/^\s*\d+[.)]\s+(.*)$/))){ if(list !== "ol"){ close(); out.push("<ol>"); list = "ol"; } out.push("<li>" + inline(m[1]) + "</li>"); }
+      else if(!l.trim()){ close(); out.push('<div class="ag-sp"></div>'); }
+      else { close(); out.push("<div>" + inline(l) + "</div>"); }
+    });
+    close(); return out.join("");
+  }
+  /* what this person has already seen per agent (so a colleague's new conversation is marked ● new) */
+  var AG_SEEN_KEY = "hk_agent_seen_v1";
+  function agSeen(){ return lsGet(AG_SEEN_KEY, {}) || {}; }
+  function agUnseen(k){ var seen = agSeen()[k] || "", me = myName(); return agMsgs(k).filter(function(x){ return (x.at || "") > seen && !(x.role !== "agent" && x.by === me); }).length; }
+  function agMarkSeen(k){ var m = agMsgs(k); if(!m.length) return; var s0 = agSeen(); var last = m[m.length - 1].at || ""; if(s0[k] !== last){ s0[k] = last; lsSet(AG_SEEN_KEY, s0); } }
+  function agNewTotal(){ return AGENT_LIST.reduce(function(t, a){ return t + agUnseen(a.key); }, 0); }
+  setInterval(function(){ try{ agBadgeNav(); }catch(e){} }, 5000);
+  function agBadgeNav(){ var b = document.getElementById("view-btn-agents"); if(!b) return; var n = agNewTotal(), sp = b.querySelector(".ag-nav-new");
+    if(n){ if(!sp){ sp = document.createElement("span"); sp.className = "ag-nav-new"; b.appendChild(sp); } sp.textContent = n; } else if(sp) sp.remove(); }
   function agRenderLog(k){
     var log = document.getElementById("ag-log"); if(!log) return;
     var m = agMsgs(k), a = AGENT_LIST.filter(function(x){ return x.key === k; })[0];
     log.innerHTML = m.length ? m.map(function(x){
       var me = x.role !== "agent";
-      return '<div class="ag-m ' + (me ? "me" : "it") + '"><div class="ag-b" dir="auto">' + esc(x.text).replace(/\n/g, "<br>") + '</div><small>' + esc(me ? (x.by || "Team") : a.name) + " · " + esc(String(x.at || "").slice(0, 16).replace("T", " ")) + '</small></div>';
+      return '<div class="ag-m ' + (me ? "me" : "it") + '"><div class="ag-b" dir="auto">' + (me ? esc(x.text).replace(/\n/g, "<br>") : agMd(x.text)) + '</div><small>' + esc(me ? (x.by || "Team") : a.name) + " · " + esc(String(x.at || "").slice(0, 16).replace("T", " ")) + '</small></div>';
     }).join("") : '<p class="ag-empty">Say hello to ' + esc(a.name) + '. ' + esc(a.hint) + '</p>';
     if(AG_BUSY[k]) log.insertAdjacentHTML("beforeend", '<div class="ag-m it"><div class="ag-b ag-typing"><span></span><span></span><span></span></div></div>');
     log.scrollTop = log.scrollHeight;
@@ -5115,8 +5140,9 @@
   function renderAgents(){
     var tabs = document.getElementById("ag-tabs"), panel = document.getElementById("ag-panel"); if(!tabs || !panel) return;
     if(!AGENT_LIST.some(function(a){ return a.key === AG_CUR; })) AG_CUR = "ali";
-    tabs.innerHTML = AGENT_LIST.map(function(a){ var n = agMsgs(a.key).length;
-      return '<button type="button" class="ag-tab' + (a.key === AG_CUR ? " on" : "") + '" data-ag="' + a.key + '"><span class="ag-ic">' + a.icon + '</span><b>' + esc(a.name) + '</b><small>' + esc(a.role) + '</small>' + (n ? '<i>' + n + '</i>' : '') + '</button>'; }).join("");
+    if(document.getElementById("view-agents").style.display !== "none") agMarkSeen(AG_CUR);
+    tabs.innerHTML = AGENT_LIST.map(function(a){ var n = agMsgs(a.key).length, nw = agUnseen(a.key);
+      return '<button type="button" class="ag-tab' + (a.key === AG_CUR ? " on" : "") + (nw ? " has-new" : "") + '" data-ag="' + a.key + '"><span class="ag-ic">' + a.icon + '</span><b>' + esc(a.name) + '</b><small>' + esc(a.role) + '</small>' + (nw ? '<em>● ' + nw + ' new</em>' : '') + (n ? '<i>' + n + '</i>' : '') + '</button>'; }).join("");
     var a = AGENT_LIST.filter(function(x){ return x.key === AG_CUR; })[0];
     if(!panel.querySelector(".ag-in") || panel.getAttribute("data-ag") !== AG_CUR){
       panel.setAttribute("data-ag", AG_CUR);
@@ -5126,6 +5152,7 @@
         '<div class="upd-row"><button type="button" class="btn gold ag-send">Send to ' + esc(a.name) + '</button><span class="ag-note"></span></div>';
     }
     agRenderLog(AG_CUR);
+    agBadgeNav();
   }
   function agSend(){
     var k = AG_CUR, panel = document.getElementById("ag-panel"), ta = panel.querySelector(".ag-in"), note = panel.querySelector(".ag-note");
@@ -5365,7 +5392,7 @@
     }
   });
   setInterval(function(){ if(document.getElementById("app-content") && document.getElementById("app-content").style.display === "block") alCheck(); }, 30000);
-  setTimeout(function(){ var b = document.getElementById("alert-btn"); if(b) b.classList.toggle("on", alOn()); alCheck(true); }, 3000);
+  setTimeout(function(){ var b = document.getElementById("alert-btn"); if(b) b.classList.toggle("on", alOn()); alCheck(true); try{ agBadgeNav(); }catch(e){} }, 3000);
   function renderAgentTabsOnly(){ var tabs = document.getElementById("ag-tabs"); if(tabs && document.getElementById("view-agents").style.display !== "none"){ var cur = document.getElementById("ag-panel").getAttribute("data-ag"); renderAgents(); } }
   document.addEventListener("click", function(e){
     if(!e.target.closest) return;
