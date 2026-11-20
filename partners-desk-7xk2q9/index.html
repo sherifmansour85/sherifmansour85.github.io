@@ -5312,7 +5312,7 @@
           used.map(function(a){ return '<span class="wa-tag ' + esc(a) + '">' + esc(WA_NAMES[a] || a) + '</span>'; }).join("") +
           '<span class="wa-last" dir="auto">' + esc((last.who === "customer" ? "" : (WA_NAMES[last.who] || "") + ": ") + String(last.t || "").slice(0, 120)) + '</span><small>' + esc(when) + '</small></summary><div class="wa-msgs">' +
           c.hist.map(function(h){ var cu = h.who === "customer";
-            return '<div class="wa-m ' + (cu ? "cu" : "ag") + '" dir="auto"><small>' + (cu ? "Customer" : "🤖 " + esc(WA_NAMES[h.who] || h.who)) + (h.at ? " · " + esc(new Date(h.at).toLocaleString()) : "") + '</small>' + esc(h.t) + '</div>'; }).join("") +
+            return '<div class="wa-m ' + (cu ? "cu" : "ag") + '" dir="auto"><small>' + (cu ? "Customer" : "🤖 " + esc(WA_NAMES[h.who] || h.who)) + (h.at ? " · " + esc(new Date(h.at).toLocaleString()) : "") + '</small>' + esc(h.t).replace(/\*([^*\n]+)\*/g, "<b>$1</b>").replace(/(^|\s)_([^_\n]+)_(?=\s|$)/g, "$1<i>$2</i>") + '</div>'; }).join("") +
           '</div></details>'; }).join("");
     }).catch(function(){ WA_BUSY = false; box.innerHTML = '<p class="wa-empty">⚠ Couldn\'t load the WhatsApp conversations. Check the connection and press Refresh.</p>'; });
   }
