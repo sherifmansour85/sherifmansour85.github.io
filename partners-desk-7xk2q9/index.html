@@ -78,6 +78,9 @@
   .vc-trash,.vc-ok{display:none;border:0;width:30px;height:30px;border-radius:50%;cursor:pointer;flex:none;font-size:14px}
   .vc-trash{background:#FDECEA;color:#C0392B}.vc-ok{background:#1B8A5A;color:#fff;font-weight:700}
   .vc-locked .vc-trash,.vc-locked .vc-ok{display:inline-flex;align-items:center;justify-content:center}.vc-locked .vc-mic{display:none}
+  .cs-box{margin:8px 0 4px;border:1px solid #CFE3E5;border-radius:10px;background:#F7FBFB;padding:10px 12px;display:grid;gap:8px}
+  .cs-box select,.cs-box input:not([type=checkbox]){font:inherit;padding:7px 9px;border:1px solid #CFE3E5;border-radius:8px;width:100%;box-sizing:border-box;background:#fff}
+  .cs-meet{display:grid;grid-template-columns:1fr 1fr;gap:8px}.cs-who{font-size:.86em;color:#2e4a50;margin:0;background:#fff;border:1px dashed #CFE3E5;border-radius:8px;padding:6px 8px}
   .qa-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0 4px}
   .qa-l{font-size:.95em;opacity:.7}
   .qa-b{font:inherit;font-size:.82em;padding:6px 11px;border-radius:999px;border:1px solid #CFE3E5;background:linear-gradient(180deg,#fff,#F2F8F8);color:#0B5960;cursor:pointer;transition:transform .12s,box-shadow .12s}
@@ -4663,6 +4666,12 @@
       var id = f.rec.id, pr = profOf(id);
       var line = document.createElement("p"); line.className = "prof-line" + (pr.verified ? " ok" : "");
       line.textContent = profLine(pr); acts.parentNode.insertBefore(line, acts);
+      var r0 = f.rec, extra = [];
+      if(r0.meeting_email) extra.push("📅 Teams/Zoom: " + r0.meeting_email);
+      var ems = (r0.emails || []).filter(function(x){ return x && x !== r0.email; }); if(ems.length) extra.push("✉ Also: " + ems.join(", "));
+      if(r0.specialities) extra.push("🩺 " + r0.specialities);
+      if(r0.tourism_licence) extra.push("🏛 Tourism licence " + r0.tourism_licence);
+      if(extra.length){ var l2 = document.createElement("p"); l2.className = "prof-line"; l2.textContent = extra.join(" · "); acts.parentNode.insertBefore(l2, acts); }
       var btn = document.createElement("button"); btn.type = "button"; btn.className = "btn prof-btn"; btn.textContent = "🩺 Provider profile";
       btn.title = "Doctors, specialities, official written prices, response time, rating and available dates";
       acts.insertBefore(btn, acts.firstChild);
@@ -4915,9 +4924,43 @@
         '<optgroup label="All partners">'+rest.map(opt).join("")+'</optgroup></select></label>'+
       '<label class="prof-f"><span>Type</span><select class="cs-t"><option>Video consultation</option><option>Phone consultation</option><option>In-person consultation on arrival</option></select></label>'+
       '<label class="prof-f"><span>Preferred times (the patient\'s)</span><input class="cs-w" dir="auto" placeholder="e.g. Sun–Tue after 6 pm Saudi time"></label>'+
+      '<div class="cs-meet"><label class="prof-f"><span>Meeting date (Cairo time)</span><input type="date" class="cs-d"></label><label class="prof-f"><span>Time</span><input type="time" class="cs-h" value="18:00"></label></div>'+
+      '<p class="cs-who"></p>'+
       '<label class="prof-chk"><input type="checkbox" class="cs-ok"> The patient agreed that we share their case with this partner</label>'+
-      '<div class="upd-row"><button type="button" class="btn gold cs-go">Prepare email to the partner</button><button type="button" class="btn cs-x">Cancel</button></div>';
+      '<div class="upd-row"><button type="button" class="btn gold cs-go">Prepare email to the partner</button><button type="button" class="btn cs-teams">📅 Create Teams meeting</button><button type="button" class="btn cs-x">Cancel</button></div>';
     card.querySelector(".qa-row").insertAdjacentElement("afterend", box);
+    // who gets the meeting invitation: the partner's Teams/Zoom email from their partner form (or their main email),
+    // the patient's email, and support@ — shown as soon as a partner is chosen
+    function meetPeople(){
+      var p = findRec(box.querySelector(".cs-p").value); p = p && p.rec;
+      var pe = p ? (p.meeting_email || p.email || "") : "";
+      var ce = (state[c.id]||{}).email || c.email || "";
+      return { p: p, partnerEmail: pe, fromForm: !!(p && p.meeting_email), patientEmail: ce };
+    }
+    function showWho(){
+      var m = meetPeople(), w = box.querySelector(".cs-who");
+      w.innerHTML = "📅 Invitation goes to: <b>" + esc(m.partnerEmail || "— no email for this partner") + "</b>" + (m.partnerEmail ? (m.fromForm ? " <small>(Teams/Zoom email from their partner form)</small>" : " <small>(main email — no Teams email on their form yet)</small>") : "") +
+        " · patient <b>" + esc(m.patientEmail || "— no email yet: ask the patient for one") + "</b> · support@hayakkom.com";
+    }
+    box.querySelector(".cs-p").addEventListener("change", showWho); showWho();
+    box.querySelector(".cs-teams").addEventListener("click", function(){
+      if(!box.querySelector(".cs-ok").checked){ toast("Please confirm the patient agreed to share their case first."); return; }
+      var m = meetPeople(); if(!m.p) return;
+      var dv = box.querySelector(".cs-d").value; if(!dv){ toast("Choose the meeting date first."); box.querySelector(".cs-d").focus(); return; }
+      var hv = box.querySelector(".cs-h").value || "18:00", type = box.querySelector(".cs-t").value;
+      var start = new Date(dv + "T" + hv + ":00"), end = new Date(start); end.setMinutes(end.getMinutes() + 30);
+      var to = [m.partnerEmail, m.patientEmail, "support@hayakkom.com"].filter(Boolean);
+      var subj = "Consultation — " + (c.enquiry_type || "patient") + " (Hayakkom ref " + caseRef(c.id) + ")";
+      var body = type + " arranged by Hayakkom.\n\nPartner: " + m.p.name + "\nCase reference: " + caseRef(c.id) + "\n\nThe patient agreed to this consultation and to share their case with the partner. Hayakkom coordinates; the consultation and any medical advice are given by the licensed provider.";
+      var url = "https://outlook.office.com/calendar/0/deeplink/compose?path=/calendar/action/compose&rru=addevent&online=true"
+        + "&subject=" + encodeURIComponent(subj) + "&startdt=" + encodeURIComponent(isoLocal(start)) + "&enddt=" + encodeURIComponent(isoLocal(end))
+        + "&body=" + encodeURIComponent(body) + "&to=" + encodeURIComponent(to.join(";"));
+      state[c.id] = state[c.id] || {};
+      state[c.id].consult = Object.assign({}, state[c.id].consult || {}, { partner: m.p.id, partnerName: m.p.name, type: type, when: box.querySelector(".cs-w").value.trim(), meetingAt: start.toISOString(), at: new Date().toISOString(), by: myName() });
+      saveState(state);
+      window.open(url, "_blank", "noopener");
+      toast("Outlook opened with the meeting — make sure 'Teams meeting' is on, then Send.");
+    });
     box.querySelector(".cs-x").addEventListener("click", function(){ box.remove(); });
     box.querySelector(".cs-go").addEventListener("click", function(){
       if(!box.querySelector(".cs-ok").checked){ toast("Please confirm the patient agreed to share their case first."); return; }
