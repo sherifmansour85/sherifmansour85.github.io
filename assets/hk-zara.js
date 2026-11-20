@@ -286,21 +286,21 @@
   var LOC = { ar: "ar-SA", en: "en-US", ru: "ru-RU" };
   var VT = {
     en: { mic: "Hold to talk, release to send", stop: "Recording — release to send", on: "Read answers aloud: on", off: "Read answers aloud: off", lg: "Language",
-          slide: "‹ Slide to cancel", lock: "Slide up to lock", locked: "Recording — tap ➤ to send", del: "Delete recording", hold: "Hold 🎙️ to record, release to send", none: "I didn't catch that — hold 🎙️ and speak a little longer.",
+          tapIos: "Recording — tap ➤ to send, 🗑 to delete", slide: "‹ Slide to cancel", lock: "Slide up to lock", locked: "Recording — tap ➤ to send", del: "Delete recording", hold: "Hold 🎙️ to record, release to send", none: "I didn't catch that — hold 🎙️ and speak a little longer.",
           den: "I can't hear you — please allow the microphone for this site in your browser settings, or type your message.",
           denIos: "I can't hear you. On iPhone: Settings → Safari → Microphone → Allow, and Settings → Siri → turn on Dictation (Apple needs it for voice). Or tap the 🎤 on your keyboard and speak — that always works.",
           noneIos: "I didn't catch that. Hold 🎙️ a little longer — or tap the text box and use the 🎤 on your iPhone keyboard to speak.",
           net: "Voice needs an internet connection to work. Please check it, or type your message.",
-          noSr: "On this browser, tap the 🎤 on your keyboard to speak — your words appear in the box, then press ➤. (In Safari you can also hold 🎙️ here.)" },
+          noSr: "On this browser, tap the 🎤 on your keyboard to speak — your words appear in the box, then press ➤. (In Safari you can also tap 🎙️ here.)" },
     ar: { mic: "اضغط مطوّلًا للتحدث، وارفع إصبعك للإرسال", stop: "جارٍ التسجيل — ارفع إصبعك للإرسال", on: "قراءة الإجابات بصوت: مفعّلة", off: "قراءة الإجابات بصوت: متوقفة", lg: "اللغة",
-          slide: "اسحب للإلغاء ›", lock: "اسحب للأعلى للتثبيت", locked: "جارٍ التسجيل — اضغط ➤ للإرسال", del: "حذف التسجيل", hold: "اضغط مطوّلًا على 🎙️ للتسجيل، وارفع إصبعك للإرسال", none: "لم أسمعك جيدًا — اضغط مطوّلًا على 🎙️ وتحدّث لفترة أطول قليلًا.",
+          tapIos: "جارٍ التسجيل — اضغط ➤ للإرسال أو 🗑 للحذف", slide: "اسحب للإلغاء ›", lock: "اسحب للأعلى للتثبيت", locked: "جارٍ التسجيل — اضغط ➤ للإرسال", del: "حذف التسجيل", hold: "اضغط مطوّلًا على 🎙️ للتسجيل، وارفع إصبعك للإرسال", none: "لم أسمعك جيدًا — اضغط مطوّلًا على 🎙️ وتحدّث لفترة أطول قليلًا.",
           den: "لا أستطيع سماعك — اسمح باستخدام الميكروفون لهذا الموقع من إعدادات المتصفح، أو اكتب رسالتك.",
           denIos: "لا أستطيع سماعك. على الآيفون: الإعدادات ← Safari ← الميكروفون ← سماح، والإعدادات ← Siri ← فعّل الإملاء (تحتاجه Apple للصوت). أو اضغط 🎤 في لوحة المفاتيح وتحدّث — وهذه تعمل دائمًا.",
           noneIos: "لم أسمعك جيدًا. اضغط مطوّلًا على 🎙️ لمدة أطول — أو اضغط على مربع الكتابة واستخدم 🎤 في لوحة مفاتيح الآيفون للتحدث.",
           net: "يحتاج الصوت إلى اتصال بالإنترنت. تحقّق من الاتصال أو اكتب رسالتك.",
-          noSr: "في هذا المتصفح اضغط 🎤 في لوحة المفاتيح وتحدّث — يظهر كلامك في المربع، ثم اضغط ➤. (في Safari يمكنك أيضًا الضغط مطوّلًا على 🎙️ هنا.)" },
+          noSr: "في هذا المتصفح اضغط 🎤 في لوحة المفاتيح وتحدّث — يظهر كلامك في المربع، ثم اضغط ➤. (في Safari يمكنك أيضًا الضغط على 🎙️ هنا.)" },
     ru: { mic: "Удерживайте, чтобы говорить; отпустите, чтобы отправить", stop: "Запись — отпустите, чтобы отправить", on: "Читать ответы вслух: вкл.", off: "Читать ответы вслух: выкл.", lg: "Язык",
-          slide: "‹ Сдвиньте для отмены", lock: "Сдвиньте вверх, чтобы закрепить", locked: "Запись — нажмите ➤, чтобы отправить", del: "Удалить запись", hold: "Удерживайте 🎙️ для записи, отпустите для отправки", none: "Я не расслышала — удерживайте 🎙️ и говорите чуть дольше.",
+          tapIos: "Запись — нажмите ➤, чтобы отправить, 🗑 — удалить", slide: "‹ Сдвиньте для отмены", lock: "Сдвиньте вверх, чтобы закрепить", locked: "Запись — нажмите ➤, чтобы отправить", del: "Удалить запись", hold: "Удерживайте 🎙️ для записи, отпустите для отправки", none: "Я не расслышала — удерживайте 🎙️ и говорите чуть дольше.",
           den: "Я вас не слышу — разрешите доступ к микрофону для этого сайта или напишите сообщение.",
           denIos: "Я вас не слышу. На iPhone: Настройки → Safari → Микрофон → Разрешить и Настройки → Siri → включите Диктовку. Или нажмите 🎤 на клавиатуре и говорите.",
           noneIos: "Я не расслышала. Удерживайте 🎙️ подольше — или нажмите на поле ввода и используйте 🎤 на клавиатуре iPhone.",
@@ -348,29 +348,44 @@
   lockHint.innerHTML = '<span class="zr-lk">🔒</span><span class="zr-ch">⌃</span>'; mic.appendChild(lockHint);
   function micUi(on) {
     listening = on; mic.classList.toggle("on", on); mic.setAttribute("aria-pressed", on ? "true" : "false");
-    mic.title = VT[lang][on ? "stop" : "mic"]; mic.setAttribute("aria-label", mic.title);
+    mic.title = IOS ? (on ? VT[lang].tapIos : (lang === "ar" ? "اضغط 🎙️ للتحدث" : lang === "ru" ? "Нажмите 🎙️, чтобы говорить" : "Tap 🎙️ to talk")) : VT[lang][on ? "stop" : "mic"]; mic.setAttribute("aria-label", mic.title);
     recBar.hidden = !on; form.classList.toggle("zr-recording", on);
     if (!on) { locked = false; form.classList.remove("zr-locked", "zr-up"); }
     var tr = recBar.querySelector(".zr-trash"); tr.title = VT[lang].del; tr.setAttribute("aria-label", VT[lang].del);
     if (on) { recBar.querySelector(".zr-sl").textContent = locked ? VT[lang].locked : VT[lang].slide; recBar.classList.remove("zr-cx"); }
   }
   function clock() { var s = Math.floor((Date.now() - t0) / 1000); if (holding && s >= 60) { release(false); return; } if (locked && s >= 180) { sendLocked(); return; } recBar.querySelector(".zr-tm").textContent = Math.floor(s / 60) + ":" + ("0" + s % 60).slice(-2); }
+  var VTRACE = [];
+  function vlog(k, d) { try { VTRACE.push([Date.now() - (t0 || Date.now()), k, d == null ? "" : String(d).slice(0, 40)]); if (VTRACE.length > 60) VTRACE.shift(); } catch (x) {} }
+  function vreport(outcome) {
+    try {
+      var body = JSON.stringify({ diag: "voice", ua: navigator.userAgent.slice(0, 160), ios: IOS, sr: !!SR, outcome: outcome, lang: LOC[lang], trace: VTRACE.slice(-60) });
+      VTRACE = [];
+      if (navigator.sendBeacon) navigator.sendBeacon(AI_URL + "diag", new Blob([body], { type: "text/plain" }));
+      else fetch(AI_URL + "diag", { method: "POST", body: body, keepalive: true, mode: "no-cors" });
+    } catch (x) {}
+  }
   function startRec() {
     /* everything heard in earlier sessions of this recording is kept in "heard"; this session's text is rebuilt from
        all its results each time — iPhone Safari rarely marks results final and sometimes repeats them */
     rec = new SR(); rec.lang = LOC[lang]; rec.interimResults = true; rec.continuous = !IOS; rec.maxAlternatives = 1;
+    rec.onstart = function () { vlog("start"); };
+    rec.onaudiostart = function () { vlog("audio"); };
+    rec.onspeechstart = function () { vlog("speech"); };
     rec.onresult = function (e) {
+      vlog("result", e.results.length);
       var all = "";
       for (var i = 0; i < e.results.length; i++) all += e.results[i][0].transcript + (IOS ? "" : " ");
       interim = all.replace(/\s+/g, " ").trim(); gotSome = true;
     };
     rec.onerror = function (e) {
-      var er = e && e.error;
+      var er = e && e.error; vlog("error", er);
       if (restarts > 0 && (heard || interim) && er !== "aborted") { if (interim) { heard += interim + " "; interim = ""; } holding = false; locked = false; clearInterval(tick); cancelled = false; finishRec(); return; }   /* a restart was refused: send what we have */
-      if (er === "not-allowed" || er === "service-not-allowed" || er === "audio-capture") { holding = false; locked = false; cancelled = true; finishRec(); bot(IOS ? VT[lang].denIos : VT[lang].den); }
+      if (er === "not-allowed" || er === "service-not-allowed" || er === "audio-capture") { holding = false; locked = false; cancelled = true; vreport("denied:" + er); finishRec(); bot((IOS ? VT[lang].denIos : VT[lang].den) + " (" + er + ")"); }
       else if (er === "network" && !interim && !heard) { holding = false; locked = false; cancelled = true; finishRec(); bot(VT[lang].net); }
     };
     rec.onend = function () {
+      vlog("end", (heard + interim).length);
       if (interim) { heard += interim + " "; interim = ""; }
       if ((holding || locked) && !cancelled) {   /* the browser stopped early: keep recording while the finger is down */
         if (++restarts <= 20) { try { startRec(); return; } catch (e) {} }
@@ -378,7 +393,7 @@
       }
       finishRec();
     };
-    rec.start();
+    try { rec.start(); vlog("start()"); } catch (x) { vlog("start-throw", x && (x.name || x.message)); throw x; }
   }
   function press(e) {
     if (!SR || listening) return;
@@ -422,8 +437,9 @@
     if (!listening) return;   /* already finished (each recording is sent at most once) */
     var said = (heard + " " + interim).replace(/\s+/g, " ").trim(), wasCancelled = cancelled;
     clearInterval(tick); micUi(false); heard = ""; interim = "";
-    if (wasCancelled) return;
-    if (!said) { bot(IOS ? VT[lang].noneIos : VT[lang].none); return; }
+    if (wasCancelled) { vreport("cancelled"); return; }
+    if (!said) { vreport("nothing-heard"); bot(IOS ? VT[lang].noneIos : VT[lang].none); return; }
+    vreport("ok:" + said.length);
     input.value = said;
     if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event("submit", { cancelable: true }));
   }
@@ -433,11 +449,20 @@
   }
   if (SR) {
     mic.hidden = false; micUi(false);
+    if (IOS) {
+      /* iPhone Safari only lets voice start from a completed tap: tap 🎙️ → records hands-free → ➤ sends, 🗑 deletes */
+      mic.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (listening) { if (locked) sendLocked(); return; }
+        vlog("tap");
+        try { press(null); } catch (x) {}
+        if (holding) lockIt();
+      });
+    } else
     mic.addEventListener("pointerdown", press);
-    mic.addEventListener("pointerup", function () { release(false); });
-    mic.addEventListener("pointercancel", function () { release(true); });
+    if (!IOS) { mic.addEventListener("pointerup", function () { release(false); }); mic.addEventListener("pointercancel", function () { release(true); }); }
     /* the finger can lift somewhere else — e.g. on the microphone-permission popup the first time — so listen everywhere */
-    window.addEventListener("pointerup", function () { if (holding) release(false); }, true);
+    if (!IOS) window.addEventListener("pointerup", function () { if (holding) release(false); }, true);
     window.addEventListener("blur", function () { if (holding) release(false); });
     document.addEventListener("visibilitychange", function () { if (document.hidden && holding) release(true); });
     recBar.addEventListener("pointerdown", function (e) {
@@ -458,7 +483,7 @@
       if (moved > 90) release(true);
     });
     mic.addEventListener("contextmenu", function (e) { e.preventDefault(); });
-    mic.addEventListener("click", function (e) { e.preventDefault(); });
+    if (!IOS) mic.addEventListener("click", function (e) { e.preventDefault(); });
     mic.addEventListener("keydown", function (e) { if ((e.key === " " || e.key === "Enter") && !e.repeat) { e.preventDefault(); press(null); } else if (e.key === "Escape") release(true); });
     mic.addEventListener("keyup", function (e) { if (e.key === " " || e.key === "Enter") { e.preventDefault(); release(false); } });
   }
