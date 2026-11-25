@@ -5152,6 +5152,7 @@
   //      The agents talk, plan and draft; anything sent to people is still approved by Reham in the Hub. ----
   var HUB_AGENT_URL = "https://zara.sherif-mansour-85.workers.dev/hub/agent";
   var AGENT_LIST = [
+    { key: "master", icon: "🧭", name: "Master", role: "General manager of all agents", hint: "Runs Hayakkom like a business: priorities, decisions, money, and what each agent should do. Try: “Give me this week’s review.” · “Where is the money this month?” · “What is missing for you to make Hayakkom a success?”" },
     { key: "zara",  icon: "👩🏻‍💼", name: "Zara",  role: "Website & WhatsApp coordinator", hint: "Ask what visitors asked today, or how to answer a lead." },
     { key: "ali",   icon: "🗂", name: "Ali",   role: "Reham's assistant", hint: "“What should I do first today?” · “Who is waiting for a reply?”" },
     { key: "jisr",  icon: "🌉", name: "Jisr",  role: "Doctors & quotes", hint: "“Which partners still owe written prices?” · “Draft a quote request for an implant case.”" },
@@ -5181,8 +5182,17 @@
     L.push("HELPERS / APPLICANTS: " + helpers.length + " (" + helpers.filter(function(h){ return h.priority === "High"; }).map(function(h){ return h.name + " — " + (h.profession || ""); }).slice(0, 12).join("; ") + ")");
     var dec = state._decisions || {}, waiting = (AI_DRAFTS || []).filter(function(d){ return !dec[d.id]; });
     L.push("SUGGESTED EMAILS WAITING FOR APPROVAL: " + waiting.length + (waiting.length ? " — " + waiting.slice(0, 12).map(function(d){ var f = findRec(d.record_id); return (f ? f.rec.name : d.record_id) + " (" + (d.label || "") + ")"; }).join("; ") : ""));
+    if(AG_CUR === "master"){
+      var funnel = {}; cust.forEach(function(c){ var s = effStatusOf(c) || "?"; funnel[s] = (funnel[s] || 0) + 1; });
+      L.push("CUSTOMER STATUS COUNTS: " + Object.keys(funnel).map(function(k){ return k + " " + funnel[k]; }).join(", "));
+      var pst = {}; part.forEach(function(p){ var s = effStatusOf(p) || "?"; pst[s] = (pst[s] || 0) + 1; });
+      L.push("PARTNER STATUS COUNTS: " + Object.keys(pst).map(function(k){ return k + " " + pst[k]; }).join(", ") + " | with written prices: " + part.filter(function(p){ return profOf(p.id).writtenPrices; }).length);
+      L.push("WHAT THE OTHER AGENTS DISCUSSED WITH THE TEAM RECENTLY:");
+      AGENT_LIST.forEach(function(a){ if(a.key === "master") return; var m = agMsgs(a.key).slice(-6);
+        if(m.length) L.push("[" + a.name + "] " + m.map(function(x){ return (x.role === "agent" ? a.name : (x.by || "Team")) + ": " + String(x.text || "").replace(/\s+/g, " ").slice(0, 260); }).join(" / ")); });
+    }
     L.push("Today: " + today + ". Team: Sherif Mansour (founder), Reham Mobasher (approves). Signed-in now: " + myName() + ".");
-    return L.join("\n").slice(0, 14000);
+    return L.join("\n").slice(0, AG_CUR === "master" ? 24000 : 14000);
   }
   /* agents write simple Markdown: show it formatted (headings, bold, italic, lists, rules), safely escaped */
   function agMd(t){
