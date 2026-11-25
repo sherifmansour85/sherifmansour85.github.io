@@ -11,14 +11,14 @@ https://www.hayakkom.com/llms.txt
 Hayakkom is the trading name of **Hayakom for Healthcare Solutions and Logistic Services**,
 an Egyptian single-person limited liability company. It coordinates holidays and stays in
 Egypt (Red Sea, Nile, Cairo, North Coast, Siwa) and medical treatment, dental care, hair
-restoration and cosmetic surgery for families travelling from Saudi Arabia, the UAE and
-Kuwait, and arranges pre-travel video consultations, record review, appointments,
+restoration and cosmetic surgery for families and visitors from the GCC countries (mainly Saudi Arabia, the UAE and
+Kuwait) and from anywhere in the world, including travellers already in Egypt, and arranges pre-travel video consultations, record review, appointments,
 transfers, accommodation and follow-up. It is not a travel agency or tour operator: trips,
 transfers and tourist transport are operated and invoiced by licensed Egyptian tourism and
 transport companies. Hayakkom earns marketing fees, paid only by its licensed Saudi
 partner company; clients receive an itemised written estimate before paying and are invoiced by the provider.
 
-- **Category:** travel and medical coordination for GCC families
+- **Category:** travel and medical coordination in Egypt for GCC families and international visitors
 - **Holiday packages (indicative 2026 prices in SAR):** https://www.hayakkom.com/holidays/
 - **North Coast (Sahel) guide:** https://www.hayakkom.com/north-coast/
 - **Video consultation before travel:** https://www.hayakkom.com/video-consultation/
@@ -28,7 +28,7 @@ partner company; clients receive an itemised written estimate before paying and 
 - **Commercial Register:** 49973
 - **Unified Commercial Registry:** 11070-01000-49973
 - **Languages:** Arabic and English
-- **Markets served:** Saudi Arabia, United Arab Emirates, Kuwait
+- **Markets served:** the GCC countries first (Saudi Arabia, United Arab Emirates, Kuwait, Qatar, Bahrain, Oman) and visitors from anywhere in the world, including residents and travellers already in Egypt (market pages for Russian-speaking visitors at https://www.hayakkom.com/ru/ and for the United Kingdom at https://www.hayakkom.com/uk/)
 - **Contact:** support@hayakkom.com · Phone +20 100 010 0529 · WhatsApp +20 103 156 7949
 - **Website:** https://www.hayakkom.com
 

@@ -1,6 +1,6 @@
 # Hayakkom — full site text for AI assistants
 
-> This file contains the full text of hayakkom.com in English and Arabic. Hayakkom (Hayakom for Healthcare Solutions and Logistic Services, Commercial Register 49973) coordinates medical treatment and travel in Egypt for GCC patients; it is not a healthcare provider. Accommodation, hotel bookings, villa and chalet rentals, trips, tours and all transport are provided by registered Egyptian tourism companies; all medical treatment and operations are performed by registered, licensed medical institutions, including within packages. Short index: https://www.hayakkom.com/llms.txt
+> This file contains the full text of hayakkom.com in English and Arabic. Hayakkom (Hayakom for Healthcare Solutions and Logistic Services, Commercial Register 49973) coordinates medical treatment and travel in Egypt for patients and families from the GCC countries and from anywhere in the world; it is not a healthcare provider. Accommodation, hotel bookings, villa and chalet rentals, trips, tours and all transport are provided by registered Egyptian tourism companies; all medical treatment and operations are performed by registered, licensed medical institutions, including within packages. Short index: https://www.hayakkom.com/llms.txt
 
 Prices are indicative, in Saudi riyals (SAR), excluding flights; US-dollar figures in brackets use the fixed peg 1 USD = 3.75 SAR.
 

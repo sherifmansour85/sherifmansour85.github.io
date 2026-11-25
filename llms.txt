@@ -2,7 +2,7 @@
 
 Full text of every page (English and Arabic): https://www.hayakkom.com/llms-full.txt
 
-> Hayakkom (Hayakom for Healthcare Solutions and Logistic Services; also searched as Hayakom, Hayakoom or حياكم) is an Egyptian coordination company for GCC families visiting Egypt from Saudi Arabia, the UAE and Kuwait. It coordinates holidays and stays (Red Sea, Nile, Cairo, North Coast, Siwa), and medical treatment, dental care, hair restoration and cosmetic surgery with licensed providers, including pre-travel video consultations, appointments, transfers, accommodation and follow-up. Hayakkom is not a healthcare provider and not a travel agency: treatment is delivered by independent licensed Egyptian doctors and hospitals, and trips, transfers and tourist transport are operated and invoiced by licensed Egyptian tourism and transport companies.
+> Hayakkom (Hayakom for Healthcare Solutions and Logistic Services; also searched as Hayakom, Hayakoom or حياكم) is an Egyptian coordination company for families and visitors coming to Egypt from the GCC countries (mainly Saudi Arabia, the UAE and Kuwait) and from anywhere in the world, including travellers already in Egypt. It coordinates holidays and stays (Red Sea, Nile, Cairo, North Coast, Siwa), and medical treatment, dental care, hair restoration and cosmetic surgery with licensed providers, including pre-travel video consultations, appointments, transfers, accommodation and follow-up. Hayakkom is not a healthcare provider and not a travel agency: treatment is delivered by independent licensed Egyptian doctors and hospitals, and trips, transfers and tourist transport are operated and invoiced by licensed Egyptian tourism and transport companies.
 
 Prices are indicative, in Saudi riyals (SAR), excluding flights; US-dollar figures in brackets use the fixed peg 1 USD = 3.75 SAR.
 
@@ -144,6 +144,7 @@ Hayakkom coordinates access under a documented authorisation from Alameda Health
 
 ## Markets
 
+- Hayakkom serves the GCC countries first (Saudi Arabia, the UAE, Kuwait, Qatar, Bahrain, Oman) and visitors from anywhere in the world, including travellers and residents already in Egypt. Market pages: [Russian-speaking visitors](https://www.hayakkom.com/ru/), [United Kingdom](https://www.hayakkom.com/uk/), and [doctor visits for anyone already in Egypt](https://www.hayakkom.com/hotel-doctor/).
 - [Saudi Arabia](https://www.hayakkom.com/saudi-arabia): why Saudi patients travel to Egypt, routes, SAR pricing, the before/during/after journey, and ten Saudi-specific questions answered.
 - [From Riyadh](https://www.hayakkom.com/saudi-arabia/riyadh): King Khalid International to Cairo, about 2h45–3h, flown daily by Saudia and EgyptAir.
 - [From Jeddah](https://www.hayakkom.com/saudi-arabia/jeddah): King Abdulaziz International to Cairo, about 2h15 — the shortest route from Saudi Arabia and the most frequent.
