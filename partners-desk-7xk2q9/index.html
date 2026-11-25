@@ -5035,10 +5035,12 @@
   function pbRender(box, r){
     var pb = (PB.partners || {})[r.id] || {};
     var brief = pb.brief || [r.category, r.city || r.country].filter(Boolean).join(", ");
-    box.innerHTML = '<p class="rs-hint">Zara shows these to customers straight away as Option A/B/C/D with the description below — <b>never the partner\'s name</b>. Enter only <b>official written</b> prices. If a price does not include our 15% commission, Zara adds it.' + (PB.egp_per_sar ? "" : " For EGP prices set the rate below.") + '</p>' +
+    box.innerHTML = '<p class="rs-hint">Zara shows these to customers straight away as Option A/B/C (the 3 partners closest to them) with the description below — <b>never the partner\'s name</b>. Enter only <b>official written</b> prices. If a price does not include our 15% commission, Zara adds it.' + (PB.egp_per_sar ? "" : " For EGP prices set the rate below.") + '</p>' +
       '<label class="prof-f"><span>Description customers see (no name)</span><input class="pb-brief" dir="auto" placeholder="e.g. JCI-accredited private hospital in New Cairo, 25 years, international patients team" value="' + esc(brief) + '"></label>' +
       '<label class="prof-f"><span>City</span><input class="pb-city" dir="auto" value="' + esc(pb.city || r.city || "") + '"></label>' +
       '<label class="prof-f"><span>Prices valid until</span><input class="pb-valid" type="date" value="' + esc(pb.valid_until || "") + '"></label>' +
+      '<label class="prof-f"><span>Branches (one per line: area, city)</span><textarea class="pb-locs" dir="auto" placeholder="New Cairo, Cairo&#10;Sheikh Zayed, Giza">' + esc((pb.locations && pb.locations.length ? pb.locations : (r.locations || [])).map(function(l){ return [l.area, l.city].filter(Boolean).join(", "); }).join("\n")) + '</textarea></label>' +
+      '<p class="rs-hint">Zara proposes the 3 partners closest to the customer — add every branch.</p>' +
       '<div class="pb-rows">' + ((pb.items && pb.items.length ? pb.items : [{}]).map(pbRow).join("")) + '</div>' +
       '<div class="upd-row"><button type="button" class="btn pb-add">+ Add a price</button><button type="button" class="btn gold pb-save">Save prices</button><button type="button" class="btn pb-close">Close</button>' +
       '<label class="pb-rate">1 SAR = <input class="pb-egp" type="number" min="0" step="0.01" value="' + (PB.egp_per_sar || "") + '"> EGP</label><span class="pb-note"></span></div>';
@@ -5058,7 +5060,8 @@
     var egp = +box.querySelector(".pb-egp").value || 0;
     (egp && egp !== PB.egp_per_sar ? pbCall({ op: "rate", egp_per_sar: egp }) : Promise.resolve()).then(function(){
       return pbCall({ op: "set", partner: { id: r.id, name: r.name, brief: box.querySelector(".pb-brief").value.trim(), city: box.querySelector(".pb-city").value.trim(), kind: r.category || "",
-        valid_until: box.querySelector(".pb-valid").value, source: "Hub", items: items, by: myName() } });
+        valid_until: box.querySelector(".pb-valid").value, source: "Hub", items: items, by: myName(),
+        locations: box.querySelector(".pb-locs").value.split("\n").map(function(l){ var q = l.split(",").map(function(x){ return x.trim(); }).filter(Boolean); return q.length ? { area: q.length > 1 ? q.slice(0, -1).join(", ") : "", city: q[q.length - 1] } : null; }).filter(Boolean) } });
     }).then(function(res){
       if(!res || !res.ok){ note.textContent = "⚠ Couldn't save — try again."; return; }
       PB = res.book; note.textContent = "✓ Saved — Zara uses these now.";
