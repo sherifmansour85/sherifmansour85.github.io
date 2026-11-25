@@ -1497,7 +1497,7 @@
   };
   ANNOUNCE_TEMPLATES.partner_profile_en = {
     subject: "Please update your Hayakkom partner profile",
-    body: "Dear {{name}} team,\n\nTo route Gulf families to you faster and quote them accurately the first time, we're updating our partner directory.\n\nCould you take about 5 minutes to complete your profile here:\nhttps://form.jotform.com/263202563928055\n\nIt covers your contacts, accreditation, facility photos, logo, price list and social links.\n\nFor your profile, please also send us:\n• your doctors (full name, speciality, years of experience) and the specialities you cover,\n• your official price list — written, on your letterhead or signed and stamped, with prices valid until a stated date (we can only share prices you have confirmed in writing),\n• how quickly you can usually reply to a quotation request,\n• your available appointment dates over the next 4–8 weeks, and any dates you're closed,\n• any patient reviews or ratings you publish (Google, Vezeeta, etc.).\n\nThank you for working with us.\n\nKind regards."
+    body: "Dear {{name}} team,\n\nTo route Gulf families to you faster and quote them accurately the first time, we're updating our partner directory.\n\nCould you take about 5 minutes to complete your profile here:\nhttps://form.jotform.com/263202563928055\n\nIt covers your contacts, accreditation, facility photos, logo (PNG, ideally with a transparent background), price list and social links.\n\nFor your profile, please also send us:\n• your doctors (full name, speciality, years of experience) and the specialities you cover,\n• your official price list — written, on your letterhead or signed and stamped, with prices valid until a stated date (we can only share prices you have confirmed in writing),\n• how quickly you can usually reply to a quotation request,\n• your available appointment dates over the next 4–8 weeks, and any dates you're closed,\n• any patient reviews or ratings you publish (Google, Vezeeta, etc.).\n\nThank you for working with us.\n\nKind regards."
   };
 
   ANNOUNCE_TEMPLATES.partner_pricing_en = {
@@ -1510,7 +1510,7 @@
   };
   ANNOUNCE_TEMPLATES.partner_welcome_en = {
     subject: "Welcome to the Hayakkom partner network — next steps",
-    body: "Dear {{name}} team,\n\nThank you for joining the Hayakkom partner network. We coordinate treatment and stays in Egypt for families from Saudi Arabia, the UAE and Kuwait, and we're glad to have you with us.\n\nTo start receiving enquiries, here's what we need from you:\n\n1. Your completed partner profile (about 5 minutes):\nhttps://form.jotform.com/263202563928055\n2. Your licence or accreditation, a few photos of your facility and your logo (you can upload them in the same form).\n3. One contact person and a WhatsApp number we can reach quickly when a family is waiting.\n4. Your official written price list — on your letterhead, or signed and stamped, with the date it is valid until. We only quote families prices you have confirmed in writing.\n5. Your doctors and specialities, how quickly you can reply to a quotation request, and your available dates over the next 4–8 weeks.\n\nOnce your profile is in, we'll confirm your listing and share how referrals reach you.\n\nWe look forward to working together."
+    body: "Dear {{name}} team,\n\nThank you for joining the Hayakkom partner network. We coordinate treatment and stays in Egypt for families from Saudi Arabia, the UAE and Kuwait, and we're glad to have you with us.\n\nTo start receiving enquiries, here's what we need from you:\n\n1. Your completed partner profile (about 5 minutes):\nhttps://form.jotform.com/263202563928055\n2. Your licence or accreditation, a few photos of your facility and your logo as a PNG file, ideally with a transparent background (you can upload them in the same form).\n3. One contact person and a WhatsApp number we can reach quickly when a family is waiting.\n4. Your official written price list — on your letterhead, or signed and stamped, with the date it is valid until. We only quote families prices you have confirmed in writing.\n5. Your doctors and specialities, how quickly you can reply to a quotation request, and your available dates over the next 4–8 weeks.\n\nOnce your profile is in, we'll confirm your listing and share how referrals reach you.\n\nWe look forward to working together."
   };
   ANNOUNCE_TEMPLATES.partner_checkin_en = {
     subject: "Quick check-in from Hayakkom — prices and availability",
@@ -4499,7 +4499,7 @@
   var FORM_URL = "https://form.jotform.com/263202563928055";
   var FORM_STEPS = "What to do (about 5 minutes):\n" +
     "1. Open the link and fill in your facility details and contacts.\n" +
-    "2. If you can, upload your licence or accreditation, a few photos of your facility, your logo and your price list — all uploads are optional.\n" +
+    "2. If you can, upload your licence or accreditation, a few photos of your facility, your logo (as a PNG file, ideally with a transparent background) and your price list — all uploads are optional.\n" +
     "3. Press Submit — we'll review it and confirm your listing with you.";
   function partnerFormBlock(){ return "Please complete our partner form:\n" + FORM_URL + "\n\n" + FORM_STEPS; }
   function partnerReplyDraft(r){
@@ -6063,17 +6063,17 @@
       (contracts && contracts.length ? contracts.map(function(c){ return "• " + c.name + " — the Hayakkom partnership contract prepared for " + r.name + ". Please review it and send it back signed and stamped:\n  " + c.url; }).join("\n") + "\n" : "") + "\n" +
       "For your website team — please add (about 15 minutes):\n" +
       "1. A short section on your Partners or International patients page, with the badge linked to https://www.hayakkom.com :\n" +
-      "   English: \"" + r.name + " is an official partner of Hayakkom, which coordinates treatment and stays in Egypt for families from Saudi Arabia and the GCC.\"\n" +
-      "   Arabic: \"" + r.name + " شريك معتمد لدى حياكم، التي تنسّق العلاج والإقامة في مصر للعائلات القادمة من السعودية ودول الخليج.\"\n" +
+      "   English: \"" + r.name + " is an official partner of Hayakkom, which coordinates treatment and stays in Egypt for families and visitors from the GCC countries and around the world.\"\n" +
+      "   Arabic: \"" + r.name + " شريك معتمد لدى حياكم، التي تنسّق العلاج والإقامة في مصر للعائلات والزوار من دول مجلس التعاون الخليجي ومن جميع أنحاء العالم.\"\n" +
       "2. Use a normal link (no \"nofollow\"), and give the badge image the alt text \"Official partner of Hayakkom\".\n" +
       "3. If your site has structured data (schema.org), add https://www.hayakkom.com under \"memberOf\" or \"sameAs\" — the README shows the code.\n" +
       "4. Make sure that page is not blocked in robots.txt, so Google and AI assistants (ChatGPT, Gemini, Perplexity) can read it and connect " + r.name + " with Hayakkom.\n" +
       "5. Reply to this email with the page link once it's live — we'll link back to you from your Hayakkom listing.\n\n" +
-      "How families choose a partner: when a family asks us about a treatment or a stay, our coordinator immediately proposes the 3 partners closest to them, each with a short description (without your name at that stage) and your written price; the family chooses. So please send your official written price list (letterhead, or signed and stamped, with what each price includes and the validity date), say clearly whether the prices include Hayakkom's 15% commission, keep them competitive, and list all your branches in the form.\n\n" +
+      "How families choose a partner: when a family asks us about a treatment or a stay, our coordinator immediately proposes the 3 partners closest to where they will stay in Egypt, each with a short description (without your name at that stage) and your written price; the family chooses. So please send your official written price list (letterhead, or signed and stamped, with what each price includes and the validity date), say clearly whether the prices include Hayakkom's 15% commission, keep them competitive, and list all your branches in the form.\n\n" +
       (anSector("partners", r.category || "", r) === "medical" ? "Reservations: when a family books treatment, they pay a reservation deposit of at least EGP 1,000 against an official written reservation. To save you time, we can prepare the reservation document on your behalf — you only stamp and sign it.\n\n" : "") +
       "An optional opportunity: " + r.name + " can sponsor a relevant guide on hayakkom.com, or " + (anSector("partners", r.category || "", r) === "medical" ? "have your doctors credited as the medical reviewers of the treatment pages in your speciality (\"Medically reviewed by Dr …\")" : "be credited as the expert reviewer of the destination and stay guides in your area") + ". Each credit names " + r.name + " with a link to your website, which strengthens your visibility on Google and in AI assistants such as ChatGPT and Gemini, as they favour content reviewed by named experts. If this interests you, reply and we'll share the options.\n\n" +
       "One step from your side — please complete our partner form:\n" + PARTNER_FORM + "\n\n" + FORM_STEPS + "\n\n" +
-      "Everything you send through the form is filed in your folder, so we always present " + r.name + " accurately to the families we coordinate from Saudi Arabia and the Gulf.\n\n" +
+      "Everything you send through the form is filed in your folder, so we always present " + r.name + " accurately to the families and visitors we coordinate from the GCC countries and around the world.\n\n" +
       "Kind regards.";
   }
   document.addEventListener("click", function(e){
