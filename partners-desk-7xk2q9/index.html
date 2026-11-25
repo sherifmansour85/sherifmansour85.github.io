@@ -1269,6 +1269,7 @@
   var DRAFTS_P = getEnc("drafts.enc.json");
   var AI_DRAFTS = [];
   var CAL_P = getEnc("calendar.enc.json");
+  var MKT_P = getEnc("marketing.enc.json"), MKT = null;   /* weekly marketing snapshot (GA4, Search Console, Bing) for Rawaj and Master */
   var SESSION_PW = "hk_session_pw";
   // Stay signed in on this device: phones often wipe the tab's memory on pull-to-refresh or when you switch
   // apps, so the password is also kept in this browser's storage for 30 days, renewed every time the Hub is
@@ -1362,7 +1363,8 @@
       }, function(){ ALL_HELP = []; renderHelpers(); }).then(function(){
         CAL_P = again(CAL_P, "calendar.enc.json"); DRAFTS_P = again(DRAFTS_P, "drafts.enc.json");
         return CAL_P.then(function(enc){ return enc ? decryptWith(val, enc) : null; }).then(function(c){ if(c) CAL = c; }, function(){})
-          .then(function(){ return DRAFTS_P.then(function(enc){ return enc ? decryptWith(val, enc) : []; }).then(function(d){ AI_DRAFTS = Array.isArray(d) ? d : []; }, function(){}); });
+          .then(function(){ return DRAFTS_P.then(function(enc){ return enc ? decryptWith(val, enc) : []; }).then(function(d){ AI_DRAFTS = Array.isArray(d) ? d : []; }, function(){}); })
+          .then(function(){ return MKT_P.then(function(enc){ return enc ? decryptWith(val, enc) : null; }).then(function(m){ MKT = m; }, function(){}); });
       }).then(function(){
         renderUpcoming();
         showView(currentView);
@@ -5183,7 +5185,16 @@
     L.push("HELPERS / APPLICANTS: " + helpers.length + " (" + helpers.filter(function(h){ return h.priority === "High"; }).map(function(h){ return h.name + " — " + (h.profession || ""); }).slice(0, 12).join("; ") + ")");
     var dec = state._decisions || {}, waiting = (AI_DRAFTS || []).filter(function(d){ return !dec[d.id]; });
     L.push("SUGGESTED EMAILS WAITING FOR APPROVAL: " + waiting.length + (waiting.length ? " — " + waiting.slice(0, 12).map(function(d){ var f = findRec(d.record_id); return (f ? f.rec.name : d.record_id) + " (" + (d.label || "") + ")"; }).join("; ") : ""));
+    if((AG_CUR === "rawaj" || AG_CUR === "master") && MKT){
+      L.push("MARKETING SNAPSHOT (" + (MKT.period || "") + ", updated " + String(MKT.updated || "").slice(0, 10) + "):");
+      L.push(JSON.stringify(MKT.data || MKT).slice(0, 6000));
+    }
+    if(AG_CUR === "rawaj"){
+      var kits = part.filter(function(p){ var st = state[p.id] || {}; return st.driveFolder || st.kitSent || p.kit_sent; });
+      L.push("PARTNERS WHO GOT THE KIT: " + (kits.length ? kits.map(function(p){ var st = state[p.id] || {}; return p.name + " (kit sent" + (p.website ? ", site " + p.website : "") + (p.website_link_check ? ", website link: " + p.website_link_check : "") + ")"; }).join("; ") : "none recorded"));
+    }
     if(AG_CUR === "master"){
+      if(WA_LAST && WA_LAST.length) L.push("RECENT WHATSAPP CONVERSATIONS: " + WA_LAST.slice(0, 15).map(function(c){ var h = c.hist || [], f = h[0] || {}; return (c.agent || "?") + " · " + String(c.updated || "").slice(0, 10) + " · " + String(f.t || "").replace(/\s+/g, " ").slice(0, 120); }).join(" | "));
       var funnel = {}; cust.forEach(function(c){ var s = effStatusOf(c) || "?"; funnel[s] = (funnel[s] || 0) + 1; });
       L.push("CUSTOMER STATUS COUNTS: " + Object.keys(funnel).map(function(k){ return k + " " + funnel[k]; }).join(", "));
       var pst = {}; part.forEach(function(p){ var s = effStatusOf(p) || "?"; pst[s] = (pst[s] || 0) + 1; });
@@ -5444,13 +5455,14 @@
     return (RAW_C || []).filter(function(c){ var x = String(c.phone || "").replace(/\D/g, "").replace(/^00/, ""); return x && (x.slice(-9) === d.slice(-9)); })[0] || null;
   }
   /* ---- WhatsApp conversations (one number, several agents) ---- */
+  var WA_LAST = [];
   var HUB_WA_URL = "https://zara.sherif-mansour-85.workers.dev/hub/wa", WA_NAMES = { zara:"Zara", rafiq:"Rafiq", jisr:"Jisr", amin:"Amin", rawaj:"Rawaj" }, WA_BUSY = false, WA_OPEN = {};
   function waLoad(){
     var box = document.getElementById("wa-list"); if(!box || WA_BUSY) return; WA_BUSY = true;
     box.querySelectorAll("details[open]").forEach(function(d){ WA_OPEN[d.getAttribute("data-id")] = 1; });
     hubAiKey().then(function(key){ return fetch(HUB_WA_URL, { method:"POST", headers:{ "content-type":"application/json", "x-hub-key": key }, body:"{}" }); })
     .then(function(r){ return r.json(); }).then(function(res){
-      WA_BUSY = false; var cs = res.conversations || [];
+      WA_BUSY = false; var cs = res.conversations || []; WA_LAST = cs;
       if(!cs.length){ box.innerHTML = '<p class="wa-empty">No WhatsApp conversations in the last 14 days yet.</p>'; return; }
       box.innerHTML = cs.map(function(c){
         var last = c.hist[c.hist.length - 1] || {}, when = c.updated ? new Date(c.updated).toLocaleString() : "";
