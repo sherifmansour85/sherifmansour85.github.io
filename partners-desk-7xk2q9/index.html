@@ -573,6 +573,7 @@
   .wa-conv summary::-webkit-details-marker{display:none}
   .wa-conv summary b{font-variant-numeric:tabular-nums}.wa-conv summary .wa-last{color:var(--sub);font-size:12.5px;flex:1 1 220px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .wa-tag{font-size:11px;font-weight:700;border-radius:999px;padding:2px 9px;background:#E6F4F5;color:#0B6E76}
+  .ms-tasks{margin-top:10px;padding-top:8px;border-top:1px dashed rgba(127,127,127,.35)}.ms-tasks .btn{white-space:normal;text-align:left}
   .wa-tag.rafiq{background:#FFF1DC;color:#8A5A00}.wa-tag.jisr{background:#EDE7FB;color:#5A3FA0}.wa-tag.amin{background:#E5F5EA;color:#1D7A43}.wa-tag.rawaj{background:#FCE8EF;color:#A0335A}
   .wa-msgs{padding:4px 14px 14px;display:flex;flex-direction:column;gap:7px}
   .wa-m{max-width:88%;padding:8px 11px;border-radius:12px;font-size:13px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
@@ -5152,7 +5153,7 @@
   //      The agents talk, plan and draft; anything sent to people is still approved by Reham in the Hub. ----
   var HUB_AGENT_URL = "https://zara.sherif-mansour-85.workers.dev/hub/agent";
   var AGENT_LIST = [
-    { key: "master", icon: "🧭", name: "Master", role: "General manager of all agents", hint: "Runs Hayakkom like a business: priorities, decisions, money, and what each agent should do. Try: “Give me this week’s review.” · “Where is the money this month?” · “What is missing for you to make Hayakkom a success?”" },
+    { key: "master", icon: "🧭", name: "Master", role: "General manager of all agents", hint: "Runs Hayakkom like a business: priorities, decisions, money, and what each agent should do. Try: “Give me this week’s review.” · “Where is the money this month?” · “What is missing for you to make Hayakkom a success?” — when he gives tasks to the agents, press ▶ to hand them out." },
     { key: "zara",  icon: "👩🏻‍💼", name: "Zara",  role: "Website & WhatsApp coordinator", hint: "Ask what visitors asked today, or how to answer a lead." },
     { key: "ali",   icon: "🗂", name: "Ali",   role: "Reham's assistant", hint: "“What should I do first today?” · “Who is waiting for a reply?”" },
     { key: "jisr",  icon: "🌉", name: "Jisr",  role: "Doctors & quotes", hint: "“Which partners still owe written prices?” · “Draft a quote request for an implant case.”" },
@@ -5224,7 +5225,9 @@
     var m = agMsgs(k), a = AGENT_LIST.filter(function(x){ return x.key === k; })[0];
     log.innerHTML = m.length ? m.map(function(x){
       var me = x.role !== "agent";
-      return '<div class="ag-m ' + (me ? "me" : "it") + '"><div class="ag-b" dir="auto">' + (me ? esc(x.text).replace(/\n/g, "<br>") : agMd(x.text)) + (x.files && x.files.length ? '<div class="ag-att">📎 ' + x.files.map(esc).join(" · ") + '</div>' : '') + '</div><small>' + esc(me ? (x.by || "Team") : a.name) + " · " + esc(String(x.at || "").slice(0, 16).replace("T", " ")) + '</small></div>';
+      var tasks = (!me && k === "master") ? masterTasks(x.text) : [];
+      return '<div class="ag-m ' + (me ? "me" : "it") + '"><div class="ag-b" dir="auto">' + (me ? esc(x.text).replace(/\n/g, "<br>") : agMd(x.text)) + (x.files && x.files.length ? '<div class="ag-att">📎 ' + x.files.map(esc).join(" · ") + '</div>' : '') +
+        (tasks.length ? '<div class="ms-tasks">' + (x.sent ? '✅ Sent to ' + esc(x.sent) : '<button type="button" class="btn gold ms-send" data-at="' + esc(x.at || "") + '">▶ Give these ' + tasks.length + ' task' + (tasks.length > 1 ? "s" : "") + ' to ' + esc(tasks.map(function(t){ return t.name; }).filter(function(v, i, a){ return a.indexOf(v) === i; }).join(", ")) + '</button>') + '</div>' : '') + '</div><small>' + esc(me ? (x.by || "Team") : a.name) + " · " + esc(String(x.at || "").slice(0, 16).replace("T", " ")) + '</small></div>';
     }).join("") : '<p class="ag-empty">Say hello to ' + esc(a.name) + '. ' + esc(a.hint) + '</p>';
     if(AG_BUSY[k]) log.insertAdjacentHTML("beforeend", '<div class="ag-m it"><div class="ag-b ag-typing"><span></span><span></span><span></span></div></div>');
     log.scrollTop = log.scrollHeight;
@@ -5274,6 +5277,42 @@
   document.addEventListener("click", function(e){
     var x = e.target.closest && e.target.closest(".ag-chip-x"); if(!x) return;
     (AG_FILES[AG_CUR] || []).splice(+x.getAttribute("data-i"), 1); agFilesRender();
+  });
+  /* 🧭 Master hands out work: lines like "TASK → Jisr: …" become tasks. Pressing the button posts each task in that agent's chat
+     (signed "Master") and the agent answers there — so the agents act on Master's decisions. Nothing is sent to customers or partners. */
+  function masterTasks(t){
+    var out = [], names = {}; AGENT_LIST.forEach(function(a){ if(a.key !== "master") names[a.name.toLowerCase()] = a; });
+    String(t || "").split("\n").forEach(function(l){
+      var m = l.replace(/\*\*/g, "").match(/TASK\s*(?:→|->|:)\s*([A-Za-z]+)\s*[:：-]\s*(.+)$/i);
+      if(m && names[m[1].toLowerCase()]) out.push({ key: names[m[1].toLowerCase()].key, name: names[m[1].toLowerCase()].name, text: m[2].trim() });
+    });
+    return out;
+  }
+  function agAskAs(k, text, by){
+    var a = AGENT_LIST.filter(function(x){ return x.key === k; })[0];
+    var list = agMsgs(k).concat([{ role: "user", by: by, text: text.slice(0, 4000), at: new Date().toISOString() }]);
+    agSave(k, list); AG_BUSY[k] = true; renderAgentTabsOnly();
+    act({ t: "log", kind: "agent", id: null, name: a.name, what: by + " → " + a.name + ": “" + text.slice(0, 140) + "”" });
+    var cur = AG_CUR; AG_CUR = k; var ctx = agContext(); AG_CUR = cur;
+    return hubAiKey().then(function(key){
+      return fetch(HUB_AGENT_URL, { method: "POST", headers: { "content-type": "application/json", "x-hub-key": key },
+        body: JSON.stringify({ agent: k, messages: list.slice(-24), context: ctx }) });
+    }).then(function(r){ return r.json(); }).then(function(res){
+      AG_BUSY[k] = false;
+      if(res.reply){ agSave(k, agMsgs(k).concat([{ role: "agent", text: res.reply.slice(0, 6000), at: new Date().toISOString() }]));
+        act({ t: "log", kind: "agent", id: null, name: a.name, what: a.name + " replied to " + by + ": “" + res.reply.replace(/\s+/g, " ").slice(0, 140) + "”" }); }
+      renderAgentTabsOnly(); if(AG_CUR === k) agRenderLog(k); return !!res.reply;
+    }).catch(function(){ AG_BUSY[k] = false; renderAgentTabsOnly(); return false; });
+  }
+  document.addEventListener("click", function(e){
+    var b = e.target.closest && e.target.closest(".ms-send"); if(!b) return;
+    var at = b.getAttribute("data-at"), list = agMsgs("master"), msg = list.filter(function(m){ return m.at === at && m.role === "agent"; })[0]; if(!msg) return;
+    var tasks = masterTasks(msg.text); if(!tasks.length) return;
+    b.disabled = true; b.textContent = "Sending to the agents…";
+    var by = "Master (approved by " + myName() + ")", done = [];
+    tasks.reduce(function(p, t){ return p.then(function(){ return agAskAs(t.key, "Task from Master: " + t.text + "\nDo it now with what the Hub shows; tell the team what you did, what you drafted for Reham to approve, and anything you need.", by).then(function(ok){ if(ok && done.indexOf(t.name) < 0) done.push(t.name); }); }); }, Promise.resolve()).then(function(){
+      msg.sent = done.join(", ") || "nobody (couldn't reach the agents)"; agSave("master", list); agRenderLog("master");
+    });
   });
   function agSend(){
     var k = AG_CUR, panel = document.getElementById("ag-panel"), ta = panel.querySelector(".ag-in"), note = panel.querySelector(".ag-note");
