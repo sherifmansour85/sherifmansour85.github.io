@@ -573,6 +573,7 @@
   .wa-conv summary::-webkit-details-marker{display:none}
   .wa-conv summary b{font-variant-numeric:tabular-nums}.wa-conv summary .wa-last{color:var(--sub);font-size:12.5px;flex:1 1 220px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .wa-tag{font-size:11px;font-weight:700;border-radius:999px;padding:2px 9px;background:#E6F4F5;color:#0B6E76}
+  .pb-btn.ok{border-color:#2e9e5b;color:#1D7A43}.pb-row{display:grid;grid-template-columns:2fr .8fr .8fr .7fr 1.1fr 1.6fr .9fr auto;gap:6px;margin:6px 0}.pb-row input,.pb-row select{min-width:0}.pb-rate{font-size:12px;display:inline-flex;gap:4px;align-items:center}.pb-rate input{width:70px}@media(max-width:760px){.pb-row{grid-template-columns:1fr 1fr}.pb-row .pb-s,.pb-row .pb-inc{grid-column:1/-1}}
   .ms-tasks{margin-top:10px;padding-top:8px;border-top:1px dashed rgba(127,127,127,.35)}.ms-tasks .btn{white-space:normal;text-align:left}
   .wa-tag.rafiq{background:#FFF1DC;color:#8A5A00}.wa-tag.jisr{background:#EDE7FB;color:#5A3FA0}.wa-tag.amin{background:#E5F5EA;color:#1D7A43}.wa-tag.rawaj{background:#FCE8EF;color:#A0335A}
   .wa-msgs{padding:4px 14px 14px;display:flex;flex-direction:column;gap:7px}
@@ -1367,6 +1368,7 @@
           .then(function(){ return MKT_P.then(function(enc){ return enc ? decryptWith(val, enc) : null; }).then(function(m){ MKT = m; }, function(){}); });
       }).then(function(){
         renderUpcoming();
+        pbLoad().then(function(){ if(PB_LOADED && Object.keys(PB.partners).length) rerenderAll(); });
         showView(currentView);
         renderSyncPills();
         return SYNC_P.then(function(sh){
@@ -5009,8 +5011,62 @@
         '<div class="upd-row"><button type="button" class="btn gold prof-save">Save profile</button><button type="button" class="btn prof-cancel">Close</button>'+
         '<small>Ask for written prices with the template “Partners: send us your official written price list”.</small></div>';
       acts.parentNode.insertBefore(box, acts.nextSibling);
+      /* 💰 price list for Zara (kept in the relay's price book, not Drive) */
+      var pb = (PB.partners || {})[id];
+      var pbtn = document.createElement("button"); pbtn.type = "button"; pbtn.className = "btn pb-btn" + (pb && pb.items && pb.items.length ? " ok" : "");
+      pbtn.textContent = "💰 Prices for Zara" + (pb && pb.items && pb.items.length ? " (" + pb.items.length + ")" : " — none");
+      pbtn.title = "Official written prices Zara quotes to customers at once as anonymised options";
+      acts.insertBefore(pbtn, btn.nextSibling);
+      var pbox = document.createElement("div"); pbox.className = "prof-box pb-box"; pbox.hidden = !PB_OPEN[id];
+      acts.parentNode.insertBefore(pbox, box.nextSibling);
+      if(!pbox.hidden) pbRender(pbox, f.rec);
     });
   }
+  /* ---- 💰 Price book: partners' official written prices → Zara answers customers at once with 3–4 anonymised options ---- */
+  var HUB_PRICES_URL = "https://zara.sherif-mansour-85.workers.dev/hub/prices", PB = { partners: {} }, PB_OPEN = {}, PB_LOADED = false;
+  function pbCall(body){ return hubAiKey().then(function(key){ return fetch(HUB_PRICES_URL, { method: "POST", headers: { "content-type": "application/json", "x-hub-key": key }, body: JSON.stringify(body || {}) }); }).then(function(r){ return r.json(); }); }
+  function pbLoad(){ return pbCall({}).then(function(res){ if(res && res.book){ PB = res.book; PB.partners = PB.partners || {}; PB_LOADED = true; } }).catch(function(){}); }
+  function pbRow(it){ it = it || {};
+    return '<div class="pb-row"><input class="pb-s" dir="auto" placeholder="Service (e.g. Dental implant, one tooth with crown)" value="' + esc(it.service || "") + '">' +
+      '<input class="pb-p" type="number" min="0" placeholder="Price" value="' + (it.price || "") + '"><input class="pb-p2" type="number" min="0" placeholder="to (optional)" value="' + (it.price_to || "") + '">' +
+      '<select class="pb-c">' + ["SAR", "USD", "EGP"].map(function(c){ return '<option' + (it.cur === c ? " selected" : "") + '>' + c + '</option>'; }).join("") + '</select>' +
+      '<select class="pb-i"><option value="no"' + (!it.incl ? " selected" : "") + '>+15% added</option><option value="yes"' + (it.incl ? " selected" : "") + '>already incl. 15%</option></select>' +
+      '<input class="pb-inc" dir="auto" placeholder="What it includes" value="' + esc(it.includes || "") + '"><input class="pb-st" dir="auto" placeholder="Stay (e.g. 5 days)" value="' + esc(it.stay || "") + '"><button type="button" class="btn pb-del" title="Remove">✕</button></div>'; }
+  function pbRender(box, r){
+    var pb = (PB.partners || {})[r.id] || {};
+    var brief = pb.brief || [r.category, r.city || r.country].filter(Boolean).join(", ");
+    box.innerHTML = '<p class="rs-hint">Zara shows these to customers straight away as Option A/B/C/D with the description below — <b>never the partner\'s name</b>. Enter only <b>official written</b> prices. If a price does not include our 15% commission, Zara adds it.' + (PB.egp_per_sar ? "" : " For EGP prices set the rate below.") + '</p>' +
+      '<label class="prof-f"><span>Description customers see (no name)</span><input class="pb-brief" dir="auto" placeholder="e.g. JCI-accredited private hospital in New Cairo, 25 years, international patients team" value="' + esc(brief) + '"></label>' +
+      '<label class="prof-f"><span>City</span><input class="pb-city" dir="auto" value="' + esc(pb.city || r.city || "") + '"></label>' +
+      '<label class="prof-f"><span>Prices valid until</span><input class="pb-valid" type="date" value="' + esc(pb.valid_until || "") + '"></label>' +
+      '<div class="pb-rows">' + ((pb.items && pb.items.length ? pb.items : [{}]).map(pbRow).join("")) + '</div>' +
+      '<div class="upd-row"><button type="button" class="btn pb-add">+ Add a price</button><button type="button" class="btn gold pb-save">Save prices</button><button type="button" class="btn pb-close">Close</button>' +
+      '<label class="pb-rate">1 SAR = <input class="pb-egp" type="number" min="0" step="0.01" value="' + (PB.egp_per_sar || "") + '"> EGP</label><span class="pb-note"></span></div>';
+  }
+  document.addEventListener("click", function(e){
+    if(!e.target.closest) return;
+    var card = e.target.closest("#view-partners .card[data-id]"); if(!card) return;
+    var f = findRec(card.getAttribute("data-id")); if(!f) return; var r = f.rec, box = card.querySelector(".pb-box"); if(!box) return;
+    if(e.target.closest(".pb-btn")){ box.hidden = !box.hidden; PB_OPEN[r.id] = !box.hidden; if(!box.hidden){ box.innerHTML = '<p class="rs-hint">Loading…</p>'; pbLoad().then(function(){ pbRender(box, r); }); } return; }
+    if(e.target.closest(".pb-close")){ box.hidden = true; PB_OPEN[r.id] = false; return; }
+    if(e.target.closest(".pb-add")){ box.querySelector(".pb-rows").insertAdjacentHTML("beforeend", pbRow({})); return; }
+    if(e.target.closest(".pb-del")){ e.target.closest(".pb-row").remove(); return; }
+    if(!e.target.closest(".pb-save")) return;
+    var items = [].map.call(box.querySelectorAll(".pb-row"), function(row){ return { service: row.querySelector(".pb-s").value.trim(), price: +row.querySelector(".pb-p").value || 0, price_to: +row.querySelector(".pb-p2").value || 0,
+      cur: row.querySelector(".pb-c").value, incl: row.querySelector(".pb-i").value === "yes", includes: row.querySelector(".pb-inc").value.trim(), stay: row.querySelector(".pb-st").value.trim() }; }).filter(function(x){ return x.service && x.price > 0; });
+    var note = box.querySelector(".pb-note"); note.textContent = "Saving…";
+    var egp = +box.querySelector(".pb-egp").value || 0;
+    (egp && egp !== PB.egp_per_sar ? pbCall({ op: "rate", egp_per_sar: egp }) : Promise.resolve()).then(function(){
+      return pbCall({ op: "set", partner: { id: r.id, name: r.name, brief: box.querySelector(".pb-brief").value.trim(), city: box.querySelector(".pb-city").value.trim(), kind: r.category || "",
+        valid_until: box.querySelector(".pb-valid").value, source: "Hub", items: items, by: myName() } });
+    }).then(function(res){
+      if(!res || !res.ok){ note.textContent = "⚠ Couldn't save — try again."; return; }
+      PB = res.book; note.textContent = "✓ Saved — Zara uses these now.";
+      if(items.length){ var pr = profOf(r.id); if(!pr.writtenPrices){ pr = Object.assign({}, pr, { writtenPrices: true, updatedAt: new Date().toISOString(), updatedBy: myName() }); if(box.querySelector(".pb-valid").value) pr.pricesUntil = box.querySelector(".pb-valid").value; state[r.id] = state[r.id] || {}; state[r.id].prof = pr; saveState(state); } }
+      act({ t: "log", kind: "partner", id: r.id, name: r.name, what: "💰 Prices for Zara saved: " + items.length + " price" + (items.length === 1 ? "" : "s") });
+      setTimeout(rerenderAll, 900);
+    }).catch(function(){ note.textContent = "⚠ Couldn't reach the price book — check the connection."; });
+  });
   document.addEventListener("click", function(e){
     if(!e.target.closest) return;
     var card = e.target.closest("#view-partners .card[data-id]"); if(!card) return;
