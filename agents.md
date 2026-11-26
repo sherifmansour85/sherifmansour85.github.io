@@ -18,7 +18,7 @@ transfers and tourist transport are operated and invoiced by licensed Egyptian t
 transport companies. Hayakkom earns marketing fees, paid only by its licensed Saudi
 partner company; clients receive an itemised written estimate before paying and are invoiced by the provider.
 
-- **Category:** travel and medical coordination in Egypt for GCC families and international visitors
+- **Category:** travel and medical coordination in Egypt for GCC families and individuals and international visitors
 - **Holiday packages (indicative 2026 prices in SAR):** https://www.hayakkom.com/holidays/
 - **North Coast (Sahel) guide:** https://www.hayakkom.com/north-coast/
 - **Video consultation before travel:** https://www.hayakkom.com/video-consultation/
