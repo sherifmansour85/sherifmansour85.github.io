@@ -269,6 +269,19 @@
   .stat .s-num{font-family:Georgia,serif;font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink)}
   .stat .s-lbl{font-size:11.5px;color:var(--sub);margin-top:2px}
   .stat .s-sub{font-size:11.5px;color:var(--sub);margin-top:6px}
+  .lv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr));gap:14px}
+  .lv-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-width:0}
+  .lv-card h3{margin:0 0 8px;font-size:15px;color:var(--ink);display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+  .lv-card h3 small{font-weight:400;color:var(--sub);font-size:12px}
+  .lv-row{border-top:1px solid var(--line);padding:7px 0;font-size:13px;line-height:1.4;overflow-wrap:anywhere}
+  .lv-row:first-of-type{border-top:0}
+  .lv-row b{color:var(--ink)} .lv-sub{color:var(--sub);font-size:12px}
+  .lv-tag{display:inline-block;font-size:11px;border-radius:999px;padding:1px 8px;margin-left:4px;background:#EEF3F1;color:#21564F}
+  .lv-tag.warn{background:#FFF4D6;color:#7A5300} .lv-tag.crit{background:#FDE3DF;color:#8A1C10}
+  .lv-btn{font-size:12px;padding:4px 10px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;margin-top:4px}
+  .lv-alert{background:#FDE3DF;border-color:#F2B8AE}
+  .lv-empty{color:var(--sub);font-size:13px;padding:4px 0}
+  .lv-head{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap;margin-bottom:12px}
   .dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:14px}
   .chart-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
   .chart-card.wide{grid-column:1/-1}
@@ -646,6 +659,7 @@
 
   <div class="view-toggle">
     <button class="view-btn active" id="view-btn-dashboard" type="button">📊 Dashboard</button>
+    <button class="view-btn" id="view-btn-live" type="button">📡 Live</button>
     <button class="view-btn" id="view-btn-partners" type="button">🤝 Partners</button>
     <button class="view-btn" id="view-btn-customers" type="button">🧳 Customers</button>
     <button class="view-btn" id="view-btn-helpers" type="button">🧰 Helpers</button>
@@ -676,6 +690,12 @@
     <div class="brief" id="dash-brief"></div>
     <div class="stat-row" id="dash-stats"></div>
     <div class="dash-grid" id="dash-charts"></div>
+  </div>
+
+  <div id="view-live" style="display:none">
+    <div class="lv-head"><div><h2 class="dash-title">Live — what is happening now</h2><p class="lede" id="lv-asof" style="margin:2px 0 0">Loading…</p></div>
+      <button class="lv-btn" id="lv-refresh" type="button">↻ Refresh</button></div>
+    <div class="lv-grid" id="lv-grid"></div>
   </div>
 
   <div id="view-calendar" style="display:none">
@@ -1270,6 +1290,7 @@
   var DRAFTS_P = getEnc("drafts.enc.json");
   var AI_DRAFTS = [];
   var CAL_P = getEnc("calendar.enc.json");
+  var WF_P = getEnc("workflow.enc.json"), WF = null;   /* Sherif's to-do list and decisions (Master keeps it) */
   var MKT_P = getEnc("marketing.enc.json"), MKT = null;   /* weekly marketing snapshot (GA4, Search Console, Bing) for Rawaj and Master */
   var SESSION_PW = "hk_session_pw";
   // Stay signed in on this device: phones often wipe the tab's memory on pull-to-refresh or when you switch
@@ -1365,7 +1386,8 @@
         CAL_P = again(CAL_P, "calendar.enc.json"); DRAFTS_P = again(DRAFTS_P, "drafts.enc.json");
         return CAL_P.then(function(enc){ return enc ? decryptWith(val, enc) : null; }).then(function(c){ if(c) CAL = c; }, function(){})
           .then(function(){ return DRAFTS_P.then(function(enc){ return enc ? decryptWith(val, enc) : []; }).then(function(d){ AI_DRAFTS = Array.isArray(d) ? d : []; }, function(){}); })
-          .then(function(){ return MKT_P.then(function(enc){ return enc ? decryptWith(val, enc) : null; }).then(function(m){ MKT = m; }, function(){}); });
+          .then(function(){ return MKT_P.then(function(enc){ return enc ? decryptWith(val, enc) : null; }).then(function(m){ MKT = m; }, function(){}); })
+          .then(function(){ return WF_P.then(function(enc){ return enc ? decryptWith(val, enc) : null; }).then(function(w){ WF = w; }, function(){}); });
       }).then(function(){
         renderUpcoming();
         pbLoad().then(function(){ if(PB_LOADED && Object.keys(PB.partners).length) rerenderAll(); });
@@ -2768,7 +2790,7 @@
   }
 
   // ---- view toggle ----
-  var VIEWS = ["dashboard","partners","customers","helpers","calendar","announce","forms","agents"];
+  var VIEWS = ["dashboard","live","partners","customers","helpers","calendar","announce","forms","agents"];
   var currentView = (function(){ var h = (location.hash||"").slice(1); return VIEWS.indexOf(h) >= 0 ? h : "dashboard"; })();
   var NAV_POP = false;
   function showView(name){
@@ -2783,9 +2805,107 @@
     if(name==="announce"){ renderBrief("an-brief", "announce"); if(!announceRendered){ renderAnnounceRecipients(); announceRendered = true; } }
     if(name==="dashboard") renderDashboard();
     if(name==="calendar") renderCalendar();
+    if(name==="live") liveLoad(); else liveStop();
     if(name==="agents"){ renderAgents(); waLoad(); try{ pull(); }catch(e){} agBadgeNav(); }
     renderUpcoming();
   }
+
+  /* ==== LIVE DASHBOARD: reads stored data only (no AI), refreshes every minute while this tab is open ==== */
+  var LIVE = null, LIVE_T = null, LIVE_URL = "https://zara.sherif-mansour-85.workers.dev/hub/";
+  function livePost(path, body){ return hubAiKey().then(function(key){ return fetch(LIVE_URL + path, { method:"POST", headers:{ "content-type":"application/json", "x-hub-key": key }, body: JSON.stringify(body||{}) }); }).then(function(r){ return r.json(); }); }
+  function liveLoad(){
+    liveStop();
+    livePost("live", {}).then(function(d){ if(d && !d.error){ LIVE = d; } renderLive(); }).catch(function(){ renderLive(); });
+    LIVE_T = setInterval(function(){ if(document.visibilityState === "visible" && currentView === "live") livePost("live", {}).then(function(d){ if(d && !d.error){ LIVE = d; renderLive(); } }).catch(function(){}); }, 60000);
+  }
+  function liveStop(){ if(LIVE_T){ clearInterval(LIVE_T); LIVE_T = null; } }
+  function ago(t){ if(!t) return ""; var ms = Date.now() - (typeof t === "number" ? t : Date.parse(t)); if(!(ms >= 0)) return ""; var m = Math.round(ms/60000);
+    return m < 1 ? "just now" : m < 60 ? m + " min ago" : m < 1440 ? Math.round(m/60) + " h ago" : Math.round(m/1440) + " days ago"; }
+  function lvCard(title, sub, rows, cls){ return '<div class="lv-card ' + (cls||"") + '"><h3>' + title + (sub ? ' <small>' + sub + '</small>' : '') + '</h3>' + (rows.length ? rows.join("") : '<div class="lv-empty">Nothing here right now.</div>') + '</div>'; }
+  var LV_AGENTS = [["zara","🌸 Zara"],["rafiq","🧭 Rafiq"],["jisr","🤝 Jisr"],["amin","💳 Amin"],["rawaj","📈 Rawaj"],["ali","🗂️ Ali"],["master","🧭 Master"]];
+  function lvRegion(t){ t = String(t||"").toLowerCase();
+    if(/hurghada|gouna|safaga|soma|marsa alam|red sea|الغردقة|سفاجا|مرسى/.test(t)) return "Red Sea";
+    if(/sharm|dahab|sinai|taba|nuweiba|ras sedr|شرم|دهب|سيناء/.test(t)) return "Sinai";
+    if(/luxor|aswan|nile cruise|الأقصر|أسوان/.test(t)) return "Luxor / Aswan";
+    if(/alex|sahel|north coast|alamein|marassi|الساحل|الإسكندرية|العلمين/.test(t)) return "North Coast / Alexandria";
+    if(/sokhna|galala|السخنة/.test(t)) return "Ain Sokhna";
+    if(/siwa|fayoum|oasis|سيوة|الفيوم/.test(t)) return "Siwa / Fayoum";
+    return "Cairo / Giza"; }
+  function renderLive(){
+    var el = document.getElementById("lv-grid"); if(!el) return;
+    var d = LIVE || { act:[], alerts:[], tasks:{}, mail:{ configured:false, log:[] }, enq:[], wa:[], partners:[] };
+    document.getElementById("lv-asof").textContent = LIVE ? "Updated " + new Date(d.now).toLocaleTimeString() + " · refreshes every minute while this tab is open · no AI cost" : "Could not reach the live service — showing the Hub's own data.";
+    var cards = [];
+    // 1. urgent alerts
+    var open = (d.alerts||[]).filter(function(a){ return a.level === "urgent" && !a.ack && !/test/i.test(a.who||""); });
+    cards.push(lvCard("🚨 Urgent — needs a person now", open.length + " open", open.slice(0,8).map(function(a){
+      return '<div class="lv-row"><b>' + esc(a.title) + '</b> <span class="lv-sub">' + ago(a.at) + ' · ' + esc(a.who||"") + '</span><br>' + esc(a.text||"") +
+        (a.call && a.call.owner_name ? '<div class="lv-sub">On duty: ' + esc(a.call.owner_name) + (a.call.owner_phone ? ' · <a href="tel:' + esc(a.call.owner_phone) + '">' + esc(a.call.owner_phone) + '</a>' : '') + '</div>' : '') +
+        '<button class="lv-btn" data-lv-ack="' + esc(a.id) + '">✓ Received</button></div>'; }), open.length ? "lv-alert" : ""));
+    // 2. agents now
+    var last = {}; (d.act||[]).forEach(function(x){ if(!last[x.agent]) last[x.agent] = x; });
+    (d.wa||[]).forEach(function(w){ var t = w.updated; if(w.agent && (!last[w.agent] || Date.parse(t) > Date.parse(last[w.agent].at))) last[w.agent] = { at:t, text:"WhatsApp conversation" }; });
+    cards.push(lvCard("🤖 Agents — latest work", "", LV_AGENTS.map(function(a){ var x = last[a[0]];
+      return '<div class="lv-row"><b>' + a[1] + '</b> ' + (x ? '<span class="lv-sub">' + ago(x.at) + '</span><br>' + esc(x.text) + (x.urgent ? ' <span class="lv-tag crit">urgent</span>' : '') : '<span class="lv-sub">no activity yet</span>') + '</div>'; })));
+    // 3. waiting clients (Hub data) + questions to clinics (live)
+    var waiting = ALL_CUST.filter(function(r){ if(isCustArchived(r) || lastContacted(r) || /legacy|old zara/i.test(r.source||"") || /\btest\b/i.test(r.name||"")) return false;
+      var t = Date.parse(r.received_at || r.date || ""); return t && Date.now() - t < 60*86400000; })
+      .sort(function(a,b){ return Date.parse(a.received_at||a.date) - Date.parse(b.received_at||b.date); });
+    var wr = waiting.slice(0,10).map(function(r){ var h = Math.round((Date.now() - Date.parse(r.received_at||r.date))/3600000);
+      return '<div class="lv-row"><b>' + esc(r.name||"Client") + '</b> <span class="lv-tag ' + (h > 12 ? "crit" : "warn") + '">waiting ' + (h < 48 ? h + " h" : Math.round(h/24) + " days") + '</span><br><span class="lv-sub">' + esc((r.enquiry_type||"") + " · " + (r.source||"")) + '</span></div>'; });
+    (d.enq||[]).forEach(function(e){ wr.unshift('<div class="lv-row"><b>Question to clinics ' + esc(e.ref) + '</b> <span class="lv-sub">' + ago(e.created) + '</span><br>' + esc(e.question) + '<div class="lv-sub">' +
+      e.partners.map(function(p){ return "Option " + esc(p.opt) + ": " + (p.replied ? "answered" : p.missed ? "no reply" : p.escSent ? "escalated" : "waiting") + (p.replacement ? " (replacement)" : ""); }).join(" · ") + '</div></div>'); });
+    cards.push(lvCard("⏳ Waiting for us", waiting.length + " clients · " + (d.enq||[]).length + " clinic questions", wr));
+    // 4. WhatsApp right now
+    var wa24 = (d.wa||[]).filter(function(w){ return w.updated && Date.now() - Date.parse(w.updated) < 86400000; });
+    cards.push(lvCard("💬 WhatsApp", wa24.length + " conversations in the last 24 h", (d.wa||[]).slice(0,6).map(function(w){
+      return '<div class="lv-row"><b>' + esc((w.agent||"zara").replace(/^./, function(c){ return c.toUpperCase(); })) + '</b> <span class="lv-sub">' + ago(w.updated) + ' · #' + esc(w.id) + '</span><br>' + esc(w.last||"") + '</div>'; })));
+    // 5. partners: late / paused / price book
+    var pr = (d.partners||[]);
+    var late = pr.filter(function(p){ return p.resp && ((p.resp.missed||0) + (p.resp.late||0)) > 0; }).sort(function(a,b){ return (b.resp.missed||0) - (a.resp.missed||0); });
+    cards.push(lvCard("🐢 Partner response", pr.filter(function(p){ return p.priced; }).length + " with prices · " + pr.filter(function(p){ return p.onrequest; }).length + " on request",
+      late.slice(0,8).map(function(p){ var r = p.resp; return '<div class="lv-row"><b>' + esc(p.name||p.id) + '</b>' + (p.paused ? ' <span class="lv-tag crit">paused</span>' : '') + '<br><span class="lv-sub">asked ' + (r.asked||0) + ' · answered ' + (r.replied||0) + ' · late ' + (r.late||0) + ' · missed ' + (r.missed||0) + '</span></div>'; })));
+    // 6. next 7 days
+    var now = Date.now(), wk = now + 7*86400000;
+    var evs = ((CAL && CAL.events) || []).filter(function(e){ var t = Date.parse(e.start); return t >= now - 3600000 && t <= wk; }).sort(function(a,b){ return Date.parse(a.start) - Date.parse(b.start); });
+    cards.push(lvCard("📅 Next 7 days", evs.length + " events", evs.slice(0,8).map(function(e){ return '<div class="lv-row"><b>' + esc(e.subject) + '</b><br><span class="lv-sub">' + esc(new Date(e.start).toLocaleString([], { weekday:"short", day:"numeric", month:"short", hour:"2-digit", minute:"2-digit" })) + (e.location ? ' · ' + esc(e.location) : '') + '</span></div>'; })));
+    // 7. Rafiq's database by region
+    var reg = {}; ALL.filter(function(r){ return !(state[r.id]&&state[r.id].deleted) && anSector("partners", (state[r.id]&&state[r.id].category) || r.category || "", r) === "tourism"; })
+      .forEach(function(r){ var g = lvRegion([r.city, r.summary, (r.locations||[]).map(function(l){ return (l.area||"") + " " + (l.city||""); }).join(" "), r.name].join(" ")); (reg[g] = reg[g] || []).push(r); });
+    var regs = ["Cairo / Giza","Red Sea","Sinai","Luxor / Aswan","North Coast / Alexandria","Ain Sokhna","Siwa / Fayoum"];
+    cards.push(lvCard("🏨 Rafiq — stays & tourism database", Object.keys(reg).reduce(function(n,k){ return n + reg[k].length; }, 0) + " partners", regs.map(function(g){ var l = reg[g] || [];
+      var priced = l.filter(function(r){ return pr.some(function(p){ return p.id === r.id && p.priced; }); }).length;
+      return '<div class="lv-row"><b>' + g + '</b> <span class="lv-tag ' + (l.length ? "" : "warn") + '">' + l.length + '</span> <span class="lv-sub">' + priced + ' with written prices</span>' + (l.length ? '<br><span class="lv-sub">' + l.slice(0,4).map(function(r){ return esc(r.name); }).join(" · ") + (l.length > 4 ? " …" : "") + '</span>' : '') + '</div>'; })));
+    // 8. money (Amin)
+    var booked = ALL_CUST.filter(function(r){ return custStage(r) === "Booked"; });
+    var comm = booked.reduce(function(s, r){ var st = state[r.id]||{}; var v = +(st.dealValue || r.deal_value || 0); var pct = st.commissionPct!=null ? +st.commissionPct : (r.commission_pct || 15); return s + v * pct / 100; }, 0);
+    cards.push(lvCard("💳 Money — Amin", "partners collect; we are paid monthly", ['<div class="lv-row"><b>' + booked.length + ' booked</b> · expected Hayakkom share <b>' + Math.round(comm).toLocaleString() + ' SAR</b><br><span class="lv-sub">Monthly statements per partner start with the first booking. Reservation fees and video-consultation shares (40%) will show here.</span></div>']));
+    // 9. tasks for the team (partners we can only reach by hand)
+    var tasks = ALL.filter(function(r){ return !(state[r.id]&&state[r.id].deleted) && !r.email && !(r.emails||[]).length && !/low priority|vendor/i.test((r.status||"") + " " + (r.category||"")); });
+    cards.push(lvCard("✅ Tasks for the team", "partners with no email", tasks.filter(function(r){ return !((d.tasks||{})["reach-" + r.id]||{}).done; }).slice(0,5).map(function(r){
+      var so = r.social || {}, link = so.instagram || so.facebook || so.tiktok || so.website || "";
+      var how = link ? '<a href="' + esc(link) + '" target="_blank" rel="noopener">open their page</a> and send the message below' : (r.phone ? 'call or WhatsApp ' + esc(r.phone) : 'find a contact');
+      var msg = "Hello " + (r.contact || r.name) + ", this is Hayakkom (www.hayakkom.com). We coordinate treatment and stays in Egypt for clients from the GCC and abroad and would like to list you as a partner. Could you share an email address so we can send our short partner form?";
+      return '<div class="lv-row"><b>' + esc(r.name) + '</b><br><span class="lv-sub">' + how + '</span><br><span class="lv-sub">“' + esc(msg) + '”</span><br><button class="lv-btn" data-lv-copy="' + esc(msg) + '">Copy message</button> <button class="lv-btn" data-lv-task="reach-' + esc(r.id) + '">✓ Done</button></div>'; })));
+    // 10. email system
+    var ml = (d.mail && d.mail.log) || [];
+    cards.push(lvCard("✉️ Instant email (Zara)", d.mail && d.mail.configured ? "on" : "off — waiting for the Microsoft steps", ml.slice(0,6).map(function(x){ return '<div class="lv-row"><span class="lv-sub">' + ago(x.at) + '</span> ' + esc(x.customer ? "Client " + x.customer + (x.replied ? " answered" : " not answered") + (x.status === "stuck" ? " — needs a person" : "") : x.relayed ? "Clinic answer passed on " + x.relayed : x.asked ? "Asked clinics " + x.asked : x.left ? "Left for the weekly run (" + x.left + ")" : x.skip ? "Ignored (automatic email)" : JSON.stringify(x).slice(0,80)) + '</div>'; })));
+    // 11. reviews
+    var sat = ALL_CUST.filter(function(r){ var st = state[r.id]||{}; return st.satisfied || r.satisfied; }), rev = ALL_CUST.filter(function(r){ var st = state[r.id]||{}; return st.reviewed || r.reviewed; });
+    cards.push(lvCard("⭐ Satisfaction & reviews", sat.length + " satisfied · " + rev.length + " reviews", sat.length ? [] : ['<div class="lv-empty">Starts after the first completed trip or treatment: Zara asks if they are satisfied, and only then sends our Google review link (2 reminders at most).</div>']));
+    // 12. Sherif's to-do (Master keeps it)
+    var td = (WF && WF.sherif_todo && WF.sherif_todo.open) || [];
+    cards.push(lvCard("📝 Sherif's to-do", td.length + " open · kept by Master", td.slice(0,12).map(function(t){ return '<div class="lv-row"><b>' + esc(t.area) + '</b> <span class="lv-tag ' + (t.priority === "high" ? "crit" : t.priority === "medium" ? "warn" : "") + '">' + esc(t.priority||"") + '</span><br>' + esc(t.task) + '</div>'; })));
+    el.innerHTML = cards.join("");
+  }
+  document.addEventListener("click", function(e){
+    var b = e.target.closest("[data-lv-ack],[data-lv-task],[data-lv-copy],#lv-refresh"); if(!b) return;
+    if(b.id === "lv-refresh"){ liveLoad(); return; }
+    if(b.hasAttribute("data-lv-copy")){ try{ navigator.clipboard.writeText(b.getAttribute("data-lv-copy")); b.textContent = "Copied ✓"; }catch(x){} return; }
+    b.disabled = true;
+    var p = b.hasAttribute("data-lv-ack") ? livePost("alerts", { ack: b.getAttribute("data-lv-ack"), by: myName() }) : livePost("live", { op:"task", id: b.getAttribute("data-lv-task"), done: true, by: myName() });
+    p.then(function(){ liveLoad(); }).catch(function(){ b.disabled = false; });
+  });
   VIEWS.forEach(function(v){ document.getElementById("view-btn-"+v).addEventListener("click", function(){ showView(v); }); });
 
   function pillClass(kind, val){
