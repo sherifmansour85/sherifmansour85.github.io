@@ -1048,7 +1048,7 @@
     </div>
     <div class="field"><label>Note (optional)</label><input type="text" id="doc-note" placeholder="e.g. Quote for implants, valid until 30 Dec"></div>
     <p class="sd-note" id="doc-status"></p>
-    <div class="modal-actions"><button class="btn gold" id="doc-go" type="button">⬆ Save to Google Drive</button><button class="btn" id="doc-cancel" type="button">Cancel</button></div>
+    <div class="modal-actions"><button class="btn gold" id="doc-go" type="button">⬆ Save to OneDrive</button><button class="btn" id="doc-cancel" type="button">Cancel</button></div>
   </div>
 </div>
 
@@ -1079,7 +1079,7 @@
       <div class="field"><label>Title</label><select id="sd-title"></select></div>
     </div>
     <div class="field"><label>How should it go out?</label>
-      <label class="how"><input type="radio" name="sd-how" value="auto" checked> <span><b>Hayakkom sends it for me</b><br><small>From support@hayakkom.com at the next hourly update. Logged in History.</small></span></label>
+      <label class="how"><input type="radio" name="sd-how" value="auto" checked> <span><b>Hayakkom sends it for me</b><br><small>From support@hayakkom.com within about 5 minutes. Logged in History.</small></span></label>
       <label class="how"><input type="radio" name="sd-how" value="outlook"> <span><b>Open in my Outlook now</b><br><small>Sends straight away from your Outlook, with your logo signature if you've set it up.</small></span></label>
     </div>
     <div class="sig-preview" id="sd-sig"></div>
@@ -1345,7 +1345,7 @@
     var manual = !AUTO_UNLOCK, SYNC_P = null, STATE0 = null, pwOk = false;
     decryptWith(val, ENCRYPTED).then(function(json){
       pwOk = true; PW = val; sessSet(val);
-      // The team's shared storage (Google Apps Script) can take several seconds to answer:
+      // The team's shared storage can take a few seconds to answer:
       // show the Hub straight away from this device's copy and load the team's changes in the background.
       SYNC_WAIT = true;
       SYNC_P = syncGet(val);
@@ -3135,7 +3135,7 @@
             '<button class="btn contact-toggle">+ Add contact</button>'+
             '<button class="btn edit-toggle">Edit</button>'+
             (atts.length ? '<button class="btn atts-toggle">📎 Attachments ('+atts.length+')</button>' : '')+
-            '<button type="button" class="btn kit-btn" title="Create their Google Drive folder with the Hayakkom partner kit and email it to them">📦 Partner kit</button>'+
+            '<button type="button" class="btn kit-btn" title="Create their OneDrive folder with the Hayakkom partner kit and email it to them">📦 Partner kit</button>'+
             ((st.driveFolder || r.drive_folder) ? '<a class="btn" target="_blank" rel="noopener" href="'+esc(st.driveFolder || r.drive_folder)+'">📁 Drive folder</a>' : '')+
             '<div class="flag-wrap" style="position:relative;display:inline-block">'+
               '<button class="flag-btn" type="button"><span class="flag-dot flag-'+flag+'"></span>'+esc(flagOpt.label)+'</button>'+
@@ -4214,29 +4214,27 @@
   });
 
   // ================= Shared sync · suggested actions · approvals · history =================
-  // The site is static, so shared team state lives in Sherif's Google Drive behind a small Google
-  // Apps Script web app (folder "Hayakkom Hub"). Every change made here (archive, delete, contacted,
+  // The site is static, so shared team state lives in Hayakkom's Cloudflare worker (/hub/sync); documents
+  // and partner folders go to care@hayakkom.com's OneDrive (Hayakom Info Center). Every change made here (archive, delete, contacted,
   // approvals, new records) is posted to it straight away and everyone's Hub pulls it every minute,
   // so Reham, Sherif and any trainee see the same Hub. The script only answers requests carrying a
-  // token derived from the Hub password. The hourly job sends the approved emails.
-  var SYNC_URL = "https://script.google.com/macros/s/AKfycbyNF6QJPbxwaOH90YV7jA5c0yh-USYepimKa_7qxR0Nte8zKssTR8n63MymVv6k7AFhZg/exec";
+  // token derived from the Hub password. The worker's 5-minute cron sends the approved emails (max 25 a day).
+  var SYNC_URL = "https://zara.sherif-mansour-85.workers.dev/hub/sync";
   var SYNC_TOKEN = null, SYNC_ERR = "";
   function syncToken(pw){
     return crypto.subtle.digest("SHA-256", new TextEncoder().encode("hayakkom-hub:" + pw)).then(function(buf){
       return Array.prototype.map.call(new Uint8Array(buf), function(b){ return ("0" + b.toString(16)).slice(-2); }).join("").slice(0, 32);
     });
   }
-  // POST to the Google script and explain failures in plain words.
+  // POST to the team storage and explain failures in plain words.
   function scriptPost(body){
     return fetch(SYNC_URL, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify(body) })
-      .catch(function(){ throw new Error("the browser couldn't connect to Google (check the internet connection, or the deployment's access must be \"Anyone\")"); })
+      .catch(function(){ throw new Error("the browser couldn't connect to the team storage (check the internet connection)"); })
       .then(function(r){ return r.text(); })
       .then(function(t){
         try{ return JSON.parse(t); }catch(e){
           var msg = (t.match(/<div[^>]*>([^<]*(Exception|Error|permission|authoriz)[^<]*)<\/div>/i) || [])[1] || "";
-          if(/permission|authoriz/i.test(t)) throw new Error("the Google script needs your permission. In script.google.com choose the function doGet at the top, press ▶ Run, then Review permissions → Allow" + (msg ? " (" + msg + ")" : ""));
-          if(/sign in|accounts\.google/i.test(t)) throw new Error("the deployment is not open to the Hub — in Deploy → Manage deployments set 'Who has access' to Anyone");
-          throw new Error("the Google script returned an error" + (msg ? ": " + msg : " — please send Claude a screenshot"));
+          throw new Error("the team storage returned an error" + (msg ? ": " + msg : " — please send Claude a screenshot"));
         }
       });
   }
@@ -4341,7 +4339,7 @@
   function postActions(list){
     return fetch(SYNC_URL, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify({ t: SYNC_TOKEN, actions: list }) })
       .then(function(r){ return r.text(); })
-      .then(function(t){ var j = null; try{ j = JSON.parse(t); }catch(e){} if(!j) throw new Error("the Google script answered with a page instead of data (" + t.slice(0, 80).replace(/\s+/g, " ") + ")"); return j; });
+      .then(function(t){ var j = null; try{ j = JSON.parse(t); }catch(e){} if(!j) throw new Error("the team storage answered with a page instead of data (" + t.slice(0, 80).replace(/\s+/g, " ") + ")"); return j; });
   }
   function retryLater(){ clearTimeout(flushTimer); flushTimer = setTimeout(flush, 30000); }
   function flush(){
@@ -4762,7 +4760,7 @@
 
       (items.length ? '<div class="sugg-list">' + show.map(function(s, i){
         return '<div class="sugg-item'+(s.sent?' sent':(s.rank===0?' hot':''))+'" data-i="'+items.indexOf(s)+'">'+
-          (s.sent ? '<div class="sugg-sent-tag">✓ Approved'+(s.sent!=="✓" ? ' on '+esc(s.sent) : '')+' — sent (or sending at the next hourly update). Press 🗄 Archive to move it out of this list.</div>' : '')+
+          (s.sent ? '<div class="sugg-sent-tag">✓ Approved'+(s.sent!=="✓" ? ' on '+esc(s.sent) : '')+' — sent (or sending within about 5 minutes). Press 🗄 Archive to move it out of this list.</div>' : '')+
           '<div class="sugg-main"><div class="sugg-title"><span class="sugg-badge'+(s.ai?' ai':'')+'" title="'+(s.ai?'Written by Claude after reading the whole conversation':'Quick template — Claude replaces it with a written draft at the next hourly run')+'">'+(s.ai?'🤖 ':'')+esc(s.label)+(s.ai?'':' · template')+'</span> '+(s.rec ? '<button type="button" class="sugg-name" title="Show this card in the list">'+esc(s.rec.name)+' ↗</button>' : esc(s.to||""))+'</div>'+
           '<div class="sugg-why">'+esc(s.why)+'</div>'+
           (s.since || s.done ? '<div class="sugg-since">'+(s.since ? '📨 Contacted on '+esc(s.since)+' since this was written — check it\'s still needed, or press 🗄 Archive to move it out of the list.' : '')+(s.done ? ' ✔ Card marked done.' : '')+'</div>' : '')+
@@ -4921,7 +4919,7 @@
     var auto = document.querySelector('input[name="sd-how"]:checked').value === "auto";
     document.getElementById("sd-sig").innerHTML = auto ? '<div class="sig-text">'+esc(sigPlainFor(name, title))+'</div>' : sigHtmlFor(name, title);
     document.getElementById("sd-note").textContent = auto
-      ? "Hayakkom sends it from support@hayakkom.com at the next hourly update (within about an hour). The automatic sender can't attach images, so the signature goes out as text — name, title, email and website."
+      ? "Hayakkom sends it from support@hayakkom.com within about 5 minutes, with the Hayakkom logo signature (name, title, email and website)."
       : "Outlook opens with the email ready — press Send. If you set up the Outlook signature (✎ Set up logo signature), your logo is added automatically.";
   }
   wirePickers(sdPerson, sdTitle, updSendSig);
@@ -4947,7 +4945,7 @@
     if(how==="auto"){
       act({ t:"send", kind:o.kind, id:o.id, name:o.name, to:o.to, subject:o.subject, body:o.body, signer:name, title:title, key:o.key||null,
         what:"Approved — Hayakkom will send “" + o.subject + "” signed by " + name + " (" + title + ")" });
-      toast("Approved. Hayakkom sends it from support@hayakkom.com at the next hourly update.");
+      toast("Approved. Hayakkom sends it from support@hayakkom.com within about 5 minutes.");
     } else {
       var body = o.body + (sigTextOn() ? "\n\n" + sigPlainFor(name, title) : "");
       act({ t:"log", kind:o.kind, id:o.id, name:o.name, what:"Sent from Outlook: “" + o.subject + "” (signed " + name + ")", key:o.key||null, decision:"approved" });
@@ -6085,7 +6083,7 @@
   });
   ["view-partners","view-customers","view-helpers"].forEach(function(v){ var el = document.getElementById(v); if(el) histObs.observe(el, { childList:true, subtree:true }); });
 
-  // ---- 📎 Documents on partner and customer cards (saved to Google Drive by the Apps Script) ----
+  // ---- 📎 Documents on partner and customer cards (saved to care@ OneDrive by the team storage) ----
   var docModal = document.getElementById("doc-modal"), DOC_FOR = null;
   function decorateCards(){
     ["partners","customers"].forEach(function(view){
@@ -6096,7 +6094,7 @@
         var acts = card.querySelector(".card-actions"); if(!acts) return;
         var btn = document.createElement("button");
         btn.type = "button"; btn.className = "btn doc-btn"; btn.setAttribute("data-kind", kind);
-        btn.title = "Attach an invoice, quotation, contract or any document — saved to Google Drive";
+        btn.title = "Attach an invoice, quotation, contract or any document — saved to OneDrive";
         btn.textContent = "📎 Add document";
         acts.insertBefore(btn, acts.firstChild ? acts.firstChild.nextSibling : null);
         var docs = st.docs || [];
@@ -6123,7 +6121,7 @@
     var st = state[f.rec.id] || {};
     DOC_FOR = { kind: f.kind, id: f.rec.id, name: st.name || f.rec.name };
     document.getElementById("doc-title").textContent = "📎 Add a document — " + DOC_FOR.name;
-    document.getElementById("doc-sub").textContent = "Saved to Google Drive › Hayakom Info Center › " + (f.kind==="customer" ? "Hub Customers › " + DOC_FOR.name : "Contracts › Clinics › " + DOC_FOR.name + " › Documents") + ", and listed on this card for the whole team.";
+    document.getElementById("doc-sub").textContent = "Saved to OneDrive (care@) › Hayakom Info Center › " + (f.kind==="customer" ? "Hub Customers › " + DOC_FOR.name : "Contracts › Clinics › " + DOC_FOR.name + " › Documents") + ", and listed on this card for the whole team.";
     document.getElementById("doc-file").value = ""; document.getElementById("doc-note").value = ""; document.getElementById("doc-status").textContent = "";
     document.getElementById("doc-type").value = f.kind==="customer" ? "Quotation" : "Contract";
     docModal.classList.add("open");
@@ -6138,8 +6136,8 @@
     var files = Array.prototype.slice.call(document.getElementById("doc-file").files || []);
     var status = document.getElementById("doc-status"), go = this;
     if(!files.length){ status.textContent = "Choose a file first."; return; }
-    if(files.some(function(f){ return f.size > 25*1024*1024; })){ status.textContent = "One of the files is larger than 25 MB — please upload it to Google Drive directly."; return; }
-    if(!SYNC_TOKEN){ status.textContent = "The shared Google Drive storage isn't connected yet — try again in a moment."; return; }
+    if(files.some(function(f){ return f.size > 25*1024*1024; })){ status.textContent = "One of the files is larger than 25 MB — please upload it to OneDrive directly."; return; }
+    if(!SYNC_TOKEN){ status.textContent = "The team storage isn't connected yet — try again in a moment."; return; }
     var type = document.getElementById("doc-type").value, note = document.getElementById("doc-note").value.trim(), done = 0;
     go.disabled = true;
     files.reduce(function(p, file, i){
@@ -6148,7 +6146,7 @@
         return fileB64(file).then(function(data){
           return scriptPost({ t: SYNC_TOKEN, op:"upload", kind: DOC_FOR.kind, id: DOC_FOR.id, name: DOC_FOR.name, docType: type, note: note, by: myName(), fileName: file.name, mimeType: file.type, data: data })
             .then(function(u){
-              if(!u || !u.ok) throw new Error((u && u.error) || "upload failed — the Google script may need updating to the latest version");
+              if(!u || !u.ok) throw new Error((u && u.error) || "upload failed — please send Claude a screenshot");
               done++;
               state[DOC_FOR.id] = state[DOC_FOR.id] || {};
               var docs = (state[DOC_FOR.id].docs || []).slice();
@@ -6162,7 +6160,7 @@
       });
     }, Promise.resolve()).then(function(){
       go.disabled = false; docModal.classList.remove("open");
-      toast("Saved " + done + " document" + (done>1?"s":"") + " to Google Drive.");
+      toast("Saved " + done + " document" + (done>1?"s":"") + " to OneDrive.");
       if(DOC_FOR.kind==="partner") render(); else renderCustomers();
       pull();
     }).catch(function(err){ go.disabled = false; status.textContent = "Couldn't save: " + err.message + (done ? " (" + done + " saved before the error)" : ""); });
@@ -6202,15 +6200,15 @@
     var f = findRec(card.getAttribute("data-id")); if(!f) return;
     var r = f.rec, st = state[r.id] || {};
     var name = st.name || r.name, email = (st.email!=null ? st.email : r.email) || "";
-    if(!SYNC_TOKEN){ alert("The shared Google Drive storage isn't connected yet, so the folder can't be created. Open the Hub again in a moment, or ask Sherif to finish the Google Drive set-up."); return; }
+    if(!SYNC_TOKEN){ alert("The team storage isn't connected yet, so the folder can't be created. Open the Hub again in a moment."); return; }
     b.disabled = true; var old = b.textContent; b.textContent = "Creating folder…";
     var medical = anSector("partners", (st.category || r.category || ""), r) === "medical";
     scriptPost({ t: SYNC_TOKEN, op:"partnerKit", partner:{ id: r.id, name: name, email: email, medical: medical } })
       .then(function(k){
         b.disabled = false; b.textContent = old;
-        if(!k || !k.ok || !k.folder_url){ alert("Couldn't create the folder" + (k && k.error ? ": " + k.error : "") + ". If this keeps happening, the Google script needs updating to the latest version."); return; }
+        if(!k || !k.ok || !k.folder_url){ alert("Couldn't create the folder" + (k && k.error ? ": " + k.error : "") + ". If this keeps happening, send Claude a screenshot."); return; }
         state[r.id] = state[r.id] || {}; state[r.id].driveFolder = k.folder_url; saveState(state);
-        act({ t:"log", kind:"partner", id:r.id, name:name, what:"Created Google Drive folder Contracts › Clinics › " + k.folder_name + " with the partner kit" });
+        act({ t:"log", kind:"partner", id:r.id, name:name, what:"Created OneDrive folder Contracts › Clinics › " + k.folder_name + " with the partner kit" });
         render();
         openModal(Object.assign({}, r, { kind:"partner", name:name, email: email }));
         document.getElementById("modal-title").textContent = "📦 Partner kit for " + name;
@@ -6218,8 +6216,8 @@
         document.getElementById("m-to").value = email;
         document.getElementById("m-subject").value = "Your Hayakkom partner kit — " + name;
         document.getElementById("m-body").value = kitEmail(Object.assign({}, r, { name:name }), k.folder_url, k.contracts || []);
-        if(medical && k.contract_template_empty) alert("Note: this is a medical partner, but the folder “Hayakom Contract template” in Google Drive is empty, so no contract was added. Put the contract file in that folder and press 📦 Partner kit again.");
-        else if(medical && !k.contracts) alert("Note: the Google script is an older version, so the contract wasn't added. Ask Sherif to update the Hub's Google script, then press 📦 Partner kit again.");
+        if(medical && k.contract_template_empty) alert("Note: this is a medical partner, but the folder “Hayakom Contract template” in OneDrive (care@) is empty, so no contract was added. Put the contract file in that folder and press 📦 Partner kit again.");
+        
       })
       .catch(function(err){ b.disabled = false; b.textContent = old; alert("Couldn't create the folder: " + err.message + "."); });
   });
