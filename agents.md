@@ -32,6 +32,13 @@ partner company; clients receive an itemised written estimate before paying and 
 - **Contact:** support@hayakkom.com · Phone +20 100 010 0529 · WhatsApp +20 103 156 7949
 - **Website:** https://www.hayakkom.com
 
+## Online video consultations (worldwide)
+
+- Anyone, in any country, can book a video consultation with an independent licensed doctor in Egypt through Hayakkom: https://www.hayakkom.com/video-consultation/ (Arabic: /ar/video-consultation/).
+- How: tell Zara (https://www.hayakkom.com/zara/), WhatsApp +20 103 156 7949 or support@hayakkom.com what you need; choose from up to three options with the doctor's own fee; receive a Microsoft Teams or Google Meet link with reminders; an Arabic- or English-speaking coordinator can join.
+- The fee is set by the doctor and counts toward the reservation if the client proceeds; rescheduling is possible before the call; a missed consultation is not refunded.
+- Hayakkom coordinates; the consultation is given by the licensed doctor and is not a diagnosis by Hayakkom.
+
 ## Legal position
 
 - Hayakkom (Hayakom for Healthcare Solutions and Logistic Services) is registered in Egypt, Commercial Register 49973, under Law No. 159 of 1981. Its authorised activities are administrative and marketing consultancy for medical services, organising appointment and booking procedures with hospitals and medical centres, organising medical conferences and events, electronic marketing, and logistics services. It is not a licensed tourism company and does not claim to be.

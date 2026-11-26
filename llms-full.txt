@@ -8841,10 +8841,10 @@ Language: ar
 # Video Consultation with a Doctor in Egypt Before You Travel | Hayakkom
 URL: https://www.hayakkom.com/video-consultation/
 Language: en
-> Talk to a licensed Egyptian specialist by Zoom or WhatsApp video before booking flights: dental, hair, weight-loss, cosmetic, orthopaedics, eyes and LASIK. Arabic coordinator available.
+> Talk to a licensed Egyptian specialist by secure video (Microsoft Teams or Google Meet) before booking flights: dental, hair, weight-loss, cosmetic, orthopaedics, eyes and LASIK. Arabic coordinator available.
 Before you travel
 # Video Consultation with a Doctor in Egypt — Before You Book Flights
-Talk to the licensed Egyptian doctor who would treat you, from home, before you commit to a trip.In short: Before you book anything, Hayakkom sends your reports and scans to a licensed Egyptian specialist and schedules a video call — on Zoom, Google Meet or WhatsApp video — at a time that suits the GCC countries. A coordinator can join in Arabic or English. The doctor reviews your file, explains the options and gives an indicative plan; the final plan and price are confirmed after an in-person examination in Egypt.
+Talk to the licensed Egyptian doctor who would treat you, from home, before you commit to a trip.In short: Before you book anything, Hayakkom sends your reports and scans to a licensed Egyptian specialist and schedules a video call — on Microsoft Teams or Google Meet — at a time that suits the GCC countries. A coordinator can join in Arabic or English. The doctor reviews your file, explains the options and gives an indicative plan; the final plan and price are confirmed after an in-person examination in Egypt.
 ## How it works
 Send us your reports, scans or photos on WhatsApp or by email.
 We share them, with your consent, with a licensed clinic or hospital and confirm the doctor's name.
