@@ -24,13 +24,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 50
       - name: Wait for GitHub Pages to publish the new version
         if: github.event_name == 'push'
         run: sleep 120
       - name: Submit URLs
         env:
           ALL: ${{ github.event_name == 'workflow_dispatch' && inputs.all }}
+          BEFORE: ${{ github.event.before }}
         run: |
           python3 - <<'EOF'
           import json, os, re, subprocess, urllib.request
@@ -40,8 +41,13 @@ jobs:
           if os.environ.get('ALL') == 'true':
               urls = sitemap
           else:
-              changed = subprocess.run(['git', 'diff', '--name-only', 'HEAD~1', 'HEAD'],
-                                       capture_output=True, text=True).stdout.split()
+              # every commit in this push, not only the last one
+              before = os.environ.get('BEFORE', '')
+              base = before if before and set(before) != {'0'} else 'HEAD~1'
+              res = subprocess.run(['git', 'diff', '--name-only', base, 'HEAD'], capture_output=True, text=True)
+              if res.returncode != 0:
+                  res = subprocess.run(['git', 'diff', '--name-only', 'HEAD~1', 'HEAD'], capture_output=True, text=True)
+              changed = res.stdout.split()
               urls = []
               for f in changed:
                   if f.endswith('/index.html'):
