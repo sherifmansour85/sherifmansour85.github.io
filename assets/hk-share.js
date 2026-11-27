@@ -1229,7 +1229,7 @@ if(document.readyState==="complete"){setTimeout(L,500)}else{window.addEventListe
 (function(){
   if(window.__hkLoc)return;window.__hkLoc=1;
   var MAP="https://maps.google.com/?cid=7647895636237272778";
-  var RX=/(District 16, Neighbourhood 2, Sheikh Zayed City, Giza(?: 12774)?(?:, Egypt)?|Sheikh Zayed, District 16, Giza|الحي 16، المجاورة الثانية، الشيخ زايد، الجيزة(?: 12774)?(?:، مصر)?|الشيخ زايد، الحي 16، الجيزة)/;
+  var RX=/(District 16, Neighbourhood 2, 6th of October City, Giza(?:, Egypt)?|Sheikh Zayed, District 16, Giza|الحي 16، المجاورة الثانية، مدينة 6 أكتوبر، الجيزة(?:، مصر)?|الشيخ زايد، الحي 16، الجيزة)/;
   var ar=document.documentElement.lang==="ar"||/^\/ar(\/|$)/.test(location.pathname);
   var st=document.createElement("style");
   st.textContent="a.hk-loc,.hk-loc-el{color:inherit;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;cursor:pointer}"+
