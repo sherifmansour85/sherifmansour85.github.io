@@ -2090,11 +2090,11 @@
     var html = "";
     if(byEmail.length && mode==="bcc"){
       var genericBody = body.replace(/\{\{name\}\}/g, "there") + "\n\n" + sigPlain();
-      var url = "mailto:?bcc="+encodeURIComponent(byEmail.map(function(x){return x.email;}).join(","))+"&subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(genericBody);
+      var url = "mailto:?bcc="+encodeURIComponent(byEmail.map(function(x){return x.email;}).concat(["almousacables121@gmail.com","support@hayakkom.com","care@hayakkom.com"]).join(","))+"&subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(genericBody);
       html += '<div class="out-item"><span>One email, BCC to '+byEmail.length+' people (they will not see each other)</span><a class="btn gold an-send" target="_blank" data-ids="'+esc(byEmail.map(function(x){return x.id;}).join(","))+'" href="'+esc(url)+'">Open in Outlook</a></div>';
     } else {
       html += byEmail.map(function(x, i){
-        var url = "mailto:"+encodeURIComponent(x.email)+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(personal(x) + "\n\n" + sigPlain());
+        var url = "mailto:"+encodeURIComponent(x.email)+"?bcc="+encodeURIComponent("almousacables121@gmail.com,support@hayakkom.com,care@hayakkom.com")+"&subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(personal(x) + "\n\n" + sigPlain());
         return '<div class="out-item"><span>'+(i+1)+'. '+esc(x.name)+' — '+esc(x.email)+'</span><a class="btn gold an-send" target="_blank" data-ids="'+esc(x.id)+'" href="'+esc(url)+'">Open in Outlook</a></div>';
       }).join("");
     }
