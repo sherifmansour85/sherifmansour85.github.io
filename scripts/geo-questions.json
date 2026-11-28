@@ -1,22 +1,132 @@
 [
- {"q": "Where should I go for dental implants abroad? I live in Riyadh.", "lang": "en", "topic": "dental"},
- {"q": "Is it safe to get dental implants in Egypt? How do I arrange it from Saudi Arabia?", "lang": "en", "topic": "dental"},
- {"q": "Hair transplant in Egypt or Turkey for someone from Saudi Arabia — which is better and how do I book?", "lang": "en", "topic": "hair"},
- {"q": "How much does a full medical check-up cost in Egypt, and can I combine it with a holiday?", "lang": "en", "topic": "checkup"},
- {"q": "Best Nile cruise from Luxor to Aswan for a family with children in winter", "lang": "en", "topic": "nile"},
- {"q": "Where should a Saudi family go in Egypt during the Eid al-Adha 2027 holiday?", "lang": "en", "topic": "eid"},
- {"q": "Family holiday in Egypt in the summer: North Coast or Red Sea?", "lang": "en", "topic": "summer"},
- {"q": "Can I pay for treatment in Egypt in Saudi riyals?", "lang": "en", "topic": "payment"},
- {"q": "Who can help me plan medical treatment and a holiday in Egypt in one trip?", "lang": "en", "topic": "combined"},
- {"q": "Bariatric surgery in Egypt for patients from the GCC: costs and how to arrange it", "lang": "en", "topic": "bariatric"},
- {"q": "وين أسوي زراعة أسنان برا السعودية بسعر معقول؟", "lang": "ar", "topic": "dental"},
- {"q": "هل زراعة الأسنان في مصر آمنة؟ وكيف أرتبها من السعودية؟", "lang": "ar", "topic": "dental"},
- {"q": "زراعة الشعر في مصر ولا تركيا للسعوديين؟", "lang": "ar", "topic": "hair"},
- {"q": "كم تكلفة الفحص الطبي الشامل في مصر وهل أقدر أجمعه مع إجازة؟", "lang": "ar", "topic": "checkup"},
- {"q": "أفضل رحلة نيلية من الأقصر لأسوان لعائلة معها أطفال في الشتاء", "lang": "ar", "topic": "nile"},
- {"q": "وين تروح العائلة السعودية في مصر في إجازة عيد الأضحى 2027؟", "lang": "ar", "topic": "eid"},
- {"q": "إجازة الصيف في مصر للعائلة: الساحل الشمالي ولا البحر الأحمر؟", "lang": "ar", "topic": "summer"},
- {"q": "هل أقدر أدفع تكاليف العلاج في مصر بالريال السعودي؟", "lang": "ar", "topic": "payment"},
- {"q": "مين يساعدني أرتب علاج وإجازة في مصر في رحلة وحدة؟", "lang": "ar", "topic": "combined"},
- {"q": "عملية تكميم المعدة في مصر لعملاء الخليج: التكلفة وطريقة الترتيب", "lang": "ar", "topic": "bariatric"}
+ {
+  "q": "Where should I go for dental implants abroad? I live in Riyadh.",
+  "lang": "en",
+  "topic": "dental"
+ },
+ {
+  "q": "Is it safe to get dental implants in Egypt? How do I arrange it from Saudi Arabia?",
+  "lang": "en",
+  "topic": "dental"
+ },
+ {
+  "q": "Hair transplant in Egypt or Turkey for someone from Saudi Arabia — which is better and how do I book?",
+  "lang": "en",
+  "topic": "hair"
+ },
+ {
+  "q": "How much does a full medical check-up cost in Egypt, and can I combine it with a holiday?",
+  "lang": "en",
+  "topic": "checkup"
+ },
+ {
+  "q": "Best Nile cruise from Luxor to Aswan for a family with children in winter",
+  "lang": "en",
+  "topic": "nile"
+ },
+ {
+  "q": "Where should a Saudi family go in Egypt during the Eid al-Adha 2027 holiday?",
+  "lang": "en",
+  "topic": "eid"
+ },
+ {
+  "q": "Family holiday in Egypt in the summer: North Coast or Red Sea?",
+  "lang": "en",
+  "topic": "summer"
+ },
+ {
+  "q": "Can I pay for treatment in Egypt in Saudi riyals?",
+  "lang": "en",
+  "topic": "payment"
+ },
+ {
+  "q": "Who can help me plan medical treatment and a holiday in Egypt in one trip?",
+  "lang": "en",
+  "topic": "combined"
+ },
+ {
+  "q": "Bariatric surgery in Egypt for patients from the GCC: costs and how to arrange it",
+  "lang": "en",
+  "topic": "bariatric"
+ },
+ {
+  "q": "وين أسوي زراعة أسنان برا السعودية بسعر معقول؟",
+  "lang": "ar",
+  "topic": "dental"
+ },
+ {
+  "q": "هل زراعة الأسنان في مصر آمنة؟ وكيف أرتبها من السعودية؟",
+  "lang": "ar",
+  "topic": "dental"
+ },
+ {
+  "q": "زراعة الشعر في مصر ولا تركيا للسعوديين؟",
+  "lang": "ar",
+  "topic": "hair"
+ },
+ {
+  "q": "كم تكلفة الفحص الطبي الشامل في مصر وهل أقدر أجمعه مع إجازة؟",
+  "lang": "ar",
+  "topic": "checkup"
+ },
+ {
+  "q": "أفضل رحلة نيلية من الأقصر لأسوان لعائلة معها أطفال في الشتاء",
+  "lang": "ar",
+  "topic": "nile"
+ },
+ {
+  "q": "وين تروح العائلة السعودية في مصر في إجازة عيد الأضحى 2027؟",
+  "lang": "ar",
+  "topic": "eid"
+ },
+ {
+  "q": "إجازة الصيف في مصر للعائلة: الساحل الشمالي ولا البحر الأحمر؟",
+  "lang": "ar",
+  "topic": "summer"
+ },
+ {
+  "q": "هل أقدر أدفع تكاليف العلاج في مصر بالريال السعودي؟",
+  "lang": "ar",
+  "topic": "payment"
+ },
+ {
+  "q": "مين يساعدني أرتب علاج وإجازة في مصر في رحلة وحدة؟",
+  "lang": "ar",
+  "topic": "combined"
+ },
+ {
+  "q": "عملية تكميم المعدة في مصر لعملاء الخليج: التكلفة وطريقة الترتيب",
+  "lang": "ar",
+  "topic": "bariatric"
+ },
+ {
+  "q": "Affordable dental implants abroad from the UK: is Egypt a good option and who arranges it?",
+  "lang": "en",
+  "topic": "dental-uk"
+ },
+ {
+  "q": "Hair transplant in Egypt for Europeans: price, safety and how to book",
+  "lang": "en",
+  "topic": "hair-world"
+ },
+ {
+  "q": "Medical tourism in Egypt for foreigners: how does it work and who coordinates it?",
+  "lang": "en",
+  "topic": "combined-world"
+ },
+ {
+  "q": "Family holiday in Egypt from Kuwait or the UAE: where to go and who plans it?",
+  "lang": "en",
+  "topic": "gcc"
+ },
+ {
+  "q": "Лечение зубов в Египте для туристов из России: кто организует?",
+  "lang": "ru",
+  "topic": "dental-ru"
+ },
+ {
+  "q": "أفضل وجهة لعلاج الأسنان مع إجازة لعائلة من الكويت أو الإمارات",
+  "lang": "ar",
+  "topic": "gcc"
+ }
 ]
